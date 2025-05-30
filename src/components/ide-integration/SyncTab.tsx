@@ -91,7 +91,7 @@ export const SyncTab = ({ ides, selectedIDE }: SyncTabProps) => {
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <RefreshCcw className={`w-5 h-5 ${syncStatus.isActive ? 'text-green-500 animate-spin' : 'text-gray-500'}`} />
+              <RefreshCw className={`w-5 h-5 ${syncStatus.isActive ? 'text-green-500 animate-spin' : 'text-gray-500'}`} />
               <div>
                 <p className="font-medium text-card-foreground">
                   {syncStatus.isActive ? 'Synchronizing...' : 'Sync Disabled'}
