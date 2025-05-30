@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  Template, 
+  FileTemplate, 
   Plus, 
   Copy, 
   Edit, 
@@ -205,7 +204,7 @@ export const WorkflowTemplates = () => {
           <Card key={template.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
               <div className="flex items-start justify-between">
-                <Template className="w-8 h-8 text-primary" />
+                <FileTemplate className="w-8 h-8 text-primary" />
                 <div className="flex items-center gap-1">
                   <Button variant="ghost" size="sm">
                     <Copy className="w-4 h-4" />
@@ -265,7 +264,7 @@ export const WorkflowTemplates = () => {
 
       {filteredTemplates.length === 0 && (
         <div className="text-center py-12">
-          <Template className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <FileTemplate className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">No templates found</h3>
           <p className="text-muted-foreground mb-4">
             Try adjusting your search criteria or create a new template
