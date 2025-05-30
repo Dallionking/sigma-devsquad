@@ -28,7 +28,7 @@ export const ChatInterface = () => {
       timestamp: new Date(),
       attachments: [
         {
-          type: "idea",
+          type: "idea" as const,
           content: "Consider starting with a high-level overview of your project goals and target audience.",
           title: "Getting Started Tip"
         }
@@ -78,7 +78,7 @@ export const ChatInterface = () => {
           content: "I understand you want to work on that. Let me analyze the requirements and suggest a structured approach. Based on your input, I can help create a detailed project roadmap.",
           attachments: [
             {
-              type: "document",
+              type: "document" as const,
               content: "# Project Analysis\n\n## Key Requirements\n- Feature analysis\n- Technical specifications\n- Timeline estimation\n\n## Next Steps\n1. Define user stories\n2. Create technical architecture\n3. Establish milestones",
               title: "Requirements Analysis"
             }
@@ -88,7 +88,7 @@ export const ChatInterface = () => {
           content: "Great! I can help break that down into manageable components. Let me create a structured plan that considers dependencies, technical constraints, and user impact.",
           attachments: [
             {
-              type: "code",
+              type: "code" as const,
               content: "// Example implementation approach\nconst projectStructure = {\n  frontend: 'React + TypeScript',\n  backend: 'Node.js + Express',\n  database: 'PostgreSQL',\n  deployment: 'Docker + AWS'\n};",
               title: "Technical Stack Suggestion"
             }
