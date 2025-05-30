@@ -15,6 +15,7 @@ import { AdvancedSearchBar } from "@/components/settings/AdvancedSearchBar";
 import { Header } from "@/components/dashboard/Header";
 import { ViewMode, Agent } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
 import { cn } from "@/lib/utils";
 
 export const Settings = () => {
@@ -25,6 +26,19 @@ export const Settings = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFilters, setSearchFilters] = useState({});
   const [activeTab, setActiveTab] = useState("general");
+
+  // Keyboard navigation setup
+  const { focusNext, focusPrevious } = useKeyboardNavigation({
+    onEscape: () => {
+      // Clear search when pressing Escape
+      if (searchQuery) {
+        setSearchQuery("");
+      }
+    },
+    enableArrowNavigation: true,
+    onArrowDown: focusNext,
+    onArrowUp: focusPrevious,
+  });
 
   const mockAgents: Agent[] = [
     { 
@@ -104,7 +118,12 @@ export const Settings = () => {
       
       <div className="bg-background text-foreground">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-          <main id="main-content" className="space-y-6 sm:space-y-8">
+          <main 
+            id="main-content" 
+            className="space-y-6 sm:space-y-8"
+            role="main"
+            aria-label="Settings Configuration"
+          >
             <div className="fade-in">
               <SettingsHeader />
             </div>
@@ -113,7 +132,7 @@ export const Settings = () => {
               <AdvancedSearchBar 
                 onSearch={setSearchQuery}
                 onFilterChange={setSearchFilters}
-                placeholder="Search settings..."
+                placeholder="Search settings... (Press Escape to clear)"
                 categories={["General", "Security", "API", "Performance", "Appearance", "Notifications", "Backup"]}
                 className="max-w-2xl"
               />
@@ -125,7 +144,7 @@ export const Settings = () => {
               className="space-y-6 fade-in" 
               style={{ animationDelay: "200ms" }}
             >
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" role="tablist">
                 <SettingsTabsList />
               </div>
 
@@ -137,6 +156,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="general-tab"
                 >
                   <GeneralSettings searchQuery={searchQuery} />
                 </TabsContent>
@@ -148,6 +169,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="api-keys-tab"
                 >
                   <APIKeySettings searchQuery={searchQuery} />
                 </TabsContent>
@@ -159,6 +182,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="appearance-tab"
                 >
                   <AppearanceSettings searchQuery={searchQuery} />
                 </TabsContent>
@@ -170,6 +195,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="performance-tab"
                 >
                   <PerformanceSettings 
                     performanceMode={performanceMode} 
@@ -185,6 +212,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="security-tab"
                 >
                   <SecuritySettings searchQuery={searchQuery} />
                 </TabsContent>
@@ -196,6 +225,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="notifications-tab"
                 >
                   <NotificationSettings 
                     notifications={notifications} 
@@ -211,6 +242,8 @@ export const Settings = () => {
                     "animate-in fade-in-0 duration-200"
                   )}
                   tabIndex={-1}
+                  role="tabpanel"
+                  aria-labelledby="backup-tab"
                 >
                   <BackupSettings 
                     autoBackup={autoBackup} 
