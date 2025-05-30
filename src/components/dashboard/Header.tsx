@@ -1,5 +1,5 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers } from "lucide-react";
+import { Bell, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/types";
@@ -153,10 +153,6 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
           
           <Button variant="ghost" size="sm">
             <Bell className="w-4 h-4" />
-          </Button>
-          
-          <Button variant="ghost" size="sm">
-            <Settings className="w-4 h-4" />
           </Button>
         </div>
       </div>
