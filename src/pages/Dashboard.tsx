@@ -7,14 +7,17 @@ import { TaskManagement } from "@/components/dashboard/TaskManagement";
 import { EnhancedAgentCard } from "@/components/cards/EnhancedAgentCard";
 import { EnhancedTaskCard } from "@/components/cards/EnhancedTaskCard";
 import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
+import { useAgents } from "@/contexts/AgentContext";
 import { Agent, Task, Message } from "@/types";
-import { mockAgents, mockTasks, mockMessages } from "@/data/mockData";
+import { mockTasks, mockMessages } from "@/data/mockData";
 
 const Dashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [activeView, setActiveView] = useState<"workflow" | "communication" | "tasks">("workflow");
+
+  const { agents } = useAgents();
 
   const handleAgentSelect = (agent: Agent | null) => {
     setSelectedAgent(agent);
@@ -27,7 +30,7 @@ const Dashboard = () => {
       case "workflow":
         return (
           <WorkflowVisualization
-            agents={mockAgents}
+            agents={agents}
             tasks={mockTasks}
             selectedAgent={selectedAgent}
             onAgentSelect={handleAgentSelect}
@@ -36,7 +39,7 @@ const Dashboard = () => {
       case "communication":
         return (
           <CommunicationGraph
-            agents={mockAgents}
+            agents={agents}
             messages={mockMessages}
             selectedAgent={selectedAgent}
             onAgentSelect={handleAgentSelect}
@@ -47,7 +50,7 @@ const Dashboard = () => {
         return (
           <TaskManagement
             tasks={mockTasks}
-            agents={mockAgents}
+            agents={agents}
             selectedTask={selectedTask}
             onTaskSelect={setSelectedTask}
           />
@@ -60,7 +63,7 @@ const Dashboard = () => {
   return (
     <div className="flex h-screen bg-background">
       <AgentSidebar
-        agents={mockAgents}
+        agents={agents}
         selectedAgent={selectedAgent}
         onAgentSelect={handleAgentSelect}
       />

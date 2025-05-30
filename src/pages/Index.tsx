@@ -7,8 +7,9 @@ import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
+import { useAgents } from "@/contexts/AgentContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
-import { mockAgents, mockTasks, mockMessages } from "@/data/mockData";
+import { mockTasks, mockMessages } from "@/data/mockData";
 
 const Index = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -16,6 +17,8 @@ const Index = () => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [showFooter, setShowFooter] = useState(true);
+
+  const { agents } = useAgents();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
@@ -32,13 +35,13 @@ const Index = () => {
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
-        agents={mockAgents}
+        agents={agents}
       />
       
       {/* Enhanced main layout with improved responsive behavior */}
       <div className="flex flex-1 overflow-hidden">
         <AgentSidebar 
-          agents={mockAgents}
+          agents={agents}
           selectedAgent={selectedAgent}
           onAgentSelect={setSelectedAgent}
         />
@@ -54,7 +57,7 @@ const Index = () => {
           {viewMode === "workflow" && (
             <div className="fade-in">
               <DashboardOverview 
-                agents={mockAgents}
+                agents={agents}
                 onAgentSelect={setSelectedAgent}
               />
             </div>
@@ -64,7 +67,7 @@ const Index = () => {
           <div className="flex-1 transition-all duration-300 ease-in-out">
             <MainWorkflowArea 
               viewMode={viewMode}
-              agents={mockAgents}
+              agents={agents}
               tasks={mockTasks}
               messages={mockMessages}
               selectedAgent={selectedAgent}
@@ -83,7 +86,7 @@ const Index = () => {
           selectedTask={selectedTask}
           selectedMessage={selectedMessage}
           viewMode={viewMode}
-          agents={mockAgents}
+          agents={agents}
         />
       </div>
       

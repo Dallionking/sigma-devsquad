@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { AgentType } from "@/types";
+import { useAgents } from "@/contexts/AgentContext";
 import { FlowHeader } from "./FlowHeader";
 import { FlowStepRenderer } from "./FlowStepRenderer";
 import { FlowNavigation } from "./FlowNavigation";
@@ -36,6 +37,7 @@ export const EnhancedAgentCreationFlow = ({ onComplete, onCancel }: EnhancedAgen
     description: ""
   });
 
+  const { addAgent } = useAgents();
   const { savedTemplates, saveAsTemplate } = useTemplateManager();
   const { canProceed } = useFlowValidation(config, steps, currentStep);
 
@@ -52,6 +54,11 @@ export const EnhancedAgentCreationFlow = ({ onComplete, onCancel }: EnhancedAgen
   };
 
   const handleComplete = () => {
+    // Create the agent in the global state
+    const newAgent = addAgent(config);
+    console.log("Agent created and added to global state:", newAgent);
+    
+    // Call the original completion handler
     onComplete(config);
   };
 

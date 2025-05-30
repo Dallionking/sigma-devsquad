@@ -6,10 +6,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Plus, Bot, Layers, Code, Server, TestTube, FileText, Settings as SettingsIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { EnhancedAgentCard } from "@/components/cards/EnhancedAgentCard";
+import { useAgents } from "@/contexts/AgentContext";
 import { Agent } from "@/types";
 
 interface EnhancedAgentOverviewProps {
-  agents: Agent[];
   onAgentSelect: (agent: Agent | null) => void;
 }
 
@@ -47,8 +47,9 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const EnhancedAgentOverview = ({ agents, onAgentSelect }: EnhancedAgentOverviewProps) => {
+export const EnhancedAgentOverview = ({ onAgentSelect }: EnhancedAgentOverviewProps) => {
   const navigate = useNavigate();
+  const { agents } = useAgents();
 
   const handleAddAgent = () => {
     console.log("Add Agent button clicked");
