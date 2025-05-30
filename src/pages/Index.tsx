@@ -41,6 +41,15 @@ const Index = () => {
   const { tasks } = taskContext;
   const { messages } = messageContext;
 
+  // Check if there's any selection to show the detail panel
+  const hasSelection = selectedAgent || selectedTask || selectedMessage;
+
+  const handleDismissSelection = () => {
+    setSelectedAgent(null);
+    setSelectedTask(null);
+    setSelectedMessage(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
       {/* Enhanced skip to main content for accessibility */}
@@ -108,16 +117,19 @@ const Index = () => {
           </div>
         </main>
         
-        {/* Context-aware Detail Panel */}
-        <div className="w-80 transition-all duration-300">
-          <DetailPanel 
-            selectedAgent={selectedAgent}
-            selectedTask={selectedTask}
-            selectedMessage={selectedMessage}
-            viewMode={viewMode}
-            agents={agents || []}
-          />
-        </div>
+        {/* Context-aware Detail Panel - only show when there's a selection */}
+        {hasSelection && (
+          <div className="w-80 transition-all duration-300 animate-in slide-in-from-right">
+            <DetailPanel 
+              selectedAgent={selectedAgent}
+              selectedTask={selectedTask}
+              selectedMessage={selectedMessage}
+              viewMode={viewMode}
+              agents={agents || []}
+              onDismiss={handleDismissSelection}
+            />
+          </div>
+        )}
       </div>
       
       {/* Enhanced footer with smooth animations */}
