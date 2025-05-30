@@ -19,12 +19,8 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
 
   return (
     <div className="relative h-full flex">
-      {/* Main Chat Interface - Responsive Width */}
-      <div className={`h-full transition-all duration-300 ${
-        isCanvasOpen 
-          ? 'w-full lg:w-1/2 xl:w-[45%]' 
-          : 'w-full'
-      }`}>
+      {/* Main Chat Interface - Fixed Width */}
+      <div className="w-full lg:w-[600px] xl:w-[700px] h-full flex-shrink-0">
         <Card className="h-full card-enhanced">
           <ChatInterface 
             onCreateTask={onCreateTask}
@@ -34,13 +30,13 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
         </Card>
       </div>
 
-      {/* Canvas - Responsive Positioning */}
+      {/* Canvas - Expands to the right */}
       {isCanvasOpen && (
         <div className={`
           h-full transition-all duration-300
           absolute lg:relative
-          top-0 right-0 lg:top-auto lg:right-auto
-          w-full sm:w-2/3 lg:w-1/2 xl:w-[55%]
+          top-0 right-0 lg:top-auto lg:right-auto lg:left-auto
+          w-full sm:w-2/3 lg:flex-1 lg:min-w-[400px]
           z-50 lg:z-auto
           ${isCanvasOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
         `}>
