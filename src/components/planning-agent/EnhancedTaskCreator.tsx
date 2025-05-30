@@ -2,21 +2,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { 
-  Plus, 
-  Wand2, 
-  Clock, 
-  User, 
-  Flag, 
-  Target,
-  GitBranch,
-  Sparkles
-} from "lucide-react";
+import { Plus, Wand2 } from "lucide-react";
+import { TaskForm } from "./task-creator/TaskForm";
+import { TaskTagSelector } from "./task-creator/TaskTagSelector";
+import { TaskPreview } from "./task-creator/TaskPreview";
 
 interface EnhancedTaskCreatorProps {
   onCreateTask?: (taskData: any) => void;
@@ -37,11 +26,6 @@ export const EnhancedTaskCreator = ({ onCreateTask }: EnhancedTaskCreatorProps) 
     "QA Agent",
     "Documentation Agent",
     "DevOps Agent"
-  ];
-
-  const suggestedTags = [
-    "authentication", "ui", "api", "database", "testing", 
-    "documentation", "security", "performance", "mobile", "integration"
   ];
 
   const handleTagToggle = (tag: string) => {
@@ -113,123 +97,31 @@ export const EnhancedTaskCreator = ({ onCreateTask }: EnhancedTaskCreatorProps) 
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Task Title */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <Target className="w-4 h-4" />
-            Task Title
-          </label>
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter task title..."
-          />
-        </div>
+        <TaskForm
+          title={title}
+          description={description}
+          priority={priority}
+          assignedAgent={assignedAgent}
+          estimatedHours={estimatedHours}
+          agents={agents}
+          onTitleChange={setTitle}
+          onDescriptionChange={setDescription}
+          onPriorityChange={setPriority}
+          onAgentChange={setAssignedAgent}
+          onHoursChange={setEstimatedHours}
+        />
 
-        {/* Task Description */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Description</label>
-          <Textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe the task requirements and acceptance criteria..."
-            rows={3}
-          />
-        </div>
+        <TaskTagSelector
+          selectedTags={selectedTags}
+          onTagToggle={handleTagToggle}
+        />
 
-        {/* Priority and Agent Assignment */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <Flag className="w-4 h-4" />
-              Priority
-            </label>
-            <Select value={priority} onValueChange={setPriority}>
-              <SelectTrigger>
-                <SelectValue placeholder="Set priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="high">High Priority</SelectItem>
-                <SelectItem value="medium">Medium Priority</SelectItem>
-                <SelectItem value="low">Low Priority</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <User className="w-4 h-4" />
-              Assign to Agent
-            </label>
-            <Select value={assignedAgent} onValueChange={setAssignedAgent}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select agent" />
-              </SelectTrigger>
-              <SelectContent>
-                {agents.map((agent) => (
-                  <SelectItem key={agent} value={agent}>
-                    {agent}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Estimated Hours */}
-        <div className="space-y-3">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            Estimated Hours: {estimatedHours[0]}h
-          </label>
-          <Slider
-            value={estimatedHours}
-            onValueChange={setEstimatedHours}
-            max={80}
-            min={1}
-            step={1}
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>1h</span>
-            <span>40h</span>
-            <span>80h</span>
-          </div>
-        </div>
-
-        {/* Tags */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <GitBranch className="w-4 h-4" />
-            Tags
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {suggestedTags.map((tag) => (
-              <Badge
-                key={tag}
-                variant={selectedTags.includes(tag) ? "default" : "outline"}
-                className="cursor-pointer hover:bg-primary/10 transition-colors"
-                onClick={() => handleTagToggle(tag)}
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {/* Visual Feedback */}
-        {title && priority && (
-          <div className="p-3 bg-muted/50 rounded-lg border space-y-2">
-            <div className="flex items-center gap-2 text-sm">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="font-medium">Task Preview</span>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <strong>{title}</strong> • {priority} priority • {estimatedHours[0]}h estimated
-              {assignedAgent && ` • Assigned to ${assignedAgent}`}
-            </div>
-          </div>
-        )}
+        <TaskPreview
+          title={title}
+          priority={priority}
+          estimatedHours={estimatedHours[0]}
+          assignedAgent={assignedAgent}
+        />
 
         {/* Create Button */}
         <Button 
