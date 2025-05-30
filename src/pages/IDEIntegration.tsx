@@ -14,12 +14,20 @@ import {
   RefreshCw,
   CheckCircle,
   AlertCircle,
-  XCircle
+  XCircle,
+  Workflow
 } from "lucide-react";
+import { ConnectionStatusTab } from "@/components/ide-integration/ConnectionStatusTab";
+import { ConfigurationTab } from "@/components/ide-integration/ConfigurationTab";
+import { FileExplorerTab } from "@/components/ide-integration/FileExplorerTab";
+import { TerminalTab } from "@/components/ide-integration/TerminalTab";
+import { ExecutionTab } from "@/components/ide-integration/ExecutionTab";
+import { SyncTab } from "@/components/ide-integration/SyncTab";
+import { IDEIntegrationFlow } from "@/components/ide-integration/IDEIntegrationFlow";
 
 const IDEIntegration = () => {
   const [connectionStatus, setConnectionStatus] = useState("connected");
-  const [syncStatus, setSyncStatus] = useState("synced");
+  const [selectedIDE, setSelectedIDE] = useState("vscode");
 
   const connectionStatuses = {
     connected: { icon: CheckCircle, color: "text-green-600", bg: "bg-green-50" },
@@ -28,6 +36,25 @@ const IDEIntegration = () => {
   };
 
   const StatusIcon = connectionStatuses[connectionStatus as keyof typeof connectionStatuses].icon;
+
+  const mockIDEs = [
+    {
+      id: "vscode",
+      name: "VS Code",
+      status: "connected",
+      version: "1.85.0",
+      extensions: ["Lovable", "TypeScript", "React"],
+      lastSync: "2 minutes ago"
+    },
+    {
+      id: "webstorm",
+      name: "WebStorm",
+      status: "disconnected",
+      version: "2023.3",
+      extensions: ["Lovable Plugin"],
+      lastSync: "1 hour ago"
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,206 +94,53 @@ const IDEIntegration = () => {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+        <Tabs defaultValue="flow" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="flow">Flow</TabsTrigger>
+            <TabsTrigger value="status">Status</TabsTrigger>
             <TabsTrigger value="configuration">Configuration</TabsTrigger>
-            <TabsTrigger value="files">File Explorer</TabsTrigger>
+            <TabsTrigger value="files">Files</TabsTrigger>
             <TabsTrigger value="terminal">Terminal</TabsTrigger>
             <TabsTrigger value="execution">Execution</TabsTrigger>
             <TabsTrigger value="sync">Sync</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-2">
-                    <Monitor className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <div className="text-2xl font-bold">Active</div>
-                      <div className="text-sm text-muted-foreground">Connection</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-2">
-                    <FolderOpen className="w-5 h-5 text-green-600" />
-                    <div>
-                      <div className="text-2xl font-bold">247</div>
-                      <div className="text-sm text-muted-foreground">Files Synced</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-2">
-                    <Terminal className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <div className="text-2xl font-bold">12</div>
-                      <div className="text-sm text-muted-foreground">Commands Run</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-2">
-                    <RefreshCw className="w-5 h-5 text-orange-600" />
-                    <div>
-                      <div className="text-2xl font-bold">2m ago</div>
-                      <div className="text-sm text-muted-foreground">Last Sync</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {[
-                    { action: "File synchronized", file: "src/components/Dashboard.tsx", time: "2 minutes ago" },
-                    { action: "Command executed", file: "npm run build", time: "5 minutes ago" },
-                    { action: "File created", file: "src/types/agent.ts", time: "8 minutes ago" }
-                  ].map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border border-border rounded-lg">
-                      <div>
-                        <p className="font-medium">{activity.action}</p>
-                        <p className="text-sm text-muted-foreground">{activity.file}</p>
-                      </div>
-                      <span className="text-xs text-muted-foreground">{activity.time}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="flow">
+            <IDEIntegrationFlow />
           </TabsContent>
 
-          <TabsContent value="configuration" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Connection Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">IDE Type</label>
-                    <select className="w-full p-2 border border-border rounded-md">
-                      <option>VS Code</option>
-                      <option>IntelliJ IDEA</option>
-                      <option>WebStorm</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Port</label>
-                    <Input type="number" defaultValue="3001" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Workspace Path</label>
-                  <Input defaultValue="/home/user/projects/ai-workforce" />
-                </div>
-                <Button>Save Configuration</Button>
-              </CardContent>
-            </Card>
+          <TabsContent value="status">
+            <ConnectionStatusTab 
+              ides={mockIDEs}
+              selectedIDE={selectedIDE}
+              setSelectedIDE={setSelectedIDE}
+            />
           </TabsContent>
 
-          <TabsContent value="files" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FolderOpen className="w-5 h-5" />
-                  File Explorer
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Browse and manage files with real-time synchronization status
-                </p>
-                <div className="space-y-2">
-                  {[
-                    { name: "src/", type: "folder", status: "synced" },
-                    { name: "components/", type: "folder", status: "synced" },
-                    { name: "Dashboard.tsx", type: "file", status: "modified" },
-                    { name: "AgentCard.tsx", type: "file", status: "synced" }
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 hover:bg-muted/50 rounded">
-                      <span>{item.name}</span>
-                      <Badge variant={item.status === "synced" ? "default" : "secondary"}>
-                        {item.status}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="configuration">
+            <ConfigurationTab 
+              selectedIDE={selectedIDE}
+              ides={mockIDEs}
+            />
           </TabsContent>
 
-          <TabsContent value="terminal" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Terminal className="w-5 h-5" />
-                  Terminal
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                  <div>$ npm run dev</div>
-                  <div>Starting development server...</div>
-                  <div>Server running on http://localhost:3000</div>
-                  <div className="text-white">$ <span className="animate-pulse">|</span></div>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="files">
+            <FileExplorerTab />
           </TabsContent>
 
-          <TabsContent value="execution" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Play className="w-5 h-5" />
-                  Code Execution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Execute code and view output directly from the integrated environment
-                </p>
-              </CardContent>
-            </Card>
+          <TabsContent value="terminal">
+            <TerminalTab />
           </TabsContent>
 
-          <TabsContent value="sync" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <RefreshCw className="w-5 h-5" />
-                  Synchronization
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span>Auto-sync enabled</span>
-                  <Badge variant="default">Active</Badge>
-                </div>
-                <Button>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Force Sync Now
-                </Button>
-              </CardContent>
-            </Card>
+          <TabsContent value="execution">
+            <ExecutionTab />
+          </TabsContent>
+
+          <TabsContent value="sync">
+            <SyncTab 
+              ides={mockIDEs}
+              selectedIDE={selectedIDE}
+            />
           </TabsContent>
         </Tabs>
       </div>
