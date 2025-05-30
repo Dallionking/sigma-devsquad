@@ -1,22 +1,56 @@
 
-import { Header } from "@/components/dashboard/Header";
+import { useState } from "react";
+import { PlanningDialogManager } from "@/components/planning-agent/PlanningDialogManager";
+import { PlanningAgentHeader } from "@/components/planning-agent/PlanningAgentHeader";
 import { PlanningCanvasLayout } from "@/components/planning-agent/PlanningCanvasLayout";
-import { TouchGestureProvider } from "@/components/settings/TouchGestureProvider";
-import { AccessibilityEnhancedSettings } from "@/components/settings/AccessibilityEnhancedSettings";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import { mockAgents } from "@/data/mockData";
-import { cn } from "@/lib/utils";
+import { Header } from "@/components/dashboard/Header";
+import { useAgents } from "@/contexts/AgentContext";
+import { useTasks } from "@/contexts/TaskContext";
+import { useMessages } from "@/contexts/MessageContext";
+import { useProjects } from "@/contexts/ProjectContext";
 
 const PlanningAgent = () => {
-  const isMobile = useIsMobile();
-  const { mobileOptimizations } = usePerformanceOptimization();
+  const [showTaskAssignment, setShowTaskAssignment] = useState(false);
+  const [showWorkflowTracker, setShowWorkflowTracker] = useState(false);
+
+  // Use centralized state management
+  const { agents } = useAgents();
+  const { addTask } = useTasks();
+  const { addMessage } = useMessages();
+  const { currentProject } = useProjects();
+
+  const handleTaskCreate = (taskData: any) => {
+    console.log("Creating task:", taskData);
+    addTask(taskData);
+    setShowTaskAssignment(false);
+    
+    // Also create a message about the task creation
+    addMessage({
+      from: "planning",
+      to: taskData.assignedAgent,
+      content: `New task assigned: ${taskData.title}`,
+      type: "notification"
+    });
+  };
+
+  const handleWorkflowAction = (action: string, ...args: any[]) => {
+    console.log("Workflow action:", action, args);
+    // Handle workflow state changes
+  };
+
+  const handleCreateTask = () => {
+    console.log("Create Task clicked");
+    setShowTaskAssignment(true);
+  };
+
+  const handleTrackWorkflow = () => {
+    console.log("Track Workflow clicked");
+    setShowWorkflowTracker(true);
+  };
 
   return (
-    <div className={cn(
-      "min-h-screen bg-gradient-to-br from-background via-background to-muted/20",
-      mobileOptimizations.enableTouch && "touch-manipulation"
-    )}>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Enhanced skip to main content for accessibility */}
       <a 
         href="#main-content" 
         className="sr-only-focusable"
@@ -28,26 +62,38 @@ const PlanningAgent = () => {
       <Header 
         viewMode="workflow" 
         onViewModeChange={() => {}}
-        agents={mockAgents}
+        agents={agents}
       />
 
-      <TouchGestureProvider>
-        <AccessibilityEnhancedSettings
-          title="Planning Agent"
-          description="AI-powered project planning and task orchestration"
-        >
-          <main 
-            id="main-content"
-            className={cn(
-              "h-[calc(100vh-4rem)]",
-              isMobile && "mobile-safe-area"
-            )}
-            role="main"
-          >
-            <PlanningCanvasLayout />
-          </main>
-        </AccessibilityEnhancedSettings>
-      </TouchGestureProvider>
+      <main id="main-content" className="h-[calc(100vh-64px)]">
+        <div className="container-responsive py-responsive h-full flex flex-col">
+          <div className="mb-4">
+            <PlanningAgentHeader 
+              onCreateTask={handleCreateTask}
+              onTrackWorkflow={handleTrackWorkflow}
+            />
+          </div>
+
+          {/* Canvas-based Layout - Takes remaining space */}
+          <div className="flex-1 min-h-0">
+            <PlanningCanvasLayout 
+              selectedProject={currentProject?.id || "ai-workforce"}
+              onCreateTask={handleCreateTask}
+              onTrackWorkflow={handleTrackWorkflow}
+            />
+          </div>
+        </div>
+
+        {/* Enhanced Dialog Manager */}
+        <PlanningDialogManager
+          showTaskAssignment={showTaskAssignment}
+          showWorkflowTracker={showWorkflowTracker}
+          onTaskAssignmentChange={setShowTaskAssignment}
+          onWorkflowTrackerChange={setShowWorkflowTracker}
+          onTaskCreate={handleTaskCreate}
+          onWorkflowAction={handleWorkflowAction}
+        />
+      </main>
     </div>
   );
 };
