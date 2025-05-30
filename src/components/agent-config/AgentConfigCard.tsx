@@ -7,7 +7,7 @@ import { RuleEditor } from "./RuleEditor";
 import { ContextManagement } from "./ContextManagement";
 import { PerformanceSettings } from "./PerformanceSettings";
 import { MCPConfiguration } from "./MCPConfiguration";
-import { AgentType } from "@/types";
+import { AgentType } from "@/pages/AgentConfiguration";
 
 interface AgentConfigCardProps {
   agentType: AgentType;
