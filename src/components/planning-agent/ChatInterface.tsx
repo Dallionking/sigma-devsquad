@@ -195,7 +195,7 @@ export const ChatInterface = () => {
                   ? "bg-primary text-primary-foreground ml-auto shadow-md" 
                   : "bg-card border border-border hover:shadow-sm transition-shadow"
               }`}>
-                <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                <div className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</div>
               </Card>
               
               {/* Attachments */}
@@ -218,10 +218,10 @@ export const ChatInterface = () => {
                 </div>
               )}
               
-              <p className="text-xs text-muted-foreground flex items-center gap-2">
+              <div className="text-xs text-muted-foreground flex items-center gap-2">
                 <span>{formatTimestamp(message.timestamp)}</span>
                 {message.type === "agent" && <Badge variant="outline" className="text-xs">AI</Badge>}
-              </p>
+              </div>
             </div>
 
             {message.type === "user" && (
