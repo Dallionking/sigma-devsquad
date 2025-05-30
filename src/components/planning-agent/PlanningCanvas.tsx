@@ -9,6 +9,7 @@ import { ResearchPanel } from "./ResearchPanel";
 import { ResearchBrowser } from "./ResearchBrowser";
 import { ContextualTools } from "./ContextualTools";
 import { PRDGenerator } from "./PRDGenerator";
+import { TaskMasterIntegration } from "./TaskMasterIntegration";
 import { cn } from "@/lib/utils";
 
 interface PlanningCanvasProps {
@@ -101,12 +102,8 @@ export const PlanningCanvas = ({ selectedProject, isOpen, onToggle, className }:
               <PRDGenerator />
             </TabsContent>
 
-            <TabsContent value="tasks" className="h-full m-0 p-4">
-              <div className="text-center text-muted-foreground">
-                <Target className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>Task Management Panel</p>
-                <p className="text-sm mt-1">Coming soon...</p>
-              </div>
+            <TabsContent value="tasks" className="h-full m-0 p-0">
+              <TaskMasterIntegration />
             </TabsContent>
 
             <TabsContent value="tools" className="h-full m-0 p-4">
