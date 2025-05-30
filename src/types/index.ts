@@ -11,6 +11,10 @@ export interface Agent {
   currentTask: string;
   progress: number;
   lastActive: string;
+  capabilities: string[];
+  specialization: string;
+  background: string;
+  description: string;
 }
 
 export interface Task {

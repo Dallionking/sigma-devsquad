@@ -31,7 +31,6 @@ export const DashboardGrids = ({ agents, onAgentSelect }: DashboardGridsProps) =
         </div>
         <div className="card-enhanced hover:shadow-lg transition-all duration-300">
           <EnhancedAgentOverview 
-            agents={agents}
             onAgentSelect={onAgentSelect}
           />
         </div>
