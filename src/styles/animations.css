@@ -1,0 +1,23 @@
+
+@layer components {
+  /* Enhanced animations */
+  .fade-in {
+    @apply animate-in fade-in-0 duration-300;
+  }
+
+  .slide-in-from-bottom {
+    @apply animate-in slide-in-from-bottom-4 duration-300;
+  }
+
+  .slide-in-from-right {
+    @apply animate-in slide-in-from-right-4 duration-300;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  .animate-pulse-subtle {
+    @apply animate-pulse;
+  }
+}

@@ -1,0 +1,48 @@
+
+@tailwind utilities;
+
+@layer utilities {
+  /* Enhanced responsive spacing */
+  .space-y-responsive {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+
+  .space-x-responsive {
+    @apply space-x-4 sm:space-x-6 lg:space-x-8;
+  }
+
+  /* Enhanced responsive padding */
+  .p-responsive {
+    @apply p-4 sm:p-6 lg:p-8 xl:p-12;
+  }
+
+  .px-responsive {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
+  .py-responsive {
+    @apply py-4 sm:py-6 lg:py-8 xl:py-12;
+  }
+
+  /* Enhanced responsive margins */
+  .m-responsive {
+    @apply m-4 sm:m-6 lg:m-8 xl:m-12;
+  }
+
+  .mx-responsive {
+    @apply mx-4 sm:mx-6 lg:mx-8 xl:px-12;
+  }
+
+  .my-responsive {
+    @apply my-4 sm:my-6 lg:my-8 xl:my-12;
+  }
+
+  /* Enhanced responsive widths */
+  .w-responsive-full {
+    @apply w-full max-w-7xl mx-auto;
+  }
+
+  .w-responsive-container {
+    @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
