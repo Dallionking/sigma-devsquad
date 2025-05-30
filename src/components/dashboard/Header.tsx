@@ -1,4 +1,3 @@
-
 import { Bell, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +7,8 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { Logo } from "@/components/branding/Logo";
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTasks } from "@/contexts/TaskContext";
+import { useMessages } from "@/contexts/MessageContext";
 
 interface HeaderProps {
   viewMode: ViewMode;
@@ -28,15 +29,57 @@ export const Header = ({
   const location = useLocation();
   const { darkMode, toggleDarkMode } = useTheme();
   const isMobile = useIsMobile();
+  const { tasks } = useTasks();
+  const { messages } = useMessages();
   
   const activeAgents = agents?.filter(agent => agent.status === "working").length || 0;
   const totalAgents = agents?.length || 0;
   
+  // Calculate notification counts for each tab
+  const getNotificationCounts = () => {
+    const pendingTasks = tasks?.filter(task => task.status === "pending").length || 0;
+    const inProgressTasks = tasks?.filter(task => task.status === "in-progress").length || 0;
+    const recentMessages = messages?.filter(message => {
+      const messageTime = new Date(message.timestamp).getTime();
+      const oneHourAgo = Date.now() - (60 * 60 * 1000);
+      return messageTime > oneHourAgo;
+    }).length || 0;
+    
+    return {
+      workflow: inProgressTasks,
+      communication: recentMessages,
+      tasks: pendingTasks,
+      messages: recentMessages
+    };
+  };
+
+  const notificationCounts = getNotificationCounts();
+  
   const viewModeConfig = {
-    workflow: { icon: GitBranch, label: "Workflow" },
-    communication: { icon: MessageSquare, label: "Communication" },
-    tasks: { icon: CheckSquare, label: "Tasks" },
-    messages: { icon: Activity, label: "Messages" }
+    workflow: { 
+      icon: GitBranch, 
+      label: "Workflow",
+      description: "Monitor agent activities and processes",
+      notifications: notificationCounts.workflow
+    },
+    communication: { 
+      icon: MessageSquare, 
+      label: "Communication",
+      description: "View agent interactions and messages", 
+      notifications: notificationCounts.communication
+    },
+    tasks: { 
+      icon: CheckSquare, 
+      label: "Tasks",
+      description: "Manage and track task progress",
+      notifications: notificationCounts.tasks
+    },
+    messages: { 
+      icon: Activity, 
+      label: "Messages",
+      description: "Inspect detailed message logs",
+      notifications: notificationCounts.messages
+    }
   };
 
   // Preserve all existing navigation states
@@ -91,22 +134,48 @@ export const Header = ({
             />
           </div>
           
-          {/* View Mode Selector */}
+          {/* Enhanced View Mode Selector */}
           {!isMobile && isDashboardPage && (
-            <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
+            <div className="flex items-center space-x-1 bg-muted/50 rounded-xl p-1 border border-border/50">
               {Object.entries(viewModeConfig).map(([mode, config]) => {
                 const Icon = config.icon;
+                const isActive = viewMode === mode;
+                const hasNotifications = config.notifications > 0;
+                
                 return (
-                  <Button
-                    key={mode}
-                    variant={viewMode === mode ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => onViewModeChange(mode as ViewMode)}
-                    className="h-8 px-3"
-                  >
-                    <Icon className="w-4 h-4 mr-2" />
-                    {config.label}
-                  </Button>
+                  <div key={mode} className="relative">
+                    <Button
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => onViewModeChange(mode as ViewMode)}
+                      className={`
+                        h-9 px-4 relative transition-all duration-200 group
+                        ${isActive 
+                          ? "bg-background shadow-sm border border-border/50 text-foreground" 
+                          : "hover:bg-background/50 text-muted-foreground hover:text-foreground"
+                        }
+                      `}
+                      title={config.description}
+                    >
+                      <Icon className="w-4 h-4 mr-2" />
+                      <span className="font-medium">{config.label}</span>
+                      
+                      {/* Notification Badge */}
+                      {hasNotifications && (
+                        <Badge 
+                          variant="destructive" 
+                          className="ml-2 px-1.5 py-0.5 text-xs min-w-5 h-5 flex items-center justify-center"
+                        >
+                          {config.notifications > 99 ? "99+" : config.notifications}
+                        </Badge>
+                      )}
+                    </Button>
+                    
+                    {/* Active Tab Indicator */}
+                    {isActive && (
+                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full" />
+                    )}
+                  </div>
                 );
               })}
             </div>
