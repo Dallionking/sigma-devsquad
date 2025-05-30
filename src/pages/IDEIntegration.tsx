@@ -9,6 +9,10 @@ import { TerminalTab } from "@/components/ide-integration/TerminalTab";
 import { ExecutionTab } from "@/components/ide-integration/ExecutionTab";
 import { SyncTab } from "@/components/ide-integration/SyncTab";
 import { IDEIntegrationFlow } from "@/components/ide-integration/IDEIntegrationFlow";
+import { InstallationGuideTab } from "@/components/ide-integration/InstallationGuideTab";
+import { BridgeApplicationTab } from "@/components/ide-integration/BridgeApplicationTab";
+import { ConnectionTestingTab } from "@/components/ide-integration/ConnectionTestingTab";
+import { EditorPreferencesTab } from "@/components/ide-integration/EditorPreferencesTab";
 
 const IDEIntegration = () => {
   const {
@@ -47,15 +51,39 @@ const IDEIntegration = () => {
 
         {/* Enhanced tabs with better responsive design */}
         <main id="main-content" role="main" aria-label="IDE Integration tools">
-          <Tabs defaultValue="flow" className="space-y-8">
+          <Tabs defaultValue="installation" className="space-y-8">
             {/* Enhanced tab navigation with scroll support on mobile */}
             <div className="relative">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1 bg-muted/50 p-1 rounded-xl h-auto">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-11 gap-1 bg-muted/50 p-1 rounded-xl h-auto">
+                <TabsTrigger 
+                  value="installation" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  <span className="hidden sm:inline">Installation</span><span className="sm:hidden">Install</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="bridge" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  Bridge
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="testing" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  Testing
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="preferences" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  <span className="hidden sm:inline">Preferences</span><span className="sm:hidden">Prefs</span>
+                </TabsTrigger>
                 <TabsTrigger 
                   value="flow" 
                   className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
                 >
-                  <span className="hidden sm:inline">Integration </span>Flow
+                  Flow
                 </TabsTrigger>
                 <TabsTrigger 
                   value="status" 
@@ -98,6 +126,22 @@ const IDEIntegration = () => {
 
             {/* Enhanced tab content with consistent spacing */}
             <div className="mt-8">
+              <TabsContent value="installation" className="space-y-6 fade-in">
+                <InstallationGuideTab />
+              </TabsContent>
+
+              <TabsContent value="bridge" className="space-y-6 fade-in">
+                <BridgeApplicationTab />
+              </TabsContent>
+
+              <TabsContent value="testing" className="space-y-6 fade-in">
+                <ConnectionTestingTab />
+              </TabsContent>
+
+              <TabsContent value="preferences" className="space-y-6 fade-in">
+                <EditorPreferencesTab />
+              </TabsContent>
+
               <TabsContent value="flow" className="space-y-6 fade-in">
                 <IDEIntegrationFlow />
               </TabsContent>
