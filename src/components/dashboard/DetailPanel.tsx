@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,7 @@ import {
   RotateCcw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface DetailPanelProps {
   selectedAgent: Agent | null;
@@ -33,6 +33,8 @@ export const DetailPanel = ({
   viewMode,
   agents 
 }: DetailPanelProps) => {
+  const navigate = useNavigate();
+
   const getAgentName = (agentType: string) => {
     const agent = agents.find(a => a.type === agentType);
     return agent?.name || agentType;
@@ -131,6 +133,7 @@ export const DetailPanel = ({
               variant="outline" 
               size="sm" 
               className="w-full justify-start"
+              onClick={() => navigate("/agent-configuration")}
             >
               <Settings className="w-4 h-4 mr-2" />
               Configure
