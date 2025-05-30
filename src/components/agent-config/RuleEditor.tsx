@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,8 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Trash2, Copy, ArrowRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plus, Trash2, Copy, ArrowRight, TestTube, Download, Upload, Sparkles } from "lucide-react";
 import { AgentType } from "@/pages/AgentConfiguration";
+import { RuleTemplateSelector } from "./RuleTemplateSelector";
+import { RuleTester } from "./RuleTester";
+import { RuleImportExport } from "./RuleImportExport";
 
 interface Rule {
   id: string;
@@ -97,6 +100,8 @@ const defaultRules: Record<AgentType, Rule[]> = {
 
 export const RuleEditor = ({ agentType, onConfigChange }: RuleEditorProps) => {
   const [rules, setRules] = useState<Rule[]>(defaultRules[agentType] || []);
+  const [activeDialog, setActiveDialog] = useState<"template" | "test" | "import-export" | null>(null);
+  const [testingRule, setTestingRule] = useState<Rule | null>(null);
 
   const addNewRule = () => {
     const newRule: Rule = {
@@ -131,6 +136,28 @@ export const RuleEditor = ({ agentType, onConfigChange }: RuleEditorProps) => {
     onConfigChange();
   };
 
+  const handleTemplateSelect = (template: any) => {
+    // In a real implementation, you would fetch the template rules
+    const templateRules: Rule[] = [
+      {
+        id: Date.now().toString(),
+        name: `${template.name} - Example Rule`,
+        condition: "template.condition === 'example'",
+        action: "execute_template_action",
+        priority: "medium",
+        enabled: true
+      }
+    ];
+    setRules([...rules, ...templateRules]);
+    setActiveDialog(null);
+    onConfigChange();
+  };
+
+  const handleRuleImport = (importedRules: Rule[]) => {
+    setRules([...rules, ...importedRules]);
+    onConfigChange();
+  };
+
   const enabledRulesCount = rules.filter(rule => rule.enabled).length;
 
   return (
@@ -148,6 +175,24 @@ export const RuleEditor = ({ agentType, onConfigChange }: RuleEditorProps) => {
               <Badge variant="secondary" className="bg-blue-50 text-blue-700">
                 {enabledRulesCount} active rules
               </Badge>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveDialog("template")}
+                className="flex items-center space-x-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Templates</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveDialog("import-export")}
+                className="flex items-center space-x-2"
+              >
+                <Download className="w-4 h-4" />
+                <span>Import/Export</span>
+              </Button>
               <Button onClick={addNewRule} size="sm" className="flex items-center space-x-2">
                 <Plus className="w-4 h-4" />
                 <span>Add Rule</span>
@@ -186,6 +231,17 @@ export const RuleEditor = ({ agentType, onConfigChange }: RuleEditorProps) => {
                           </Badge>
                         </div>
                         <div className="flex items-center space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setTestingRule(rule);
+                              setActiveDialog("test");
+                            }}
+                            className="text-blue-500 hover:text-blue-700"
+                          >
+                            <TestTube className="w-4 h-4" />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -272,6 +328,48 @@ export const RuleEditor = ({ agentType, onConfigChange }: RuleEditorProps) => {
           )}
         </CardContent>
       </Card>
+
+      {/* Dialogs */}
+      <Dialog open={activeDialog === "template"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Rule Templates</DialogTitle>
+          </DialogHeader>
+          <RuleTemplateSelector
+            onTemplateSelect={handleTemplateSelect}
+            onClose={() => setActiveDialog(null)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={activeDialog === "test"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Test Rule</DialogTitle>
+          </DialogHeader>
+          {testingRule && (
+            <RuleTester
+              ruleName={testingRule.name}
+              condition={testingRule.condition}
+              action={testingRule.action}
+              onClose={() => setActiveDialog(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={activeDialog === "import-export"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Import/Export Rules</DialogTitle>
+          </DialogHeader>
+          <RuleImportExport
+            rules={rules}
+            onImport={handleRuleImport}
+            onClose={() => setActiveDialog(null)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
