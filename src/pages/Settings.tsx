@@ -50,26 +50,43 @@ export const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Enhanced skip to main content for accessibility */}
+      <a 
+        href="#main-content" 
+        className="sr-only-focusable"
+        aria-label="Skip to main content"
+      >
+        Skip to main content
+      </a>
+
       <Header 
         viewMode="workflow" 
         onViewModeChange={() => {}}
         agents={mockAgents}
       />
       
-      <div className="bg-background text-foreground p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-card-foreground">Settings & Configuration</h1>
-              <p className="text-muted-foreground mt-2">Manage system preferences and configuration</p>
+      <div className="bg-background text-foreground container-responsive py-responsive fade-in">
+        <main id="main-content" className="max-w-6xl mx-auto space-y-responsive">
+          {/* Enhanced header section with better typography and spacing */}
+          <header className="text-center lg:text-left">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="heading-primary mb-4">
+                  Settings & Configuration
+                </h1>
+                <p className="text-muted-enhanced max-w-3xl">
+                  Manage system preferences and configuration options
+                </p>
+              </div>
+              <Badge variant="secondary" className="status-success flex items-center gap-2 self-start sm:self-center">
+                <Activity className="w-3 h-3" />
+                System Healthy
+              </Badge>
             </div>
-            <Badge variant="secondary" className="bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300">
-              <Activity className="w-3 h-3 mr-1" />
-              System Healthy
-            </Badge>
-          </div>
+          </header>
 
+          {/* Enhanced search bar with better responsive design */}
           <div className="w-full max-w-md">
             <SettingsSearchBar 
               onSearch={setSearchQuery}
@@ -77,76 +94,113 @@ export const Settings = () => {
             />
           </div>
 
-          <Tabs defaultValue="general" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6 bg-muted">
-              <TabsTrigger value="general" className="flex items-center space-x-2">
-                <SettingsIcon className="w-4 h-4" />
-                <span>General</span>
-              </TabsTrigger>
-              <TabsTrigger value="appearance" className="flex items-center space-x-2">
-                <Palette className="w-4 h-4" />
-                <span>Appearance</span>
-              </TabsTrigger>
-              <TabsTrigger value="performance" className="flex items-center space-x-2">
-                <Monitor className="w-4 h-4" />
-                <span>Performance</span>
-              </TabsTrigger>
-              <TabsTrigger value="security" className="flex items-center space-x-2">
-                <Shield className="w-4 h-4" />
-                <span>Security</span>
-              </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex items-center space-x-2">
-                <Bell className="w-4 h-4" />
-                <span>Notifications</span>
-              </TabsTrigger>
-              <TabsTrigger value="backup" className="flex items-center space-x-2">
-                <Database className="w-4 h-4" />
-                <span>Backup</span>
-              </TabsTrigger>
-            </TabsList>
+          {/* Enhanced tabs with better responsive design and animations */}
+          <Tabs defaultValue="general" className="space-y-responsive">
+            {/* Enhanced tab navigation with better mobile support */}
+            <div className="relative">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 bg-muted/50 p-1 rounded-xl h-auto">
+                <TabsTrigger 
+                  value="general" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md flex items-center gap-2"
+                >
+                  <SettingsIcon className="w-4 h-4" />
+                  <span className="hidden sm:inline">General</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="appearance" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md flex items-center gap-2"
+                >
+                  <Palette className="w-4 h-4" />
+                  <span className="hidden sm:inline">Appearance</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="performance" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md flex items-center gap-2"
+                >
+                  <Monitor className="w-4 h-4" />
+                  <span className="hidden sm:inline">Performance</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="security" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md flex items-center gap-2"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span className="hidden sm:inline">Security</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="notifications" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md flex items-center gap-2"
+                >
+                  <Bell className="w-4 h-4" />
+                  <span className="hidden sm:inline">Notifications</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="backup" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md flex items-center gap-2"
+                >
+                  <Database className="w-4 h-4" />
+                  <span className="hidden sm:inline">Backup</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-            <TabsContent value="general" className="space-y-6">
-              <GeneralSettings searchQuery={searchQuery} />
-            </TabsContent>
+            {/* Enhanced tab content with consistent spacing and animations */}
+            <div className="mt-8">
+              <TabsContent value="general" className="space-y-6 fade-in">
+                <GeneralSettings searchQuery={searchQuery} />
+              </TabsContent>
 
-            <TabsContent value="appearance" className="space-y-6">
-              <AppearanceSettings searchQuery={searchQuery} />
-            </TabsContent>
+              <TabsContent value="appearance" className="space-y-6 fade-in">
+                <AppearanceSettings searchQuery={searchQuery} />
+              </TabsContent>
 
-            <TabsContent value="performance" className="space-y-6">
-              <PerformanceSettings 
-                performanceMode={performanceMode} 
-                setPerformanceMode={setPerformanceMode}
-                searchQuery={searchQuery}
-              />
-            </TabsContent>
+              <TabsContent value="performance" className="space-y-6 fade-in">
+                <PerformanceSettings 
+                  performanceMode={performanceMode} 
+                  setPerformanceMode={setPerformanceMode}
+                  searchQuery={searchQuery}
+                />
+              </TabsContent>
 
-            <TabsContent value="security" className="space-y-6">
-              <SecuritySettings searchQuery={searchQuery} />
-            </TabsContent>
+              <TabsContent value="security" className="space-y-6 fade-in">
+                <SecuritySettings searchQuery={searchQuery} />
+              </TabsContent>
 
-            <TabsContent value="notifications" className="space-y-6">
-              <NotificationSettings 
-                notifications={notifications} 
-                setNotifications={setNotifications}
-                searchQuery={searchQuery}
-              />
-            </TabsContent>
+              <TabsContent value="notifications" className="space-y-6 fade-in">
+                <NotificationSettings 
+                  notifications={notifications} 
+                  setNotifications={setNotifications}
+                  searchQuery={searchQuery}
+                />
+              </TabsContent>
 
-            <TabsContent value="backup" className="space-y-6">
-              <BackupSettings 
-                autoBackup={autoBackup} 
-                setAutoBackup={setAutoBackup}
-                searchQuery={searchQuery}
-              />
-            </TabsContent>
+              <TabsContent value="backup" className="space-y-6 fade-in">
+                <BackupSettings 
+                  autoBackup={autoBackup} 
+                  setAutoBackup={setAutoBackup}
+                  searchQuery={searchQuery}
+                />
+              </TabsContent>
+            </div>
           </Tabs>
 
-          <div className="flex justify-end space-x-4">
-            <Button variant="outline" onClick={handleResetAll}>Reset to Defaults</Button>
-            <Button onClick={handleSaveAll}>Save All Changes</Button>
+          {/* Enhanced action buttons with better responsive design */}
+          <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t border-border">
+            <Button 
+              variant="outline" 
+              onClick={handleResetAll}
+              className="btn-secondary-enhanced w-full sm:w-auto"
+            >
+              Reset to Defaults
+            </Button>
+            <Button 
+              onClick={handleSaveAll}
+              className="btn-primary-enhanced w-full sm:w-auto"
+            >
+              Save All Changes
+            </Button>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

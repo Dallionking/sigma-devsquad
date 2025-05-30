@@ -18,8 +18,8 @@ const Index = () => {
   const [showFooter, setShowFooter] = useState(true);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col transition-all duration-300 ease-in-out">
-      {/* Skip to main content for accessibility */}
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
+      {/* Enhanced skip to main content for accessibility */}
       <a 
         href="#main-content" 
         className="sr-only-focusable"
@@ -28,12 +28,14 @@ const Index = () => {
         Skip to main content
       </a>
       
+      {/* Enhanced header with better responsive design */}
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
         agents={mockAgents}
       />
       
+      {/* Enhanced main layout with improved responsive behavior */}
       <div className="flex flex-1 overflow-hidden">
         <AgentSidebar 
           agents={mockAgents}
@@ -41,14 +43,14 @@ const Index = () => {
           onAgentSelect={setSelectedAgent}
         />
         
-        {/* Enhanced Main Content Area with better responsive design */}
+        {/* Enhanced main content area with better responsive design and accessibility */}
         <main 
           id="main-content"
           className="flex-1 flex flex-col min-w-0 bg-gradient-to-br from-background via-background to-muted/20"
           role="main"
           aria-label="Main dashboard content"
         >
-          {/* Dashboard Overview Section - Enhanced with better spacing */}
+          {/* Enhanced dashboard overview section with improved spacing and transitions */}
           {viewMode === "workflow" && (
             <div className="fade-in">
               <DashboardOverview 
@@ -58,7 +60,7 @@ const Index = () => {
             </div>
           )}
           
-          {/* Main Workflow Area with enhanced transitions */}
+          {/* Enhanced main workflow area with better transitions and responsive design */}
           <div className="flex-1 transition-all duration-300 ease-in-out">
             <MainWorkflowArea 
               viewMode={viewMode}
@@ -75,6 +77,7 @@ const Index = () => {
           </div>
         </main>
         
+        {/* Enhanced detail panel with improved responsive behavior */}
         <DetailPanel 
           selectedAgent={selectedAgent}
           selectedTask={selectedTask}
@@ -84,7 +87,7 @@ const Index = () => {
         />
       </div>
       
-      {/* Enhanced footer with smooth transitions */}
+      {/* Enhanced footer with smooth animations and better responsive design */}
       {showFooter && (
         <div className="slide-in-from-bottom">
           <SystemFooter 
@@ -94,9 +97,11 @@ const Index = () => {
         </div>
       )}
       
-      {/* Enhanced floating action button */}
+      {/* Enhanced floating action button with better positioning and animations */}
       <div className="fixed bottom-6 right-6 z-50">
-        <AgentCreationButton />
+        <div className="hover-scale">
+          <AgentCreationButton />
+        </div>
       </div>
     </div>
   );

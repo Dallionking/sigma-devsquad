@@ -14,21 +14,21 @@ export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBan
       icon: CheckCircle, 
       color: "text-green-600 dark:text-green-400", 
       bg: "bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950 dark:to-green-900",
-      badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+      badge: "status-success",
       pulse: "animate-pulse-subtle"
     },
     connecting: { 
       icon: AlertCircle, 
       color: "text-yellow-600 dark:text-yellow-400", 
       bg: "bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-950 dark:to-yellow-900",
-      badge: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+      badge: "status-warning",
       pulse: "animate-pulse"
     },
     disconnected: { 
       icon: XCircle, 
       color: "text-red-600 dark:text-red-400", 
       bg: "bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900",
-      badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+      badge: "status-error",
       pulse: ""
     }
   };
@@ -39,16 +39,16 @@ export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBan
 
   return (
     <Card className={`card-enhanced border-2 ${statusConfig.bg} ${statusConfig.pulse} transition-all duration-300`}>
-      <CardContent className="p-6 sm:p-8">
+      <CardContent className="p-responsive">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-          {/* Status Information */}
+          {/* Enhanced status information section */}
           <div className="flex items-start sm:items-center space-x-4 flex-1">
-            {/* Status Icon */}
-            <div className={`p-3 rounded-full bg-background/80 backdrop-blur-sm shadow-md ${statusConfig.pulse}`}>
+            {/* Enhanced status icon with better styling */}
+            <div className={`p-3 rounded-full bg-background/80 backdrop-blur-sm shadow-md ${statusConfig.pulse} hover-scale`}>
               <StatusIcon className={`w-6 h-6 sm:w-7 sm:h-7 ${statusConfig.color}`} />
             </div>
             
-            {/* Status Details */}
+            {/* Enhanced status details with better typography */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-2">
                 <h3 className="heading-secondary text-xl sm:text-2xl text-foreground">
@@ -75,7 +75,7 @@ export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBan
             </div>
           </div>
           
-          {/* Action Controls */}
+          {/* Enhanced action controls with better responsive design */}
           <div className="flex items-center space-x-3 w-full sm:w-auto">
             <Badge 
               variant={connectionStatus === "connected" ? "default" : "secondary"}
@@ -87,7 +87,7 @@ export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBan
             <Button 
               variant="outline" 
               size="sm"
-              className="btn-secondary-enhanced gap-2 min-w-fit"
+              className="btn-secondary-enhanced gap-2 min-w-fit hover-scale"
               aria-label={`Configure ${connectionStatus} IDE connection`}
             >
               <Settings className="w-4 h-4" />
@@ -96,9 +96,9 @@ export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBan
           </div>
         </div>
         
-        {/* Additional Status Information */}
+        {/* Enhanced additional status information with better styling */}
         {connectionStatus === 'connecting' && (
-          <div className="mt-4 p-3 bg-background/50 rounded-lg border border-border/50">
+          <div className="mt-4 p-3 bg-background/50 rounded-lg border border-border/50 fade-in">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <div className="flex space-x-1">
                 <div className="w-2 h-2 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -111,7 +111,7 @@ export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBan
         )}
         
         {connectionStatus === 'disconnected' && (
-          <div className="mt-4 p-3 bg-background/50 rounded-lg border border-border/50">
+          <div className="mt-4 p-3 bg-background/50 rounded-lg border border-border/50 fade-in">
             <p className="text-sm text-muted-foreground">
               Please check your IDE extension and try reconnecting.
             </p>
