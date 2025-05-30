@@ -193,7 +193,9 @@ export const VisualTaskBreakdown = ({
 
           <div className="flex items-center gap-2 ml-auto">
             {task.dependencies && task.dependencies.length > 0 && (
-              <GitBranch className="w-3 h-3 text-muted-foreground" title="Has dependencies" />
+              <div title="Has dependencies">
+                <GitBranch className="w-3 h-3 text-muted-foreground" />
+              </div>
             )}
             
             {task.assignedAgent && (
