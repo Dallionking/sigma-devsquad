@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { PlanningDialogManager } from "@/components/planning-agent/PlanningDialogManager";
 import { PlanningAgentHeader } from "@/components/planning-agent/PlanningAgentHeader";
-import { PlanningAgentSidebar } from "@/components/planning-agent/PlanningAgentSidebar";
-import { PlanningAgentTabs } from "@/components/planning-agent/PlanningAgentTabs";
+import { PlanningCanvasLayout } from "@/components/planning-agent/PlanningCanvasLayout";
 import { Header } from "@/components/dashboard/Header";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
@@ -62,10 +61,9 @@ const PlanningAgent = () => {
           onTrackWorkflow={() => setShowWorkflowTracker(true)}
         />
 
-        {/* Enhanced grid layout with better responsive design */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-responsive">
-          <PlanningAgentSidebar selectedProject={currentProject?.id || "ai-workforce"} />
-          <PlanningAgentTabs onWorkflowAction={handleWorkflowAction} />
+        {/* New Canvas-based Layout */}
+        <div className="h-[calc(100vh-200px)] min-h-[600px]">
+          <PlanningCanvasLayout selectedProject={currentProject?.id || "ai-workforce"} />
         </div>
 
         {/* Enhanced Dialog Manager */}
