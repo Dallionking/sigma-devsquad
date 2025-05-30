@@ -46,18 +46,21 @@ export const ResponsiveSpacing = ({
   gap = 'none',
   direction = 'both'
 }: ResponsiveSpacingProps) => {
-  const directionClasses = {
-    vertical: 'flex flex-col',
-    horizontal: 'flex flex-row',
-    both: 'space-y-responsive'
+  const getDirectionClasses = () => {
+    if (direction === 'vertical' && gap !== 'none') {
+      return `flex flex-col ${gapClasses[gap]}`;
+    }
+    if (direction === 'horizontal' && gap !== 'none') {
+      return `flex flex-row ${gapClasses[gap]}`;
+    }
+    return '';
   };
 
   return (
     <div className={cn(
       paddingClasses[padding],
       marginClasses[margin],
-      gap !== 'none' && gapClasses[gap],
-      direction !== 'both' && directionClasses[direction],
+      getDirectionClasses(),
       className
     )}>
       {children}
@@ -65,7 +68,7 @@ export const ResponsiveSpacing = ({
   );
 };
 
-// Specialized spacing components
+// Simplified spacing components
 export const Section = ({ 
   children, 
   className,
@@ -75,12 +78,14 @@ export const Section = ({
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }) => (
-  <ResponsiveSpacing
-    padding={size}
-    className={className}
-  >
+  <div className={cn(
+    size === 'sm' && 'p-3 sm:p-4',
+    size === 'md' && 'p-4 sm:p-6',
+    size === 'lg' && 'p-6 sm:p-8',
+    className
+  )}>
     {children}
-  </ResponsiveSpacing>
+  </div>
 );
 
 export const Stack = ({ 
@@ -92,11 +97,15 @@ export const Stack = ({
   className?: string;
   gap?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }) => (
-  <ResponsiveSpacing
-    direction="vertical"
-    gap={gap}
-    className={className}
-  >
+  <div className={cn(
+    'flex flex-col',
+    gap === 'xs' && 'gap-2',
+    gap === 'sm' && 'gap-3',
+    gap === 'md' && 'gap-4',
+    gap === 'lg' && 'gap-6',
+    gap === 'xl' && 'gap-8',
+    className
+  )}>
     {children}
-  </ResponsiveSpacing>
+  </div>
 );

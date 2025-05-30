@@ -21,9 +21,9 @@ const gapClasses = {
 };
 
 const variantClasses = {
-  dashboard: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+  dashboard: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
   content: 'grid-cols-1 lg:grid-cols-2',
-  cards: 'grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
+  cards: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
   list: 'grid-cols-1'
 };
 
@@ -46,11 +46,9 @@ export const ResponsiveLayoutGrid = ({
       const baseClass = 'grid-cols-1';
       const responsiveClasses = [];
       
-      if (maxCols >= 2) responsiveClasses.push('xs:grid-cols-2');
-      if (maxCols >= 3) responsiveClasses.push('sm:grid-cols-3');
-      if (maxCols >= 4) responsiveClasses.push('md:grid-cols-4');
-      if (maxCols >= 5) responsiveClasses.push('lg:grid-cols-5');
-      if (maxCols >= 6) responsiveClasses.push('xl:grid-cols-6');
+      if (maxCols >= 2) responsiveClasses.push('sm:grid-cols-2');
+      if (maxCols >= 3) responsiveClasses.push('md:grid-cols-3');
+      if (maxCols >= 4) responsiveClasses.push('lg:grid-cols-4');
       
       return `${baseClass} ${responsiveClasses.join(' ')}`;
     }
@@ -63,7 +61,6 @@ export const ResponsiveLayoutGrid = ({
       'grid w-full',
       getGridClasses(),
       gapClasses[gap],
-      isMobile && 'px-2',
       className
     )}>
       {children}
@@ -71,11 +68,11 @@ export const ResponsiveLayoutGrid = ({
   );
 };
 
-// Specialized grid for different dashboard sections
+// Simplified grid components
 export const DashboardGrid = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <ResponsiveLayoutGrid
     variant="dashboard"
-    gap="lg"
+    gap="md"
     className={className}
   >
     {children}

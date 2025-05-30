@@ -2,7 +2,6 @@
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { ViewModeHeader } from "./ViewModeHeader";
 import { MainWorkflowContent } from "./MainWorkflowContent";
-import { ResponsiveSpacing } from "@/components/layout/ResponsiveSpacing";
 
 interface MainWorkflowAreaProps {
   viewMode: ViewMode;
@@ -31,32 +30,30 @@ export const MainWorkflowArea = ({
 }: MainWorkflowAreaProps) => {
   return (
     <div className="flex-1 bg-background overflow-hidden min-h-0">
-      <ResponsiveSpacing padding="sm" className="h-full">
-        <div className="h-full flex flex-col min-h-0">
-          <div className="flex-shrink-0">
-            <ViewModeHeader 
-              viewMode={viewMode}
-              agents={agents}
-              tasks={tasks}
-              messages={messages}
-            />
-          </div>
-          <div className="flex-1 min-h-0 mt-3 sm:mt-4">
-            <MainWorkflowContent
-              viewMode={viewMode}
-              agents={agents}
-              tasks={tasks}
-              messages={messages}
-              selectedAgent={selectedAgent}
-              selectedTask={selectedTask}
-              selectedMessage={selectedMessage}
-              onAgentSelect={onAgentSelect}
-              onTaskSelect={onTaskSelect}
-              onMessageSelect={onMessageSelect}
-            />
-          </div>
+      <div className="h-full flex flex-col min-h-0 p-4 sm:p-6">
+        <div className="flex-shrink-0">
+          <ViewModeHeader 
+            viewMode={viewMode}
+            agents={agents}
+            tasks={tasks}
+            messages={messages}
+          />
         </div>
-      </ResponsiveSpacing>
+        <div className="flex-1 min-h-0 mt-4">
+          <MainWorkflowContent
+            viewMode={viewMode}
+            agents={agents}
+            tasks={tasks}
+            messages={messages}
+            selectedAgent={selectedAgent}
+            selectedTask={selectedTask}
+            selectedMessage={selectedMessage}
+            onAgentSelect={onAgentSelect}
+            onTaskSelect={onTaskSelect}
+            onMessageSelect={onMessageSelect}
+          />
+        </div>
+      </div>
     </div>
   );
 };

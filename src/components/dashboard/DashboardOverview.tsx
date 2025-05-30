@@ -2,7 +2,6 @@
 import { DashboardHeader } from "./DashboardHeader";
 import { DashboardGrids } from "./DashboardGrids";
 import { Agent } from "@/types";
-import { ResponsiveContainer } from "@/components/layout/ResponsiveContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardOverviewProps {
@@ -15,12 +14,15 @@ export const DashboardOverview = ({ agents, onAgentSelect }: DashboardOverviewPr
   
   return (
     <div className="border-b border-border bg-card/50 backdrop-blur-sm">
-      <ResponsiveContainer padding={isMobile ? "sm" : "md"}>
+      <div className={cn(
+        "w-full mx-auto",
+        isMobile ? "px-4 py-3" : "px-4 sm:px-6 lg:px-8 py-4"
+      )}>
         <div className="space-y-4">
           <DashboardHeader />
           <DashboardGrids agents={agents} onAgentSelect={onAgentSelect} />
         </div>
-      </ResponsiveContainer>
+      </div>
     </div>
   );
 };
