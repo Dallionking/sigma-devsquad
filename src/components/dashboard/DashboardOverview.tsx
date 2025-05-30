@@ -15,9 +15,11 @@ export const DashboardOverview = ({ agents, onAgentSelect }: DashboardOverviewPr
   
   return (
     <div className="border-b border-border bg-card/50 backdrop-blur-sm">
-      <ResponsiveContainer padding={isMobile ? "sm" : "lg"}>
-        <DashboardHeader />
-        <DashboardGrids agents={agents} onAgentSelect={onAgentSelect} />
+      <ResponsiveContainer padding={isMobile ? "sm" : "md"}>
+        <div className="space-y-4">
+          <DashboardHeader />
+          <DashboardGrids agents={agents} onAgentSelect={onAgentSelect} />
+        </div>
       </ResponsiveContainer>
     </div>
   );

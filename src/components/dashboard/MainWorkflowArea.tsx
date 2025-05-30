@@ -31,7 +31,7 @@ export const MainWorkflowArea = ({
 }: MainWorkflowAreaProps) => {
   return (
     <div className="flex-1 bg-background overflow-hidden min-h-0">
-      <ResponsiveSpacing padding="md" className="h-full">
+      <ResponsiveSpacing padding="sm" className="h-full">
         <div className="h-full flex flex-col min-h-0">
           <div className="flex-shrink-0">
             <ViewModeHeader 
@@ -41,7 +41,7 @@ export const MainWorkflowArea = ({
               messages={messages}
             />
           </div>
-          <div className="flex-1 min-h-0 mt-4 sm:mt-6">
+          <div className="flex-1 min-h-0 mt-3 sm:mt-4">
             <MainWorkflowContent
               viewMode={viewMode}
               agents={agents}

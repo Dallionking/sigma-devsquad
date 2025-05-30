@@ -73,7 +73,7 @@ const Index = () => {
       {/* Main layout with responsive behavior */}
       <div className="flex flex-1 overflow-hidden">
         {/* Collapsible Agent Sidebar */}
-        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-72'}`}>
+        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
           <AgentSidebar 
             agents={agents || []}
             selectedAgent={selectedAgent}
@@ -90,9 +90,9 @@ const Index = () => {
           role="main"
           aria-label="Main dashboard content"
         >
-          {/* Dashboard overview section - only show in workflow mode */}
+          {/* Dashboard overview section - only show in workflow mode - more compact */}
           {viewMode === "workflow" && (
-            <div className="animate-in fade-in-50 duration-300">
+            <div className="animate-in fade-in-50 duration-300 flex-shrink-0">
               <DashboardOverview 
                 agents={agents || []}
                 onAgentSelect={setSelectedAgent}
@@ -119,7 +119,7 @@ const Index = () => {
         
         {/* Context-aware Detail Panel - only show when there's a selection */}
         {hasSelection && (
-          <div className="w-80 transition-all duration-300 animate-in slide-in-from-right">
+          <div className="w-80 transition-all duration-300 animate-in slide-in-from-right flex-shrink-0">
             <DetailPanel 
               selectedAgent={selectedAgent}
               selectedTask={selectedTask}
@@ -134,7 +134,7 @@ const Index = () => {
       
       {/* Enhanced footer with smooth animations */}
       {showFooter && (
-        <div className="animate-in slide-in-from-bottom duration-300">
+        <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0">
           <SystemFooter 
             onToggle={() => setShowFooter(!showFooter)}
             messages={messages || []}

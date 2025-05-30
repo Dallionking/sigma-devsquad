@@ -69,16 +69,16 @@ export const ViewModeHeader = ({ viewMode, agents, tasks, messages }: ViewModeHe
 
     return (
       <div className="border-b border-border/50">
-        <div className={`flex flex-col gap-4 ${isMobile ? 'pb-3' : 'pb-4'}`}>
-          {/* Header content */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
-              <div className="flex-shrink-0 p-2 sm:p-3 bg-primary/10 rounded-lg sm:rounded-xl border border-primary/20">
-                <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+        <div className={`flex flex-col gap-3 ${isMobile ? 'pb-2' : 'pb-3'}`}>
+          {/* Compact header content */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
+              <div className="flex-shrink-0 p-1.5 sm:p-2 bg-primary/10 rounded-lg border border-primary/20">
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               </div>
               <div className="min-w-0 flex-1">
                 <ResponsiveText
-                  variant="heading"
+                  variant="subheading"
                   weight="bold"
                   className="text-foreground"
                   truncate={isMobile ? 1 : false}
@@ -86,8 +86,8 @@ export const ViewModeHeader = ({ viewMode, agents, tasks, messages }: ViewModeHe
                   {config.title}
                 </ResponsiveText>
                 <ResponsiveText
-                  variant="body"
-                  className="text-muted-foreground mt-1"
+                  variant="caption"
+                  className="text-muted-foreground mt-0.5"
                   truncate={isMobile ? 2 : false}
                 >
                   {config.subtitle}
@@ -95,26 +95,26 @@ export const ViewModeHeader = ({ viewMode, agents, tasks, messages }: ViewModeHe
               </div>
             </div>
             
-            {/* Stats and live indicator */}
-            <div className="flex flex-row sm:flex-col lg:flex-row items-start sm:items-end lg:items-center gap-3 sm:gap-4 flex-shrink-0">
-              <Card className={`px-3 py-2 sm:px-4 bg-card/50 border-border/50 ${isMobile ? 'flex-1' : ''}`}>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="text-lg sm:text-2xl font-bold text-primary leading-none">
+            {/* Compact stats and live indicator */}
+            <div className="flex flex-row items-center gap-2 sm:gap-3 flex-shrink-0">
+              <Card className={`px-2 py-1.5 sm:px-3 sm:py-2 bg-card/50 border-border/50 ${isMobile ? 'flex-1' : ''}`}>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="text-base sm:text-lg font-bold text-primary leading-none">
                     {config.stats.active}
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground min-w-0">
+                  <div className="text-xs text-muted-foreground min-w-0">
                     <div className="leading-tight">of {config.stats.total}</div>
-                    <div className="leading-tight truncate">{config.stats.label}</div>
+                    <div className="leading-tight truncate text-xs">{config.stats.label}</div>
                   </div>
                 </div>
               </Card>
               
               <Badge 
                 variant="secondary" 
-                className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 whitespace-nowrap flex-shrink-0"
+                className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 whitespace-nowrap flex-shrink-0 text-xs px-2 py-1"
               >
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
-                {isMobile ? "Live" : "Live Updates"}
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse" />
+                Live
               </Badge>
             </div>
           </div>
