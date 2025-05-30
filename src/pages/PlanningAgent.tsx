@@ -9,7 +9,7 @@ import { TaskMasterIntegration } from "@/components/planning-agent/TaskMasterInt
 import { WorkflowVisualization } from "@/components/planning-agent/WorkflowVisualization";
 import { WorkflowTemplates } from "@/components/planning-agent/WorkflowTemplates";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, FileText, Search, Layers, CheckSquare, Workflow, FileTemplate } from "lucide-react";
+import { MessageSquare, FileText, Search, Layers, CheckSquare, Workflow, File } from "lucide-react";
 import { Agent } from "@/pages/Index";
 
 export const PlanningAgent = () => {
@@ -85,7 +85,7 @@ export const PlanningAgent = () => {
                     <span className="text-xs">Workflow</span>
                   </TabsTrigger>
                   <TabsTrigger value="templates" className="flex flex-col items-center space-y-1 p-2">
-                    <FileTemplate className="w-4 h-4" />
+                    <File className="w-4 h-4" />
                     <span className="text-xs">Templates</span>
                   </TabsTrigger>
                   <TabsTrigger value="tasks" className="flex flex-col items-center space-y-1 p-2">
