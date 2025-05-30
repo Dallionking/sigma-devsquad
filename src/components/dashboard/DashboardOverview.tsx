@@ -3,6 +3,7 @@ import { DashboardHeader } from "./DashboardHeader";
 import { DashboardGrids } from "./DashboardGrids";
 import { Agent } from "@/types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface DashboardOverviewProps {
   agents: Agent[];
