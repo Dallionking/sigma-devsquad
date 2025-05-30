@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { ChatInterface } from "@/components/planning-agent/ChatInterface";
@@ -8,13 +9,15 @@ import { FeatureBreakdown } from "@/components/planning-agent/FeatureBreakdown";
 import { TaskMasterIntegration } from "@/components/planning-agent/TaskMasterIntegration";
 import { WorkflowVisualization } from "@/components/planning-agent/WorkflowVisualization";
 import { WorkflowTemplates } from "@/components/planning-agent/WorkflowTemplates";
+import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, FileText, Search, Layers, CheckSquare, Workflow, File } from "lucide-react";
-import { Agent } from "@/pages/Index";
+import { MessageSquare, FileText, Search, Layers, CheckSquare, Workflow, File, Network } from "lucide-react";
+import { Agent, Message } from "@/pages/Index";
 
 export const PlanningAgent = () => {
   const [selectedProject, setSelectedProject] = useState("current-project");
   const [activeTab, setActiveTab] = useState("chat");
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   // Mock agents data for header
   const mockAgents: Agent[] = [
@@ -35,6 +38,26 @@ export const PlanningAgent = () => {
       currentTask: "Ready for research tasks",
       progress: 0,
       lastActive: new Date().toISOString()
+    }
+  ];
+
+  // Mock messages data
+  const mockMessages: Message[] = [
+    {
+      id: "1",
+      from: "planning",
+      to: "documentation",
+      content: "Please research user authentication best practices for our new module.",
+      timestamp: new Date().toISOString(),
+      type: "request"
+    },
+    {
+      id: "2",
+      from: "documentation",
+      to: "planning",
+      content: "Research complete. JWT with refresh tokens and OAuth2 integration recommended.",
+      timestamp: new Date().toISOString(),
+      type: "response"
     }
   ];
 
@@ -67,7 +90,7 @@ export const PlanningAgent = () => {
             {/* Tabbed Side Panel */}
             <div className="w-96 border-l border-border bg-card">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-6 rounded-none border-b border-border">
+                <TabsList className="grid w-full grid-cols-7 rounded-none border-b border-border">
                   <TabsTrigger value="chat" className="flex flex-col items-center space-y-1 p-2">
                     <MessageSquare className="w-4 h-4" />
                     <span className="text-xs">Context</span>
@@ -91,6 +114,10 @@ export const PlanningAgent = () => {
                   <TabsTrigger value="tasks" className="flex flex-col items-center space-y-1 p-2">
                     <CheckSquare className="w-4 h-4" />
                     <span className="text-xs">Tasks</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="communication" className="flex flex-col items-center space-y-1 p-2">
+                    <Network className="w-4 h-4" />
+                    <span className="text-xs">Comm</span>
                   </TabsTrigger>
                 </TabsList>
 
@@ -117,6 +144,15 @@ export const PlanningAgent = () => {
 
                   <TabsContent value="tasks" className="h-full m-0">
                     <TaskMasterIntegration />
+                  </TabsContent>
+
+                  <TabsContent value="communication" className="h-full m-0 p-4 overflow-y-auto">
+                    <AdvancedCommunicationPanel
+                      agents={mockAgents}
+                      messages={mockMessages}
+                      selectedMessage={selectedMessage}
+                      onMessageSelect={setSelectedMessage}
+                    />
                   </TabsContent>
                 </div>
               </Tabs>
