@@ -11,7 +11,7 @@ import {
   FolderOpen, 
   Terminal, 
   Play, 
-  Sync,
+  RefreshCw,
   CheckCircle,
   AlertCircle,
   XCircle
@@ -118,7 +118,7 @@ const IDEIntegration = () => {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-2">
-                    <Sync className="w-5 h-5 text-orange-600" />
+                    <RefreshCw className="w-5 h-5 text-orange-600" />
                     <div>
                       <div className="text-2xl font-bold">2m ago</div>
                       <div className="text-sm text-muted-foreground">Last Sync</div>
@@ -252,7 +252,7 @@ const IDEIntegration = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Sync className="w-5 h-5" />
+                  <RefreshCw className="w-5 h-5" />
                   Synchronization
                 </CardTitle>
               </CardHeader>
@@ -262,7 +262,7 @@ const IDEIntegration = () => {
                   <Badge variant="default">Active</Badge>
                 </div>
                 <Button>
-                  <Sync className="w-4 h-4 mr-2" />
+                  <RefreshCw className="w-4 h-4 mr-2" />
                   Force Sync Now
                 </Button>
               </CardContent>
