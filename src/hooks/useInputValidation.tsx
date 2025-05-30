@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 interface ValidationRules {
   required?: boolean;
@@ -13,6 +13,7 @@ interface UseInputValidationOptions {
   rules: ValidationRules;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  debounceMs?: number;
 }
 
 export const useInputValidation = (
@@ -22,6 +23,7 @@ export const useInputValidation = (
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout>();
 
   const validate = useCallback((val: string) => {
     const { rules } = options;
@@ -54,12 +56,19 @@ export const useInputValidation = (
     
     if (options.validateOnChange) {
       setIsValidating(true);
-      setTimeout(() => {
+      
+      // Clear existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      
+      // Set new timeout with debounce
+      debounceTimeoutRef.current = setTimeout(() => {
         setError(validate(newValue));
         setIsValidating(false);
-      }, 300);
+      }, options.debounceMs || 300);
     }
-  }, [validate, options.validateOnChange]);
+  }, [validate, options.validateOnChange, options.debounceMs]);
 
   const handleBlur = useCallback(() => {
     if (options.validateOnBlur) {
@@ -67,12 +76,28 @@ export const useInputValidation = (
     }
   }, [validate, value, options.validateOnBlur]);
 
+  const forceValidate = useCallback(() => {
+    const validationError = validate(value);
+    setError(validationError);
+    return !validationError;
+  }, [validate, value]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return {
     value,
     error,
     isValidating,
     handleChange,
     handleBlur,
-    validate: (val: string) => validate(val)
+    validate: (val: string) => validate(val),
+    forceValidate
   };
 };

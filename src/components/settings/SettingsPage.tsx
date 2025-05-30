@@ -50,8 +50,8 @@ export const SettingsPage = () => {
     enableArrowNavigation: !isMobile, // Disable arrow navigation on mobile
     enableHomeEnd: !isMobile,
     enableTabNavigation: true,
-    onArrowDown: focusNext,
-    onArrowUp: focusPrevious,
+    onArrowDown: () => focusNext(),
+    onArrowUp: () => focusPrevious(),
     onTab: (direction) => {
       // Save focus when tabbing to help with navigation
       saveFocus();
