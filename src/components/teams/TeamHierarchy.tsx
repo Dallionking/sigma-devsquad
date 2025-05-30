@@ -8,6 +8,8 @@ import { Team, AgentProfile } from "@/types/teams";
 import { ChevronDown, ChevronRight, Users, Crown, Plus } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { TeamCreationDialog } from "./TeamCreationDialog";
+import { AgentAdditionDialog } from "./AgentAdditionDialog";
 
 interface TeamHierarchyProps {
   onTeamSelect: (team: Team) => void;
@@ -75,10 +77,12 @@ export const TeamHierarchy = ({
             <Users className="w-5 h-5" />
             Team Hierarchy
           </CardTitle>
-          <Button size="sm" variant="outline">
-            <Plus className="w-4 h-4 mr-1" />
-            Add Team
-          </Button>
+          <TeamCreationDialog>
+            <Button size="sm" variant="outline">
+              <Plus className="w-4 h-4 mr-1" />
+              Add Team
+            </Button>
+          </TeamCreationDialog>
         </div>
       </CardHeader>
       
@@ -185,14 +189,16 @@ export const TeamHierarchy = ({
                     
                     {/* Add Member Button */}
                     <div className="p-2 mx-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="w-full justify-start text-muted-foreground"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Member
-                      </Button>
+                      <AgentAdditionDialog teamId={team.id}>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full justify-start text-muted-foreground"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Member
+                        </Button>
+                      </AgentAdditionDialog>
                     </div>
                   </div>
                 )}

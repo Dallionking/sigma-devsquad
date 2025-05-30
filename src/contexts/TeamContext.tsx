@@ -80,15 +80,17 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
   const createAgentProfile = (profileData: Omit<AgentProfile, 'id'>): AgentProfile => {
     const newProfile: AgentProfile = {
       ...profileData,
-      id: `agent_${Date.now()}`
+      id: `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
     setAgentProfiles(prev => [...prev, newProfile]);
     
     // Add agent to team member list
     if (profileData.teamId) {
-      updateTeam(profileData.teamId, {
-        memberIds: [...(teams.find(t => t.id === profileData.teamId)?.memberIds || []), newProfile.id]
-      });
+      setTeams(prev => prev.map(team => 
+        team.id === profileData.teamId 
+          ? { ...team, memberIds: [...team.memberIds, newProfile.id] }
+          : team
+      ));
     }
     
     return newProfile;
@@ -106,15 +108,19 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
 
     // Remove from old team
     if (agent.teamId) {
-      updateTeam(agent.teamId, {
-        memberIds: teams.find(t => t.id === agent.teamId)?.memberIds.filter(id => id !== agentId) || []
-      });
+      setTeams(prev => prev.map(team => 
+        team.id === agent.teamId 
+          ? { ...team, memberIds: team.memberIds.filter(id => id !== agentId) }
+          : team
+      ));
     }
 
     // Add to new team
-    updateTeam(teamId, {
-      memberIds: [...(teams.find(t => t.id === teamId)?.memberIds || []), agentId]
-    });
+    setTeams(prev => prev.map(team => 
+      team.id === teamId 
+        ? { ...team, memberIds: [...team.memberIds, agentId] }
+        : team
+    ));
 
     // Update agent
     updateAgentProfile(agentId, { teamId });
@@ -123,7 +129,7 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
   const sendMessage = (communicationData: Omit<TeamCommunication, 'id' | 'timestamp' | 'isRead'>): TeamCommunication => {
     const newCommunication: TeamCommunication = {
       ...communicationData,
-      id: `msg_${Date.now()}`,
+      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date().toISOString(),
       isRead: false
     };
@@ -140,7 +146,7 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
   const createTeamTask = (taskData: Omit<TeamTask, 'id' | 'createdAt'>): TeamTask => {
     const newTask: TeamTask = {
       ...taskData,
-      id: `task_${Date.now()}`,
+      id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       createdAt: new Date().toISOString()
     };
     setTeamTasks(prev => [...prev, newTask]);

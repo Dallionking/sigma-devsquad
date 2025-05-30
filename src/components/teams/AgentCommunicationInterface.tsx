@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTeams } from "@/contexts/TeamContext";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { AgentProfile, TeamCommunication } from "@/types/teams";
 import { Send, Paperclip, MoreVertical, Phone, Video } from "lucide-react";
 import { useState } from "react";
@@ -19,6 +20,7 @@ interface AgentCommunicationInterfaceProps {
 
 export const AgentCommunicationInterface = ({ agent, onClose }: AgentCommunicationInterfaceProps) => {
   const { getTeamCommunications, sendMessage, getTeamById } = useTeams();
+  const { currentUser } = useCurrentUser();
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"message" | "task-assignment">("message");
   
@@ -27,7 +29,8 @@ export const AgentCommunicationInterface = ({ agent, onClose }: AgentCommunicati
     .filter(comm => 
       comm.fromAgentId === agent.id || 
       comm.toAgentId === agent.id || 
-      (!comm.toAgentId && comm.teamId === agent.teamId)
+      (!comm.toAgentId && comm.teamId === agent.teamId) ||
+      comm.fromAgentId === currentUser.id
     )
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
@@ -36,7 +39,7 @@ export const AgentCommunicationInterface = ({ agent, onClose }: AgentCommunicati
 
     sendMessage({
       teamId: agent.teamId,
-      fromAgentId: "planning_agent", // Assuming we're the planning agent
+      fromAgentId: currentUser.id,
       toAgentId: agent.id,
       content: message,
       type: messageType,
@@ -144,7 +147,7 @@ export const AgentCommunicationInterface = ({ agent, onClose }: AgentCommunicati
               </div>
             ) : (
               communications.map((comm) => {
-                const isFromAgent = comm.fromAgentId === agent.id;
+                const isFromCurrentUser = comm.fromAgentId === currentUser.id;
                 const isTeamMessage = !comm.toAgentId;
                 
                 return (
@@ -152,24 +155,24 @@ export const AgentCommunicationInterface = ({ agent, onClose }: AgentCommunicati
                     key={comm.id}
                     className={cn(
                       "flex gap-3",
-                      !isFromAgent && "flex-row-reverse"
+                      isFromCurrentUser && "flex-row-reverse"
                     )}
                   >
                     <Avatar className="w-8 h-8 flex-shrink-0">
                       <AvatarFallback className="text-xs">
-                        {isFromAgent ? agent.name[0] : 'P'}
+                        {isFromCurrentUser ? currentUser.name[0] : agent.name[0]}
                       </AvatarFallback>
                     </Avatar>
                     
                     <div className={cn(
                       "max-w-[70%] space-y-1",
-                      !isFromAgent && "items-end"
+                      isFromCurrentUser && "items-end"
                     )}>
                       <div className={cn(
                         "rounded-lg px-3 py-2 text-sm",
-                        isFromAgent 
-                          ? "bg-muted text-foreground" 
-                          : "bg-primary text-primary-foreground"
+                        isFromCurrentUser 
+                          ? "bg-primary text-primary-foreground" 
+                          : "bg-muted text-foreground"
                       )}>
                         {comm.content}
                       </div>
