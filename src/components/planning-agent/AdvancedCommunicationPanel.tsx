@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Agent, Message } from "@/pages/Index";
+import { Agent, Message } from "@/types";
 import { CommunicationGraphVisualization } from "./CommunicationGraphVisualization";
 import { MessageInspectionTools } from "./MessageInspectionTools";
 import { PatternAnalysisDashboard } from "./PatternAnalysisDashboard";

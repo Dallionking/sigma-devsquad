@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Agent, Message } from "@/pages/Index";
+import { Agent, Message } from "@/types";
 import { Search, Filter, MessageSquare, Clock, ArrowRight, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 

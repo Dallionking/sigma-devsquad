@@ -1,7 +1,6 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Agent, Message, AgentType } from "@/pages/Index";
+import { Agent, Message, AgentType } from "@/types";
 import { ArrowRight, MessageSquare, Users, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 

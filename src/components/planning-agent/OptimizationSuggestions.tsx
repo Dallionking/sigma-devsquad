@@ -1,8 +1,7 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Agent, Message } from "@/pages/Index";
+import { Agent, Message } from "@/types";
 import { Lightbulb, AlertTriangle, CheckCircle, TrendingUp, Clock, Users } from "lucide-react";
 
 interface OptimizationSuggestionsProps {

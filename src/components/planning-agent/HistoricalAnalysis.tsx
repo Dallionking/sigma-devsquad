@@ -1,7 +1,6 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Agent, Message } from "@/pages/Index";
+import { Agent, Message } from "@/types";
 import { TrendingUp, Calendar, Clock, BarChart } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, AreaChart, Area } from "recharts";
