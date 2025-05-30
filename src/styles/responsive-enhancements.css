@@ -1,0 +1,221 @@
+
+@layer utilities {
+  /* Enhanced responsive typography system */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-base sm:text-lg lg:text-xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  
+  .text-responsive-2xl {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+  
+  .text-responsive-3xl {
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+  }
+
+  /* Enhanced responsive spacing system */
+  .space-responsive-xs {
+    @apply space-y-2 sm:space-y-3;
+  }
+  
+  .space-responsive-sm {
+    @apply space-y-3 sm:space-y-4;
+  }
+  
+  .space-responsive-md {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+  
+  .space-responsive-lg {
+    @apply space-y-6 sm:space-y-8 lg:space-y-12;
+  }
+
+  /* Enhanced responsive padding system */
+  .p-responsive-xs {
+    @apply p-2 sm:p-3;
+  }
+  
+  .p-responsive-sm {
+    @apply p-3 sm:p-4;
+  }
+  
+  .p-responsive-md {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  .p-responsive-lg {
+    @apply p-6 sm:p-8 lg:p-12;
+  }
+
+  /* Enhanced responsive margins */
+  .m-responsive-xs {
+    @apply m-2 sm:m-3;
+  }
+  
+  .m-responsive-sm {
+    @apply m-3 sm:m-4;
+  }
+  
+  .m-responsive-md {
+    @apply m-4 sm:m-6 lg:m-8;
+  }
+  
+  .m-responsive-lg {
+    @apply m-6 sm:m-8 lg:m-12;
+  }
+
+  /* Enhanced responsive layouts */
+  .layout-responsive-stack {
+    @apply flex flex-col gap-4 sm:gap-6;
+  }
+  
+  .layout-responsive-grid-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+  }
+  
+  .layout-responsive-grid-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+  }
+  
+  .layout-responsive-grid-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+
+  /* Enhanced responsive containers */
+  .container-responsive-sm {
+    @apply max-w-sm mx-auto px-4;
+  }
+  
+  .container-responsive-md {
+    @apply max-w-2xl mx-auto px-4 sm:px-6;
+  }
+  
+  .container-responsive-lg {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-responsive-xl {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-responsive-2xl {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
+  /* Enhanced responsive cards */
+  .card-responsive {
+    @apply bg-card text-card-foreground rounded-lg border shadow-sm p-4 sm:p-6;
+  }
+  
+  .card-responsive-compact {
+    @apply bg-card text-card-foreground rounded-lg border shadow-sm p-3 sm:p-4;
+  }
+
+  /* Enhanced touch targets */
+  .touch-target-sm {
+    @apply min-h-[40px] min-w-[40px];
+  }
+  
+  .touch-target-md {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .touch-target-lg {
+    @apply min-h-[48px] min-w-[48px];
+  }
+
+  /* Enhanced focus management */
+  .focus-responsive {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* Enhanced button groups */
+  .button-group-responsive {
+    @apply flex flex-col sm:flex-row gap-3 sm:gap-4;
+  }
+  
+  .button-group-responsive .btn {
+    @apply w-full sm:w-auto;
+  }
+
+  /* Enhanced form layouts */
+  .form-responsive {
+    @apply space-y-4 sm:space-y-6;
+  }
+  
+  .form-group-responsive {
+    @apply space-y-2 sm:space-y-3;
+  }
+
+  /* Enhanced navigation */
+  .nav-responsive {
+    @apply flex flex-col sm:flex-row gap-2 sm:gap-4;
+  }
+
+  /* Enhanced modal positioning */
+  .modal-responsive {
+    @apply fixed inset-0 sm:inset-4 lg:inset-8 xl:inset-16;
+  }
+
+  /* Enhanced sidebar layouts */
+  .sidebar-responsive {
+    @apply w-full sm:w-80 lg:w-96;
+  }
+
+  /* Enhanced scroll areas */
+  .scroll-responsive {
+    @apply overflow-y-auto max-h-screen sm:max-h-[80vh];
+  }
+
+  /* Enhanced animations for reduced motion */
+  .animate-responsive {
+    @apply transition-all duration-200;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .animate-responsive {
+      @apply transition-none;
+    }
+  }
+
+  /* Enhanced breakpoint utilities */
+  .xs-only {
+    @media (min-width: 475px) {
+      display: none;
+    }
+  }
+  
+  .sm-and-up {
+    @media (max-width: 639px) {
+      display: none;
+    }
+  }
+  
+  .md-and-up {
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+  
+  .lg-and-up {
+    @media (max-width: 1023px) {
+      display: none;
+    }
+  }
+}

@@ -6,6 +6,7 @@
 @import './styles/utilities.css';
 @import './styles/responsive.css';
 @import './styles/mobile.css';
+@import './styles/responsive-enhancements.css';
 
 /* Enhanced responsive typography and brand colors */
 @layer utilities {

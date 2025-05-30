@@ -1,32 +1,46 @@
 
 import { useState } from "react";
-import { AgentSidebar } from "@/components/dashboard/AgentSidebar";
-import { MainWorkflowArea } from "@/components/dashboard/MainWorkflowArea";
-import { DetailPanel } from "@/components/dashboard/DetailPanel";
 import { Header } from "@/components/dashboard/Header";
-import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
-import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
-import { useAgents } from "@/contexts/AgentContext";
-import { useTasks } from "@/contexts/TaskContext";
-import { useMessages } from "@/contexts/MessageContext";
+import { AgentSidebar } from "@/components/dashboard/AgentSidebar";
+import { DetailPanel } from "@/components/dashboard/DetailPanel";
+import { NotificationCenter } from "@/components/dashboard/NotificationCenter";
+import { SystemFooter } from "@/components/dashboard/SystemFooter";
+import { TouchGestureProvider } from "@/components/settings/TouchGestureProvider";
+import { AccessibilityEnhancedSettings } from "@/components/settings/AccessibilityEnhancedSettings";
+import { ResponsiveContainer } from "@/components/layout/ResponsiveContainer";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { ViewMode, Agent, Task, Message } from "@/types";
+import { mockAgents, mockTasks, mockMessages } from "@/data/mockData";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
+  const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("workflow");
-  const [showFooter, setShowFooter] = useState(true);
+  
+  const isMobile = useIsMobile();
+  const { mobileOptimizations } = usePerformanceOptimization();
 
-  // Use centralized state management
-  const { agents } = useAgents();
-  const { tasks } = useTasks();
-  const { messages } = useMessages();
+  const handleSwipeNavigation = (direction: 'left' | 'right') => {
+    const modes: ViewMode[] = ["workflow", "communication", "tasks", "messages"];
+    const currentIndex = modes.indexOf(viewMode);
+    
+    if (direction === 'left' && currentIndex < modes.length - 1) {
+      setViewMode(modes[currentIndex + 1]);
+    } else if (direction === 'right' && currentIndex > 0) {
+      setViewMode(modes[currentIndex - 1]);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
-      {/* Enhanced skip to main content for accessibility */}
+    <div className={cn(
+      "min-h-screen bg-gradient-to-br from-background via-background to-muted/20",
+      mobileOptimizations.enableTouch && "touch-manipulation"
+    )}>
+      {/* Skip navigation for accessibility */}
       <a 
         href="#main-content" 
         className="sr-only-focusable"
@@ -34,82 +48,107 @@ const Index = () => {
       >
         Skip to main content
       </a>
-      
-      {/* Enhanced header with better responsive design */}
+
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
-        agents={agents}
+        agents={mockAgents}
       />
       
-      {/* Enhanced main layout with improved responsive behavior */}
-      <div className="flex flex-1 overflow-hidden">
-        <AgentSidebar 
-          agents={agents}
-          selectedAgent={selectedAgent}
-          onAgentSelect={setSelectedAgent}
-        />
-        
-        {/* Enhanced main content area with better responsive design and accessibility */}
-        <main 
-          id="main-content"
-          className="flex-1 flex flex-col min-w-0 bg-gradient-to-br from-background via-background to-muted/20"
-          role="main"
-          aria-label="Main dashboard content"
+      <TouchGestureProvider
+        onSwipeLeft={() => handleSwipeNavigation('left')}
+        onSwipeRight={() => handleSwipeNavigation('right')}
+      >
+        <AccessibilityEnhancedSettings
+          title="AI Agent Command Center"
+          description="Monitor and control your AI agents from this centralized dashboard"
         >
-          {/* Enhanced dashboard overview section with improved spacing and transitions */}
-          {viewMode === "workflow" && (
-            <div className="fade-in">
-              <DashboardOverview 
-                agents={agents}
-                onAgentSelect={setSelectedAgent}
-              />
+          <ResponsiveContainer maxWidth="full" padding="none">
+            <div className={cn(
+              "flex min-h-[calc(100vh-4rem)]",
+              isMobile ? "flex-col" : "flex-row"
+            )}>
+              {/* Sidebar - hidden on mobile in collapsed view */}
+              {!isMobile && (
+                <div className="w-80 border-r border-border bg-card">
+                  <AgentSidebar
+                    agents={mockAgents}
+                    selectedAgent={selectedAgent}
+                    onAgentSelect={setSelectedAgent}
+                  />
+                </div>
+              )}
+
+              {/* Main content area */}
+              <main 
+                id="main-content"
+                className={cn(
+                  "flex-1 overflow-hidden",
+                  isMobile && "mobile-safe-area"
+                )}
+                role="main"
+                aria-label="Dashboard main content"
+              >
+                <div className={cn(
+                  "h-full",
+                  isMobile ? "p-4" : "p-6"
+                )}>
+                  <DashboardOverview
+                    agents={mockAgents}
+                    tasks={mockTasks}
+                    messages={mockMessages}
+                    viewMode={viewMode}
+                    selectedAgent={selectedAgent}
+                    selectedTask={selectedTask}
+                    selectedMessage={selectedMessage}
+                    onAgentSelect={setSelectedAgent}
+                    onTaskSelect={setSelectedTask}
+                    onMessageSelect={setSelectedMessage}
+                  />
+                </div>
+              </main>
+
+              {/* Detail panel - mobile modal on mobile */}
+              {!isMobile && (selectedAgent || selectedTask || selectedMessage) && (
+                <div className="w-96 border-l border-border bg-card">
+                  <DetailPanel
+                    selectedAgent={selectedAgent}
+                    selectedTask={selectedTask}
+                    selectedMessage={selectedMessage}
+                    onClose={() => {
+                      setSelectedAgent(null);
+                      setSelectedTask(null);
+                      setSelectedMessage(null);
+                    }}
+                  />
+                </div>
+              )}
             </div>
-          )}
-          
-          {/* Enhanced main workflow area with better transitions and responsive design */}
-          <div className="flex-1 transition-all duration-300 ease-in-out">
-            <MainWorkflowArea 
-              viewMode={viewMode}
-              agents={agents}
-              tasks={tasks}
-              messages={messages}
-              selectedAgent={selectedAgent}
-              selectedTask={selectedTask}
-              selectedMessage={selectedMessage}
-              onAgentSelect={setSelectedAgent}
-              onTaskSelect={setSelectedTask}
-              onMessageSelect={setSelectedMessage}
-            />
-          </div>
-        </main>
-        
-        {/* Enhanced detail panel with improved responsive behavior */}
-        <DetailPanel 
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          viewMode={viewMode}
-          agents={agents}
-        />
-      </div>
-      
-      {/* Enhanced footer with smooth animations and better responsive design */}
-      {showFooter && (
-        <div className="slide-in-from-bottom">
-          <SystemFooter 
-            onToggle={() => setShowFooter(!showFooter)}
-            messages={messages}
+          </ResponsiveContainer>
+        </AccessibilityEnhancedSettings>
+      </TouchGestureProvider>
+
+      {/* Mobile detail panel as modal */}
+      {isMobile && (selectedAgent || selectedTask || selectedMessage) && (
+        <div className="fixed inset-0 z-50 bg-background mobile-safe-area">
+          <DetailPanel
+            selectedAgent={selectedAgent}
+            selectedTask={selectedTask}
+            selectedMessage={selectedMessage}
+            onClose={() => {
+              setSelectedAgent(null);
+              setSelectedTask(null);
+              setSelectedMessage(null);
+            }}
           />
         </div>
       )}
+
+      {/* Notification Center */}
+      <NotificationCenter />
       
-      {/* Enhanced floating action button with better positioning and animations */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <div className="hover-scale">
-          <AgentCreationButton />
-        </div>
-      </div>
+      {/* Footer */}
+      <SystemFooter />
     </div>
   );
 };
