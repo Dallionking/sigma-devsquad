@@ -113,7 +113,7 @@ const MCPManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <Header 
         viewMode={mockViewMode} 
         onViewModeChange={() => {}} 
@@ -122,8 +122,8 @@ const MCPManagement = () => {
       
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">MCP Installation & Management</h1>
-          <p className="text-slate-600">Manage Model Context Protocols for enhanced AI capabilities</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">MCP Installation & Management</h1>
+          <p className="text-slate-600 dark:text-slate-400">Manage Model Context Protocols for enhanced AI capabilities</p>
         </div>
 
         <Tabs defaultValue="marketplace" className="space-y-6">

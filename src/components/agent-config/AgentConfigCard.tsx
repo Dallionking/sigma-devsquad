@@ -1,11 +1,12 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, BookOpen, Settings, Zap } from "lucide-react";
+import { Users, BookOpen, Settings, Zap, Package } from "lucide-react";
 import { RoleDefinition } from "./RoleDefinition";
 import { RuleEditor } from "./RuleEditor";
 import { ContextManagement } from "./ContextManagement";
 import { PerformanceSettings } from "./PerformanceSettings";
+import { MCPConfiguration } from "./MCPConfiguration";
 import { AgentType } from "@/pages/AgentConfiguration";
 
 interface AgentConfigCardProps {
@@ -18,7 +19,7 @@ export const AgentConfigCard = ({ agentType, onConfigChange }: AgentConfigCardPr
     <Card className="w-full">
       <CardContent className="p-6">
         <Tabs defaultValue="role" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="role" className="flex items-center space-x-2">
               <Users className="w-4 h-4" />
               <span>Role & Capabilities</span>
@@ -30,6 +31,10 @@ export const AgentConfigCard = ({ agentType, onConfigChange }: AgentConfigCardPr
             <TabsTrigger value="context" className="flex items-center space-x-2">
               <BookOpen className="w-4 h-4" />
               <span>Context & Knowledge</span>
+            </TabsTrigger>
+            <TabsTrigger value="mcp" className="flex items-center space-x-2">
+              <Package className="w-4 h-4" />
+              <span>MCP Access</span>
             </TabsTrigger>
             <TabsTrigger value="performance" className="flex items-center space-x-2">
               <Zap className="w-4 h-4" />
@@ -47,6 +52,10 @@ export const AgentConfigCard = ({ agentType, onConfigChange }: AgentConfigCardPr
 
           <TabsContent value="context" className="space-y-6">
             <ContextManagement agentType={agentType} onConfigChange={onConfigChange} />
+          </TabsContent>
+
+          <TabsContent value="mcp" className="space-y-6">
+            <MCPConfiguration agentType={agentType} onConfigChange={onConfigChange} />
           </TabsContent>
 
           <TabsContent value="performance" className="space-y-6">

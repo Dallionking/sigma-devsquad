@@ -1,9 +1,10 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package } from "lucide-react";
+import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   viewMode: ViewMode;
@@ -14,6 +15,8 @@ interface HeaderProps {
 export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [darkMode, setDarkMode] = useState(false);
+  
   const activeAgents = agents.filter(agent => agent.status === "working").length;
   const totalAgents = agents.length;
   
@@ -29,20 +32,47 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isAgentConfigPage = location.pathname === "/agent-configuration";
   const isMCPPage = location.pathname === "/mcp-management";
 
+  // Load dark mode preference from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
+    if (savedDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
   return (
-    <header className="bg-white border-b border-slate-200 px-6 py-4">
+    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <div>
-            <h1 className="text-xl font-semibold text-slate-900">AI Development Workforce</h1>
-            <p className="text-sm text-slate-500">
+          <div 
+            onClick={() => navigate("/")}
+            className="cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">AI Development Workforce</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               {activeAgents} of {totalAgents} agents active
             </p>
           </div>
           
           {/* Show view mode selector only on the main dashboard */}
           {location.pathname === "/" && (
-            <div className="flex items-center space-x-1 bg-slate-100 rounded-lg p-1">
+            <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-700 rounded-lg p-1">
               {Object.entries(viewModeConfig).map(([mode, config]) => {
                 const Icon = config.icon;
                 return (
@@ -66,9 +96,9 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-slate-600">System Healthy</span>
+              <span className="text-sm text-slate-600 dark:text-slate-300">System Healthy</span>
             </div>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">
+            <Badge variant="secondary" className="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
               <Users className="w-3 h-3 mr-1" />
               {activeAgents} Active
             </Badge>
@@ -116,6 +146,11 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
               Settings
             </Button>
           </div>
+          
+          {/* Dark mode toggle */}
+          <Button variant="ghost" size="sm" onClick={toggleDarkMode}>
+            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
           
           <Button variant="ghost" size="sm">
             <Bell className="w-4 h-4" />
