@@ -1,5 +1,5 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Moon, Sun } from "lucide-react";
+import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
@@ -31,6 +31,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isLLMPage = location.pathname === "/llm-integration";
   const isAgentConfigPage = location.pathname === "/agent-configuration";
   const isMCPPage = location.pathname === "/mcp-management";
+  const isIDEPage = location.pathname === "/ide-integration";
 
   return (
     <header className="bg-card border-b border-border px-6 py-4">
@@ -117,6 +118,14 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             >
               <Brain className="w-4 h-4 mr-2" />
               LLM Integration
+            </Button>
+            <Button 
+              variant={isIDEPage ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/ide-integration")}
+            >
+              <Monitor className="w-4 h-4 mr-2" />
+              IDE Integration
             </Button>
             <Button 
               variant={isSettingsPage ? "default" : "ghost"} 
