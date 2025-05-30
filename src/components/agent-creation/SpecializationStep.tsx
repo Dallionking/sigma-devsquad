@@ -64,6 +64,26 @@ const specializationOptions: Record<AgentType, string[]> = {
 export const SpecializationStep = ({ selectedRole, specialization, onSpecializationChange }: SpecializationStepProps) => {
   const options = selectedRole ? specializationOptions[selectedRole] : [];
 
+  if (!selectedRole) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-bold">Define Specialization</h2>
+          <p className="text-muted-foreground">
+            Please go back and select an agent role first
+          </p>
+        </div>
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="p-6 text-center">
+            <p className="text-muted-foreground">
+              You need to select an agent role before choosing a specialization.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-center space-y-2">
@@ -81,10 +101,10 @@ export const SpecializationStep = ({ selectedRole, specialization, onSpecializat
           <div className="space-y-2">
             <Label htmlFor="specialization">Select Specialization</Label>
             <Select value={specialization} onValueChange={onSpecializationChange}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Choose a specialization area..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-50 bg-popover">
                 {options.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
