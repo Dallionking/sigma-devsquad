@@ -2,6 +2,7 @@
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { ViewModeHeader } from "./ViewModeHeader";
 import { MainWorkflowContent } from "./MainWorkflowContent";
+import { ResponsiveSpacing } from "@/components/layout/ResponsiveSpacing";
 
 interface MainWorkflowAreaProps {
   viewMode: ViewMode;
@@ -29,29 +30,33 @@ export const MainWorkflowArea = ({
   onMessageSelect
 }: MainWorkflowAreaProps) => {
   return (
-    <div className="flex-1 bg-background overflow-hidden">
-      <div className="h-full p-6">
-        <div className="h-full space-y-6">
-          <ViewModeHeader 
-            viewMode={viewMode}
-            agents={agents}
-            tasks={tasks}
-            messages={messages}
-          />
-          <MainWorkflowContent
-            viewMode={viewMode}
-            agents={agents}
-            tasks={tasks}
-            messages={messages}
-            selectedAgent={selectedAgent}
-            selectedTask={selectedTask}
-            selectedMessage={selectedMessage}
-            onAgentSelect={onAgentSelect}
-            onTaskSelect={onTaskSelect}
-            onMessageSelect={onMessageSelect}
-          />
+    <div className="flex-1 bg-background overflow-hidden min-h-0">
+      <ResponsiveSpacing padding="md" className="h-full">
+        <div className="h-full flex flex-col min-h-0">
+          <div className="flex-shrink-0">
+            <ViewModeHeader 
+              viewMode={viewMode}
+              agents={agents}
+              tasks={tasks}
+              messages={messages}
+            />
+          </div>
+          <div className="flex-1 min-h-0 mt-4 sm:mt-6">
+            <MainWorkflowContent
+              viewMode={viewMode}
+              agents={agents}
+              tasks={tasks}
+              messages={messages}
+              selectedAgent={selectedAgent}
+              selectedTask={selectedTask}
+              selectedMessage={selectedMessage}
+              onAgentSelect={onAgentSelect}
+              onTaskSelect={onTaskSelect}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         </div>
-      </div>
+      </ResponsiveSpacing>
     </div>
   );
 };

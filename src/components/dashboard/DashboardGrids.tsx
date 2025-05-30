@@ -5,6 +5,8 @@ import { QuickAccessNav } from "./QuickAccessNav";
 import { SummaryMetrics } from "./SummaryMetrics";
 import { EnhancedAgentOverview } from "./EnhancedAgentOverview";
 import { Agent } from "@/types";
+import { ResponsiveLayoutGrid, CardGrid } from "@/components/layout/ResponsiveLayoutGrid";
+import { Stack } from "@/components/layout/ResponsiveSpacing";
 
 interface DashboardGridsProps {
   agents: Agent[];
@@ -13,33 +15,33 @@ interface DashboardGridsProps {
 
 export const DashboardGrids = ({ agents, onAgentSelect }: DashboardGridsProps) => {
   return (
-    <div className="space-y-responsive">
+    <Stack gap="lg" className="w-full">
       {/* Top Row - System Health and Quick Access */}
-      <div className="grid-responsive-2">
-        <div className="card-enhanced hover:shadow-lg transition-all duration-300">
+      <ResponsiveLayoutGrid variant="content" gap="md">
+        <div className="card-enhanced hover:shadow-lg transition-all duration-300 h-fit">
           <SystemHealthIndicators />
         </div>
-        <div className="card-enhanced hover:shadow-lg transition-all duration-300">
+        <div className="card-enhanced hover:shadow-lg transition-all duration-300 h-fit">
           <QuickAccessNav />
         </div>
-      </div>
+      </ResponsiveLayoutGrid>
       
       {/* Second Row - Notifications and Agent Overview */}
-      <div className="grid-responsive-2">
-        <div className="card-enhanced hover:shadow-lg transition-all duration-300">
+      <ResponsiveLayoutGrid variant="content" gap="md">
+        <div className="card-enhanced hover:shadow-lg transition-all duration-300 h-fit">
           <NotificationCenter />
         </div>
-        <div className="card-enhanced hover:shadow-lg transition-all duration-300">
+        <div className="card-enhanced hover:shadow-lg transition-all duration-300 h-fit">
           <EnhancedAgentOverview 
             onAgentSelect={onAgentSelect}
           />
         </div>
-      </div>
+      </ResponsiveLayoutGrid>
       
       {/* Third Row - Summary Metrics */}
       <div className="card-enhanced hover:shadow-lg transition-all duration-300">
         <SummaryMetrics />
       </div>
-    </div>
+    </Stack>
   );
 };
