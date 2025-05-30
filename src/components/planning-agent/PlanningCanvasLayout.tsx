@@ -18,11 +18,9 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
   };
 
   return (
-    <div className="flex h-full overflow-hidden">
-      {/* Main Chat Interface - Takes remaining space */}
-      <div className={`transition-all duration-300 ${
-        isCanvasOpen ? 'w-1/2' : 'w-full'
-      }`}>
+    <div className="h-full overflow-hidden">
+      {/* When canvas is closed - Chat takes full width */}
+      {!isCanvasOpen && (
         <Card className="h-full card-enhanced">
           <ChatInterface 
             onCreateTask={onCreateTask}
@@ -30,13 +28,24 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
             onToggleCanvas={handleToggleCanvas}
           />
         </Card>
-      </div>
+      )}
 
-      {/* Canvas Panel - Slides in from right and takes 50% */}
+      {/* When canvas is open - Split screen layout */}
       {isCanvasOpen && (
-        <>
-          {/* Desktop Canvas - Side by side */}
-          <div className="hidden lg:block w-1/2 h-full transition-all duration-300">
+        <div className="flex h-full gap-4">
+          {/* Chat Interface - Takes 50% */}
+          <div className="w-1/2">
+            <Card className="h-full card-enhanced">
+              <ChatInterface 
+                onCreateTask={onCreateTask}
+                onTrackWorkflow={onTrackWorkflow}
+                onToggleCanvas={handleToggleCanvas}
+              />
+            </Card>
+          </div>
+
+          {/* Planning Canvas - Takes 50% */}
+          <div className="w-1/2">
             <PlanningCanvas 
               selectedProject={selectedProject} 
               isOpen={isCanvasOpen}
@@ -44,23 +53,7 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
               className="h-full"
             />
           </div>
-
-          {/* Mobile/Tablet Canvas - Full overlay */}
-          <div className="lg:hidden fixed top-0 right-0 h-full w-full sm:w-2/3 z-50 transform transition-transform duration-300">
-            <PlanningCanvas 
-              selectedProject={selectedProject} 
-              isOpen={isCanvasOpen}
-              onToggle={handleToggleCanvas}
-              className="h-full"
-            />
-          </div>
-
-          {/* Backdrop overlay for mobile/tablet only */}
-          <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-            onClick={handleToggleCanvas}
-          />
-        </>
+        </div>
       )}
     </div>
   );
