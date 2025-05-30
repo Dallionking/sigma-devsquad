@@ -4,6 +4,8 @@
 @import './styles/components.css';
 @import './styles/animations.css';
 @import './styles/utilities.css';
+@import './styles/responsive.css';
+@import './styles/mobile.css';
 
 /* Enhanced responsive typography and brand colors */
 @layer utilities {
@@ -22,6 +24,21 @@
   .text-gradient-brand {
     @apply bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent;
   }
+  
+  /* Performance optimizations */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-scroll {
+    will-change: scroll-position;
+  }
+  
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 }
 
 /* Touch-friendly sizing for mobile */
@@ -29,5 +46,21 @@
   .touch-target {
     min-height: 44px;
     min-width: 44px;
+  }
+  
+  /* Improve mobile performance */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .animate-in,
+  .transition-all {
+    animation: none !important;
+    transition: none !important;
   }
 }

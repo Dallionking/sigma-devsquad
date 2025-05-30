@@ -1,7 +1,7 @@
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from 'react';
 
-interface ValidationRule {
+interface ValidationRules {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -9,105 +9,70 @@ interface ValidationRule {
   custom?: (value: string) => string | null;
 }
 
-interface ValidationOptions {
-  rules: ValidationRule;
+interface UseInputValidationOptions {
+  rules: ValidationRules;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
-  debounceMs?: number;
 }
 
-export const useInputValidation = (initialValue: string = "", options: ValidationOptions) => {
-  const { rules, validateOnChange = true, validateOnBlur = true, debounceMs = 300 } = options;
-  
+export const useInputValidation = (
+  initialValue: string,
+  options: UseInputValidationOptions
+) => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
-  const [hasBeenTouched, setHasBeenTouched] = useState(false);
 
-  const validate = useCallback((inputValue: string): string | null => {
-    if (rules.required && !inputValue.trim()) {
+  const validate = useCallback((val: string) => {
+    const { rules } = options;
+
+    if (rules.required && !val.trim()) {
       return "This field is required";
     }
 
-    if (rules.minLength && inputValue.length < rules.minLength) {
-      return `Minimum length is ${rules.minLength} characters`;
+    if (rules.minLength && val.length < rules.minLength) {
+      return `Minimum ${rules.minLength} characters required`;
     }
 
-    if (rules.maxLength && inputValue.length > rules.maxLength) {
-      return `Maximum length is ${rules.maxLength} characters`;
+    if (rules.maxLength && val.length > rules.maxLength) {
+      return `Maximum ${rules.maxLength} characters allowed`;
     }
 
-    if (rules.pattern && !rules.pattern.test(inputValue)) {
+    if (rules.pattern && !rules.pattern.test(val)) {
       return "Invalid format";
     }
 
     if (rules.custom) {
-      return rules.custom(inputValue);
+      return rules.custom(val);
     }
 
     return null;
-  }, [rules]);
-
-  const validateWithDebounce = useCallback(
-    (() => {
-      let timeoutId: NodeJS.Timeout;
-      return (inputValue: string) => {
-        setIsValidating(true);
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          const validationError = validate(inputValue);
-          setError(validationError);
-          setIsValidating(false);
-        }, debounceMs);
-      };
-    })(),
-    [validate, debounceMs]
-  );
+  }, [options]);
 
   const handleChange = useCallback((newValue: string) => {
     setValue(newValue);
-    setHasBeenTouched(true);
     
-    if (validateOnChange) {
-      validateWithDebounce(newValue);
+    if (options.validateOnChange) {
+      setIsValidating(true);
+      setTimeout(() => {
+        setError(validate(newValue));
+        setIsValidating(false);
+      }, 300);
     }
-  }, [validateOnChange, validateWithDebounce]);
+  }, [validate, options.validateOnChange]);
 
   const handleBlur = useCallback(() => {
-    setHasBeenTouched(true);
-    
-    if (validateOnBlur) {
-      const validationError = validate(value);
-      setError(validationError);
-      setIsValidating(false);
+    if (options.validateOnBlur) {
+      setError(validate(value));
     }
-  }, [validateOnBlur, validate, value]);
-
-  const forceValidate = useCallback(() => {
-    const validationError = validate(value);
-    setError(validationError);
-    setIsValidating(false);
-    return validationError === null;
-  }, [validate, value]);
-
-  const reset = useCallback(() => {
-    setValue(initialValue);
-    setError(null);
-    setIsValidating(false);
-    setHasBeenTouched(false);
-  }, [initialValue]);
-
-  const isValid = error === null && hasBeenTouched;
+  }, [validate, value, options.validateOnBlur]);
 
   return {
     value,
     error,
     isValidating,
-    isValid,
-    hasBeenTouched,
     handleChange,
     handleBlur,
-    forceValidate,
-    reset
+    validate: (val: string) => validate(val)
   };
 };

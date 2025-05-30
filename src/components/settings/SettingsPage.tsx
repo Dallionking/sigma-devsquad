@@ -3,9 +3,11 @@ import { SettingsLayout } from "./SettingsLayout";
 import { SettingsTabsProvider } from "./SettingsTabsProvider";
 import { SettingsContent } from "./SettingsContent";
 import { SettingsActions } from "./SettingsActions";
+import { MobileSettingsLayout } from "./MobileSettingsLayout";
 import { useSettingsState } from "@/hooks/useSettingsState";
 import { useSettingsActions } from "@/hooks/useSettingsActions";
 import { useEnhancedKeyboardNavigation } from "@/hooks/useEnhancedKeyboardNavigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useRef } from "react";
 
 export const SettingsPage = () => {
@@ -31,6 +33,7 @@ export const SettingsPage = () => {
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // Enhanced keyboard navigation with better focus management
   const { focusNext, focusPrevious, saveFocus, restoreFocus } = useEnhancedKeyboardNavigation({
@@ -44,8 +47,8 @@ export const SettingsPage = () => {
         restoreFocus();
       }
     },
-    enableArrowNavigation: true,
-    enableHomeEnd: true,
+    enableArrowNavigation: !isMobile, // Disable arrow navigation on mobile
+    enableHomeEnd: !isMobile,
     enableTabNavigation: true,
     onArrowDown: focusNext,
     onArrowUp: focusPrevious,
@@ -55,6 +58,51 @@ export const SettingsPage = () => {
     }
   });
 
+  const tabsContent = (
+    <SettingsTabsProvider
+      activeTab={activeTab}
+      onTabChange={(tab) => {
+        setActiveTab(tab);
+        saveFocus(); // Save focus when switching tabs
+      }}
+    >
+      <SettingsContent
+        searchQuery={searchQuery}
+        notifications={notifications}
+        setNotifications={setNotifications}
+        autoBackup={autoBackup}
+        setAutoBackup={setAutoBackup}
+        performanceMode={performanceMode}
+        setPerformanceMode={setPerformanceMode}
+      />
+    </SettingsTabsProvider>
+  );
+
+  if (isMobile) {
+    return (
+      <div ref={containerRef} className="focus-within:outline-none">
+        <SettingsLayout
+          searchQuery={searchQuery}
+          onSearch={setSearchQuery}
+          onFilterChange={setSearchFilters}
+        >
+          <MobileSettingsLayout
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            tabsContent={tabsContent}
+          >
+            <div className="fade-in" style={{ animationDelay: "300ms" }}>
+              <SettingsActions 
+                onSaveAll={handleSaveAll}
+                onResetAll={handleResetAll}
+              />
+            </div>
+          </MobileSettingsLayout>
+        </SettingsLayout>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className="focus-within:outline-none">
       <SettingsLayout
@@ -62,23 +110,7 @@ export const SettingsPage = () => {
         onSearch={setSearchQuery}
         onFilterChange={setSearchFilters}
       >
-        <SettingsTabsProvider
-          activeTab={activeTab}
-          onTabChange={(tab) => {
-            setActiveTab(tab);
-            saveFocus(); // Save focus when switching tabs
-          }}
-        >
-          <SettingsContent
-            searchQuery={searchQuery}
-            notifications={notifications}
-            setNotifications={setNotifications}
-            autoBackup={autoBackup}
-            setAutoBackup={setAutoBackup}
-            performanceMode={performanceMode}
-            setPerformanceMode={setPerformanceMode}
-          />
-        </SettingsTabsProvider>
+        {tabsContent}
 
         <div className="fade-in" style={{ animationDelay: "300ms" }}>
           <SettingsActions 

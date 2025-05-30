@@ -1,5 +1,7 @@
+
 import { SettingsSection } from "./SettingsSection";
-import { SettingItem } from "./SettingItem";
+import { ResponsiveSettingItem } from "./ResponsiveSettingItem";
+import { TouchOptimizedCard } from "./TouchOptimizedCard";
 import { EnhancedSettingsDemo } from "./EnhancedSettingsDemo";
 
 interface GeneralSettingsProps {
@@ -11,12 +13,13 @@ export const GeneralSettings = ({ searchQuery = "" }: GeneralSettingsProps) => {
     <div className="space-y-6">
       <EnhancedSettingsDemo />
       
-      <SettingsSection
+      <TouchOptimizedCard
         title="Application Settings"
         description="Configure general application behavior and preferences"
-        searchQuery={searchQuery}
+        category="General"
+        status="active"
       >
-        <SettingItem
+        <ResponsiveSettingItem
           id="language"
           type="select"
           label="Language"
@@ -31,7 +34,7 @@ export const GeneralSettings = ({ searchQuery = "" }: GeneralSettingsProps) => {
           ]}
         />
 
-        <SettingItem
+        <ResponsiveSettingItem
           id="timezone"
           type="select"
           label="Timezone"
@@ -46,7 +49,7 @@ export const GeneralSettings = ({ searchQuery = "" }: GeneralSettingsProps) => {
           ]}
         />
 
-        <SettingItem
+        <ResponsiveSettingItem
           id="auto-update"
           type="switch"
           label="Automatic Updates"
@@ -54,7 +57,16 @@ export const GeneralSettings = ({ searchQuery = "" }: GeneralSettingsProps) => {
           checked={true}
           onCheckedChange={() => {}}
         />
-      </SettingsSection>
+
+        <ResponsiveSettingItem
+          id="backup-settings"
+          type="button"
+          label="Backup Settings"
+          description="Export your current settings configuration"
+          buttonText="Export Settings"
+          onClick={() => console.log("Export settings")}
+        />
+      </TouchOptimizedCard>
     </div>
   );
 };
