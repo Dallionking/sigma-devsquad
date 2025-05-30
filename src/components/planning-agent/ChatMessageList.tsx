@@ -9,9 +9,10 @@ interface Message {
   content: string;
   timestamp: Date;
   attachments?: Array<{
-    type: "code" | "document" | "idea";
+    type: "code" | "document" | "idea" | "file";
     content: string;
     title: string;
+    fileId?: string;
   }>;
 }
 

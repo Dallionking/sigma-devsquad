@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bot, User, Code, FileText, Lightbulb } from "lucide-react";
+import { Bot, User, Code, FileText, Lightbulb, File } from "lucide-react";
 
 interface Message {
   id: string;
@@ -9,9 +9,10 @@ interface Message {
   content: string;
   timestamp: Date;
   attachments?: Array<{
-    type: "code" | "document" | "idea";
+    type: "code" | "document" | "idea" | "file";
     content: string;
     title: string;
+    fileId?: string;
   }>;
 }
 
@@ -28,6 +29,8 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
         return <FileText className="w-3 h-3" />;
       case "idea":
         return <Lightbulb className="w-3 h-3" />;
+      case "file":
+        return <File className="w-3 h-3" />;
       default:
         return <FileText className="w-3 h-3" />;
     }
