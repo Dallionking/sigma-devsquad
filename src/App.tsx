@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import LLMIntegration from "./pages/LLMIntegration";
 import AgentConfiguration from "./pages/AgentConfiguration";
+import AgentCreation from "./pages/AgentCreation";
 import MCPManagement from "./pages/MCPManagement";
 import IDEIntegration from "./pages/IDEIntegration";
 import PlanningAgent from "./pages/PlanningAgent";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/settings" element={<Settings />} />
             <Route path="/llm-integration" element={<LLMIntegration />} />
             <Route path="/agent-configuration" element={<AgentConfiguration />} />
+            <Route path="/agent-creation" element={<AgentCreation />} />
             <Route path="/mcp-management" element={<MCPManagement />} />
             <Route path="/ide-integration" element={<IDEIntegration />} />
             <Route path="/planning-agent" element={<PlanningAgent />} />

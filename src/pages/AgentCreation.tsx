@@ -1,61 +1,93 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, Save, Copy } from "lucide-react";
-import { Header } from "@/components/dashboard/Header";
-import { ViewMode, Agent, AgentType } from "@/types";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { RoleSelectionStep } from "@/components/agent-creation/RoleSelectionStep";
 import { SpecializationStep } from "@/components/agent-creation/SpecializationStep";
-import { BackgroundConfigStep } from "@/components/agent-creation/BackgroundConfigStep";
 import { CapabilitySelectionStep } from "@/components/agent-creation/CapabilitySelectionStep";
+import { BackgroundConfigStep } from "@/components/agent-creation/BackgroundConfigStep";
 import { AgentNamingStep } from "@/components/agent-creation/AgentNamingStep";
 import { CloneAgentStep } from "@/components/agent-creation/CloneAgentStep";
+import { AgentType } from "@/types";
+import { mockAgents } from "@/data/mockData";
+import { useToast } from "@/hooks/use-toast";
 
-const steps = [
-  { id: 'method', title: 'Creation Method', description: 'Choose how to create your agent' },
-  { id: 'role', title: 'Role Selection', description: 'Select the primary role for your agent' },
-  { id: 'specialization', title: 'Specialization', description: 'Define specific areas of expertise' },
-  { id: 'background', title: 'Background & Context', description: 'Configure knowledge and context' },
-  { id: 'capabilities', title: 'Capabilities', description: 'Select and configure capabilities' },
-  { id: 'naming', title: 'Naming & Identity', description: 'Name your agent and choose an icon' }
-];
-
-export const AgentCreation = () => {
+const AgentCreation = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   const [currentStep, setCurrentStep] = useState(0);
-  const [creationMethod, setCreationMethod] = useState<'new' | 'clone'>('new');
+  const [creationMethod, setCreationMethod] = useState<"new" | "clone">("new");
+  
+  // Agent configuration state
   const [selectedRole, setSelectedRole] = useState<AgentType | null>(null);
-  const [selectedSpecialization, setSelectedSpecialization] = useState<string>('');
-  const [agentName, setAgentName] = useState('');
-  const [agentIcon, setAgentIcon] = useState<string>('Bot');
-  const [backgroundContext, setBackgroundContext] = useState('');
-  const [selectedCapabilities, setSelectedCapabilities] = useState<Record<string, boolean>>({});
-  const [cloneSource, setCloneSource] = useState<string | null>(null);
+  const [specialization, setSpecialization] = useState("");
+  const [capabilities, setCapabilities] = useState<Record<string, boolean>>({});
+  const [background, setBackground] = useState("");
+  const [agentName, setAgentName] = useState("");
+  const [agentIcon, setAgentIcon] = useState("Bot");
+  const [selectedCloneAgent, setSelectedCloneAgent] = useState<string | null>(null);
 
-  // Mock agents data for header
-  const mockAgents: Agent[] = [
-    { id: "1", type: "planning", name: "Planning Agent", status: "working", currentTask: "Active", progress: 75, lastActive: "2024-05-30T10:30:00Z" },
-    { id: "2", type: "frontend", name: "Frontend Agent", status: "idle", currentTask: "Idle", progress: 0, lastActive: "2024-05-30T10:25:00Z" },
-    { id: "3", type: "backend", name: "Backend Agent", status: "working", currentTask: "Active", progress: 45, lastActive: "2024-05-30T10:32:00Z" }
+  const steps = [
+    { 
+      id: "method", 
+      title: "Creation Method", 
+      description: "Choose how to create your agent"
+    },
+    { 
+      id: "role", 
+      title: "Role Selection", 
+      description: "Select agent role and responsibilities"
+    },
+    { 
+      id: "specialization", 
+      title: "Specialization", 
+      description: "Define specific expertise area"
+    },
+    { 
+      id: "capabilities", 
+      title: "Capabilities", 
+      description: "Configure agent capabilities"
+    },
+    { 
+      id: "background", 
+      title: "Background", 
+      description: "Set context and knowledge"
+    },
+    { 
+      id: "naming", 
+      title: "Identity", 
+      description: "Name and customize your agent"
+    },
+    { 
+      id: "review", 
+      title: "Review", 
+      description: "Review and create agent"
+    }
   ];
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const filteredSteps = creationMethod === "clone" 
+    ? steps.filter(step => step.id !== "role" && step.id !== "specialization")
+    : steps.filter(step => step.id !== "method" || currentStep === 0);
 
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return creationMethod !== null;
-      case 1: return creationMethod === 'clone' ? cloneSource !== null : selectedRole !== null;
-      case 2: return creationMethod === 'clone' || selectedSpecialization !== '';
-      case 3: return true; // Background is optional
-      case 4: return true; // Capabilities have defaults
-      case 5: return agentName.trim() !== '';
+      case 0: return true; // Method selection
+      case 1: return creationMethod === "clone" ? selectedCloneAgent !== null : selectedRole !== null;
+      case 2: return specialization !== "";
+      case 3: return Object.keys(capabilities).length > 0;
+      case 4: return true; // Background is optional
+      case 5: return agentName.trim() !== "";
+      case 6: return true; // Review step
       default: return false;
     }
   };
 
   const handleNext = () => {
-    if (currentStep < steps.length - 1) {
+    if (currentStep < filteredSteps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -66,114 +98,109 @@ export const AgentCreation = () => {
     }
   };
 
-  const handleComplete = () => {
-    console.log('Creating agent with configuration:', {
+  const handleCreateAgent = () => {
+    // Here you would typically send the agent configuration to your backend
+    console.log("Creating agent with configuration:", {
       method: creationMethod,
       role: selectedRole,
-      specialization: selectedSpecialization,
+      specialization,
+      capabilities,
+      background,
       name: agentName,
       icon: agentIcon,
-      background: backgroundContext,
-      capabilities: selectedCapabilities,
-      cloneSource
+      cloneFrom: selectedCloneAgent
     });
-    // Handle agent creation logic here
+
+    toast({
+      title: "Agent Created Successfully!",
+      description: `${agentName} has been created and is ready to work.`,
+    });
+
+    navigate("/");
   };
 
   const renderStepContent = () => {
-    switch (currentStep) {
-      case 0:
+    const stepId = filteredSteps[currentStep]?.id;
+    
+    switch (stepId) {
+      case "method":
         return (
           <div className="space-y-6">
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold">How would you like to create your agent?</h2>
-              <p className="text-muted-foreground">Choose between creating a new agent from scratch or cloning an existing one</p>
+              <p className="text-muted-foreground">Choose your preferred creation method</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <Card 
                 className={`cursor-pointer transition-all hover:shadow-lg ${
-                  creationMethod === 'new' ? 'ring-2 ring-primary' : ''
+                  creationMethod === "new" ? 'ring-2 ring-primary' : ''
                 }`}
-                onClick={() => setCreationMethod('new')}
+                onClick={() => setCreationMethod("new")}
               >
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Save className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                <CardContent className="p-6 text-center space-y-4">
+                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto">
+                    <Check className="w-8 h-8" />
                   </div>
-                  <CardTitle>Create New Agent</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-center">
-                    Build a completely new agent from scratch with custom roles, capabilities, and configuration.
-                  </p>
+                  <h3 className="text-lg font-semibold">Create New Agent</h3>
+                  <p className="text-muted-foreground">Start from scratch and configure every aspect of your agent</p>
                 </CardContent>
               </Card>
               
               <Card 
                 className={`cursor-pointer transition-all hover:shadow-lg ${
-                  creationMethod === 'clone' ? 'ring-2 ring-primary' : ''
+                  creationMethod === "clone" ? 'ring-2 ring-primary' : ''
                 }`}
-                onClick={() => setCreationMethod('clone')}
+                onClick={() => setCreationMethod("clone")}
               >
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Copy className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <CardContent className="p-6 text-center space-y-4">
+                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto">
+                    <ArrowRight className="w-8 h-8" />
                   </div>
-                  <CardTitle>Clone Existing Agent</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-center">
-                    Start with an existing agent configuration and customize it to your needs.
-                  </p>
+                  <h3 className="text-lg font-semibold">Clone Existing Agent</h3>
+                  <p className="text-muted-foreground">Use an existing agent as a template and customize it</p>
                 </CardContent>
               </Card>
             </div>
           </div>
         );
       
-      case 1:
-        return creationMethod === 'clone' ? (
-          <CloneAgentStep 
-            selectedAgent={cloneSource}
-            onAgentSelect={setCloneSource}
-            availableAgents={mockAgents}
-          />
-        ) : (
-          <RoleSelectionStep 
+      case "role":
+        return (
+          <RoleSelectionStep
             selectedRole={selectedRole}
             onRoleSelect={setSelectedRole}
           />
         );
       
-      case 2:
+      case "specialization":
         return (
-          <SpecializationStep 
+          <SpecializationStep
             selectedRole={selectedRole}
-            specialization={selectedSpecialization}
-            onSpecializationChange={setSelectedSpecialization}
+            specialization={specialization}
+            onSpecializationChange={setSpecialization}
           />
         );
       
-      case 3:
+      case "capabilities":
         return (
-          <BackgroundConfigStep 
-            background={backgroundContext}
-            onBackgroundChange={setBackgroundContext}
-          />
-        );
-      
-      case 4:
-        return (
-          <CapabilitySelectionStep 
+          <CapabilitySelectionStep
             selectedRole={selectedRole}
-            capabilities={selectedCapabilities}
-            onCapabilitiesChange={setSelectedCapabilities}
+            capabilities={capabilities}
+            onCapabilitiesChange={setCapabilities}
           />
         );
       
-      case 5:
+      case "background":
         return (
-          <AgentNamingStep 
+          <BackgroundConfigStep
+            background={background}
+            onBackgroundChange={setBackground}
+          />
+        );
+      
+      case "naming":
+        return (
+          <AgentNamingStep
             name={agentName}
             icon={agentIcon}
             onNameChange={setAgentName}
@@ -182,103 +209,96 @@ export const AgentCreation = () => {
         );
       
       default:
-        return null;
+        if (creationMethod === "clone" && currentStep === 1) {
+          return (
+            <CloneAgentStep
+              selectedAgent={selectedCloneAgent}
+              onAgentSelect={setSelectedCloneAgent}
+              availableAgents={mockAgents}
+            />
+          );
+        }
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl font-bold">Review Your Agent</h2>
+              <p className="text-muted-foreground">Review your agent configuration before creating</p>
+            </div>
+            <Card className="max-w-2xl mx-auto">
+              <CardContent className="p-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div><strong>Creation Method:</strong> {creationMethod}</div>
+                  <div><strong>Name:</strong> {agentName}</div>
+                  {creationMethod === "new" && (
+                    <>
+                      <div><strong>Role:</strong> {selectedRole}</div>
+                      <div><strong>Specialization:</strong> {specialization}</div>
+                    </>
+                  )}
+                  {creationMethod === "clone" && (
+                    <div><strong>Clone From:</strong> {mockAgents.find(a => a.id === selectedCloneAgent)?.name}</div>
+                  )}
+                  <div><strong>Capabilities:</strong> {Object.keys(capabilities).filter(k => capabilities[k]).length} enabled</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
     }
   };
 
+  const progress = ((currentStep + 1) / filteredSteps.length) * 100;
+
   return (
     <div className="min-h-screen bg-background">
-      <Header 
-        viewMode="workflow" 
-        onViewModeChange={() => {}}
-        agents={mockAgents}
-      />
-      
-      <div className="bg-background text-foreground p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <h1 className="text-3xl font-bold text-card-foreground">Create New Agent</h1>
-            <p className="text-muted-foreground">Follow the steps below to configure your new AI agent</p>
-          </div>
-
-          {/* Progress Bar */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+          
           <div className="space-y-2">
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Step {currentStep + 1} of {steps.length}</span>
-              <span>{Math.round(progress)}% Complete</span>
-            </div>
-            <Progress value={progress} className="h-2" />
+            <h1 className="text-3xl font-bold">Create New Agent</h1>
+            <Progress value={progress} className="w-full max-w-md" />
+            <p className="text-muted-foreground">
+              Step {currentStep + 1} of {filteredSteps.length}: {filteredSteps[currentStep]?.description}
+            </p>
           </div>
+        </div>
 
-          {/* Step Navigation */}
-          <div className="flex items-center justify-center space-x-2 overflow-x-auto pb-4">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center space-x-2">
-                <div className={`flex flex-col items-center space-y-1 min-w-[120px] ${
-                  index <= currentStep ? 'text-primary' : 'text-muted-foreground'
-                }`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    index < currentStep ? 'bg-primary text-primary-foreground' :
-                    index === currentStep ? 'bg-primary/20 text-primary border-2 border-primary' :
-                    'bg-muted text-muted-foreground'
-                  }`}>
-                    {index + 1}
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs font-medium">{step.title}</div>
-                  </div>
-                </div>
-                {index < steps.length - 1 && (
-                  <div className={`w-12 h-px ${
-                    index < currentStep ? 'bg-primary' : 'bg-muted'
-                  }`} />
-                )}
-              </div>
-            ))}
-          </div>
+        {/* Step Content */}
+        <div className="mb-8">
+          {renderStepContent()}
+        </div>
 
-          {/* Step Content */}
-          <Card className="min-h-[500px]">
-            <CardContent className="p-8">
-              {renderStepContent()}
-            </CardContent>
-          </Card>
+        {/* Navigation */}
+        <div className="flex justify-between items-center max-w-4xl mx-auto">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentStep === 0}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Previous
+          </Button>
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between">
-            <Button 
-              variant="outline" 
-              onClick={handlePrevious} 
-              disabled={currentStep === 0}
-              className="flex items-center space-x-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Previous</span>
+          {currentStep === filteredSteps.length - 1 ? (
+            <Button onClick={handleCreateAgent} disabled={!canProceed()}>
+              Create Agent
+              <Check className="w-4 h-4 ml-2" />
             </Button>
-            
-            <div className="flex space-x-3">
-              {currentStep === steps.length - 1 ? (
-                <Button 
-                  onClick={handleComplete}
-                  disabled={!canProceed()}
-                  className="flex items-center space-x-2"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Create Agent</span>
-                </Button>
-              ) : (
-                <Button 
-                  onClick={handleNext}
-                  disabled={!canProceed()}
-                  className="flex items-center space-x-2"
-                >
-                  <span>Next</span>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          </div>
+          ) : (
+            <Button onClick={handleNext} disabled={!canProceed()}>
+              Next
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
         </div>
       </div>
     </div>
