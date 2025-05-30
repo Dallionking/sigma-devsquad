@@ -16,10 +16,10 @@ interface AgentConfigCardProps {
 
 export const AgentConfigCard = ({ agentType, onConfigChange }: AgentConfigCardProps) => {
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-card border-border">
       <CardContent className="p-6">
         <Tabs defaultValue="role" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-5 bg-muted">
             <TabsTrigger value="role" className="flex items-center space-x-2">
               <Users className="w-4 h-4" />
               <span>Role & Capabilities</span>

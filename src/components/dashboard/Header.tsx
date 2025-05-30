@@ -57,22 +57,27 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
+    <header className="bg-card border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <div 
             onClick={() => navigate("/")}
             className="cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">AI Development Workforce</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {activeAgents} of {totalAgents} agents active
-            </p>
+            <div className="flex items-center space-x-2">
+              <Bot className="w-8 h-8 text-primary" />
+              <div>
+                <h1 className="text-xl font-bold text-foreground">AI Development Workforce</h1>
+                <p className="text-sm text-muted-foreground">
+                  {activeAgents} of {totalAgents} agents active
+                </p>
+              </div>
+            </div>
           </div>
           
           {/* Show view mode selector only on the main dashboard */}
           {location.pathname === "/" && (
-            <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-700 rounded-lg p-1">
+            <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
               {Object.entries(viewModeConfig).map(([mode, config]) => {
                 const Icon = config.icon;
                 return (
@@ -96,7 +101,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-slate-600 dark:text-slate-300">System Healthy</span>
+              <span className="text-sm text-muted-foreground">System Healthy</span>
             </div>
             <Badge variant="secondary" className="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
               <Users className="w-3 h-3 mr-1" />

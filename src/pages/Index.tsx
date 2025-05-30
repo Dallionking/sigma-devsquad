@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AgentSidebar } from "@/components/dashboard/AgentSidebar";
 import { MainWorkflowArea } from "@/components/dashboard/MainWorkflowArea";
@@ -168,7 +167,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
