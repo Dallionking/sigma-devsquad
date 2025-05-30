@@ -30,10 +30,10 @@ export const AppearanceSettings = ({ darkMode, setDarkMode }: AppearanceSettings
         <div className="space-y-3">
           <label className="font-medium text-card-foreground">Interface Scale</label>
           <Select defaultValue="100">
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-48 bg-background border-border">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-popover border-border">
               <SelectItem value="90">90%</SelectItem>
               <SelectItem value="100">100%</SelectItem>
               <SelectItem value="110">110%</SelectItem>

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,30 +13,13 @@ import { NotificationSettings } from "@/components/settings/NotificationSettings
 import { BackupSettings } from "@/components/settings/BackupSettings";
 import { Header } from "@/components/dashboard/Header";
 import { ViewMode, Agent } from "@/pages/Index";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const Settings = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [autoBackup, setAutoBackup] = useState(true);
   const [performanceMode, setPerformanceMode] = useState("balanced");
-
-  // Load dark mode preference from localStorage
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    setDarkMode(savedDarkMode);
-  }, []);
-
-  // Update dark mode when changed
-  const handleDarkModeChange = (value: boolean) => {
-    setDarkMode(value);
-    localStorage.setItem('darkMode', value.toString());
-    
-    if (value) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
 
   // Mock agents data for header
   const mockAgents: Agent[] = [
@@ -99,7 +82,7 @@ export const Settings = () => {
             </TabsContent>
 
             <TabsContent value="appearance" className="space-y-6">
-              <AppearanceSettings darkMode={darkMode} setDarkMode={handleDarkModeChange} />
+              <AppearanceSettings darkMode={darkMode} setDarkMode={toggleDarkMode} />
             </TabsContent>
 
             <TabsContent value="performance" className="space-y-6">

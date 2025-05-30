@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface HeaderProps {
   viewMode: ViewMode;
@@ -15,7 +15,7 @@ interface HeaderProps {
 export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useTheme();
   
   const activeAgents = agents.filter(agent => agent.status === "working").length;
   const totalAgents = agents.length;
@@ -31,30 +31,6 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isLLMPage = location.pathname === "/llm-integration";
   const isAgentConfigPage = location.pathname === "/agent-configuration";
   const isMCPPage = location.pathname === "/mcp-management";
-
-  // Load dark mode preference from localStorage
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    setDarkMode(savedDarkMode);
-    if (savedDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
 
   return (
     <header className="bg-card border-b border-border px-6 py-4">
