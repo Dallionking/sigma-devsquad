@@ -37,6 +37,11 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isMCPPage = location.pathname === "/mcp-management";
   const isIDEPage = location.pathname === "/ide-integration";
   const isPlanningAgentPage = location.pathname === "/planning-agent";
+  const isAgentCreationPage = location.pathname === "/agent-creation";
+
+  const handleLogoClick = () => {
+    navigate("/");
+  };
 
   return (
     <header className="bg-card border-b border-border px-4 sm:px-6 py-3 sm:py-4">
@@ -47,8 +52,16 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
           
           {/* Logo - clickable to go home */}
           <div 
-            onClick={() => navigate("/")}
+            onClick={handleLogoClick}
             className="cursor-pointer hover:opacity-80 transition-opacity"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleLogoClick();
+              }
+            }}
+            aria-label="Go to dashboard"
           >
             <Logo 
               size={isMobile ? "sm" : "md"} 
