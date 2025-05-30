@@ -39,6 +39,16 @@ export const ResearchBrowser = ({ onResultSelect, initialQuery = "" }: ResearchB
   const [history, setHistory] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("results");
 
+  // Helper function for type icons
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "academic": return "📚";
+      case "news": return "📰";
+      case "documentation": return "📖";
+      default: return "🌐";
+    }
+  };
+
   // Mock research results for demonstration
   const mockResults: ResearchResult[] = [
     {
