@@ -1,17 +1,13 @@
+
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Trash2, Copy, ArrowRight, TestTube, Download, Upload, Sparkles } from "lucide-react";
 import { AgentType } from "@/pages/AgentConfiguration";
 import { RuleTemplateSelector } from "./RuleTemplateSelector";
 import { RuleTester } from "./RuleTester";
 import { RuleImportExport } from "./RuleImportExport";
+import { RuleEditorHeader } from "./RuleEditorHeader";
+import { RuleList } from "./RuleList";
 
 interface Rule {
   id: string;
@@ -158,175 +154,29 @@ export const RuleEditor = ({ agentType, onConfigChange }: RuleEditorProps) => {
     onConfigChange();
   };
 
+  const handleTestRule = (rule: Rule) => {
+    setTestingRule(rule);
+    setActiveDialog("test");
+  };
+
   const enabledRulesCount = rules.filter(rule => rule.enabled).length;
 
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Automation Rules</CardTitle>
-              <CardDescription>
-                Define conditions and actions to automate agent behavior
-              </CardDescription>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Badge variant="secondary" className="bg-blue-50 text-blue-700">
-                {enabledRulesCount} active rules
-              </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setActiveDialog("template")}
-                className="flex items-center space-x-2"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Templates</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setActiveDialog("import-export")}
-                className="flex items-center space-x-2"
-              >
-                <Download className="w-4 h-4" />
-                <span>Import/Export</span>
-              </Button>
-              <Button onClick={addNewRule} size="sm" className="flex items-center space-x-2">
-                <Plus className="w-4 h-4" />
-                <span>Add Rule</span>
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {rules.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <p>No rules configured. Click "Add Rule" to create your first automation rule.</p>
-            </div>
-          ) : (
-            rules.map((rule, index) => (
-              <div key={rule.id}>
-                <Card className={`border-2 ${rule.enabled ? 'border-green-200 bg-green-50/30' : 'border-slate-200 bg-slate-50/30'}`}>
-                  <CardContent className="p-4">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <Input
-                            value={rule.name}
-                            onChange={(e) => updateRule(rule.id, { name: e.target.value })}
-                            className="font-medium text-slate-900 border-0 bg-transparent p-0 text-lg focus-visible:ring-0"
-                            placeholder="Rule name"
-                          />
-                          <Badge 
-                            variant="secondary" 
-                            className={`
-                              ${rule.priority === 'high' ? 'bg-red-100 text-red-700' : ''}
-                              ${rule.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' : ''}
-                              ${rule.priority === 'low' ? 'bg-slate-100 text-slate-700' : ''}
-                            `}
-                          >
-                            {rule.priority} priority
-                          </Badge>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setTestingRule(rule);
-                              setActiveDialog("test");
-                            }}
-                            className="text-blue-500 hover:text-blue-700"
-                          >
-                            <TestTube className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => duplicateRule(rule)}
-                            className="text-slate-500 hover:text-slate-700"
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deleteRule(rule.id)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                          <label className="flex items-center space-x-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={rule.enabled}
-                              onChange={(e) => updateRule(rule.id, { enabled: e.target.checked })}
-                              className="rounded border-slate-300"
-                            />
-                            <span className="text-sm text-slate-600">Enabled</span>
-                          </label>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                        <div className="space-y-2">
-                          <Label htmlFor={`condition-${rule.id}`} className="text-sm font-medium text-slate-700">
-                            Condition (When)
-                          </Label>
-                          <Textarea
-                            id={`condition-${rule.id}`}
-                            value={rule.condition}
-                            onChange={(e) => updateRule(rule.id, { condition: e.target.value })}
-                            placeholder="e.g., task.priority === 'high' AND task.deadline < 3 days"
-                            rows={3}
-                            className="text-sm font-mono"
-                          />
-                        </div>
-
-                        <div className="flex justify-center">
-                          <ArrowRight className="w-6 h-6 text-slate-400" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor={`action-${rule.id}`} className="text-sm font-medium text-slate-700">
-                            Action (Then)
-                          </Label>
-                          <Textarea
-                            id={`action-${rule.id}`}
-                            value={rule.action}
-                            onChange={(e) => updateRule(rule.id, { action: e.target.value })}
-                            placeholder="e.g., notify_team AND escalate_to_manager"
-                            rows={3}
-                            className="text-sm font-mono"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4">
-                        <div className="space-y-1">
-                          <Label htmlFor={`priority-${rule.id}`} className="text-sm text-slate-600">Priority</Label>
-                          <select
-                            id={`priority-${rule.id}`}
-                            value={rule.priority}
-                            onChange={(e) => updateRule(rule.id, { priority: e.target.value as Rule['priority'] })}
-                            className="flex h-8 rounded-md border border-input bg-background px-3 py-1 text-sm"
-                          >
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                {index < rules.length - 1 && <Separator className="my-4" />}
-              </div>
-            ))
-          )}
-        </CardContent>
+        <RuleEditorHeader
+          enabledRulesCount={enabledRulesCount}
+          onAddRule={addNewRule}
+          onOpenTemplates={() => setActiveDialog("template")}
+          onOpenImportExport={() => setActiveDialog("import-export")}
+        />
+        <RuleList
+          rules={rules}
+          onUpdateRule={updateRule}
+          onDeleteRule={deleteRule}
+          onDuplicateRule={duplicateRule}
+          onTestRule={handleTestRule}
+        />
       </Card>
 
       {/* Dialogs */}
