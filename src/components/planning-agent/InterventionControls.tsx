@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 
 interface InterventionAction {
   id: string;
-  type: "pause" | "resume" | "restart" | "message" | "priority" | "reassign" | "resource";
+  type: "pause" | "resume" | "restart" | "message" | "priority" | "reassign" | "resource" | "emergency";
   label: string;
   description: string;
   icon: any;
