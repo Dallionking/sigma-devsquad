@@ -18,10 +18,10 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
   };
 
   return (
-    <div className="relative h-full overflow-hidden">
-      {/* Main Chat Interface - Adjusts width when canvas is open */}
+    <div className="relative h-full overflow-hidden flex">
+      {/* Main Chat Interface - Takes 50% when canvas is open, full width when closed */}
       <div className={`h-full transition-all duration-300 ${
-        isCanvasOpen ? 'lg:mr-[50vw]' : 'w-full'
+        isCanvasOpen ? 'w-1/2' : 'w-full'
       }`}>
         <Card className="h-full card-enhanced">
           <ChatInterface 
@@ -32,11 +32,11 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
         </Card>
       </div>
 
-      {/* Canvas Panel - Slides from right */}
+      {/* Canvas Panel - Takes 50% when open, slides from right */}
       {isCanvasOpen && (
         <>
-          {/* Desktop Canvas - Slides in from right */}
-          <div className="hidden lg:block fixed top-16 right-0 h-[calc(100vh-4rem)] w-1/2 z-40 transform transition-transform duration-300 translate-x-0">
+          {/* Desktop Canvas - Takes remaining 50% */}
+          <div className="hidden lg:block w-1/2 h-full">
             <PlanningCanvas 
               selectedProject={selectedProject} 
               isOpen={isCanvasOpen}
