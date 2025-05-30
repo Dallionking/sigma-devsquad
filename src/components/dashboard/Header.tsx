@@ -2,7 +2,7 @@
 import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ViewMode, Agent } from "@/pages/Index";
+import { ViewMode, Agent } from "@/types";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
 

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Agent } from "@/pages/Index";
+import { Agent } from "@/types";
 import { 
   Bot, 
   Play, 

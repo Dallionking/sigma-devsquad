@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Agent, AgentType, AgentStatus } from "@/pages/Index";
+import { Agent, AgentType, AgentStatus } from "@/types";
 import { Bot, Search, Filter, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 

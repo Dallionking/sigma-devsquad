@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Message, Agent } from "@/pages/Index";
+import { Message, Agent } from "@/types";
 import { 
   MessageSquare, 
   ArrowRight

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Bot, Layers, Code, Server, TestTube, FileText, Settings } from "lucide-react";
-import { Agent, AgentType } from "@/pages/Index";
+import { Agent, AgentType } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface AgentSidebarProps {

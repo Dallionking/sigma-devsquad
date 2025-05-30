@@ -1,5 +1,5 @@
 
-import { Agent, Task, Message, ViewMode } from "@/pages/Index";
+import { Agent, Task, Message, ViewMode } from "@/types";
 import { AgentDetails } from "./detail-panel/AgentDetails";
 import { TaskDetails } from "./detail-panel/TaskDetails";
 import { MessageDetails } from "./detail-panel/MessageDetails";

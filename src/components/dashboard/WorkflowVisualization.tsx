@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Agent, Task } from "@/pages/Index";
+import { Agent, Task } from "@/types";
 import { ArrowRight, CheckCircle, Clock, AlertCircle, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 

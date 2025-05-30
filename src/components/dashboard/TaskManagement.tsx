@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Task, Agent } from "@/pages/Index";
+import { Task, Agent } from "@/types";
 import { Filter, Clock, CheckCircle, AlertCircle, Play, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 

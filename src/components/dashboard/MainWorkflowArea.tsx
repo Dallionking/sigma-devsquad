@@ -1,5 +1,5 @@
 
-import { ViewMode, Agent, Task, Message } from "@/pages/Index";
+import { ViewMode, Agent, Task, Message } from "@/types";
 import { WorkflowVisualization } from "./WorkflowVisualization";
 import { CommunicationGraph } from "./CommunicationGraph";
 import { TaskManagement } from "./TaskManagement";

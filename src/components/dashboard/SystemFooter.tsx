@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Message } from "@/pages/Index";
+import { Message } from "@/types";
 import { ChevronUp, ChevronDown, Terminal, MessageSquare, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 

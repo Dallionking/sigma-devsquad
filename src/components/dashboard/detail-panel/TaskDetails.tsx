@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Task, Agent } from "@/pages/Index";
+import { Task, Agent } from "@/types";
 import { 
   Clock, 
   CheckCircle, 
