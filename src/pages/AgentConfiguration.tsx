@@ -83,7 +83,7 @@ export const AgentConfiguration = () => {
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Agent Configuration</h1>
+              <h1 className="text-3xl font-bold text-foreground">Agent Configuration</h1>
               <p className="text-muted-foreground mt-2">Configure roles, rules, and performance settings for each agent type</p>
             </div>
             <div className="flex items-center space-x-3">
@@ -104,7 +104,7 @@ export const AgentConfiguration = () => {
           </div>
 
           <Tabs value={activeAgent} onValueChange={(value) => setActiveAgent(value as AgentType)} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-6 bg-muted">
               {agentTypes.map((agent) => {
                 const Icon = agent.icon;
                 return (
@@ -123,7 +123,7 @@ export const AgentConfiguration = () => {
                     <agent.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold">{agent.name}</h2>
+                    <h2 className="text-xl font-semibold text-foreground">{agent.name}</h2>
                     <p className="text-muted-foreground">{agent.description}</p>
                   </div>
                 </div>

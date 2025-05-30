@@ -11,16 +11,16 @@ interface AppearanceSettingsProps {
 
 export const AppearanceSettings = ({ darkMode, setDarkMode }: AppearanceSettingsProps) => {
   return (
-    <Card>
+    <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle>Appearance Settings</CardTitle>
-        <CardDescription>Customize the visual appearance of the interface</CardDescription>
+        <CardTitle className="text-card-foreground">Appearance Settings</CardTitle>
+        <CardDescription className="text-muted-foreground">Customize the visual appearance of the interface</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-medium">Dark Mode</h4>
-            <p className="text-sm text-slate-600">Switch to dark theme</p>
+            <h4 className="font-medium text-card-foreground">Dark Mode</h4>
+            <p className="text-sm text-muted-foreground">Switch to dark theme</p>
           </div>
           <Switch checked={darkMode} onCheckedChange={setDarkMode} />
         </div>
@@ -28,7 +28,7 @@ export const AppearanceSettings = ({ darkMode, setDarkMode }: AppearanceSettings
         <Separator />
         
         <div className="space-y-3">
-          <label className="font-medium">Interface Scale</label>
+          <label className="font-medium text-card-foreground">Interface Scale</label>
           <Select defaultValue="100">
             <SelectTrigger className="w-48">
               <SelectValue />
@@ -45,7 +45,7 @@ export const AppearanceSettings = ({ darkMode, setDarkMode }: AppearanceSettings
         <Separator />
         
         <div className="space-y-3">
-          <label className="font-medium">Accent Color</label>
+          <label className="font-medium text-card-foreground">Accent Color</label>
           <div className="flex space-x-2">
             <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-blue-700 cursor-pointer"></div>
             <div className="w-8 h-8 rounded-full bg-green-500 border-2 border-transparent cursor-pointer"></div>
