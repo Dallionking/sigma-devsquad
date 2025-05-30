@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   MessageCircle, 
   Search, 
@@ -15,16 +15,25 @@ import {
   Send,
   Paperclip,
   Bot,
-  User
+  User,
+  Plus,
+  Target
 } from "lucide-react";
 import { ContextPanel } from "@/components/planning-agent/ContextPanel";
 import { FeatureBreakdown } from "@/components/planning-agent/FeatureBreakdown";
 import { PatternAnalysisDashboard } from "@/components/planning-agent/PatternAnalysisDashboard";
+import { TaskMasterIntegration } from "@/components/planning-agent/TaskMasterIntegration";
+import { ResearchPanel } from "@/components/planning-agent/ResearchPanel";
+import { EnhancedTaskAssignment } from "@/components/planning-agent/EnhancedTaskAssignment";
+import { WorkflowProgressTracker } from "@/components/workflow/WorkflowProgressTracker";
+import { WorkflowStateManager } from "@/components/workflow/WorkflowStateManager";
 import { mockMessages, mockAgents } from "@/data/mockData";
 
 const PlanningAgent = () => {
   const [selectedProject, setSelectedProject] = useState("ai-workforce");
   const [chatMessage, setChatMessage] = useState("");
+  const [showTaskAssignment, setShowTaskAssignment] = useState(false);
+  const [showWorkflowTracker, setShowWorkflowTracker] = useState(false);
   const [chatHistory, setChatHistory] = useState([
     {
       id: 1,
@@ -33,6 +42,79 @@ const PlanningAgent = () => {
       timestamp: new Date().toISOString()
     }
   ]);
+
+  // Mock data for enhanced components
+  const mockAgentList = [
+    {
+      id: "frontend-1",
+      name: "Frontend Agent Alpha",
+      type: "Frontend",
+      availability: "available" as const,
+      workload: 45,
+      expertise: ["React", "TypeScript", "UI/UX", "Responsive Design"]
+    },
+    {
+      id: "backend-1", 
+      name: "Backend Agent Beta",
+      type: "Backend",
+      availability: "busy" as const,
+      workload: 85,
+      expertise: ["Node.js", "PostgreSQL", "API Design", "Authentication"]
+    },
+    {
+      id: "qa-1",
+      name: "QA Agent Gamma",
+      type: "QA",
+      availability: "available" as const,
+      workload: 30,
+      expertise: ["Test Automation", "Performance Testing", "Bug Tracking"]
+    }
+  ];
+
+  const mockExistingTasks = [
+    { id: "task-1", title: "Setup authentication system" },
+    { id: "task-2", title: "Create dashboard layout" },
+    { id: "task-3", title: "Implement user management" }
+  ];
+
+  const mockWorkflow = {
+    id: "workflow-1",
+    name: "User Authentication Implementation",
+    steps: [
+      {
+        id: "step-1",
+        title: "Design Authentication Flow",
+        description: "Create wireframes and user flow diagrams",
+        status: "completed" as const,
+        estimatedTime: 120,
+        actualTime: 115
+      },
+      {
+        id: "step-2", 
+        title: "Setup Backend API",
+        description: "Create authentication endpoints and middleware",
+        status: "in-progress" as const,
+        estimatedTime: 180
+      },
+      {
+        id: "step-3",
+        title: "Frontend Integration",
+        description: "Connect frontend forms to authentication API",
+        status: "pending" as const,
+        estimatedTime: 150
+      },
+      {
+        id: "step-4",
+        title: "Testing & QA",
+        description: "Comprehensive testing of authentication flow",
+        status: "pending" as const,
+        estimatedTime: 90
+      }
+    ],
+    currentStepIndex: 1,
+    startTime: new Date(Date.now() - 7200000), // 2 hours ago
+    isActive: true
+  };
 
   const handleSendMessage = () => {
     if (!chatMessage.trim()) return;
@@ -59,20 +141,54 @@ const PlanningAgent = () => {
     }, 1000);
   };
 
+  const handleTaskCreate = (taskData: any) => {
+    console.log("Creating task:", taskData);
+    setShowTaskAssignment(false);
+    // Here you would typically send the task data to your backend
+  };
+
+  const handleWorkflowAction = (action: string, ...args: any[]) => {
+    console.log("Workflow action:", action, args);
+    // Handle workflow state changes
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Planning Agent</h1>
-          <p className="text-muted-foreground">
-            Intelligent project planning and requirement analysis
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Planning Agent</h1>
+              <p className="text-muted-foreground">
+                Intelligent project planning and requirement analysis
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button 
+                onClick={() => setShowTaskAssignment(true)}
+                className="flex items-center space-x-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Task</span>
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => setShowWorkflowTracker(true)}
+                className="flex items-center space-x-2"
+              >
+                <Target className="w-4 h-4" />
+                <span>Track Workflow</span>
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Context Panel - Fixed on the right */}
-          <div className="lg:col-span-1 order-2 lg:order-2">
+          {/* Enhanced Context Panel */}
+          <div className="lg:col-span-1 order-2 lg:order-2 space-y-4">
             <ContextPanel selectedProject={selectedProject} />
+            <TaskMasterIntegration />
+            <ResearchPanel />
           </div>
 
           {/* Main Content Area */}
@@ -232,19 +348,13 @@ const PlanningAgent = () => {
               </TabsContent>
 
               <TabsContent value="workflow" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Brain className="w-5 h-5" />
-                      Workflow Visualization
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">
-                      Interactive workflow graph with timeline and decision points
-                    </p>
-                  </CardContent>
-                </Card>
+                <WorkflowStateManager 
+                  onSave={(name) => handleWorkflowAction("save", name)}
+                  onLoad={(state) => handleWorkflowAction("load", state)}
+                  onDelete={(id) => handleWorkflowAction("delete", id)}
+                  onExport={(state) => handleWorkflowAction("export", state)}
+                  onImport={(file) => handleWorkflowAction("import", file)}
+                />
               </TabsContent>
 
               <TabsContent value="analysis" className="space-y-6">
@@ -253,6 +363,41 @@ const PlanningAgent = () => {
             </Tabs>
           </div>
         </div>
+
+        {/* Enhanced Task Assignment Dialog */}
+        <Dialog open={showTaskAssignment} onOpenChange={setShowTaskAssignment}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Create Enhanced Task Assignment</DialogTitle>
+            </DialogHeader>
+            <EnhancedTaskAssignment
+              agents={mockAgentList}
+              existingTasks={mockExistingTasks}
+              onTaskCreate={handleTaskCreate}
+              onCancel={() => setShowTaskAssignment(false)}
+            />
+          </DialogContent>
+        </Dialog>
+
+        {/* Workflow Progress Tracker Dialog */}
+        <Dialog open={showWorkflowTracker} onOpenChange={setShowWorkflowTracker}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Workflow Progress Tracker</DialogTitle>
+            </DialogHeader>
+            <WorkflowProgressTracker
+              workflow={mockWorkflow}
+              onStepComplete={(stepId) => handleWorkflowAction("complete-step", stepId)}
+              onWorkflowPause={() => handleWorkflowAction("pause")}
+              onWorkflowResume={() => handleWorkflowAction("resume")}
+              onWorkflowRestart={() => handleWorkflowAction("restart")}
+              onWorkflowCancel={() => {
+                handleWorkflowAction("cancel");
+                setShowWorkflowTracker(false);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

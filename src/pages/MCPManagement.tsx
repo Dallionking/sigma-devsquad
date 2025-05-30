@@ -1,17 +1,19 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Package, Download, Settings, Activity, Search, Filter } from "lucide-react";
+import { MCPInstallationWizard } from "@/components/mcp/MCPInstallationWizard";
 
 const MCPManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showInstallWizard, setShowInstallWizard] = useState(false);
+  const [selectedMCP, setSelectedMCP] = useState<any>(null);
 
-  // Mock MCP data
   const mcpPackages = [
     {
       id: "git-protocol",
@@ -21,27 +23,57 @@ const MCPManagement = () => {
       status: "installed",
       category: "development",
       downloads: 15420,
-      rating: 4.8
+      rating: 4.8,
+      dependencies: ["filesystem-protocol", "ssh-client"],
+      permissions: [
+        "Read/write access to local Git repositories",
+        "Network access for remote repository operations",
+        "Execute Git commands in terminal"
+      ],
+      configuration: [
+        { key: "default_branch", description: "Default branch name", required: false },
+        { key: "auto_fetch", description: "Enable automatic fetching", required: false }
+      ]
     },
     {
       id: "database-connector",
-      name: "Database Connector",
+      name: "Database Connector", 
       description: "Multi-database support for MySQL, PostgreSQL, MongoDB with query optimization",
       version: "2.1.0",
       status: "available",
       category: "database",
       downloads: 8930,
-      rating: 4.6
+      rating: 4.6,
+      dependencies: ["connection-pool"],
+      permissions: [
+        "Connect to external databases",
+        "Execute database queries",
+        "Manage database connections"
+      ],
+      configuration: [
+        { key: "connection_string", description: "Database connection string", required: true },
+        { key: "pool_size", description: "Connection pool size", required: false }
+      ]
     },
     {
       id: "api-client",
       name: "API Client",
       description: "RESTful API client with authentication, rate limiting, and response caching",
-      version: "1.5.2",
+      version: "1.5.2", 
       status: "installed",
       category: "networking",
       downloads: 12340,
-      rating: 4.7
+      rating: 4.7,
+      dependencies: ["http-client", "cache-manager"],
+      permissions: [
+        "Make HTTP requests to external APIs",
+        "Store API responses in cache",
+        "Manage authentication tokens"
+      ],
+      configuration: [
+        { key: "api_key", description: "Default API key", required: false },
+        { key: "timeout", description: "Request timeout (ms)", required: false }
+      ]
     }
   ];
 
@@ -59,6 +91,18 @@ const MCPManagement = () => {
     const matchesCategory = selectedCategory === "all" || pkg.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const handleInstallClick = (mcp: any) => {
+    setSelectedMCP(mcp);
+    setShowInstallWizard(true);
+  };
+
+  const handleInstallComplete = (config: Record<string, any>) => {
+    console.log("MCP installed with config:", config);
+    setShowInstallWizard(false);
+    setSelectedMCP(null);
+    // Here you would update the MCP status to "installed"
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -79,7 +123,7 @@ const MCPManagement = () => {
           </TabsList>
 
           <TabsContent value="marketplace" className="space-y-6">
-            {/* Search and Filter Bar */}
+            
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -108,7 +152,6 @@ const MCPManagement = () => {
               </div>
             </div>
 
-            {/* MCP Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPackages.map((mcp) => (
                 <Card key={mcp.id} className="hover:shadow-lg transition-shadow">
@@ -151,7 +194,11 @@ const MCPManagement = () => {
                           </Button>
                         </>
                       ) : (
-                        <Button size="sm" className="flex-1">
+                        <Button 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => handleInstallClick(mcp)}
+                        >
                           <Download className="w-4 h-4 mr-2" />
                           Install
                         </Button>
@@ -222,6 +269,24 @@ const MCPManagement = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        <Dialog open={showInstallWizard} onOpenChange={setShowInstallWizard}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Install MCP Package</DialogTitle>
+            </DialogHeader>
+            {selectedMCP && (
+              <MCPInstallationWizard
+                mcpPackage={selectedMCP}
+                onInstall={handleInstallComplete}
+                onCancel={() => {
+                  setShowInstallWizard(false);
+                  setSelectedMCP(null);
+                }}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
