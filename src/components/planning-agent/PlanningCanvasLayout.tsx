@@ -18,10 +18,10 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
   };
 
   return (
-    <div className="relative h-full overflow-hidden flex">
-      {/* Main Chat Interface - Takes 50% when canvas is open, full width when closed */}
-      <div className={`h-full transition-all duration-300 ${
-        isCanvasOpen ? 'w-1/2' : 'w-full'
+    <div className="h-full overflow-hidden relative">
+      {/* Main Chat Interface - Always visible, adjusts width when canvas opens */}
+      <div className={`transition-all duration-300 ease-in-out ${
+        isCanvasOpen ? 'w-1/2 pr-2' : 'w-full'
       }`}>
         <Card className="h-full card-enhanced">
           <ChatInterface 
@@ -32,36 +32,21 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
         </Card>
       </div>
 
-      {/* Canvas Panel - Takes 50% when open, slides from right */}
-      {isCanvasOpen && (
-        <>
-          {/* Desktop Canvas - Takes remaining 50% */}
-          <div className="hidden lg:block w-1/2 h-full">
-            <PlanningCanvas 
-              selectedProject={selectedProject} 
-              isOpen={isCanvasOpen}
-              onToggle={handleToggleCanvas}
-              className="h-full"
-            />
-          </div>
-
-          {/* Mobile/Tablet Canvas - Full overlay */}
-          <div className="lg:hidden fixed top-0 right-0 h-full w-full sm:w-2/3 z-50 transform transition-transform duration-300">
-            <PlanningCanvas 
-              selectedProject={selectedProject} 
-              isOpen={isCanvasOpen}
-              onToggle={handleToggleCanvas}
-              className="h-full"
-            />
-          </div>
-
-          {/* Backdrop overlay for mobile/tablet only */}
-          <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-            onClick={handleToggleCanvas}
+      {/* Planning Canvas - Slides in from the right */}
+      <div className={`absolute top-0 right-0 h-full transition-all duration-300 ease-in-out ${
+        isCanvasOpen 
+          ? 'w-1/2 translate-x-0 opacity-100' 
+          : 'w-1/2 translate-x-full opacity-0 pointer-events-none'
+      }`}>
+        <div className="pl-2 h-full">
+          <PlanningCanvas 
+            selectedProject={selectedProject} 
+            isOpen={isCanvasOpen}
+            onToggle={handleToggleCanvas}
+            className="h-full"
           />
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
