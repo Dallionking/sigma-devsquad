@@ -5,7 +5,8 @@ import { SettingsContent } from "./SettingsContent";
 import { SettingsActions } from "./SettingsActions";
 import { useSettingsState } from "@/hooks/useSettingsState";
 import { useSettingsActions } from "@/hooks/useSettingsActions";
-import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
+import { useEnhancedKeyboardNavigation } from "@/hooks/useEnhancedKeyboardNavigation";
+import { useRef } from "react";
 
 export const SettingsPage = () => {
   const {
@@ -29,56 +30,63 @@ export const SettingsPage = () => {
     setPerformanceMode,
   });
 
-  // Get keyboard navigation functions first
-  const { focusNext, focusPrevious } = useKeyboardNavigation({
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Enhanced keyboard navigation with better focus management
+  const { focusNext, focusPrevious, saveFocus, restoreFocus } = useEnhancedKeyboardNavigation({
+    containerRef,
     onEscape: () => {
       // Clear search when pressing Escape
       if (searchQuery) {
         setSearchQuery("");
+      } else {
+        // If no search query, restore focus to last saved position
+        restoreFocus();
       }
     },
     enableArrowNavigation: true,
-  });
-
-  // Set up keyboard navigation with the functions now available
-  useKeyboardNavigation({
-    onEscape: () => {
-      if (searchQuery) {
-        setSearchQuery("");
-      }
-    },
-    enableArrowNavigation: true,
+    enableHomeEnd: true,
+    enableTabNavigation: true,
     onArrowDown: focusNext,
     onArrowUp: focusPrevious,
+    onTab: (direction) => {
+      // Save focus when tabbing to help with navigation
+      saveFocus();
+    }
   });
 
   return (
-    <SettingsLayout
-      searchQuery={searchQuery}
-      onSearch={setSearchQuery}
-      onFilterChange={setSearchFilters}
-    >
-      <SettingsTabsProvider
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
+    <div ref={containerRef} className="focus-within:outline-none">
+      <SettingsLayout
+        searchQuery={searchQuery}
+        onSearch={setSearchQuery}
+        onFilterChange={setSearchFilters}
       >
-        <SettingsContent
-          searchQuery={searchQuery}
-          notifications={notifications}
-          setNotifications={setNotifications}
-          autoBackup={autoBackup}
-          setAutoBackup={setAutoBackup}
-          performanceMode={performanceMode}
-          setPerformanceMode={setPerformanceMode}
-        />
-      </SettingsTabsProvider>
+        <SettingsTabsProvider
+          activeTab={activeTab}
+          onTabChange={(tab) => {
+            setActiveTab(tab);
+            saveFocus(); // Save focus when switching tabs
+          }}
+        >
+          <SettingsContent
+            searchQuery={searchQuery}
+            notifications={notifications}
+            setNotifications={setNotifications}
+            autoBackup={autoBackup}
+            setAutoBackup={setAutoBackup}
+            performanceMode={performanceMode}
+            setPerformanceMode={setPerformanceMode}
+          />
+        </SettingsTabsProvider>
 
-      <div className="fade-in" style={{ animationDelay: "300ms" }}>
-        <SettingsActions 
-          onSaveAll={handleSaveAll}
-          onResetAll={handleResetAll}
-        />
-      </div>
-    </SettingsLayout>
+        <div className="fade-in" style={{ animationDelay: "300ms" }}>
+          <SettingsActions 
+            onSaveAll={handleSaveAll}
+            onResetAll={handleResetAll}
+          />
+        </div>
+      </SettingsLayout>
+    </div>
   );
 };
