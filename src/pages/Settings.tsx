@@ -14,11 +14,9 @@ import { BackupSettings } from "@/components/settings/BackupSettings";
 import { SettingsSearchBar } from "@/components/settings/SettingsSearchBar";
 import { Header } from "@/components/dashboard/Header";
 import { ViewMode, Agent } from "@/types";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useToast } from "@/hooks/use-toast";
 
 export const Settings = () => {
-  const { darkMode, toggleDarkMode } = useTheme();
   const { toast } = useToast();
   const [notifications, setNotifications] = useState(true);
   const [autoBackup, setAutoBackup] = useState(true);
@@ -112,11 +110,7 @@ export const Settings = () => {
             </TabsContent>
 
             <TabsContent value="appearance" className="space-y-6">
-              <AppearanceSettings 
-                darkMode={darkMode} 
-                setDarkMode={toggleDarkMode}
-                searchQuery={searchQuery}
-              />
+              <AppearanceSettings searchQuery={searchQuery} />
             </TabsContent>
 
             <TabsContent value="performance" className="space-y-6">
