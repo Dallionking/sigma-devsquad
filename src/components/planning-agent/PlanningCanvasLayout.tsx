@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ChatInterface } from "./ChatInterface";
@@ -23,7 +24,7 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
       <div className="hidden lg:block h-full">
         {isCanvasOpen ? (
           <ResizablePanelGroup direction="horizontal" className="h-full">
-            <ResizablePanel defaultSize={45} minSize={30} maxSize={70}>
+            <ResizablePanel defaultSize={35} minSize={25} maxSize={60}>
               <Card className="h-full card-enhanced">
                 <ChatInterface 
                   onCreateTask={onCreateTask}
@@ -33,7 +34,7 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
               </Card>
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={55} minSize={30}>
+            <ResizablePanel defaultSize={65} minSize={40}>
               <PlanningCanvas 
                 selectedProject={selectedProject} 
                 isOpen={isCanvasOpen}
