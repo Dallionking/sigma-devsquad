@@ -17,7 +17,7 @@ import {
 import { ContextPanel } from "@/components/planning-agent/ContextPanel";
 import { TaskMasterIntegration } from "@/components/planning-agent/TaskMasterIntegration";
 import { ResearchPanel } from "@/components/planning-agent/ResearchPanel";
-import { PlanningChatInterface } from "@/components/planning-agent/PlanningChatInterface";
+import { ChatInterface } from "@/components/planning-agent/ChatInterface";
 import { 
   ResearchTabContent,
   PRDTabContent,
@@ -175,7 +175,9 @@ const PlanningAgent = () => {
                 {/* Enhanced tab content with consistent spacing and animations */}
                 <div className="mt-responsive">
                   <TabsContent value="chat" className="space-y-responsive fade-in">
-                    <PlanningChatInterface />
+                    <div className="h-[600px]">
+                      <ChatInterface />
+                    </div>
                   </TabsContent>
 
                   <TabsContent value="research" className="space-y-responsive fade-in">
