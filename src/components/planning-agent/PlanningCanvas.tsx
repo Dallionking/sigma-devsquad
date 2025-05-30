@@ -10,12 +10,14 @@ import {
   Brain, 
   Search,
   Plus,
-  FileText
+  FileText,
+  Zap
 } from "lucide-react";
 import { CanvasTaskMaster } from "./CanvasTaskMaster";
 import { ContextPanel } from "./ContextPanel";
 import { ResearchPanel } from "./ResearchPanel";
 import { EnhancedPRDGenerator } from "./EnhancedPRDGenerator";
+import { ContextualTools } from "./ContextualTools";
 
 interface PlanningCanvasProps {
   selectedProject: string;
@@ -25,6 +27,15 @@ interface PlanningCanvasProps {
 }
 
 export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, className }: PlanningCanvasProps) => {
+  const [conversationContext] = useState<string[]>([
+    "planning", "breakdown", "features", "requirements"
+  ]);
+
+  const handleToolSelect = (toolId: string) => {
+    console.log("Tool selected:", toolId);
+    // This would trigger the appropriate tool action
+  };
+
   const canvasModules = [
     {
       id: "taskmaster",
@@ -53,6 +64,17 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, class
       icon: Search,
       badge: "3 sources",
       component: <ResearchPanel />
+    },
+    {
+      id: "tools",
+      title: "Smart Tools",
+      icon: Zap,
+      badge: "AI Powered",
+      component: <ContextualTools
+        currentMessage=""
+        conversationContext={conversationContext}
+        onToolSelect={handleToolSelect}
+      />
     }
   ];
 
@@ -81,7 +103,7 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, class
         {/* Canvas Content */}
         <div className="flex-1 overflow-hidden">
           <Tabs defaultValue="taskmaster" className="h-full flex flex-col">
-            <TabsList className="grid grid-cols-4 m-4 bg-muted/50">
+            <TabsList className="grid grid-cols-5 m-4 bg-muted/50">
               {canvasModules.map((module) => (
                 <TabsTrigger 
                   key={module.id} 

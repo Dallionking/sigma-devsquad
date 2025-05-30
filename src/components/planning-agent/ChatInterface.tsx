@@ -7,7 +7,6 @@ import { ChatHeader } from "./ChatHeader";
 import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
 import { EnhancedFileAttachment } from "./EnhancedFileAttachment";
-import { ContextualTools } from "./ContextualTools";
 import { Plus, Target, Activity, Menu, Paperclip } from "lucide-react";
 
 type ChatMessage = {
@@ -109,15 +108,6 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
     setAttachedFiles(prev => prev.filter(file => file.id !== fileId));
   };
 
-  const handleToolSelect = (toolId: string) => {
-    console.log("Tool selected:", toolId);
-    // This would trigger the appropriate tool in the canvas
-  };
-
-  const conversationContext = messages
-    .slice(-5) // Last 5 messages for context
-    .map(msg => msg.content);
-
   return (
     <div className="flex flex-col h-full">
       <CardHeader className="pb-3">
@@ -189,15 +179,6 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
             />
           </div>
         )}
-
-        {/* Contextual Tools Panel */}
-        <div className="mb-4">
-          <ContextualTools
-            currentMessage={messages[messages.length - 1]?.content}
-            conversationContext={conversationContext}
-            onToolSelect={handleToolSelect}
-          />
-        </div>
 
         <ChatInput 
           onSendMessage={handleSendMessage} 
