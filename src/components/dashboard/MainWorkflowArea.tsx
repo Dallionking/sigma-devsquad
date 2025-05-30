@@ -2,6 +2,8 @@
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { ViewModeHeader } from "./ViewModeHeader";
 import { MainWorkflowContent } from "./MainWorkflowContent";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MainWorkflowAreaProps {
   viewMode: ViewMode;
@@ -28,10 +30,18 @@ export const MainWorkflowArea = ({
   onTaskSelect,
   onMessageSelect
 }: MainWorkflowAreaProps) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="flex-1 bg-background overflow-hidden min-h-0">
-      <div className="h-full flex flex-col min-h-0 p-4 sm:p-6">
-        <div className="flex-shrink-0">
+    <div className="flex-1 bg-gradient-to-br from-background via-background/95 to-slate-50/50 dark:to-slate-950/50 overflow-hidden min-h-0 relative">
+      {/* Enhanced background texture */}
+      <div className="absolute inset-0 bg-dot-pattern opacity-[0.015] dark:opacity-[0.025]" />
+      
+      <div className={cn(
+        "h-full flex flex-col min-h-0 relative z-10",
+        isMobile ? "p-4" : "p-6 lg:p-8"
+      )}>
+        <div className="flex-shrink-0 animate-in fade-in-0 slide-in-from-top-4 duration-500">
           <ViewModeHeader 
             viewMode={viewMode}
             agents={agents}
@@ -39,7 +49,8 @@ export const MainWorkflowArea = ({
             messages={messages}
           />
         </div>
-        <div className="flex-1 min-h-0 mt-4">
+        
+        <div className="flex-1 min-h-0 mt-6 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-200">
           <MainWorkflowContent
             viewMode={viewMode}
             agents={agents}

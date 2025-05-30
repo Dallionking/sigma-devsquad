@@ -14,13 +14,21 @@ export const DashboardOverview = ({ agents, onAgentSelect }: DashboardOverviewPr
   const isMobile = useIsMobile();
   
   return (
-    <div className="border-b border-border bg-card/50 backdrop-blur-sm">
+    <div className="border-b border-border/30 bg-gradient-to-br from-card/80 via-card/60 to-background/80 backdrop-blur-lg relative overflow-hidden">
+      {/* Enhanced background pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.05]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+      
       <div className={cn(
-        "w-full mx-auto",
-        isMobile ? "px-4 py-3" : "px-4 sm:px-6 lg:px-8 py-4"
+        "relative w-full mx-auto",
+        isMobile 
+          ? "px-4 py-4 space-y-4" 
+          : "px-6 lg:px-8 py-6 lg:py-8 space-y-6"
       )}>
-        <div className="space-y-4">
+        <div className="animate-in fade-in-0 duration-500">
           <DashboardHeader />
+        </div>
+        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-150">
           <DashboardGrids agents={agents} onAgentSelect={onAgentSelect} />
         </div>
       </div>

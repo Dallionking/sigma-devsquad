@@ -1,7 +1,7 @@
 
 /* Import modular CSS files */
 @import './styles/base.css';
-@import './styles/components.css';
+@import './styles/enhanced-components.css';
 @import './styles/animations.css';
 @import './styles/utilities.css';
 @import './styles/responsive.css';
@@ -39,28 +39,74 @@
     backface-visibility: hidden;
     perspective: 1000px;
   }
+
+  /* Enhanced focus management for accessibility */
+  .focus-visible-enhanced:focus-visible {
+    @apply outline-none ring-2 ring-primary/60 ring-offset-2 ring-offset-background;
+  }
+
+  /* Enhanced text utilities with better contrast */
+  .text-high-contrast {
+    @apply text-foreground contrast-more:text-black contrast-more:dark:text-white;
+  }
+
+  .text-medium-contrast {
+    @apply text-muted-foreground contrast-more:text-foreground/80;
+  }
 }
 
-/* Touch-friendly sizing for mobile */
+/* Touch-friendly sizing for mobile with enhanced accessibility */
 @media (max-width: 768px) {
   .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: clamp(44px, 12vw, 56px);
+    min-width: clamp(44px, 12vw, 56px);
   }
   
-  /* Improve mobile performance */
+  /* Improve mobile performance with enhanced font rendering */
   * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
   }
 }
 
-/* Accessibility improvements */
+/* Enhanced accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
   .animate-in,
-  .transition-all {
+  .transition-all,
+  .animate-enhanced-fade-in,
+  .animate-enhanced-slide-up {
     animation: none !important;
     transition: none !important;
+  }
+
+  .hover-enhanced:hover {
+    transform: none !important;
+  }
+}
+
+/* High contrast mode enhancements */
+@media (prefers-contrast: high) {
+  .card-enhanced {
+    @apply border-2 border-foreground/20;
+  }
+
+  .btn-primary-enhanced,
+  .btn-secondary-enhanced {
+    @apply border-2 border-current;
+  }
+}
+
+/* Enhanced dark mode support */
+@media (prefers-color-scheme: dark) {
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  }
+
+  .bg-dot-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
   }
 }
