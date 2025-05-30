@@ -8,6 +8,7 @@ import { X, Maximize2, Minimize2, Search, FileText, Target, Brain } from "lucide
 import { ResearchPanel } from "./ResearchPanel";
 import { ResearchBrowser } from "./ResearchBrowser";
 import { ContextualTools } from "./ContextualTools";
+import { PRDGenerator } from "./PRDGenerator";
 import { cn } from "@/lib/utils";
 
 interface PlanningCanvasProps {
@@ -59,7 +60,7 @@ export const PlanningCanvas = ({ selectedProject, isOpen, onToggle, className }:
 
       <CardContent className="p-0 h-[calc(100%-4rem)] overflow-hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-4 mx-4 mt-4">
+          <TabsList className="grid w-full grid-cols-5 mx-4 mt-4">
             <TabsTrigger value="research" className="text-xs">
               <Search className="w-3 h-3 mr-1" />
               Research
@@ -67,6 +68,10 @@ export const PlanningCanvas = ({ selectedProject, isOpen, onToggle, className }:
             <TabsTrigger value="browser" className="text-xs">
               <FileText className="w-3 h-3 mr-1" />
               Browser
+            </TabsTrigger>
+            <TabsTrigger value="prd" className="text-xs">
+              <FileText className="w-3 h-3 mr-1" />
+              PRD
             </TabsTrigger>
             <TabsTrigger value="tasks" className="text-xs">
               <Target className="w-3 h-3 mr-1" />
@@ -90,6 +95,10 @@ export const PlanningCanvas = ({ selectedProject, isOpen, onToggle, className }:
                   // Handle result selection - could open in chat or save to context
                 }}
               />
+            </TabsContent>
+
+            <TabsContent value="prd" className="h-full m-0 p-0">
+              <PRDGenerator />
             </TabsContent>
 
             <TabsContent value="tasks" className="h-full m-0 p-4">
