@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,7 +21,7 @@ export const LLMIntegration = () => {
       id: "1", 
       name: "Agent 1", 
       status: "working" as const,
-      type: "coder",
+      type: "frontend" as const,
       currentTask: "Developing new features",
       progress: 75,
       lastActive: new Date().toISOString()
@@ -31,7 +30,7 @@ export const LLMIntegration = () => {
       id: "2", 
       name: "Agent 2", 
       status: "idle" as const,
-      type: "tester",
+      type: "qa" as const,
       currentTask: "Waiting for tasks",
       progress: 0,
       lastActive: new Date().toISOString()
@@ -40,7 +39,7 @@ export const LLMIntegration = () => {
       id: "3", 
       name: "Agent 3", 
       status: "working" as const,
-      type: "reviewer",
+      type: "backend" as const,
       currentTask: "Code review",
       progress: 50,
       lastActive: new Date().toISOString()
