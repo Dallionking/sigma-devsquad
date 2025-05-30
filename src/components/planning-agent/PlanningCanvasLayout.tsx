@@ -18,9 +18,11 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
   };
 
   return (
-    <div className="h-full overflow-hidden">
-      {/* When canvas is closed - Chat takes full width */}
-      {!isCanvasOpen && (
+    <div className="h-full overflow-hidden relative">
+      {/* Main Chat Interface - Always visible, adjusts width when canvas opens */}
+      <div className={`transition-all duration-300 ease-in-out ${
+        isCanvasOpen ? 'w-1/2 pr-2' : 'w-full'
+      }`}>
         <Card className="h-full card-enhanced">
           <ChatInterface 
             onCreateTask={onCreateTask}
@@ -28,33 +30,23 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
             onToggleCanvas={handleToggleCanvas}
           />
         </Card>
-      )}
+      </div>
 
-      {/* When canvas is open - Split screen layout */}
-      {isCanvasOpen && (
-        <div className="flex h-full gap-4">
-          {/* Chat Interface - Takes 50% */}
-          <div className="w-1/2">
-            <Card className="h-full card-enhanced">
-              <ChatInterface 
-                onCreateTask={onCreateTask}
-                onTrackWorkflow={onTrackWorkflow}
-                onToggleCanvas={handleToggleCanvas}
-              />
-            </Card>
-          </div>
-
-          {/* Planning Canvas - Takes 50% */}
-          <div className="w-1/2">
-            <PlanningCanvas 
-              selectedProject={selectedProject} 
-              isOpen={isCanvasOpen}
-              onToggle={handleToggleCanvas}
-              className="h-full"
-            />
-          </div>
+      {/* Planning Canvas - Slides in from the right */}
+      <div className={`absolute top-0 right-0 h-full transition-all duration-300 ease-in-out ${
+        isCanvasOpen 
+          ? 'w-1/2 translate-x-0 opacity-100' 
+          : 'w-1/2 translate-x-full opacity-0 pointer-events-none'
+      }`}>
+        <div className="pl-2 h-full">
+          <PlanningCanvas 
+            selectedProject={selectedProject} 
+            isOpen={isCanvasOpen}
+            onToggle={handleToggleCanvas}
+            className="h-full"
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };
