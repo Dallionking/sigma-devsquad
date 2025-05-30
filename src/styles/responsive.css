@@ -1,0 +1,96 @@
+
+@layer utilities {
+  /* Enhanced responsive breakpoints */
+  .xs\:inline {
+    @media (min-width: 475px) {
+      display: inline;
+    }
+  }
+
+  .xs\:hidden {
+    @media (min-width: 475px) {
+      display: none;
+    }
+  }
+
+  /* Enhanced container responsive */
+  .container-responsive {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+    max-width: 1400px;
+  }
+
+  /* Enhanced grid responsive */
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6;
+  }
+
+  .grid-responsive-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+  }
+
+  .grid-responsive-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+
+  /* Enhanced card styles */
+  .card-enhanced {
+    @apply bg-card text-card-foreground rounded-xl border shadow-sm;
+  }
+
+  /* Touch-friendly elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Scroll improvements */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thumb-muted-foreground\/20::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.2);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Focus improvements */
+  .focus-visible-enhanced {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* Animation delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+}
+
+/* Screen reader only that becomes visible on focus */
+.sr-only-focusable {
+  @apply sr-only;
+}
+
+.sr-only-focusable:focus {
+  @apply not-sr-only absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50;
+}
+
+/* Enhanced mobile navigation */
+@media (max-width: 768px) {
+  .mobile-nav-spacing {
+    @apply pb-16;
+  }
+  
+  .mobile-safe-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

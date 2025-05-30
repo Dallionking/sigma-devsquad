@@ -8,13 +8,14 @@ import { PerformanceSettings } from "@/components/settings/PerformanceSettings";
 import { SecuritySettings } from "@/components/settings/SecuritySettings";
 import { NotificationSettings } from "@/components/settings/NotificationSettings";
 import { BackupSettings } from "@/components/settings/BackupSettings";
-import { SettingsSearchBar } from "@/components/settings/SettingsSearchBar";
 import { SettingsHeader } from "@/components/settings/SettingsHeader";
 import { SettingsTabsList } from "@/components/settings/SettingsTabsList";
 import { SettingsActions } from "@/components/settings/SettingsActions";
+import { AdvancedSearchBar } from "@/components/settings/AdvancedSearchBar";
 import { Header } from "@/components/dashboard/Header";
 import { ViewMode, Agent } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export const Settings = () => {
   const { toast } = useToast();
@@ -22,6 +23,8 @@ export const Settings = () => {
   const [autoBackup, setAutoBackup] = useState(true);
   const [performanceMode, setPerformanceMode] = useState("balanced");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchFilters, setSearchFilters] = useState({});
+  const [activeTab, setActiveTab] = useState("general");
 
   const mockAgents: Agent[] = [
     { 
@@ -87,7 +90,7 @@ export const Settings = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <a 
         href="#main-content" 
-        className="sr-only-focusable"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50"
         aria-label="Skip to main content"
       >
         Skip to main content
@@ -99,68 +102,133 @@ export const Settings = () => {
         agents={mockAgents}
       />
       
-      <div className="bg-background text-foreground container-responsive py-responsive fade-in">
-        <main id="main-content" className="max-w-6xl mx-auto space-y-responsive">
-          <SettingsHeader />
-
-          <div className="w-full max-w-md">
-            <SettingsSearchBar 
-              onSearch={setSearchQuery}
-              placeholder="Search settings..."
-            />
-          </div>
-
-          <Tabs defaultValue="general" className="space-y-responsive">
-            <SettingsTabsList />
-
-            <div className="mt-8">
-              <TabsContent value="general" className="space-y-6 fade-in">
-                <GeneralSettings searchQuery={searchQuery} />
-              </TabsContent>
-
-              <TabsContent value="api-keys" className="space-y-6 fade-in">
-                <APIKeySettings searchQuery={searchQuery} />
-              </TabsContent>
-
-              <TabsContent value="appearance" className="space-y-6 fade-in">
-                <AppearanceSettings searchQuery={searchQuery} />
-              </TabsContent>
-
-              <TabsContent value="performance" className="space-y-6 fade-in">
-                <PerformanceSettings 
-                  performanceMode={performanceMode} 
-                  setPerformanceMode={setPerformanceMode}
-                  searchQuery={searchQuery}
-                />
-              </TabsContent>
-
-              <TabsContent value="security" className="space-y-6 fade-in">
-                <SecuritySettings searchQuery={searchQuery} />
-              </TabsContent>
-
-              <TabsContent value="notifications" className="space-y-6 fade-in">
-                <NotificationSettings 
-                  notifications={notifications} 
-                  setNotifications={setNotifications}
-                  searchQuery={searchQuery}
-                />
-              </TabsContent>
-
-              <TabsContent value="backup" className="space-y-6 fade-in">
-                <BackupSettings 
-                  autoBackup={autoBackup} 
-                  setAutoBackup={setAutoBackup}
-                  searchQuery={searchQuery}
-                />
-              </TabsContent>
+      <div className="bg-background text-foreground">
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <main id="main-content" className="space-y-6 sm:space-y-8">
+            <div className="fade-in">
+              <SettingsHeader />
             </div>
-          </Tabs>
 
-          <SettingsActions 
-            onSaveAll={handleSaveAll}
-            onResetAll={handleResetAll}
-          />
-        </main>
+            <div className="fade-in" style={{ animationDelay: "100ms" }}>
+              <AdvancedSearchBar 
+                onSearch={setSearchQuery}
+                onFilterChange={setSearchFilters}
+                placeholder="Search settings..."
+                categories={["General", "Security", "API", "Performance", "Appearance", "Notifications", "Backup"]}
+                className="max-w-2xl"
+              />
+            </div>
+
+            <Tabs 
+              value={activeTab} 
+              onValueChange={setActiveTab}
+              className="space-y-6 fade-in" 
+              style={{ animationDelay: "200ms" }}
+            >
+              <div className="overflow-x-auto">
+                <SettingsTabsList />
+              </div>
+
+              <div className="min-h-[500px]">
+                <TabsContent 
+                  value="general" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <GeneralSettings searchQuery={searchQuery} />
+                </TabsContent>
+
+                <TabsContent 
+                  value="api-keys" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <APIKeySettings searchQuery={searchQuery} />
+                </TabsContent>
+
+                <TabsContent 
+                  value="appearance" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <AppearanceSettings searchQuery={searchQuery} />
+                </TabsContent>
+
+                <TabsContent 
+                  value="performance" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <PerformanceSettings 
+                    performanceMode={performanceMode} 
+                    setPerformanceMode={setPerformanceMode}
+                    searchQuery={searchQuery}
+                  />
+                </TabsContent>
+
+                <TabsContent 
+                  value="security" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <SecuritySettings searchQuery={searchQuery} />
+                </TabsContent>
+
+                <TabsContent 
+                  value="notifications" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <NotificationSettings 
+                    notifications={notifications} 
+                    setNotifications={setNotifications}
+                    searchQuery={searchQuery}
+                  />
+                </TabsContent>
+
+                <TabsContent 
+                  value="backup" 
+                  className={cn(
+                    "space-y-6 mt-6 focus:outline-none",
+                    "animate-in fade-in-0 duration-200"
+                  )}
+                  tabIndex={-1}
+                >
+                  <BackupSettings 
+                    autoBackup={autoBackup} 
+                    setAutoBackup={setAutoBackup}
+                    searchQuery={searchQuery}
+                  />
+                </TabsContent>
+              </div>
+            </Tabs>
+
+            <div className="fade-in" style={{ animationDelay: "300ms" }}>
+              <SettingsActions 
+                onSaveAll={handleSaveAll}
+                onResetAll={handleResetAll}
+              />
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );
