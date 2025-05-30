@@ -1,52 +1,103 @@
 
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { SettingsSection } from "./SettingsSection";
+import { SettingItem } from "./SettingItem";
 
-export const GeneralSettings = () => {
+interface GeneralSettingsProps {
+  searchQuery?: string;
+}
+
+export const GeneralSettings = ({ searchQuery = "" }: GeneralSettingsProps) => {
+  const [autoSave, setAutoSave] = useState(true);
+  const [debugMode, setDebugMode] = useState(false);
+  const [defaultTimeout, setDefaultTimeout] = useState("300");
+  const [maxRetries, setMaxRetries] = useState("3");
+  const [logLevel, setLogLevel] = useState("info");
+
+  const handleSave = () => {
+    console.log("Saving general settings:", {
+      autoSave,
+      debugMode,
+      defaultTimeout,
+      maxRetries,
+      logLevel
+    });
+  };
+
+  const handleReset = () => {
+    setAutoSave(true);
+    setDebugMode(false);
+    setDefaultTimeout("300");
+    setMaxRetries("3");
+    setLogLevel("info");
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>General Settings</CardTitle>
-        <CardDescription>Configure basic system preferences</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium">Auto-save Changes</h4>
-            <p className="text-sm text-slate-600">Automatically save configuration changes</p>
-          </div>
-          <Switch checked={true} />
-        </div>
-        
-        <Separator />
-        
-        <div className="space-y-3">
-          <label className="font-medium">Default Agent Timeout</label>
-          <Select defaultValue="300">
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="60">1 minute</SelectItem>
-              <SelectItem value="300">5 minutes</SelectItem>
-              <SelectItem value="600">10 minutes</SelectItem>
-              <SelectItem value="1800">30 minutes</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <Separator />
-        
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium">Debug Mode</h4>
-            <p className="text-sm text-slate-600">Enable detailed logging and debugging</p>
-          </div>
-          <Switch />
-        </div>
-      </CardContent>
-    </Card>
+    <SettingsSection
+      title="General Settings"
+      description="Configure basic system preferences"
+      onSave={handleSave}
+      onReset={handleReset}
+      searchQuery={searchQuery}
+    >
+      <SettingItem
+        id="auto-save"
+        type="switch"
+        label="Auto-save Changes"
+        description="Automatically save configuration changes"
+        checked={autoSave}
+        onCheckedChange={setAutoSave}
+      />
+
+      <SettingItem
+        id="default-timeout"
+        type="select"
+        label="Default Agent Timeout"
+        description="Default timeout for agent operations"
+        value={defaultTimeout}
+        onValueChange={setDefaultTimeout}
+        options={[
+          { value: "60", label: "1 minute" },
+          { value: "300", label: "5 minutes" },
+          { value: "600", label: "10 minutes" },
+          { value: "1800", label: "30 minutes" }
+        ]}
+      />
+
+      <SettingItem
+        id="max-retries"
+        type="input"
+        label="Max Retries"
+        description="Maximum number of retry attempts"
+        value={maxRetries}
+        onChange={setMaxRetries}
+        inputType="number"
+        placeholder="Enter max retries"
+      />
+
+      <SettingItem
+        id="log-level"
+        type="select"
+        label="Log Level"
+        description="System logging verbosity level"
+        value={logLevel}
+        onValueChange={setLogLevel}
+        options={[
+          { value: "error", label: "Error" },
+          { value: "warn", label: "Warning" },
+          { value: "info", label: "Info" },
+          { value: "debug", label: "Debug" }
+        ]}
+      />
+
+      <SettingItem
+        id="debug-mode"
+        type="switch"
+        label="Debug Mode"
+        description="Enable detailed logging and debugging"
+        checked={debugMode}
+        onCheckedChange={setDebugMode}
+      />
+    </SettingsSection>
   );
 };

@@ -11,15 +11,19 @@ import { PerformanceSettings } from "@/components/settings/PerformanceSettings";
 import { SecuritySettings } from "@/components/settings/SecuritySettings";
 import { NotificationSettings } from "@/components/settings/NotificationSettings";
 import { BackupSettings } from "@/components/settings/BackupSettings";
+import { SettingsSearchBar } from "@/components/settings/SettingsSearchBar";
 import { Header } from "@/components/dashboard/Header";
 import { ViewMode, Agent } from "@/types";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useToast } from "@/hooks/use-toast";
 
 export const Settings = () => {
   const { darkMode, toggleDarkMode } = useTheme();
+  const { toast } = useToast();
   const [notifications, setNotifications] = useState(true);
   const [autoBackup, setAutoBackup] = useState(true);
   const [performanceMode, setPerformanceMode] = useState("balanced");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Mock agents data for header
   const mockAgents: Agent[] = [
@@ -27,6 +31,25 @@ export const Settings = () => {
     { id: "2", type: "frontend", name: "Frontend Agent", status: "idle", currentTask: "Idle", progress: 0, lastActive: "2024-05-30T10:25:00Z" },
     { id: "3", type: "backend", name: "Backend Agent", status: "working", currentTask: "Active", progress: 45, lastActive: "2024-05-30T10:32:00Z" }
   ];
+
+  const handleSaveAll = () => {
+    toast({
+      title: "All Settings Saved",
+      description: "All configuration changes have been saved successfully.",
+    });
+  };
+
+  const handleResetAll = () => {
+    // Reset all settings to defaults
+    setNotifications(true);
+    setAutoBackup(true);
+    setPerformanceMode("balanced");
+    toast({
+      title: "Settings Reset",
+      description: "All settings have been reset to default values.",
+      variant: "destructive",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,6 +70,13 @@ export const Settings = () => {
               <Activity className="w-3 h-3 mr-1" />
               System Healthy
             </Badge>
+          </div>
+
+          <div className="w-full max-w-md">
+            <SettingsSearchBar 
+              onSearch={setSearchQuery}
+              placeholder="Search settings..."
+            />
           </div>
 
           <Tabs defaultValue="general" className="space-y-6">
@@ -78,33 +108,49 @@ export const Settings = () => {
             </TabsList>
 
             <TabsContent value="general" className="space-y-6">
-              <GeneralSettings />
+              <GeneralSettings searchQuery={searchQuery} />
             </TabsContent>
 
             <TabsContent value="appearance" className="space-y-6">
-              <AppearanceSettings darkMode={darkMode} setDarkMode={toggleDarkMode} />
+              <AppearanceSettings 
+                darkMode={darkMode} 
+                setDarkMode={toggleDarkMode}
+                searchQuery={searchQuery}
+              />
             </TabsContent>
 
             <TabsContent value="performance" className="space-y-6">
-              <PerformanceSettings performanceMode={performanceMode} setPerformanceMode={setPerformanceMode} />
+              <PerformanceSettings 
+                performanceMode={performanceMode} 
+                setPerformanceMode={setPerformanceMode}
+                searchQuery={searchQuery}
+              />
             </TabsContent>
 
             <TabsContent value="security" className="space-y-6">
-              <SecuritySettings />
+              <SecuritySettings searchQuery={searchQuery} />
             </TabsContent>
 
             <TabsContent value="notifications" className="space-y-6">
-              <NotificationSettings notifications={notifications} setNotifications={setNotifications} />
+              <NotificationSettings 
+                notifications={notifications} 
+                setNotifications={setNotifications}
+                searchQuery={searchQuery}
+              />
             </TabsContent>
 
             <TabsContent value="backup" className="space-y-6">
-              <BackupSettings autoBackup={autoBackup} setAutoBackup={setAutoBackup} />
+              <BackupSettings 
+                autoBackup={autoBackup} 
+                setAutoBackup={setAutoBackup}
+                searchQuery={searchQuery}
+              />
             </TabsContent>
           </Tabs>
 
           <div className="flex justify-end space-x-4">
-            <Button variant="outline">Reset to Defaults</Button>
-            <Button>Save All Changes</Button>
+            <Button variant="outline" onClick={handleResetAll}>Reset to Defaults</Button>
+            <Button onClick={handleSaveAll}>Save All Changes</Button>
           </div>
         </div>
       </div>

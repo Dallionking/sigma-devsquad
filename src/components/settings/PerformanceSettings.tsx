@@ -1,63 +1,101 @@
 
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { SettingsSection } from "./SettingsSection";
+import { SettingItem } from "./SettingItem";
 
 interface PerformanceSettingsProps {
   performanceMode: string;
   setPerformanceMode: (value: string) => void;
+  searchQuery?: string;
 }
 
-export const PerformanceSettings = ({ performanceMode, setPerformanceMode }: PerformanceSettingsProps) => {
+export const PerformanceSettings = ({ performanceMode, setPerformanceMode, searchQuery = "" }: PerformanceSettingsProps) => {
+  const [realTimeUpdates, setRealTimeUpdates] = useState(true);
+  const [maxConcurrentAgents, setMaxConcurrentAgents] = useState("6");
+  const [cacheEnabled, setCacheEnabled] = useState(true);
+  const [preloadData, setPreloadData] = useState(false);
+
+  const handleSave = () => {
+    console.log("Saving performance settings:", {
+      performanceMode,
+      realTimeUpdates,
+      maxConcurrentAgents,
+      cacheEnabled,
+      preloadData
+    });
+  };
+
+  const handleReset = () => {
+    setPerformanceMode("balanced");
+    setRealTimeUpdates(true);
+    setMaxConcurrentAgents("6");
+    setCacheEnabled(true);
+    setPreloadData(false);
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Performance Settings</CardTitle>
-        <CardDescription>Optimize system performance and resource usage</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <label className="font-medium">Performance Mode</label>
-          <Select value={performanceMode} onValueChange={setPerformanceMode}>
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="power-saver">Power Saver</SelectItem>
-              <SelectItem value="balanced">Balanced</SelectItem>
-              <SelectItem value="performance">High Performance</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <Separator />
-        
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium">Real-time Updates</h4>
-            <p className="text-sm text-slate-600">Enable live updates for agent status</p>
-          </div>
-          <Switch checked={true} />
-        </div>
-        
-        <Separator />
-        
-        <div className="space-y-3">
-          <label className="font-medium">Max Concurrent Agents</label>
-          <Select defaultValue="6">
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="3">3 agents</SelectItem>
-              <SelectItem value="6">6 agents</SelectItem>
-              <SelectItem value="10">10 agents</SelectItem>
-              <SelectItem value="unlimited">Unlimited</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </CardContent>
-    </Card>
+    <SettingsSection
+      title="Performance Settings"
+      description="Optimize system performance and resource usage"
+      onSave={handleSave}
+      onReset={handleReset}
+      searchQuery={searchQuery}
+    >
+      <SettingItem
+        id="performance-mode"
+        type="select"
+        label="Performance Mode"
+        description="Choose optimization strategy"
+        value={performanceMode}
+        onValueChange={setPerformanceMode}
+        options={[
+          { value: "power-saver", label: "Power Saver" },
+          { value: "balanced", label: "Balanced" },
+          { value: "performance", label: "High Performance" }
+        ]}
+      />
+
+      <SettingItem
+        id="real-time-updates"
+        type="switch"
+        label="Real-time Updates"
+        description="Enable live updates for agent status"
+        checked={realTimeUpdates}
+        onCheckedChange={setRealTimeUpdates}
+      />
+
+      <SettingItem
+        id="max-concurrent-agents"
+        type="select"
+        label="Max Concurrent Agents"
+        description="Maximum number of agents running simultaneously"
+        value={maxConcurrentAgents}
+        onValueChange={setMaxConcurrentAgents}
+        options={[
+          { value: "3", label: "3 agents" },
+          { value: "6", label: "6 agents" },
+          { value: "10", label: "10 agents" },
+          { value: "unlimited", label: "Unlimited" }
+        ]}
+      />
+
+      <SettingItem
+        id="cache-enabled"
+        type="switch"
+        label="Enable Caching"
+        description="Cache frequently accessed data for better performance"
+        checked={cacheEnabled}
+        onCheckedChange={setCacheEnabled}
+      />
+
+      <SettingItem
+        id="preload-data"
+        type="switch"
+        label="Preload Data"
+        description="Load data in advance to improve responsiveness"
+        checked={preloadData}
+        onCheckedChange={setPreloadData}
+      />
+    </SettingsSection>
   );
 };

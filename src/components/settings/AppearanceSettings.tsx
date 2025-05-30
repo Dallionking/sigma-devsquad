@@ -1,59 +1,102 @@
 
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { SettingsSection } from "./SettingsSection";
+import { SettingItem } from "./SettingItem";
 
 interface AppearanceSettingsProps {
   darkMode: boolean;
   setDarkMode: (value: boolean) => void;
+  searchQuery?: string;
 }
 
-export const AppearanceSettings = ({ darkMode, setDarkMode }: AppearanceSettingsProps) => {
+export const AppearanceSettings = ({ darkMode, setDarkMode, searchQuery = "" }: AppearanceSettingsProps) => {
+  const [interfaceScale, setInterfaceScale] = useState("100");
+  const [accentColor, setAccentColor] = useState("blue");
+  const [compactMode, setCompactMode] = useState(false);
+  const [animations, setAnimations] = useState(true);
+
+  const handleSave = () => {
+    console.log("Saving appearance settings:", {
+      darkMode,
+      interfaceScale,
+      accentColor,
+      compactMode,
+      animations
+    });
+  };
+
+  const handleReset = () => {
+    setDarkMode(false);
+    setInterfaceScale("100");
+    setAccentColor("blue");
+    setCompactMode(false);
+    setAnimations(true);
+  };
+
   return (
-    <Card className="bg-card border-border">
-      <CardHeader>
-        <CardTitle className="text-card-foreground">Appearance Settings</CardTitle>
-        <CardDescription className="text-muted-foreground">Customize the visual appearance of the interface</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium text-card-foreground">Dark Mode</h4>
-            <p className="text-sm text-muted-foreground">Switch to dark theme</p>
-          </div>
-          <Switch checked={darkMode} onCheckedChange={setDarkMode} />
-        </div>
-        
-        <Separator />
-        
-        <div className="space-y-3">
-          <label className="font-medium text-card-foreground">Interface Scale</label>
-          <Select defaultValue="100">
-            <SelectTrigger className="w-48 bg-background border-border">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-popover border-border">
-              <SelectItem value="90">90%</SelectItem>
-              <SelectItem value="100">100%</SelectItem>
-              <SelectItem value="110">110%</SelectItem>
-              <SelectItem value="125">125%</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <Separator />
-        
-        <div className="space-y-3">
-          <label className="font-medium text-card-foreground">Accent Color</label>
-          <div className="flex space-x-2">
-            <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-blue-700 cursor-pointer"></div>
-            <div className="w-8 h-8 rounded-full bg-green-500 border-2 border-transparent cursor-pointer"></div>
-            <div className="w-8 h-8 rounded-full bg-purple-500 border-2 border-transparent cursor-pointer"></div>
-            <div className="w-8 h-8 rounded-full bg-orange-500 border-2 border-transparent cursor-pointer"></div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <SettingsSection
+      title="Appearance Settings"
+      description="Customize the visual appearance of the interface"
+      onSave={handleSave}
+      onReset={handleReset}
+      searchQuery={searchQuery}
+    >
+      <SettingItem
+        id="dark-mode"
+        type="switch"
+        label="Dark Mode"
+        description="Switch to dark theme"
+        checked={darkMode}
+        onCheckedChange={setDarkMode}
+      />
+
+      <SettingItem
+        id="interface-scale"
+        type="select"
+        label="Interface Scale"
+        description="Adjust the overall size of UI elements"
+        value={interfaceScale}
+        onValueChange={setInterfaceScale}
+        options={[
+          { value: "90", label: "90%" },
+          { value: "100", label: "100%" },
+          { value: "110", label: "110%" },
+          { value: "125", label: "125%" }
+        ]}
+      />
+
+      <SettingItem
+        id="accent-color"
+        type="select"
+        label="Accent Color"
+        description="Choose the primary accent color"
+        value={accentColor}
+        onValueChange={setAccentColor}
+        options={[
+          { value: "blue", label: "Blue" },
+          { value: "green", label: "Green" },
+          { value: "purple", label: "Purple" },
+          { value: "orange", label: "Orange" }
+        ]}
+      />
+
+      <SettingItem
+        id="compact-mode"
+        type="switch"
+        label="Compact Mode"
+        description="Use smaller spacing and compact layouts"
+        checked={compactMode}
+        onCheckedChange={setCompactMode}
+      />
+
+      <SettingItem
+        id="animations"
+        type="switch"
+        label="Enable Animations"
+        description="Show smooth transitions and animations"
+        checked={animations}
+        onCheckedChange={setAnimations}
+      />
+    </SettingsSection>
   );
 };
