@@ -15,27 +15,37 @@ export const CreateTemplateDialog = ({ isOpen, onOpenChange }: CreateTemplateDia
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus className="w-4 h-4 mr-2" />
+        <Button size="sm" className="btn-primary-enhanced gap-2 hover-scale">
+          <Plus className="w-4 h-4" />
           Create Template
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="card-enhanced">
         <DialogHeader>
-          <DialogTitle>Create New Workflow Template</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="heading-secondary text-xl">
+            Create New Workflow Template
+          </DialogTitle>
+          <DialogDescription className="text-muted-enhanced">
             Design a new workflow template for your team
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-responsive">
           <div>
-            <Label htmlFor="template-name">Template Name</Label>
-            <Input id="template-name" placeholder="Enter template name" />
+            <Label htmlFor="template-name" className="text-responsive-sm font-medium">
+              Template Name
+            </Label>
+            <Input 
+              id="template-name" 
+              placeholder="Enter template name" 
+              className="mt-2 transition-all duration-200 focus:scale-[1.01]"
+            />
           </div>
           <div>
-            <Label htmlFor="template-category">Category</Label>
+            <Label htmlFor="template-category" className="text-responsive-sm font-medium">
+              Category
+            </Label>
             <Select>
-              <SelectTrigger>
+              <SelectTrigger className="mt-2 transition-all duration-200 focus:scale-[1.01]">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
@@ -46,11 +56,18 @@ export const CreateTemplateDialog = ({ isOpen, onOpenChange }: CreateTemplateDia
               </SelectContent>
             </Select>
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+              className="btn-secondary-enhanced"
+            >
               Cancel
             </Button>
-            <Button onClick={() => onOpenChange(false)}>
+            <Button 
+              onClick={() => onOpenChange(false)}
+              className="btn-primary-enhanced"
+            >
               Create Template
             </Button>
           </div>

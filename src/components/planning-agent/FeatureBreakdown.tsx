@@ -56,13 +56,13 @@ export const FeatureBreakdown = () => {
   const getComplexityColor = (complexity: string) => {
     switch (complexity) {
       case "high":
-        return "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300";
+        return "status-error";
       case "medium":
-        return "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300";
+        return "status-warning";
       case "low":
-        return "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300";
+        return "status-success";
       default:
-        return "bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300";
+        return "status-info";
     }
   };
 
@@ -70,7 +70,7 @@ export const FeatureBreakdown = () => {
     return (
       <Button
         onClick={() => setIsVisible(true)}
-        className="rounded-full shadow-lg"
+        className="btn-primary-enhanced rounded-full shadow-lg hover-scale"
         size="sm"
       >
         <Eye className="w-4 h-4 mr-2" />
@@ -80,23 +80,23 @@ export const FeatureBreakdown = () => {
   }
 
   return (
-    <Card className="w-80 max-h-96 shadow-lg">
+    <Card className="w-80 max-h-96 shadow-xl card-enhanced">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <Layers className="w-4 h-4" />
+          <CardTitle className="flex items-center gap-2 text-responsive-base">
+            <Layers className="w-5 h-5" />
             Feature Breakdown
           </CardTitle>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsVisible(false)}
-            className="h-6 w-6 p-0"
+            className="h-6 w-6 p-0 hover-scale"
           >
-            <EyeOff className="w-3 h-3" />
+            <EyeOff className="w-4 h-4" />
           </Button>
         </div>
-        <CardDescription className="text-xs">
+        <CardDescription className="text-muted-enhanced">
           Interactive feature hierarchy and complexity analysis
         </CardDescription>
       </CardHeader>
@@ -104,29 +104,29 @@ export const FeatureBreakdown = () => {
         <div className="space-y-2">
           {featureTree.map((feature) => (
             <div key={feature.id} className="space-y-1">
-              {/* Parent Feature */}
+              {/* Enhanced Parent Feature */}
               <div 
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer transition-colors"
+                className="flex items-center gap-2 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 hover-scale"
                 onClick={() => toggleFeature(feature.id)}
               >
                 {expandedFeatures.has(feature.id) ? (
-                  <ChevronDown className="w-3 h-3 flex-shrink-0" />
+                  <ChevronDown className="w-4 h-4 flex-shrink-0 text-primary" />
                 ) : (
-                  <ChevronRight className="w-3 h-3 flex-shrink-0" />
+                  <ChevronRight className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
                 )}
-                <span className="text-sm font-medium flex-1">{feature.name}</span>
+                <span className="text-responsive-sm font-medium flex-1">{feature.name}</span>
                 <Badge variant="outline" className={getComplexityColor(feature.complexity)}>
                   {feature.complexity}
                 </Badge>
               </div>
 
-              {/* Child Features */}
+              {/* Enhanced Child Features */}
               {expandedFeatures.has(feature.id) && feature.children && (
-                <div className="ml-5 space-y-1">
+                <div className="ml-6 space-y-1 fade-in">
                   {feature.children.map((child) => (
-                    <div key={child.id} className="flex items-center gap-2 p-1.5 text-xs">
+                    <div key={child.id} className="flex items-center gap-2 p-2 text-xs rounded-md hover:bg-muted/30 transition-colors duration-200">
                       <div className="w-2 h-2 bg-muted-foreground rounded-full flex-shrink-0" />
-                      <span className="flex-1">{child.name}</span>
+                      <span className="flex-1 text-responsive-sm">{child.name}</span>
                       <span className="text-muted-foreground text-xs">{child.estimated}</span>
                       <Badge variant="outline" className={`${getComplexityColor(child.complexity)} text-xs`}>
                         {child.complexity}
@@ -139,19 +139,19 @@ export const FeatureBreakdown = () => {
           ))}
         </div>
 
-        {/* Summary */}
+        {/* Enhanced Summary */}
         <div className="mt-4 pt-3 border-t border-border">
           <div className="grid grid-cols-3 gap-2 text-center text-xs">
-            <div>
-              <div className="font-medium text-foreground">12</div>
+            <div className="p-2 rounded-lg bg-muted/50">
+              <div className="font-medium text-foreground text-responsive-base">12</div>
               <div className="text-muted-foreground">Features</div>
             </div>
-            <div>
-              <div className="font-medium text-foreground">36</div>
+            <div className="p-2 rounded-lg bg-muted/50">
+              <div className="font-medium text-foreground text-responsive-base">36</div>
               <div className="text-muted-foreground">Est. Days</div>
             </div>
-            <div>
-              <div className="font-medium text-foreground">3</div>
+            <div className="p-2 rounded-lg bg-muted/50">
+              <div className="font-medium text-foreground text-responsive-base">3</div>
               <div className="text-muted-foreground">Epics</div>
             </div>
           </div>

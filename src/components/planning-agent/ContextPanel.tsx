@@ -48,29 +48,31 @@ export const ContextPanel = ({ selectedProject }: ContextPanelProps) => {
   ];
 
   return (
-    <div className="h-full overflow-y-auto p-4 space-y-4">
-      {/* Project Overview */}
-      <Card>
+    <div className="h-full overflow-y-auto p-responsive space-y-responsive">
+      {/* Enhanced Project Overview */}
+      <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-4 h-4" />
+          <CardTitle className="flex items-center gap-2 heading-secondary text-lg">
+            <Target className="w-5 h-5" />
             Project Context
           </CardTitle>
-          <CardDescription>Current project information and status</CardDescription>
+          <CardDescription className="text-muted-enhanced">
+            Current project information and status
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h3 className="font-semibold text-foreground">{projectInfo.name}</h3>
-            <p className="text-sm text-muted-foreground">{projectInfo.description}</p>
+            <h3 className="font-semibold text-foreground text-responsive-base">{projectInfo.name}</h3>
+            <p className="text-muted-enhanced">{projectInfo.description}</p>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Progress</span>
-            <Badge variant="secondary">{projectInfo.status}</Badge>
+            <span className="text-responsive-sm font-medium">Progress</span>
+            <Badge variant="secondary" className="status-success">{projectInfo.status}</Badge>
           </div>
           <Progress value={projectInfo.progress} className="h-2" />
 
-          <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-2 gap-3 text-responsive-sm">
             <div>
               <span className="text-muted-foreground">Start Date</span>
               <p className="font-medium">{projectInfo.startDate}</p>
@@ -83,65 +85,65 @@ export const ContextPanel = ({ selectedProject }: ContextPanelProps) => {
         </CardContent>
       </Card>
 
-      {/* Team Members */}
-      <Card>
+      {/* Enhanced Team Members */}
+      <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
+          <CardTitle className="flex items-center gap-2 heading-secondary text-lg">
+            <Users className="w-5 h-5" />
             Active Agents
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             {projectInfo.team.map((agent, index) => (
-              <div key={index} className="flex items-center justify-between p-2 rounded-md bg-muted/50">
-                <span className="text-sm font-medium">{agent}</span>
-                <Badge variant="outline" className="text-xs">Active</Badge>
+              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors duration-200">
+                <span className="text-responsive-sm font-medium">{agent}</span>
+                <Badge variant="outline" className="status-success text-xs">Active</Badge>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Project Objectives */}
-      <Card>
+      {/* Enhanced Project Objectives */}
+      <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-4 h-4" />
+          <CardTitle className="flex items-center gap-2 heading-secondary text-lg">
+            <FileText className="w-5 h-5" />
             Key Objectives
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {projectInfo.objectives.map((objective, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                <span>{objective}</span>
+              <li key={index} className="flex items-start gap-3 text-responsive-sm">
+                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <span className="leading-relaxed">{objective}</span>
               </li>
             ))}
           </ul>
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
-      <Card>
+      {/* Enhanced Recent Activity */}
+      <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
+            <div className="flex items-center gap-2 heading-secondary text-lg">
+              <Calendar className="w-5 h-5" />
               Recent Activity
             </div>
-            <Button variant="ghost" size="sm">
-              <RefreshCcw className="w-3 h-3" />
+            <Button variant="ghost" size="sm" className="hover-scale">
+              <RefreshCcw className="w-4 h-4" />
             </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {recentActivity.map((activity) => (
-              <div key={activity.id} className="border-l-2 border-primary/20 pl-3 pb-3">
-                <p className="text-sm font-medium">{activity.action}</p>
-                <div className="flex items-center justify-between mt-1">
+              <div key={activity.id} className="border-l-2 border-primary/20 pl-4 pb-3 hover:border-primary/40 transition-colors duration-200">
+                <p className="text-responsive-sm font-medium">{activity.action}</p>
+                <div className="flex items-center justify-between mt-2">
                   <span className="text-xs text-muted-foreground">{activity.agent}</span>
                   <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
                 </div>
