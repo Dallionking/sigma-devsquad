@@ -124,12 +124,12 @@ export const ExecutionTab = () => {
             <div className="bg-black text-green-400 p-4 rounded-md h-32 overflow-y-auto font-mono text-sm">
               <div className="text-blue-400">$ npm run dev</div>
               <div className="text-green-400">
-                > my-app@0.1.0 dev<br/>
-                > vite<br/><br/>
+                {`> my-app@0.1.0 dev`}<br/>
+                {`> vite`}<br/><br/>
                 VITE v5.0.0  ready in 524 ms<br/>
-                ➜  Local:   http://localhost:3000/<br/>
-                ➜  Network: use --host to expose<br/>
-                ➜  press h + enter to show help<br/>
+                {`➜  Local:   http://localhost:3000/`}<br/>
+                {`➜  Network: use --host to expose`}<br/>
+                {`➜  press h + enter to show help`}<br/>
                 <span className="animate-pulse">|</span>
               </div>
             </div>
