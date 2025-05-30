@@ -1,5 +1,5 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot } from "lucide-react";
+import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
@@ -27,6 +27,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isSettingsPage = location.pathname === "/settings";
   const isLLMPage = location.pathname === "/llm-integration";
   const isAgentConfigPage = location.pathname === "/agent-configuration";
+  const isMCPPage = location.pathname === "/mcp-management";
 
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4">
@@ -89,6 +90,14 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             >
               <Bot className="w-4 h-4 mr-2" />
               Agent Config
+            </Button>
+            <Button 
+              variant={isMCPPage ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/mcp-management")}
+            >
+              <Package className="w-4 h-4 mr-2" />
+              MCP
             </Button>
             <Button 
               variant={isLLMPage ? "default" : "ghost"} 
