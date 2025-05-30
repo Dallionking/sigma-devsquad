@@ -4,6 +4,7 @@ import { WorkflowVisualization } from "./WorkflowVisualization";
 import { CommunicationGraph } from "./CommunicationGraph";
 import { TaskManagement } from "./TaskManagement";
 import { MessageInspector } from "./MessageInspector";
+import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
 
 interface MainWorkflowAreaProps {
   viewMode: ViewMode;
@@ -43,11 +44,10 @@ export const MainWorkflowArea = ({
         );
       case "communication":
         return (
-          <CommunicationGraph 
+          <AdvancedCommunicationPanel
             agents={agents}
             messages={messages}
-            selectedAgent={selectedAgent}
-            onAgentSelect={onAgentSelect}
+            selectedMessage={selectedMessage}
             onMessageSelect={onMessageSelect}
           />
         );
