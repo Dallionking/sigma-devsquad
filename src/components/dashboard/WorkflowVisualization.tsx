@@ -34,24 +34,24 @@ export const WorkflowVisualization = ({ agents, tasks, selectedAgent, onAgentSel
 
   const getStepColor = (status: string) => {
     switch (status) {
-      case "completed": return "text-green-600 bg-green-50 border-green-200";
-      case "active": return "text-blue-600 bg-blue-50 border-blue-200";
-      case "waiting": return "text-yellow-600 bg-yellow-50 border-yellow-200";
-      case "error": return "text-red-600 bg-red-50 border-red-200";
-      default: return "text-slate-600 bg-slate-50 border-slate-200";
+      case "completed": return "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800";
+      case "active": return "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800";
+      case "waiting": return "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800";
+      case "error": return "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800";
+      default: return "text-muted-foreground bg-muted border-border";
     }
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-slate-900 mb-2">Development Workflow</h2>
-        <p className="text-slate-600">Current project: User Authentication Module</p>
+        <h2 className="text-2xl font-semibold text-foreground mb-2">Development Workflow</h2>
+        <p className="text-muted-foreground">Current project: User Authentication Module</p>
       </div>
 
       {/* Workflow Timeline */}
-      <Card className="p-6">
-        <h3 className="text-lg font-medium text-slate-900 mb-4">Workflow Progress</h3>
+      <Card className="p-6 bg-card border-border">
+        <h3 className="text-lg font-medium text-card-foreground mb-4">Workflow Progress</h3>
         
         <div className="space-y-4">
           {workflowSteps.map((step, index) => {
@@ -65,7 +65,7 @@ export const WorkflowVisualization = ({ agents, tasks, selectedAgent, onAgentSel
                   className={cn(
                     "flex items-center space-x-4 p-4 rounded-lg border cursor-pointer transition-all duration-200",
                     getStepColor(step.status),
-                    selectedAgent?.id === agent?.id && "ring-2 ring-blue-500"
+                    selectedAgent?.id === agent?.id && "ring-2 ring-primary"
                   )}
                   onClick={() => agent && onAgentSelect(agent)}
                 >
@@ -84,7 +84,7 @@ export const WorkflowVisualization = ({ agents, tasks, selectedAgent, onAgentSel
                         <p className="text-sm opacity-75">{agent.currentTask}</p>
                         {agent.status === "working" && (
                           <div className="flex items-center space-x-2">
-                            <div className="w-32 bg-white bg-opacity-50 rounded-full h-1.5">
+                            <div className="w-32 bg-background/50 rounded-full h-1.5">
                               <div 
                                 className="bg-current h-1.5 rounded-full transition-all duration-300" 
                                 style={{ width: `${agent.progress}%` }}
@@ -100,7 +100,7 @@ export const WorkflowVisualization = ({ agents, tasks, selectedAgent, onAgentSel
                 
                 {!isLast && (
                   <div className="flex justify-center py-2">
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                    <ArrowRight className="w-4 h-4 text-muted-foreground" />
                   </div>
                 )}
               </div>
@@ -110,35 +110,35 @@ export const WorkflowVisualization = ({ agents, tasks, selectedAgent, onAgentSel
       </Card>
 
       {/* Active Tasks Overview */}
-      <Card className="p-6">
-        <h3 className="text-lg font-medium text-slate-900 mb-4">Active Tasks</h3>
+      <Card className="p-6 bg-card border-border">
+        <h3 className="text-lg font-medium text-card-foreground mb-4">Active Tasks</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tasks.filter(task => task.status === "in-progress").map((task) => {
             const agent = agents.find(a => a.type === task.assignedAgent);
             
             return (
-              <Card key={task.id} className="p-4 border border-slate-200 hover:shadow-md transition-shadow">
+              <Card key={task.id} className="p-4 bg-card border-border hover:shadow-md transition-shadow">
                 <div className="space-y-3">
                   <div>
-                    <h4 className="font-medium text-slate-900">{task.title}</h4>
-                    <p className="text-sm text-slate-600 mt-1">{task.description}</p>
+                    <h4 className="font-medium text-card-foreground">{task.title}</h4>
+                    <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <Badge 
                       variant="secondary" 
                       className={cn(
-                        task.priority === "high" && "bg-red-50 text-red-700",
-                        task.priority === "medium" && "bg-yellow-50 text-yellow-700",
-                        task.priority === "low" && "bg-green-50 text-green-700"
+                        task.priority === "high" && "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400",
+                        task.priority === "medium" && "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400",
+                        task.priority === "low" && "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
                       )}
                     >
                       {task.priority} priority
                     </Badge>
                     
                     {agent && (
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-muted-foreground">
                         {agent.name}
                       </div>
                     )}
@@ -147,12 +147,12 @@ export const WorkflowVisualization = ({ agents, tasks, selectedAgent, onAgentSel
                   {agent?.status === "working" && (
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
-                        <span className="text-slate-500">Progress</span>
-                        <span className="text-slate-700 font-medium">{agent.progress}%</span>
+                        <span className="text-muted-foreground">Progress</span>
+                        <span className="text-foreground font-medium">{agent.progress}%</span>
                       </div>
-                      <div className="w-full bg-slate-200 rounded-full h-1.5">
+                      <div className="w-full bg-muted rounded-full h-1.5">
                         <div 
-                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-300" 
+                          className="bg-primary h-1.5 rounded-full transition-all duration-300" 
                           style={{ width: `${agent.progress}%` }}
                         />
                       </div>

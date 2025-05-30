@@ -75,7 +75,7 @@ export const MainWorkflowArea = ({
   };
 
   return (
-    <div className="flex-1 bg-slate-50 p-6 overflow-auto">
+    <div className="flex-1 bg-background p-6 overflow-auto">
       {renderContent()}
     </div>
   );
