@@ -18,9 +18,11 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
   };
 
   return (
-    <div className="relative h-full">
-      {/* Main Chat Interface - Always full width */}
-      <div className="w-full h-full">
+    <div className="relative h-full overflow-hidden">
+      {/* Main Chat Interface - Adjusts width when canvas is open */}
+      <div className={`h-full transition-all duration-300 ${
+        isCanvasOpen ? 'lg:mr-[50vw]' : 'w-full'
+      }`}>
         <Card className="h-full card-enhanced">
           <ChatInterface 
             onCreateTask={onCreateTask}
@@ -30,11 +32,11 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
         </Card>
       </div>
 
-      {/* Canvas Overlay - Desktop and Mobile */}
+      {/* Canvas Panel - Slides from right */}
       {isCanvasOpen && (
         <>
-          {/* Canvas Panel */}
-          <div className="fixed top-0 right-0 h-full w-full sm:w-2/3 lg:w-1/2 z-50 transform transition-transform duration-300">
+          {/* Desktop Canvas - Slides in from right */}
+          <div className="hidden lg:block fixed top-16 right-0 h-[calc(100vh-4rem)] w-1/2 z-40 transform transition-transform duration-300 translate-x-0">
             <PlanningCanvas 
               selectedProject={selectedProject} 
               isOpen={isCanvasOpen}
@@ -43,9 +45,19 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
             />
           </div>
 
-          {/* Backdrop overlay for mobile/tablet */}
+          {/* Mobile/Tablet Canvas - Full overlay */}
+          <div className="lg:hidden fixed top-0 right-0 h-full w-full sm:w-2/3 z-50 transform transition-transform duration-300">
+            <PlanningCanvas 
+              selectedProject={selectedProject} 
+              isOpen={isCanvasOpen}
+              onToggle={handleToggleCanvas}
+              className="h-full"
+            />
+          </div>
+
+          {/* Backdrop overlay for mobile/tablet only */}
           <div 
-            className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden"
+            className="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
             onClick={handleToggleCanvas}
           />
         </>
