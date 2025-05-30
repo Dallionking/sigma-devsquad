@@ -18,7 +18,16 @@ const Index = () => {
   const [showFooter, setShowFooter] = useState(true);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col transition-all duration-300 ease-in-out">
+      {/* Skip to main content for accessibility */}
+      <a 
+        href="#main-content" 
+        className="sr-only-focusable"
+        aria-label="Skip to main content"
+      >
+        Skip to main content
+      </a>
+      
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
@@ -32,18 +41,25 @@ const Index = () => {
           onAgentSelect={setSelectedAgent}
         />
         
-        {/* Enhanced Main Content Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Dashboard Overview Section - Only show when in workflow mode */}
+        {/* Enhanced Main Content Area with better responsive design */}
+        <main 
+          id="main-content"
+          className="flex-1 flex flex-col min-w-0 bg-gradient-to-br from-background via-background to-muted/20"
+          role="main"
+          aria-label="Main dashboard content"
+        >
+          {/* Dashboard Overview Section - Enhanced with better spacing */}
           {viewMode === "workflow" && (
-            <DashboardOverview 
-              agents={mockAgents}
-              onAgentSelect={setSelectedAgent}
-            />
+            <div className="fade-in">
+              <DashboardOverview 
+                agents={mockAgents}
+                onAgentSelect={setSelectedAgent}
+              />
+            </div>
           )}
           
-          {/* Main Workflow Area */}
-          <div className="flex-1">
+          {/* Main Workflow Area with enhanced transitions */}
+          <div className="flex-1 transition-all duration-300 ease-in-out">
             <MainWorkflowArea 
               viewMode={viewMode}
               agents={mockAgents}
@@ -57,7 +73,7 @@ const Index = () => {
               onMessageSelect={setSelectedMessage}
             />
           </div>
-        </div>
+        </main>
         
         <DetailPanel 
           selectedAgent={selectedAgent}
@@ -68,15 +84,20 @@ const Index = () => {
         />
       </div>
       
+      {/* Enhanced footer with smooth transitions */}
       {showFooter && (
-        <SystemFooter 
-          onToggle={() => setShowFooter(!showFooter)}
-          messages={mockMessages}
-        />
+        <div className="slide-in-from-bottom">
+          <SystemFooter 
+            onToggle={() => setShowFooter(!showFooter)}
+            messages={mockMessages}
+          />
+        </div>
       )}
       
-      {/* Add the Agent Creation Button */}
-      <AgentCreationButton />
+      {/* Enhanced floating action button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <AgentCreationButton />
+      </div>
     </div>
   );
 };

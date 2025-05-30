@@ -19,66 +19,125 @@ const IDEIntegration = () => {
   } = useIDEConnectionStatus();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">IDE Integration</h1>
-          <p className="text-muted-foreground">
-            Connect and synchronize with your development environment
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Skip to main content for accessibility */}
+      <a 
+        href="#main-content" 
+        className="sr-only-focusable"
+        aria-label="Skip to main content"
+      >
+        Skip to main content
+      </a>
+
+      <div className="container-responsive py-responsive fade-in">
+        {/* Enhanced header section with better typography */}
+        <header className="mb-8 text-center lg:text-left">
+          <h1 className="heading-primary mb-4">
+            IDE Integration
+          </h1>
+          <p className="text-muted-enhanced max-w-3xl mx-auto lg:mx-0">
+            Connect and synchronize with your development environment for seamless workflow integration
           </p>
+        </header>
+
+        {/* Enhanced connection status banner */}
+        <div className="mb-8">
+          <ConnectionStatusBanner connectionStatus={connectionStatus} />
         </div>
 
-        <ConnectionStatusBanner connectionStatus={connectionStatus} />
+        {/* Enhanced tabs with better responsive design */}
+        <main id="main-content" role="main" aria-label="IDE Integration tools">
+          <Tabs defaultValue="flow" className="space-y-8">
+            {/* Enhanced tab navigation with scroll support on mobile */}
+            <div className="relative">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1 bg-muted/50 p-1 rounded-xl h-auto">
+                <TabsTrigger 
+                  value="flow" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  <span className="hidden sm:inline">Integration </span>Flow
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="status" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  Status
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="configuration" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  <span className="hidden sm:inline">Config</span><span className="sm:hidden">Cfg</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="files" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  Files
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="terminal" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  Terminal
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="execution" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  <span className="hidden sm:inline">Execute</span><span className="sm:hidden">Run</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="sync" 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-md"
+                >
+                  Sync
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-        <Tabs defaultValue="flow" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="flow">Flow</TabsTrigger>
-            <TabsTrigger value="status">Status</TabsTrigger>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
-            <TabsTrigger value="files">Files</TabsTrigger>
-            <TabsTrigger value="terminal">Terminal</TabsTrigger>
-            <TabsTrigger value="execution">Execution</TabsTrigger>
-            <TabsTrigger value="sync">Sync</TabsTrigger>
-          </TabsList>
+            {/* Enhanced tab content with consistent spacing */}
+            <div className="mt-8">
+              <TabsContent value="flow" className="space-y-6 fade-in">
+                <IDEIntegrationFlow />
+              </TabsContent>
 
-          <TabsContent value="flow">
-            <IDEIntegrationFlow />
-          </TabsContent>
+              <TabsContent value="status" className="space-y-6 fade-in">
+                <ConnectionStatusTab 
+                  ides={mockIDEs}
+                  selectedIDE={selectedIDE}
+                  setSelectedIDE={setSelectedIDE}
+                />
+              </TabsContent>
 
-          <TabsContent value="status">
-            <ConnectionStatusTab 
-              ides={mockIDEs}
-              selectedIDE={selectedIDE}
-              setSelectedIDE={setSelectedIDE}
-            />
-          </TabsContent>
+              <TabsContent value="configuration" className="space-y-6 fade-in">
+                <ConfigurationTab 
+                  selectedIDE={selectedIDE}
+                  ides={mockIDEs}
+                />
+              </TabsContent>
 
-          <TabsContent value="configuration">
-            <ConfigurationTab 
-              selectedIDE={selectedIDE}
-              ides={mockIDEs}
-            />
-          </TabsContent>
+              <TabsContent value="files" className="space-y-6 fade-in">
+                <FileExplorerTab />
+              </TabsContent>
 
-          <TabsContent value="files">
-            <FileExplorerTab />
-          </TabsContent>
+              <TabsContent value="terminal" className="space-y-6 fade-in">
+                <TerminalTab />
+              </TabsContent>
 
-          <TabsContent value="terminal">
-            <TerminalTab />
-          </TabsContent>
+              <TabsContent value="execution" className="space-y-6 fade-in">
+                <ExecutionTab />
+              </TabsContent>
 
-          <TabsContent value="execution">
-            <ExecutionTab />
-          </TabsContent>
-
-          <TabsContent value="sync">
-            <SyncTab 
-              ides={mockIDEs}
-              selectedIDE={selectedIDE}
-            />
-          </TabsContent>
-        </Tabs>
+              <TabsContent value="sync" className="space-y-6 fade-in">
+                <SyncTab 
+                  ides={mockIDEs}
+                  selectedIDE={selectedIDE}
+                />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </main>
       </div>
     </div>
   );

@@ -33,7 +33,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -43,6 +43,14 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Enhanced design system variables */
+    --gradient-primary: linear-gradient(135deg, hsl(222.2 47.4% 11.2%) 0%, hsl(222.2 47.4% 21.2%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(210 40% 96.1%) 0%, hsl(210 40% 89.1%) 100%);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 
   .dark {
@@ -81,6 +89,14 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Enhanced dark mode design system variables */
+    --gradient-primary: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(212.7 26.8% 83.9%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(217.2 32.6% 17.5%) 0%, hsl(217.2 32.6% 25.5%) 100%);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
   }
 }
 
@@ -90,10 +106,184 @@
   }
 
   body {
-    @apply bg-background text-foreground transition-colors duration-200;
+    @apply bg-background text-foreground transition-all duration-300 ease-in-out;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
   
   html {
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    scroll-behavior: smooth;
+  }
+
+  /* Enhanced focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* Improved reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Enhanced card styles with better shadows and responsiveness */
+  .card-enhanced {
+    @apply bg-card text-card-foreground rounded-xl border shadow-md hover:shadow-lg transition-all duration-300 ease-in-out;
+  }
+
+  .card-interactive {
+    @apply card-enhanced hover:scale-[1.02] hover:border-primary/20 cursor-pointer;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  /* Enhanced button styles */
+  .btn-primary-enhanced {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-6 py-3 font-medium transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md focus:scale-[1.02] focus:shadow-md;
+  }
+
+  .btn-secondary-enhanced {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg px-6 py-3 font-medium transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md focus:scale-[1.02] focus:shadow-md;
+  }
+
+  /* Enhanced responsive containers */
+  .container-responsive {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
+  /* Enhanced grid layouts */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  /* Enhanced typography */
+  .heading-primary {
+    @apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-foreground;
+  }
+
+  .heading-secondary {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-foreground;
+  }
+
+  .text-muted-enhanced {
+    @apply text-muted-foreground text-sm sm:text-base leading-relaxed;
+  }
+
+  /* Enhanced status indicators */
+  .status-success {
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-warning {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-error {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-info {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  /* Enhanced loading states */
+  .skeleton-enhanced {
+    @apply animate-pulse bg-muted rounded-md;
+  }
+
+  /* Enhanced animations */
+  .fade-in {
+    @apply animate-in fade-in-0 duration-300;
+  }
+
+  .slide-in-from-bottom {
+    @apply animate-in slide-in-from-bottom-4 duration-300;
+  }
+
+  .slide-in-from-right {
+    @apply animate-in slide-in-from-right-4 duration-300;
+  }
+
+  /* Enhanced accessibility helpers */
+  .sr-only-focusable {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:bg-background focus:text-foreground focus:p-4 focus:rounded-md focus:shadow-lg;
+  }
+
+  /* Enhanced responsive text sizes */
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+}
+
+@layer utilities {
+  /* Enhanced responsive spacing */
+  .space-y-responsive {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+
+  .space-x-responsive {
+    @apply space-x-4 sm:space-x-6 lg:space-x-8;
+  }
+
+  /* Enhanced responsive padding */
+  .p-responsive {
+    @apply p-4 sm:p-6 lg:p-8 xl:p-12;
+  }
+
+  .px-responsive {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
+  .py-responsive {
+    @apply py-4 sm:py-6 lg:py-8 xl:py-12;
+  }
+
+  /* Enhanced responsive margins */
+  .m-responsive {
+    @apply m-4 sm:m-6 lg:m-8 xl:m-12;
+  }
+
+  .mx-responsive {
+    @apply mx-4 sm:mx-6 lg:mx-8 xl:mx-12;
+  }
+
+  .my-responsive {
+    @apply my-4 sm:my-6 lg:my-8 xl:my-12;
+  }
+
+  /* Enhanced responsive widths */
+  .w-responsive-full {
+    @apply w-full max-w-7xl mx-auto;
+  }
+
+  .w-responsive-container {
+    @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
