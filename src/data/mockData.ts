@@ -1,4 +1,3 @@
-
 import { Agent, Task, Message } from "@/types";
 
 export const mockAgents: Agent[] = [
@@ -9,7 +8,11 @@ export const mockAgents: Agent[] = [
     status: "working",
     currentTask: "Analyzing requirements for user authentication module",
     progress: 75,
-    lastActive: "2024-05-30T10:30:00Z"
+    lastActive: "2024-05-30T10:30:00Z",
+    capabilities: ["requirement-analysis", "project-planning", "roadmap-creation"],
+    specialization: "Project Planning & Requirements Analysis",
+    background: "Experienced in breaking down complex projects into manageable tasks and creating comprehensive roadmaps.",
+    description: "Analyzes requirements and creates detailed project plans with clear timelines and deliverables."
   },
   {
     id: "2",
@@ -18,7 +21,11 @@ export const mockAgents: Agent[] = [
     status: "waiting",
     currentTask: "Waiting for API specifications",
     progress: 0,
-    lastActive: "2024-05-30T10:25:00Z"
+    lastActive: "2024-05-30T10:25:00Z",
+    capabilities: ["react-development", "ui-design", "responsive-design", "component-creation"],
+    specialization: "React & Modern Frontend Development",
+    background: "Expert in React, TypeScript, and modern frontend frameworks with focus on user experience.",
+    description: "Builds responsive user interfaces and interactive components using React and modern web technologies."
   },
   {
     id: "3",
@@ -27,7 +34,11 @@ export const mockAgents: Agent[] = [
     status: "working",
     currentTask: "Implementing authentication endpoints",
     progress: 45,
-    lastActive: "2024-05-30T10:32:00Z"
+    lastActive: "2024-05-30T10:32:00Z",
+    capabilities: ["api-development", "database-design", "authentication", "security"],
+    specialization: "API Development & Database Management",
+    background: "Specialized in creating robust backend systems with secure authentication and efficient data handling.",
+    description: "Develops server-side logic, APIs, and database systems with focus on security and performance."
   },
   {
     id: "4",
@@ -36,7 +47,11 @@ export const mockAgents: Agent[] = [
     status: "idle",
     currentTask: "Ready for testing assignments",
     progress: 0,
-    lastActive: "2024-05-30T09:45:00Z"
+    lastActive: "2024-05-30T09:45:00Z",
+    capabilities: ["automated-testing", "manual-testing", "bug-detection", "test-planning"],
+    specialization: "Quality Assurance & Testing",
+    background: "Comprehensive testing expertise including unit tests, integration tests, and end-to-end testing.",
+    description: "Ensures code quality through comprehensive testing strategies and bug detection."
   },
   {
     id: "5",
@@ -45,7 +60,11 @@ export const mockAgents: Agent[] = [
     status: "working",
     currentTask: "Updating API documentation",
     progress: 60,
-    lastActive: "2024-05-30T10:31:00Z"
+    lastActive: "2024-05-30T10:31:00Z",
+    capabilities: ["technical-writing", "api-documentation", "user-guides", "knowledge-management"],
+    specialization: "Technical Documentation & Knowledge Management",
+    background: "Expert in creating clear, comprehensive documentation for both technical and non-technical audiences.",
+    description: "Creates and maintains comprehensive documentation including API docs, user guides, and technical specifications."
   },
   {
     id: "6",
@@ -54,7 +73,11 @@ export const mockAgents: Agent[] = [
     status: "error",
     currentTask: "CI/CD pipeline configuration failed",
     progress: 0,
-    lastActive: "2024-05-30T10:15:00Z"
+    lastActive: "2024-05-30T10:15:00Z",
+    capabilities: ["ci-cd", "deployment", "infrastructure", "monitoring"],
+    specialization: "DevOps & Infrastructure Management",
+    background: "Experienced in setting up robust CI/CD pipelines and managing cloud infrastructure.",
+    description: "Manages deployment pipelines, infrastructure automation, and system monitoring."
   }
 ];
 

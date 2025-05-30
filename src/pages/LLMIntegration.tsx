@@ -24,7 +24,11 @@ export const LLMIntegration = () => {
       type: "frontend" as const,
       currentTask: "Developing new features",
       progress: 75,
-      lastActive: new Date().toISOString()
+      lastActive: new Date().toISOString(),
+      capabilities: ["react-development", "ui-design"],
+      specialization: "Frontend Development",
+      background: "Expert in React and modern frontend technologies",
+      description: "Builds user interfaces and client-side functionality"
     },
     { 
       id: "2", 
@@ -33,7 +37,11 @@ export const LLMIntegration = () => {
       type: "qa" as const,
       currentTask: "Waiting for tasks",
       progress: 0,
-      lastActive: new Date().toISOString()
+      lastActive: new Date().toISOString(),
+      capabilities: ["automated-testing", "manual-testing"],
+      specialization: "Quality Assurance",
+      background: "Expert in testing and quality assurance",
+      description: "Tests functionality and ensures quality standards"
     },
     { 
       id: "3", 
@@ -42,7 +50,11 @@ export const LLMIntegration = () => {
       type: "backend" as const,
       currentTask: "Code review",
       progress: 50,
-      lastActive: new Date().toISOString()
+      lastActive: new Date().toISOString(),
+      capabilities: ["api-development", "database-design"],
+      specialization: "Backend Development",
+      background: "Expert in server-side development and APIs",
+      description: "Develops server-side logic and API endpoints"
     }
   ];
 

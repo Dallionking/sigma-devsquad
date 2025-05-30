@@ -55,9 +55,45 @@ export const AgentConfiguration = () => {
 
   // Mock agents data for header
   const mockAgents: Agent[] = [
-    { id: "1", type: "planning", name: "Planning Agent", status: "working", currentTask: "Active", progress: 75, lastActive: "2024-05-30T10:30:00Z" },
-    { id: "2", type: "frontend", name: "Frontend Agent", status: "idle", currentTask: "Idle", progress: 0, lastActive: "2024-05-30T10:25:00Z" },
-    { id: "3", type: "backend", name: "Backend Agent", status: "working", currentTask: "Active", progress: 45, lastActive: "2024-05-30T10:32:00Z" }
+    { 
+      id: "1", 
+      type: "planning", 
+      name: "Planning Agent", 
+      status: "working", 
+      currentTask: "Active", 
+      progress: 75, 
+      lastActive: "2024-05-30T10:30:00Z",
+      capabilities: ["requirement-analysis", "project-planning"],
+      specialization: "Project Planning",
+      background: "Expert in project planning and requirements analysis",
+      description: "Analyzes requirements and creates project roadmaps"
+    },
+    { 
+      id: "2", 
+      type: "frontend", 
+      name: "Frontend Agent", 
+      status: "idle", 
+      currentTask: "Idle", 
+      progress: 0, 
+      lastActive: "2024-05-30T10:25:00Z",
+      capabilities: ["react-development", "ui-design"],
+      specialization: "Frontend Development",
+      background: "Expert in React and modern frontend technologies",
+      description: "Builds user interfaces and client-side functionality"
+    },
+    { 
+      id: "3", 
+      type: "backend", 
+      name: "Backend Agent", 
+      status: "working", 
+      currentTask: "Active", 
+      progress: 45, 
+      lastActive: "2024-05-30T10:32:00Z",
+      capabilities: ["api-development", "database-design"],
+      specialization: "Backend Development",
+      background: "Expert in server-side development and APIs",
+      description: "Develops server-side logic and API endpoints"
+    }
   ];
 
   const handleSaveAll = () => {
