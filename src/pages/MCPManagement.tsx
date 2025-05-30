@@ -47,14 +47,18 @@ const MCPManagement = () => {
       name: "Filesystem MCP",
       description: "Provides file system access capabilities",
       status: "installed",
-      version: "1.0.0"
+      version: "1.0.0",
+      dependencies: [],
+      permissions: ["file:read", "file:write"]
     },
     {
       id: "database",
       name: "Database MCP", 
       description: "Database connection and query capabilities",
       status: "available",
-      version: "1.2.0"
+      version: "1.2.0",
+      dependencies: ["sqlite3"],
+      permissions: ["db:read", "db:write"]
     }
   ];
 
