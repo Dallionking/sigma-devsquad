@@ -2,246 +2,138 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { 
-  Bot, Brain, Cpu, Zap, Target, Shield, Rocket, Star, 
-  Diamond, Heart, Lightbulb, Wrench, Code, Server, Upload, X 
-} from "lucide-react";
-import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Bot, Settings, TestTube, Code, Server, FileText } from "lucide-react";
 
 interface AgentNamingStepProps {
   name: string;
   icon: string;
   onNameChange: (name: string) => void;
   onIconChange: (icon: string) => void;
+  description?: string;
+  onDescriptionChange?: (description: string) => void;
 }
 
 const iconOptions = [
-  { name: 'Bot', icon: Bot, color: 'bg-blue-500' },
-  { name: 'Brain', icon: Brain, color: 'bg-purple-500' },
-  { name: 'Cpu', icon: Cpu, color: 'bg-green-500' },
-  { name: 'Zap', icon: Zap, color: 'bg-yellow-500' },
-  { name: 'Target', icon: Target, color: 'bg-red-500' },
-  { name: 'Shield', icon: Shield, color: 'bg-indigo-500' },
-  { name: 'Rocket', icon: Rocket, color: 'bg-orange-500' },
-  { name: 'Star', icon: Star, color: 'bg-pink-500' },
-  { name: 'Diamond', icon: Diamond, color: 'bg-cyan-500' },
-  { name: 'Heart', icon: Heart, color: 'bg-rose-500' },
-  { name: 'Lightbulb', icon: Lightbulb, color: 'bg-amber-500' },
-  { name: 'Wrench', icon: Wrench, color: 'bg-gray-500' },
-  { name: 'Code', icon: Code, color: 'bg-emerald-500' },
-  { name: 'Server', icon: Server, color: 'bg-slate-500' }
+  { value: "Bot", label: "Bot", icon: Bot },
+  { value: "Settings", label: "Settings", icon: Settings },
+  { value: "TestTube", label: "Test Tube", icon: TestTube },
+  { value: "Code", label: "Code", icon: Code },
+  { value: "Server", label: "Server", icon: Server },
+  { value: "FileText", label: "Document", icon: FileText }
 ];
 
-export const AgentNamingStep = ({ name, icon, onNameChange, onIconChange }: AgentNamingStepProps) => {
-  const [customIcon, setCustomIcon] = useState<string | null>(null);
-  const [dragOver, setDragOver] = useState(false);
-  
-  const isCustomIcon = icon.startsWith('data:') || icon.startsWith('http') || icon.startsWith('/');
-  const selectedIconData = iconOptions.find(opt => opt.name === icon) || iconOptions[0];
-  const SelectedIcon = selectedIconData.icon;
-
-  const handleFileUpload = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setCustomIcon(result);
-        onIconChange(result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileUpload(file);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      handleFileUpload(file);
-    }
-  };
-
-  const removeCustomIcon = () => {
-    setCustomIcon(null);
-    onIconChange('Bot'); // Reset to default
-  };
+export const AgentNamingStep = ({ 
+  name, 
+  icon, 
+  onNameChange, 
+  onIconChange,
+  description = "",
+  onDescriptionChange
+}: AgentNamingStepProps) => {
+  const selectedIconOption = iconOptions.find(option => option.value === icon);
+  const IconComponent = selectedIconOption?.icon || Bot;
 
   return (
     <div className="space-y-6">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-bold">Agent Identity</h2>
         <p className="text-muted-foreground">
-          Give your agent a name and choose an icon to represent it
+          Give your agent a name and personality
         </p>
       </div>
 
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Preview */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Agent Preview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
-              <Avatar className="w-16 h-16">
-                {isCustomIcon ? (
-                  <AvatarImage src={icon} alt="Custom agent icon" />
-                ) : (
-                  <AvatarFallback className={`${selectedIconData.color} text-white`}>
-                    <SelectedIcon className="w-8 h-8" />
-                  </AvatarFallback>
-                )}
-              </Avatar>
-              <div>
-                <h3 className="text-lg font-semibold">{name || 'Unnamed Agent'}</h3>
-                <p className="text-muted-foreground text-sm">Ready to assist with your tasks</p>
-              </div>
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>Agent Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Agent Preview */}
+          <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
+            <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center">
+              <IconComponent className="w-8 h-8 text-primary-foreground" />
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Name Input */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Agent Name</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="agent-name">Name</Label>
-              <Input
-                id="agent-name"
-                placeholder="Enter a name for your agent..."
-                value={name}
-                onChange={(e) => onNameChange(e.target.value)}
-              />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Choose a memorable name that reflects your agent's role and personality.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Icon Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Agent Icon</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Custom Icon Upload */}
-            <div className="space-y-4">
-              <Label>Upload Custom Icon</Label>
-              <div
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                  dragOver 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-muted-foreground/25 hover:border-muted-foreground/50'
-                }`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground mb-2">
-                  Drag and drop an image here, or click to select
-                </p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="icon-upload"
-                />
-                <Button variant="outline" asChild>
-                  <label htmlFor="icon-upload" className="cursor-pointer">
-                    Choose File
-                  </label>
-                </Button>
-              </div>
-              
-              {customIcon && (
-                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={customIcon} alt="Custom icon preview" />
-                    </Avatar>
-                    <span className="text-sm">Custom icon uploaded</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={removeCustomIcon}>
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              )}
-              
-              <p className="text-xs text-muted-foreground">
-                Supported formats: PNG, JPG, GIF. Recommended size: 64x64px or larger.
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">{name || "Agent Name"}</h3>
+              <p className="text-sm text-muted-foreground">
+                {description || "Agent description will appear here"}
               </p>
             </div>
+          </div>
 
-            {/* Divider */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or choose from presets
-                </span>
-              </div>
+          {/* Name Input */}
+          <div className="space-y-2">
+            <Label htmlFor="agent-name">Agent Name *</Label>
+            <Input
+              id="agent-name"
+              placeholder="Enter a descriptive name for your agent..."
+              value={name}
+              onChange={(e) => onNameChange(e.target.value)}
+              className="text-lg"
+            />
+            <p className="text-xs text-muted-foreground">
+              Choose a name that reflects your agent's role and purpose
+            </p>
+          </div>
+
+          {/* Description Input */}
+          {onDescriptionChange && (
+            <div className="space-y-2">
+              <Label htmlFor="agent-description">Description</Label>
+              <Textarea
+                id="agent-description"
+                placeholder="Describe what makes this agent unique and its primary purpose..."
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                rows={3}
+              />
+              <p className="text-xs text-muted-foreground">
+                This description will help you and your team understand the agent's purpose
+              </p>
             </div>
+          )}
 
-            {/* Preset Icons */}
-            <div className="space-y-4">
-              <div className="grid grid-cols-4 md:grid-cols-7 gap-3">
-                {iconOptions.map((iconOption) => {
-                  const IconComponent = iconOption.icon;
-                  const isSelected = icon === iconOption.name && !isCustomIcon;
-                  
+          {/* Icon Selection */}
+          <div className="space-y-2">
+            <Label htmlFor="agent-icon">Icon</Label>
+            <Select value={icon} onValueChange={onIconChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose an icon for your agent..." />
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover">
+                {iconOptions.map((option) => {
+                  const OptionIcon = option.icon;
                   return (
-                    <Button
-                      key={iconOption.name}
-                      variant="outline"
-                      size="icon"
-                      className={`h-12 w-12 ${
-                        isSelected 
-                          ? `ring-2 ring-primary ${iconOption.color} text-white` 
-                          : `hover:${iconOption.color} hover:text-white`
-                      }`}
-                      onClick={() => {
-                        setCustomIcon(null);
-                        onIconChange(iconOption.name);
-                      }}
-                    >
-                      <IconComponent className="w-6 h-6" />
-                    </Button>
+                    <SelectItem key={option.value} value={option.value}>
+                      <div className="flex items-center space-x-2">
+                        <OptionIcon className="w-4 h-4" />
+                        <span>{option.label}</span>
+                      </div>
+                    </SelectItem>
                   );
                 })}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Select an icon that best represents your agent's functionality.
-              </p>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Agent Stats Preview */}
+          <div className="grid grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary">0</div>
+              <div className="text-xs text-muted-foreground">Tasks Completed</div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">Ready</div>
+              <div className="text-xs text-muted-foreground">Status</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">New</div>
+              <div className="text-xs text-muted-foreground">Experience</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
