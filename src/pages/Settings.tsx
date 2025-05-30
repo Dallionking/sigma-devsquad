@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Monitor, Shield, Bell, Database, Palette, Activity } from "lucide-react";
+import { Settings as SettingsIcon, Monitor, Shield, Bell, Database, Palette, Activity } from "lucide-react";
 
 export const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -32,7 +31,7 @@ export const Settings = () => {
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="general" className="flex items-center space-x-2">
-              <Settings className="w-4 h-4" />
+              <SettingsIcon className="w-4 h-4" />
               <span>General</span>
             </TabsTrigger>
             <TabsTrigger value="appearance" className="flex items-center space-x-2">
