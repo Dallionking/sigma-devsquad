@@ -1,6 +1,8 @@
 
 import { TemplateLibraryStep } from "./TemplateLibraryStep";
+import { EnhancedTemplateLibrary } from "./EnhancedTemplateLibrary";
 import { RoleSelectionStep } from "./RoleSelectionStep";
+import { EnhancedRoleSelection } from "./EnhancedRoleSelection";
 import { SpecializationStep } from "./SpecializationStep";
 import { BackgroundConfigStep } from "./BackgroundConfigStep";
 import { CapabilitySelectionStep } from "./CapabilitySelectionStep";
@@ -25,13 +27,21 @@ interface FlowStepRendererProps {
   config: AgentConfig;
   onConfigChange: (updates: Partial<AgentConfig>) => void;
   savedTemplates: any[];
+  customRoles?: any[];
+  onSaveTemplate?: (template: any) => void;
+  onDeleteTemplate?: (templateId: string) => void;
+  onAddCustomRole?: (role: any) => void;
 }
 
 export const FlowStepRenderer = ({
   stepId,
   config,
   onConfigChange,
-  savedTemplates
+  savedTemplates,
+  customRoles = [],
+  onSaveTemplate = () => {},
+  onDeleteTemplate = () => {},
+  onAddCustomRole = () => {}
 }: FlowStepRendererProps) => {
   const updateConfig = (updates: Partial<AgentConfig>) => {
     onConfigChange(updates);
@@ -40,23 +50,32 @@ export const FlowStepRenderer = ({
   switch (stepId) {
     case "template":
       return (
-        <TemplateLibraryStep
+        <EnhancedTemplateLibrary
           onTemplateSelect={(template) => {
             if (template) {
-              updateConfig({ ...template.config });
+              updateConfig({ 
+                templateId: template.id,
+                ...template.config 
+              });
+            } else {
+              updateConfig({ templateId: null });
             }
           }}
           savedTemplates={savedTemplates}
+          onSaveTemplate={onSaveTemplate}
+          onDeleteTemplate={onDeleteTemplate}
         />
       );
     
     case "role":
       return (
-        <RoleSelectionStep
+        <EnhancedRoleSelection
           selectedRole={config.role}
-          onRoleSelect={(role) => updateConfig({ role })}
           customRole={config.customRole}
+          onRoleSelect={(role) => updateConfig({ role })}
           onCustomRoleChange={(customRole) => updateConfig({ customRole })}
+          customRoles={customRoles}
+          onAddCustomRole={onAddCustomRole}
         />
       );
     

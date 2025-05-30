@@ -8,6 +8,16 @@ import { FlowNavigation } from "./FlowNavigation";
 import { useFlowValidation } from "./useFlowValidation";
 import { useTemplateManager } from "./useTemplateManager";
 
+interface CustomRole {
+  id: string;
+  name: string;
+  description: string;
+  capabilities: string[];
+  category: string;
+  icon: string;
+  color: string;
+}
+
 interface EnhancedAgentCreationFlowProps {
   onComplete: (config: any) => void;
   onCancel: () => void;
@@ -37,8 +47,11 @@ export const EnhancedAgentCreationFlow = ({ onComplete, onCancel }: EnhancedAgen
     description: ""
   });
 
+  // Enhanced state for custom roles and templates
+  const [customRoles, setCustomRoles] = useState<CustomRole[]>([]);
+
   const { addAgent } = useAgents();
-  const { savedTemplates, saveAsTemplate } = useTemplateManager();
+  const { savedTemplates, saveAsTemplate, deleteTemplate } = useTemplateManager();
   const { canProceed } = useFlowValidation(config, steps, currentStep);
 
   const handleNext = () => {
@@ -55,15 +68,40 @@ export const EnhancedAgentCreationFlow = ({ onComplete, onCancel }: EnhancedAgen
 
   const handleComplete = () => {
     // Create the agent in the global state
-    const newAgent = addAgent(config);
-    console.log("Agent created and added to global state:", newAgent);
+    const finalConfig = {
+      ...config,
+      // Use custom role name if no standard role is selected
+      role: config.role || (config.customRole ? 'planning' : null)
+    };
+    
+    const newAgent = addAgent(finalConfig);
+    console.log("Enhanced agent created and added to global state:", newAgent);
     
     // Call the original completion handler
-    onComplete(config);
+    onComplete(finalConfig);
   };
 
   const handleSaveAsTemplate = () => {
-    saveAsTemplate(config);
+    const template = {
+      id: `template_${Date.now()}`,
+      name: config.name || "Custom Template",
+      description: config.description || "Custom agent template",
+      category: "Custom",
+      tags: [config.role || config.customRole || "custom"],
+      config: {
+        role: config.role || 'planning',
+        specialization: config.specialization,
+        capabilities: config.capabilities,
+        background: config.background
+      },
+      createdAt: new Date(),
+      downloads: 0
+    };
+    saveAsTemplate(template);
+  };
+
+  const handleAddCustomRole = (role: CustomRole) => {
+    setCustomRoles(prev => [...prev, role]);
   };
 
   const handleStepClick = (stepIndex: number) => {
@@ -94,6 +132,10 @@ export const EnhancedAgentCreationFlow = ({ onComplete, onCancel }: EnhancedAgen
           config={config}
           onConfigChange={updateConfig}
           savedTemplates={savedTemplates}
+          customRoles={customRoles}
+          onSaveTemplate={saveAsTemplate}
+          onDeleteTemplate={deleteTemplate}
+          onAddCustomRole={handleAddCustomRole}
         />
       </div>
 
