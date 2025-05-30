@@ -1,13 +1,20 @@
 
-import { SettingsLayout } from "./SettingsLayout";
-import { SettingsTabsProvider } from "./SettingsTabsProvider";
-import { SettingsContent } from "./SettingsContent";
+import { OptimizedSettingsLayout } from "./OptimizedSettingsLayout";
+import { PerformanceOptimizedTabs } from "./PerformanceOptimizedTabs";
 import { SettingsActions } from "./SettingsActions";
 import { MobileSettingsLayout } from "./MobileSettingsLayout";
+import { GeneralSettings } from "./GeneralSettings";
+import { APIKeySettings } from "./APIKeySettings";
+import { AppearanceSettings } from "./AppearanceSettings";
+import { PerformanceSettings } from "./PerformanceSettings";
+import { SecuritySettings } from "./SecuritySettings";
+import { NotificationSettings } from "./NotificationSettings";
+import { BackupSettings } from "./BackupSettings";
 import { useSettingsState } from "@/hooks/useSettingsState";
 import { useSettingsActions } from "@/hooks/useSettingsActions";
 import { useEnhancedKeyboardNavigation } from "@/hooks/useEnhancedKeyboardNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Settings as SettingsIcon, Monitor, Shield, Bell, Database, Palette, Key } from "lucide-react";
 import { useRef } from "react";
 
 export const SettingsPage = () => {
@@ -58,33 +65,84 @@ export const SettingsPage = () => {
     }
   });
 
+  // Define tabs with their components for performance optimization
+  const tabs = [
+    { 
+      id: "general", 
+      label: "General", 
+      icon: SettingsIcon, 
+      component: GeneralSettings 
+    },
+    { 
+      id: "api-keys", 
+      label: "API Keys", 
+      icon: Key, 
+      component: APIKeySettings 
+    },
+    { 
+      id: "appearance", 
+      label: "Appearance", 
+      icon: Palette, 
+      component: AppearanceSettings 
+    },
+    { 
+      id: "performance", 
+      label: "Performance", 
+      icon: Monitor, 
+      component: PerformanceSettings 
+    },
+    { 
+      id: "security", 
+      label: "Security", 
+      icon: Shield, 
+      component: SecuritySettings 
+    },
+    { 
+      id: "notifications", 
+      label: "Notifications", 
+      icon: Bell, 
+      component: NotificationSettings 
+    },
+    { 
+      id: "backup", 
+      label: "Backup", 
+      icon: Database, 
+      component: BackupSettings 
+    }
+  ];
+
+  const settingsProps = {
+    searchQuery,
+    notifications,
+    setNotifications,
+    autoBackup,
+    setAutoBackup,
+    performanceMode,
+    setPerformanceMode,
+  };
+
   const tabsContent = (
-    <SettingsTabsProvider
+    <PerformanceOptimizedTabs
       activeTab={activeTab}
       onTabChange={(tab) => {
         setActiveTab(tab);
         saveFocus(); // Save focus when switching tabs
       }}
-    >
-      <SettingsContent
-        searchQuery={searchQuery}
-        notifications={notifications}
-        setNotifications={setNotifications}
-        autoBackup={autoBackup}
-        setAutoBackup={setAutoBackup}
-        performanceMode={performanceMode}
-        setPerformanceMode={setPerformanceMode}
-      />
-    </SettingsTabsProvider>
+      searchQuery={searchQuery}
+      tabs={tabs}
+      settingsProps={settingsProps}
+    />
   );
 
   if (isMobile) {
     return (
       <div ref={containerRef} className="focus-within:outline-none">
-        <SettingsLayout
+        <OptimizedSettingsLayout
           searchQuery={searchQuery}
           onSearch={setSearchQuery}
           onFilterChange={setSearchFilters}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         >
           <MobileSettingsLayout
             activeTab={activeTab}
@@ -98,17 +156,19 @@ export const SettingsPage = () => {
               />
             </div>
           </MobileSettingsLayout>
-        </SettingsLayout>
+        </OptimizedSettingsLayout>
       </div>
     );
   }
 
   return (
     <div ref={containerRef} className="focus-within:outline-none">
-      <SettingsLayout
+      <OptimizedSettingsLayout
         searchQuery={searchQuery}
         onSearch={setSearchQuery}
         onFilterChange={setSearchFilters}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
       >
         {tabsContent}
 
@@ -118,7 +178,7 @@ export const SettingsPage = () => {
             onResetAll={handleResetAll}
           />
         </div>
-      </SettingsLayout>
+      </OptimizedSettingsLayout>
     </div>
   );
 };
