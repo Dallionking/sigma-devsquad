@@ -58,7 +58,7 @@ export const AgentSidebar = ({ agents, selectedAgent, onAgentSelect }: AgentSide
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     <div className="relative">
-                      <Icon className="w-5 h-5 text-foreground" />
+                      <Icon className="w-5 h-5 text-card-foreground" />
                       <div className={cn(
                         "absolute -top-1 -right-1 w-3 h-3 rounded-full",
                         statusColors[agent.status]
@@ -89,7 +89,7 @@ export const AgentSidebar = ({ agents, selectedAgent, onAgentSelect }: AgentSide
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Progress</span>
-                        <span className="text-foreground font-medium">{agent.progress}%</span>
+                        <span className="text-card-foreground font-medium">{agent.progress}%</span>
                       </div>
                       <Progress value={agent.progress} className="h-1.5" />
                     </div>

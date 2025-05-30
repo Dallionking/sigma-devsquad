@@ -36,7 +36,7 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-border">
         <div className="flex items-center space-x-4">
-          <h3 className="text-sm font-medium text-foreground">System Logs & Activity</h3>
+          <h3 className="text-sm font-medium text-card-foreground">System Logs & Activity</h3>
           <div className="flex items-center space-x-2">
             <Badge variant="secondary" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
               <Activity className="w-3 h-3 mr-1" />
@@ -89,7 +89,7 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
           <div className="flex-1 p-4 border-r border-border">
             <div className="flex items-center space-x-2 mb-3">
               <Terminal className="w-4 h-4 text-muted-foreground" />
-              <h4 className="text-sm font-medium text-foreground">System Logs</h4>
+              <h4 className="text-sm font-medium text-card-foreground">System Logs</h4>
             </div>
             
             <div className="space-y-1 max-h-48 overflow-y-auto">
@@ -107,7 +107,7 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
                   >
                     {log.level}
                   </Badge>
-                  <span className="text-foreground flex-1">{log.message}</span>
+                  <span className="text-card-foreground flex-1">{log.message}</span>
                 </div>
               ))}
             </div>
@@ -117,7 +117,7 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
           <div className="w-96 p-4">
             <div className="flex items-center space-x-2 mb-3">
               <MessageSquare className="w-4 h-4 text-muted-foreground" />
-              <h4 className="text-sm font-medium text-foreground">Recent Messages</h4>
+              <h4 className="text-sm font-medium text-card-foreground">Recent Messages</h4>
             </div>
             
             <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -133,7 +133,7 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
                       {new Date(message.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="text-foreground truncate">{message.content}</p>
+                  <p className="text-card-foreground truncate">{message.content}</p>
                 </div>
               ))}
             </div>

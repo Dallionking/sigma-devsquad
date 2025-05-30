@@ -43,7 +43,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             <div className="flex items-center space-x-2">
               <Bot className="w-8 h-8 text-primary" />
               <div>
-                <h1 className="text-xl font-bold text-foreground">AI Development Workforce</h1>
+                <h1 className="text-xl font-bold text-card-foreground">AI Development Workforce</h1>
                 <p className="text-sm text-muted-foreground">
                   {activeAgents} of {totalAgents} agents active
                 </p>
