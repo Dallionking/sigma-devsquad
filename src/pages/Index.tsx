@@ -5,6 +5,12 @@ import { DetailPanel } from "@/components/dashboard/DetailPanel";
 import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
 
+import { SystemHealthIndicators } from "@/components/dashboard/SystemHealthIndicators";
+import { NotificationCenter } from "@/components/dashboard/NotificationCenter";
+import { QuickAccessNav } from "@/components/dashboard/QuickAccessNav";
+import { SummaryMetrics } from "@/components/dashboard/SummaryMetrics";
+import { EnhancedAgentOverview } from "@/components/dashboard/EnhancedAgentOverview";
+
 export type ViewMode = "workflow" | "communication" | "tasks" | "messages";
 export type AgentType = "planning" | "frontend" | "backend" | "qa" | "documentation" | "devops";
 export type AgentStatus = "working" | "idle" | "waiting" | "error";
@@ -181,18 +187,56 @@ const Index = () => {
           onAgentSelect={setSelectedAgent}
         />
         
-        <MainWorkflowArea 
-          viewMode={viewMode}
-          agents={agents}
-          tasks={tasks}
-          messages={messages}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          onAgentSelect={setSelectedAgent}
-          onTaskSelect={setSelectedTask}
-          onMessageSelect={setSelectedMessage}
-        />
+        {/* Enhanced Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Dashboard Overview Section - Only show when in workflow mode */}
+          {viewMode === "workflow" && (
+            <div className="p-6 border-b border-border bg-card/50">
+              <div className="mb-6">
+                <h1 className="text-3xl font-bold text-foreground mb-2">
+                  AI Development Workforce Dashboard
+                </h1>
+                <p className="text-muted-foreground">
+                  Monitor and manage your AI agent ecosystem in real-time
+                </p>
+              </div>
+              
+              {/* Top Row - System Health and Quick Access */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <SystemHealthIndicators />
+                <QuickAccessNav />
+              </div>
+              
+              {/* Second Row - Notifications and Agent Overview */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <NotificationCenter />
+                <EnhancedAgentOverview 
+                  agents={agents}
+                  onAgentSelect={setSelectedAgent}
+                />
+              </div>
+              
+              {/* Third Row - Summary Metrics */}
+              <SummaryMetrics />
+            </div>
+          )}
+          
+          {/* Main Workflow Area */}
+          <div className="flex-1">
+            <MainWorkflowArea 
+              viewMode={viewMode}
+              agents={agents}
+              tasks={tasks}
+              messages={messages}
+              selectedAgent={selectedAgent}
+              selectedTask={selectedTask}
+              selectedMessage={selectedMessage}
+              onAgentSelect={setSelectedAgent}
+              onTaskSelect={setSelectedTask}
+              onMessageSelect={setSelectedMessage}
+            />
+          </div>
+        </div>
         
         <DetailPanel 
           selectedAgent={selectedAgent}
