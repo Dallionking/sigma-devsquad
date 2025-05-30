@@ -8,36 +8,50 @@ import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
 import { Plus, Target, Activity } from "lucide-react";
 
+type ChatMessage = {
+  id: string;
+  type: "user" | "agent";
+  content: string;
+  timestamp: Date;
+  agent?: string; // Optional for user messages
+};
+
 export const ChatInterface = () => {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "1",
-      type: "agent" as const,
+      type: "agent",
       content: "Hello! I'm your Planning Agent. I can help you break down complex projects, analyze requirements, and create actionable task plans. What would you like to work on today?",
       timestamp: new Date(),
       agent: "Planning Agent"
     }
   ]);
 
+  const [isTyping, setIsTyping] = useState(false);
+
   const handleSendMessage = (content: string) => {
-    const newMessage = {
+    const newMessage: ChatMessage = {
       id: Date.now().toString(),
-      type: "user" as const,
+      type: "user",
       content,
       timestamp: new Date()
     };
     setMessages(prev => [...prev, newMessage]);
 
+    // Set typing indicator
+    setIsTyping(true);
+
     // Simulate agent response
     setTimeout(() => {
-      const agentResponse = {
+      const agentResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        type: "agent" as const,
+        type: "agent",
         content: "I understand. Let me analyze that and provide you with a structured breakdown...",
         timestamp: new Date(),
         agent: "Planning Agent"
       };
       setMessages(prev => [...prev, agentResponse]);
+      setIsTyping(false);
     }, 1000);
   };
 
@@ -86,9 +100,9 @@ export const ChatInterface = () => {
 
       <CardContent className="flex-1 flex flex-col min-h-0 p-4 pt-0">
         <div className="flex-1 overflow-hidden mb-4">
-          <ChatMessageList messages={messages} />
+          <ChatMessageList messages={messages} isTyping={isTyping} />
         </div>
-        <ChatInput onSendMessage={handleSendMessage} />
+        <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping} />
       </CardContent>
     </div>
   );
