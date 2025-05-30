@@ -38,6 +38,16 @@ const PlanningAgent = () => {
     // Handle workflow state changes
   };
 
+  const handleCreateTask = () => {
+    console.log("Create Task clicked");
+    setShowTaskAssignment(true);
+  };
+
+  const handleTrackWorkflow = () => {
+    console.log("Track Workflow clicked");
+    setShowWorkflowTracker(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* Enhanced skip to main content for accessibility */}
@@ -57,13 +67,17 @@ const PlanningAgent = () => {
 
       <main id="main-content" className="container-responsive py-responsive fade-in">
         <PlanningAgentHeader 
-          onCreateTask={() => setShowTaskAssignment(true)}
-          onTrackWorkflow={() => setShowWorkflowTracker(true)}
+          onCreateTask={handleCreateTask}
+          onTrackWorkflow={handleTrackWorkflow}
         />
 
         {/* New Canvas-based Layout */}
         <div className="h-[calc(100vh-200px)] min-h-[600px]">
-          <PlanningCanvasLayout selectedProject={currentProject?.id || "ai-workforce"} />
+          <PlanningCanvasLayout 
+            selectedProject={currentProject?.id || "ai-workforce"}
+            onCreateTask={handleCreateTask}
+            onTrackWorkflow={handleTrackWorkflow}
+          />
         </div>
 
         {/* Enhanced Dialog Manager */}

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
-import { Plus, Target, Activity } from "lucide-react";
+import { Plus, Target, Activity, Menu } from "lucide-react";
 
 type ChatMessage = {
   id: string;
@@ -16,7 +16,13 @@ type ChatMessage = {
   agent?: string; // Optional for user messages
 };
 
-export const ChatInterface = () => {
+interface ChatInterfaceProps {
+  onCreateTask?: () => void;
+  onTrackWorkflow?: () => void;
+  onToggleCanvas?: () => void;
+}
+
+export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "1",
@@ -55,16 +61,6 @@ export const ChatInterface = () => {
     }, 1000);
   };
 
-  const handleCreateTask = () => {
-    console.log("Create Task clicked");
-    // This will be handled by parent component
-  };
-
-  const handleTrackWorkflow = () => {
-    console.log("Track Workflow clicked");
-    // This will be handled by parent component
-  };
-
   return (
     <div className="flex flex-col h-full">
       <CardHeader className="pb-3">
@@ -78,7 +74,7 @@ export const ChatInterface = () => {
           </div>
           <div className="flex items-center space-x-2">
             <Button 
-              onClick={handleCreateTask}
+              onClick={onCreateTask}
               className="btn-primary-enhanced gap-2"
               size="sm"
             >
@@ -87,12 +83,21 @@ export const ChatInterface = () => {
             </Button>
             <Button 
               variant="outline"
-              onClick={handleTrackWorkflow}
+              onClick={onTrackWorkflow}
               className="btn-secondary-enhanced gap-2"
               size="sm"
             >
               <Target className="w-4 h-4" />
               <span className="hidden sm:inline">Track Workflow</span>
+            </Button>
+            <Button
+              variant="outline"
+              onClick={onToggleCanvas}
+              className="gap-2"
+              size="sm"
+            >
+              <Menu className="w-4 h-4" />
+              <span className="hidden sm:inline">Canvas</span>
             </Button>
           </div>
         </div>

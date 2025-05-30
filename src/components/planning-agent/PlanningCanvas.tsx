@@ -6,12 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   X, 
-  Menu, 
   ListTodo, 
   Brain, 
   Search,
-  GitBranch,
-  BarChart3,
   Plus
 } from "lucide-react";
 import { CanvasTaskMaster } from "./CanvasTaskMaster";
@@ -20,11 +17,11 @@ import { ResearchPanel } from "./ResearchPanel";
 
 interface PlanningCanvasProps {
   selectedProject: string;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
-export const PlanningCanvas = ({ selectedProject }: PlanningCanvasProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle }: PlanningCanvasProps) => {
   const canvasModules = [
     {
       id: "taskmaster",
@@ -49,33 +46,18 @@ export const PlanningCanvas = ({ selectedProject }: PlanningCanvasProps) => {
     }
   ];
 
+  if (!isOpen) return null;
+
   return (
     <>
-      {/* Canvas Toggle Button */}
-      <Button
-        onClick={() => setIsOpen(true)}
-        variant="outline"
-        size="sm"
-        className="fixed top-4 right-4 z-40 shadow-lg bg-background border-2"
-      >
-        <Menu className="w-4 h-4 mr-2" />
-        Canvas
-      </Button>
-
       {/* Canvas Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-50 transition-opacity duration-300"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      <div 
+        className="fixed inset-0 bg-black/50 z-50 transition-opacity duration-300"
+        onClick={onToggle}
+      />
 
       {/* Canvas Panel */}
-      <div 
-        className={`fixed top-0 right-0 h-full w-full sm:w-2/3 lg:w-1/2 xl:w-2/5 bg-background border-l shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
+      <div className="fixed top-0 right-0 h-full w-full sm:w-2/3 lg:w-1/2 xl:w-2/5 bg-background border-l shadow-2xl z-50">
         <div className="flex flex-col h-full">
           {/* Canvas Header */}
           <div className="flex items-center justify-between p-4 border-b bg-muted/30">
@@ -84,7 +66,7 @@ export const PlanningCanvas = ({ selectedProject }: PlanningCanvasProps) => {
               <h2 className="text-lg font-semibold">Planning Canvas</h2>
             </div>
             <Button
-              onClick={() => setIsOpen(false)}
+              onClick={onToggle}
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0"
