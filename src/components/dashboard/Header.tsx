@@ -1,5 +1,5 @@
 
-import { Bell, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers } from "lucide-react";
+import { Bell, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/types";
@@ -13,9 +13,17 @@ interface HeaderProps {
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   agents: Agent[];
+  sidebarCollapsed?: boolean;
+  onSidebarToggle?: () => void;
 }
 
-export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
+export const Header = ({ 
+  viewMode, 
+  onViewModeChange, 
+  agents, 
+  sidebarCollapsed = false,
+  onSidebarToggle
+}: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { darkMode, toggleDarkMode } = useTheme();
@@ -49,10 +57,22 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
     <header className="bg-card border-b border-border px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-40 backdrop-blur-sm bg-card/95">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 sm:space-x-6">
+          {/* Sidebar Toggle Button */}
+          {!isMobile && isDashboardPage && onSidebarToggle && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={onSidebarToggle}
+              className="p-2"
+            >
+              <Menu className="w-4 h-4" />
+            </Button>
+          )}
+          
           {/* Mobile Navigation */}
           <MobileNavigation activeAgents={activeAgents} totalAgents={totalAgents} />
           
-          {/* Preserved Logo Navigation */}
+          {/* Logo Navigation */}
           <div 
             onClick={handleLogoClick}
             className="cursor-pointer hover:opacity-80 transition-opacity"
@@ -71,7 +91,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             />
           </div>
           
-          {/* Preserved View Mode Selector - MUST MAINTAIN FUNCTIONALITY */}
+          {/* View Mode Selector */}
           {!isMobile && isDashboardPage && (
             <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
               {Object.entries(viewModeConfig).map(([mode, config]) => {
@@ -94,7 +114,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Preserved Status Badge */}
+          {/* Status Badge */}
           {!isMobile && (
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-1">
@@ -108,7 +128,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             </div>
           )}
           
-          {/* Preserved Navigation Buttons - MUST MAINTAIN ALL FUNCTIONALITY */}
+          {/* Navigation Buttons */}
           {!isMobile && (
             <div className="hidden lg:flex items-center space-x-2">
               <Button 
@@ -169,7 +189,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             </div>
           )}
           
-          {/* Preserved Action Buttons */}
+          {/* Action Buttons */}
           <div className="flex items-center space-x-1 sm:space-x-2">
             <Button variant="ghost" size="sm" onClick={toggleDarkMode}>
               {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

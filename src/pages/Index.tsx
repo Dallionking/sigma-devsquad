@@ -18,6 +18,7 @@ const Index = () => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [showFooter, setShowFooter] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Use centralized state management with proper error handling
   const agentContext = useAgents();
@@ -51,30 +52,36 @@ const Index = () => {
         Skip to main content
       </a>
       
-      {/* Preserved Header Navigation - MUST MAINTAIN ALL EXISTING FUNCTIONALITY */}
+      {/* Header Navigation */}
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
         agents={agents || []}
+        sidebarCollapsed={sidebarCollapsed}
+        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       
-      {/* Optimized main layout with improved responsive behavior */}
+      {/* Main layout with responsive behavior */}
       <div className="flex flex-1 overflow-hidden">
         {/* Collapsible Agent Sidebar */}
-        <AgentSidebar 
-          agents={agents || []}
-          selectedAgent={selectedAgent}
-          onAgentSelect={setSelectedAgent}
-        />
+        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-72'}`}>
+          <AgentSidebar 
+            agents={agents || []}
+            selectedAgent={selectedAgent}
+            onAgentSelect={setSelectedAgent}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          />
+        </div>
         
-        {/* Enhanced main content area with better responsive design and accessibility */}
+        {/* Main content area */}
         <main 
           id="main-content"
           className="flex-1 flex flex-col min-w-0 bg-gradient-to-br from-background via-background to-muted/20"
           role="main"
           aria-label="Main dashboard content"
         >
-          {/* Enhanced dashboard overview section - only show in workflow mode */}
+          {/* Dashboard overview section - only show in workflow mode */}
           {viewMode === "workflow" && (
             <div className="animate-in fade-in-50 duration-300">
               <DashboardOverview 
@@ -84,7 +91,7 @@ const Index = () => {
             </div>
           )}
           
-          {/* Enhanced main workflow area with preserved communication functionality */}
+          {/* Main workflow area */}
           <div className="flex-1 transition-all duration-300 ease-in-out min-h-0">
             <MainWorkflowArea 
               viewMode={viewMode}
@@ -102,13 +109,15 @@ const Index = () => {
         </main>
         
         {/* Context-aware Detail Panel */}
-        <DetailPanel 
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          viewMode={viewMode}
-          agents={agents || []}
-        />
+        <div className="w-80 transition-all duration-300">
+          <DetailPanel 
+            selectedAgent={selectedAgent}
+            selectedTask={selectedTask}
+            selectedMessage={selectedMessage}
+            viewMode={viewMode}
+            agents={agents || []}
+          />
+        </div>
       </div>
       
       {/* Enhanced footer with smooth animations */}
