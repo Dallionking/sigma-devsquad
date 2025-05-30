@@ -1,5 +1,5 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog } from "lucide-react";
+import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
@@ -26,6 +26,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
 
   const isSettingsPage = location.pathname === "/settings";
   const isLLMPage = location.pathname === "/llm-integration";
+  const isAgentConfigPage = location.pathname === "/agent-configuration";
 
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4">
@@ -80,6 +81,14 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
               onClick={() => navigate("/")}
             >
               Dashboard
+            </Button>
+            <Button 
+              variant={isAgentConfigPage ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/agent-configuration")}
+            >
+              <Bot className="w-4 h-4 mr-2" />
+              Agent Config
             </Button>
             <Button 
               variant={isLLMPage ? "default" : "ghost"} 
