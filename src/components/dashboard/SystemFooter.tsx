@@ -32,13 +32,13 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
   };
 
   return (
-    <div className="bg-white border-t border-slate-200">
+    <div className="bg-card border-t border-border">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-slate-100">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-border">
         <div className="flex items-center space-x-4">
-          <h3 className="text-sm font-medium text-slate-900">System Logs & Activity</h3>
+          <h3 className="text-sm font-medium text-foreground">System Logs & Activity</h3>
           <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="bg-green-50 text-green-700">
+            <Badge variant="secondary" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
               <Activity className="w-3 h-3 mr-1" />
               Live
             </Badge>
@@ -86,28 +86,28 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
       )}>
         <div className="flex">
           {/* System Logs */}
-          <div className="flex-1 p-4 border-r border-slate-100">
+          <div className="flex-1 p-4 border-r border-border">
             <div className="flex items-center space-x-2 mb-3">
-              <Terminal className="w-4 h-4 text-slate-500" />
-              <h4 className="text-sm font-medium text-slate-900">System Logs</h4>
+              <Terminal className="w-4 h-4 text-muted-foreground" />
+              <h4 className="text-sm font-medium text-foreground">System Logs</h4>
             </div>
             
             <div className="space-y-1 max-h-48 overflow-y-auto">
               {recentLogs.map((log) => (
                 <div key={log.id} className="flex items-center space-x-3 text-xs font-mono">
-                  <span className="text-slate-500">{log.timestamp}</span>
+                  <span className="text-muted-foreground">{log.timestamp}</span>
                   <Badge 
                     variant="secondary" 
                     className={cn(
                       "text-xs px-1.5 py-0.5",
-                      log.level === "ERROR" && "bg-red-50 text-red-700",
-                      log.level === "WARN" && "bg-yellow-50 text-yellow-700",
-                      log.level === "INFO" && "bg-blue-50 text-blue-700"
+                      log.level === "ERROR" && "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300",
+                      log.level === "WARN" && "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300",
+                      log.level === "INFO" && "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
                     )}
                   >
                     {log.level}
                   </Badge>
-                  <span className="text-slate-700 flex-1">{log.message}</span>
+                  <span className="text-foreground flex-1">{log.message}</span>
                 </div>
               ))}
             </div>
@@ -116,8 +116,8 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
           {/* Recent Messages */}
           <div className="w-96 p-4">
             <div className="flex items-center space-x-2 mb-3">
-              <MessageSquare className="w-4 h-4 text-slate-500" />
-              <h4 className="text-sm font-medium text-slate-900">Recent Messages</h4>
+              <MessageSquare className="w-4 h-4 text-muted-foreground" />
+              <h4 className="text-sm font-medium text-foreground">Recent Messages</h4>
             </div>
             
             <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -125,15 +125,15 @@ export const SystemFooter = ({ onToggle, messages }: SystemFooterProps) => {
                 <div key={message.id} className="text-xs">
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium text-blue-600">{message.from}</span>
-                      <span className="text-slate-400">→</span>
-                      <span className="font-medium text-teal-600">{message.to}</span>
+                      <span className="font-medium text-blue-600 dark:text-blue-400">{message.from}</span>
+                      <span className="text-muted-foreground">→</span>
+                      <span className="font-medium text-teal-600 dark:text-teal-400">{message.to}</span>
                     </div>
-                    <span className="text-slate-500">
+                    <span className="text-muted-foreground">
                       {new Date(message.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="text-slate-700 truncate">{message.content}</p>
+                  <p className="text-foreground truncate">{message.content}</p>
                 </div>
               ))}
             </div>
