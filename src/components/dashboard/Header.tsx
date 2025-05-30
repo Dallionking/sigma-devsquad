@@ -21,8 +21,8 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const { darkMode, toggleDarkMode } = useTheme();
   const isMobile = useIsMobile();
   
-  const activeAgents = agents.filter(agent => agent.status === "working").length;
-  const totalAgents = agents.length;
+  const activeAgents = agents?.filter(agent => agent.status === "working").length || 0;
+  const totalAgents = agents?.length || 0;
   
   const viewModeConfig = {
     workflow: { icon: GitBranch, label: "Workflow" },
@@ -31,6 +31,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
     messages: { icon: Activity, label: "Messages" }
   };
 
+  // Preserve all existing navigation states
   const isSettingsPage = location.pathname === "/settings";
   const isLLMPage = location.pathname === "/llm-integration";
   const isAgentConfigPage = location.pathname === "/agent-configuration";
@@ -38,19 +39,20 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isIDEPage = location.pathname === "/ide-integration";
   const isPlanningAgentPage = location.pathname === "/planning-agent";
   const isAgentCreationPage = location.pathname === "/agent-creation";
+  const isDashboardPage = location.pathname === "/";
 
   const handleLogoClick = () => {
     navigate("/");
   };
 
   return (
-    <header className="bg-card border-b border-border px-4 sm:px-6 py-3 sm:py-4">
+    <header className="bg-card border-b border-border px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-40 backdrop-blur-sm bg-card/95">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 sm:space-x-6">
           {/* Mobile Navigation */}
           <MobileNavigation activeAgents={activeAgents} totalAgents={totalAgents} />
           
-          {/* Logo - clickable to go home */}
+          {/* Preserved Logo Navigation */}
           <div 
             onClick={handleLogoClick}
             className="cursor-pointer hover:opacity-80 transition-opacity"
@@ -69,8 +71,8 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             />
           </div>
           
-          {/* View mode selector - only on desktop and main dashboard */}
-          {!isMobile && location.pathname === "/" && (
+          {/* Preserved View Mode Selector - MUST MAINTAIN FUNCTIONALITY */}
+          {!isMobile && isDashboardPage && (
             <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
               {Object.entries(viewModeConfig).map(([mode, config]) => {
                 const Icon = config.icon;
@@ -92,25 +94,25 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Status badge - hidden on mobile */}
+          {/* Preserved Status Badge */}
           {!isMobile && (
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-sm text-muted-foreground hidden sm:inline">System Healthy</span>
               </div>
               <Badge variant="secondary" className="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
                 <Users className="w-3 h-3 mr-1" />
-                {activeAgents} Active
+                {activeAgents}/{totalAgents} Active
               </Badge>
             </div>
           )}
           
-          {/* Navigation buttons - desktop only */}
+          {/* Preserved Navigation Buttons - MUST MAINTAIN ALL FUNCTIONALITY */}
           {!isMobile && (
             <div className="hidden lg:flex items-center space-x-2">
               <Button 
-                variant={location.pathname === "/" ? "default" : "ghost"} 
+                variant={isDashboardPage ? "default" : "ghost"} 
                 size="sm"
                 onClick={() => navigate("/")}
               >
@@ -167,7 +169,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             </div>
           )}
           
-          {/* Action buttons */}
+          {/* Preserved Action Buttons */}
           <div className="flex items-center space-x-1 sm:space-x-2">
             <Button variant="ghost" size="sm" onClick={toggleDarkMode}>
               {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

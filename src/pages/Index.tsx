@@ -19,33 +19,50 @@ const Index = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [showFooter, setShowFooter] = useState(true);
 
-  // Use centralized state management
-  const { agents } = useAgents();
-  const { tasks } = useTasks();
-  const { messages } = useMessages();
+  // Use centralized state management with proper error handling
+  const agentContext = useAgents();
+  const taskContext = useTasks();
+  const messageContext = useMessages();
+
+  // Ensure contexts are available before rendering
+  if (!agentContext || !taskContext || !messageContext) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { agents } = agentContext;
+  const { tasks } = taskContext;
+  const { messages } = messageContext;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
       {/* Enhanced skip to main content for accessibility */}
       <a 
         href="#main-content" 
-        className="sr-only-focusable"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50"
         aria-label="Skip to main content"
       >
         Skip to main content
       </a>
       
-      {/* Enhanced header with better responsive design */}
+      {/* Preserved Header Navigation - MUST MAINTAIN ALL EXISTING FUNCTIONALITY */}
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
-        agents={agents}
+        agents={agents || []}
       />
       
-      {/* Enhanced main layout with improved responsive behavior */}
+      {/* Optimized main layout with improved responsive behavior */}
       <div className="flex flex-1 overflow-hidden">
+        {/* Collapsible Agent Sidebar */}
         <AgentSidebar 
-          agents={agents}
+          agents={agents || []}
           selectedAgent={selectedAgent}
           onAgentSelect={setSelectedAgent}
         />
@@ -57,23 +74,23 @@ const Index = () => {
           role="main"
           aria-label="Main dashboard content"
         >
-          {/* Enhanced dashboard overview section with improved spacing and transitions */}
+          {/* Enhanced dashboard overview section - only show in workflow mode */}
           {viewMode === "workflow" && (
-            <div className="fade-in">
+            <div className="animate-in fade-in-50 duration-300">
               <DashboardOverview 
-                agents={agents}
+                agents={agents || []}
                 onAgentSelect={setSelectedAgent}
               />
             </div>
           )}
           
-          {/* Enhanced main workflow area with better transitions and responsive design */}
-          <div className="flex-1 transition-all duration-300 ease-in-out">
+          {/* Enhanced main workflow area with preserved communication functionality */}
+          <div className="flex-1 transition-all duration-300 ease-in-out min-h-0">
             <MainWorkflowArea 
               viewMode={viewMode}
-              agents={agents}
-              tasks={tasks}
-              messages={messages}
+              agents={agents || []}
+              tasks={tasks || []}
+              messages={messages || []}
               selectedAgent={selectedAgent}
               selectedTask={selectedTask}
               selectedMessage={selectedMessage}
@@ -84,29 +101,29 @@ const Index = () => {
           </div>
         </main>
         
-        {/* Enhanced detail panel with improved responsive behavior */}
+        {/* Context-aware Detail Panel */}
         <DetailPanel 
           selectedAgent={selectedAgent}
           selectedTask={selectedTask}
           selectedMessage={selectedMessage}
           viewMode={viewMode}
-          agents={agents}
+          agents={agents || []}
         />
       </div>
       
-      {/* Enhanced footer with smooth animations and better responsive design */}
+      {/* Enhanced footer with smooth animations */}
       {showFooter && (
-        <div className="slide-in-from-bottom">
+        <div className="animate-in slide-in-from-bottom duration-300">
           <SystemFooter 
             onToggle={() => setShowFooter(!showFooter)}
-            messages={messages}
+            messages={messages || []}
           />
         </div>
       )}
       
-      {/* Enhanced floating action button with better positioning and animations */}
+      {/* Enhanced floating action button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <div className="hover-scale">
+        <div className="transition-transform hover:scale-105 duration-200">
           <AgentCreationButton />
         </div>
       </div>

@@ -35,48 +35,64 @@ export const MainWorkflowArea = ({
     switch (viewMode) {
       case "workflow":
         return (
-          <WorkflowVisualization 
-            agents={agents}
-            tasks={tasks}
-            selectedAgent={selectedAgent}
-            onAgentSelect={onAgentSelect}
-          />
+          <div className="h-full">
+            <WorkflowVisualization 
+              agents={agents}
+              tasks={tasks}
+              selectedAgent={selectedAgent}
+              onAgentSelect={onAgentSelect}
+            />
+          </div>
         );
       case "communication":
         return (
-          <AdvancedCommunicationPanel
-            agents={agents}
-            messages={messages}
-            selectedMessage={selectedMessage}
-            onMessageSelect={onMessageSelect}
-          />
+          <div className="h-full">
+            <AdvancedCommunicationPanel
+              agents={agents}
+              messages={messages}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         );
       case "tasks":
         return (
-          <TaskManagement 
-            tasks={tasks}
-            agents={agents}
-            selectedTask={selectedTask}
-            onTaskSelect={onTaskSelect}
-          />
+          <div className="h-full">
+            <TaskManagement 
+              tasks={tasks}
+              agents={agents}
+              selectedTask={selectedTask}
+              onTaskSelect={onTaskSelect}
+            />
+          </div>
         );
       case "messages":
         return (
-          <MessageInspector 
-            messages={messages}
-            agents={agents}
-            selectedMessage={selectedMessage}
-            onMessageSelect={onMessageSelect}
-          />
+          <div className="h-full">
+            <MessageInspector 
+              messages={messages}
+              agents={agents}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         );
       default:
-        return null;
+        return (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              <p>Select a view mode to get started</p>
+            </div>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="flex-1 bg-background p-6 overflow-auto">
-      {renderContent()}
+    <div className="flex-1 bg-background overflow-hidden">
+      <div className="h-full p-6">
+        {renderContent()}
+      </div>
     </div>
   );
 };
