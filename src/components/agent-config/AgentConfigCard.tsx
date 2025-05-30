@@ -20,23 +20,23 @@ export const AgentConfigCard = ({ agentType, onConfigChange }: AgentConfigCardPr
       <CardContent className="p-6">
         <Tabs defaultValue="role" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 bg-muted">
-            <TabsTrigger value="role" className="flex items-center space-x-2">
+            <TabsTrigger value="role" className="flex items-center space-x-2 text-muted-foreground data-[state=active]:text-card-foreground">
               <Users className="w-4 h-4" />
               <span>Role & Capabilities</span>
             </TabsTrigger>
-            <TabsTrigger value="rules" className="flex items-center space-x-2">
+            <TabsTrigger value="rules" className="flex items-center space-x-2 text-muted-foreground data-[state=active]:text-card-foreground">
               <Settings className="w-4 h-4" />
               <span>Rules & Logic</span>
             </TabsTrigger>
-            <TabsTrigger value="context" className="flex items-center space-x-2">
+            <TabsTrigger value="context" className="flex items-center space-x-2 text-muted-foreground data-[state=active]:text-card-foreground">
               <BookOpen className="w-4 h-4" />
               <span>Context & Knowledge</span>
             </TabsTrigger>
-            <TabsTrigger value="mcp" className="flex items-center space-x-2">
+            <TabsTrigger value="mcp" className="flex items-center space-x-2 text-muted-foreground data-[state=active]:text-card-foreground">
               <Package className="w-4 h-4" />
               <span>MCP Access</span>
             </TabsTrigger>
-            <TabsTrigger value="performance" className="flex items-center space-x-2">
+            <TabsTrigger value="performance" className="flex items-center space-x-2 text-muted-foreground data-[state=active]:text-card-foreground">
               <Zap className="w-4 h-4" />
               <span>Performance</span>
             </TabsTrigger>

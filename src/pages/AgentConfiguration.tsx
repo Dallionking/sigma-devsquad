@@ -83,7 +83,7 @@ export const AgentConfiguration = () => {
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Agent Configuration</h1>
+              <h1 className="text-3xl font-bold text-card-foreground">Agent Configuration</h1>
               <p className="text-muted-foreground mt-2">Configure roles, rules, and performance settings for each agent type</p>
             </div>
             <div className="flex items-center space-x-3">
@@ -123,7 +123,7 @@ export const AgentConfiguration = () => {
                     <agent.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-foreground">{agent.name}</h2>
+                    <h2 className="text-xl font-semibold text-card-foreground">{agent.name}</h2>
                     <p className="text-muted-foreground">{agent.description}</p>
                   </div>
                 </div>

@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -61,7 +60,7 @@ export const DetailPanel = ({
           <div className={cn("w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center", config.bg)}>
             <Bot className={cn("w-8 h-8", config.color)} />
           </div>
-          <h3 className="text-lg font-semibold text-foreground">{selectedAgent.name}</h3>
+          <h3 className="text-lg font-semibold text-card-foreground">{selectedAgent.name}</h3>
           <Badge 
             variant="secondary" 
             className={cn("mt-2", config.bg, config.color)}
@@ -73,14 +72,14 @@ export const DetailPanel = ({
 
         {/* Current Task */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-2">Current Task</h4>
+          <h4 className="font-medium text-card-foreground mb-2">Current Task</h4>
           <p className="text-sm text-muted-foreground mb-3">{selectedAgent.currentTask}</p>
           
           {selectedAgent.status === "working" && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Progress</span>
-                <span className="text-foreground font-medium">{selectedAgent.progress}%</span>
+                <span className="text-card-foreground font-medium">{selectedAgent.progress}%</span>
               </div>
               <Progress value={selectedAgent.progress} className="h-2" />
             </div>
@@ -89,28 +88,28 @@ export const DetailPanel = ({
 
         {/* Agent Stats */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-3">Statistics</h4>
+          <h4 className="font-medium text-card-foreground mb-3">Statistics</h4>
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Last Active</span>
-              <span className="text-sm text-foreground">
+              <span className="text-sm text-card-foreground">
                 {new Date(selectedAgent.lastActive).toLocaleTimeString()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Status Duration</span>
-              <span className="text-sm text-foreground">2h 15m</span>
+              <span className="text-sm text-card-foreground">2h 15m</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Tasks Completed</span>
-              <span className="text-sm text-foreground">12</span>
+              <span className="text-sm text-card-foreground">12</span>
             </div>
           </div>
         </Card>
 
         {/* Agent Controls */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-3">Controls</h4>
+          <h4 className="font-medium text-card-foreground mb-3">Controls</h4>
           <div className="space-y-2">
             <Button 
               variant="outline" 
@@ -170,7 +169,7 @@ export const DetailPanel = ({
       <div className="space-y-6">
         {/* Task Header */}
         <div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">{selectedTask.title}</h3>
+          <h3 className="text-lg font-semibold text-card-foreground mb-2">{selectedTask.title}</h3>
           <div className="flex items-center space-x-2">
             <Badge 
               variant="secondary" 
@@ -190,33 +189,33 @@ export const DetailPanel = ({
 
         {/* Task Description */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-2">Description</h4>
+          <h4 className="font-medium text-card-foreground mb-2">Description</h4>
           <p className="text-sm text-muted-foreground">{selectedTask.description}</p>
         </Card>
 
         {/* Task Details */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-3">Details</h4>
+          <h4 className="font-medium text-card-foreground mb-3">Details</h4>
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Assigned Agent</span>
-              <span className="text-sm text-foreground">{agent?.name}</span>
+              <span className="text-sm text-card-foreground">{agent?.name}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Created</span>
-              <span className="text-sm text-foreground">
+              <span className="text-sm text-card-foreground">
                 {new Date(selectedTask.createdAt).toLocaleDateString()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Deadline</span>
-              <span className="text-sm text-foreground">
+              <span className="text-sm text-card-foreground">
                 {new Date(selectedTask.deadline).toLocaleDateString()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Task ID</span>
-              <span className="text-sm text-foreground font-mono">{selectedTask.id}</span>
+              <span className="text-sm text-card-foreground font-mono">{selectedTask.id}</span>
             </div>
           </div>
         </Card>
@@ -224,11 +223,11 @@ export const DetailPanel = ({
         {/* Progress */}
         {agent?.status === "working" && selectedTask.status === "in-progress" && (
           <Card className="p-4">
-            <h4 className="font-medium text-foreground mb-3">Progress</h4>
+            <h4 className="font-medium text-card-foreground mb-3">Progress</h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Completion</span>
-                <span className="text-foreground font-medium">{agent.progress}%</span>
+                <span className="text-card-foreground font-medium">{agent.progress}%</span>
               </div>
               <Progress value={agent.progress} className="h-2" />
             </div>
@@ -253,7 +252,7 @@ export const DetailPanel = ({
       <div className="space-y-6">
         {/* Message Header */}
         <div>
-          <h3 className="text-lg font-semibold text-foreground mb-3">Message Details</h3>
+          <h3 className="text-lg font-semibold text-card-foreground mb-3">Message Details</h3>
           <div className="flex items-center space-x-3 mb-3">
             <Badge 
               variant="secondary"
@@ -280,9 +279,9 @@ export const DetailPanel = ({
 
         {/* Message Content */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-3">Content</h4>
+          <h4 className="font-medium text-card-foreground mb-3">Content</h4>
           <div className="p-3 bg-muted rounded-lg">
-            <p className="text-sm text-foreground leading-relaxed">
+            <p className="text-sm text-card-foreground leading-relaxed">
               {selectedMessage.content}
             </p>
           </div>
@@ -290,21 +289,21 @@ export const DetailPanel = ({
 
         {/* Message Metadata */}
         <Card className="p-4">
-          <h4 className="font-medium text-foreground mb-3">Metadata</h4>
+          <h4 className="font-medium text-card-foreground mb-3">Metadata</h4>
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Timestamp</span>
-              <span className="text-sm text-foreground">
+              <span className="text-sm text-card-foreground">
                 {new Date(selectedMessage.timestamp).toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Message ID</span>
-              <span className="text-sm text-foreground font-mono">{selectedMessage.id}</span>
+              <span className="text-sm text-card-foreground font-mono">{selectedMessage.id}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Type</span>
-              <span className="text-sm text-foreground">{selectedMessage.type}</span>
+              <span className="text-sm text-card-foreground">{selectedMessage.type}</span>
             </div>
           </div>
         </Card>
@@ -317,7 +316,7 @@ export const DetailPanel = ({
       <div className="w-16 h-16 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center">
         <Bot className="w-8 h-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium text-foreground mb-2">No Selection</h3>
+      <h3 className="text-lg font-medium text-card-foreground mb-2">No Selection</h3>
       <p className="text-sm text-muted-foreground max-w-xs mx-auto">
         Select an agent, task, or message from the main area to view detailed information and controls.
       </p>

@@ -40,7 +40,7 @@ export const Settings = () => {
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Settings & Configuration</h1>
+              <h1 className="text-3xl font-bold text-card-foreground">Settings & Configuration</h1>
               <p className="text-muted-foreground mt-2">Manage system preferences and configuration</p>
             </div>
             <Badge variant="secondary" className="bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300">
