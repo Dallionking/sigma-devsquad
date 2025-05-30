@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -17,22 +16,30 @@ const agentIcons: Record<AgentType, any> = {
   frontend: Code,
   backend: Server,
   qa: TestTube,
+  testing: TestTube,
   documentation: FileText,
-  devops: Settings
+  devops: Settings,
+  fullstack: Code,
+  design: Settings,
+  research: FileText,
+  content: FileText,
+  custom: Bot
 };
 
 const statusColors = {
   working: "bg-green-500",
   idle: "bg-muted-foreground",
   waiting: "bg-yellow-500",
-  error: "bg-red-500"
+  error: "bg-red-500",
+  offline: "bg-gray-500"
 };
 
 const statusLabels = {
   working: "Working",
   idle: "Idle",
   waiting: "Waiting",
-  error: "Error"
+  error: "Error",
+  offline: "Offline"
 };
 
 export const AgentSidebar = ({ agents, selectedAgent, onAgentSelect }: AgentSidebarProps) => {
