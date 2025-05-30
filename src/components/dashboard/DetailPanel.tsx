@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -44,10 +45,10 @@ export const DetailPanel = ({
     if (!selectedAgent) return null;
 
     const statusConfig = {
-      working: { icon: Play, color: "text-green-600", bg: "bg-green-50" },
-      idle: { icon: Clock, color: "text-slate-600", bg: "bg-slate-50" },
-      waiting: { icon: Clock, color: "text-yellow-600", bg: "bg-yellow-50" },
-      error: { icon: AlertCircle, color: "text-red-600", bg: "bg-red-50" }
+      working: { icon: Play, color: "text-green-600 dark:text-green-400", bg: "bg-green-50 dark:bg-green-900/20" },
+      idle: { icon: Clock, color: "text-muted-foreground", bg: "bg-muted" },
+      waiting: { icon: Clock, color: "text-yellow-600 dark:text-yellow-400", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
+      error: { icon: AlertCircle, color: "text-red-600 dark:text-red-400", bg: "bg-red-50 dark:bg-red-900/20" }
     };
 
     const config = statusConfig[selectedAgent.status];
@@ -60,7 +61,7 @@ export const DetailPanel = ({
           <div className={cn("w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center", config.bg)}>
             <Bot className={cn("w-8 h-8", config.color)} />
           </div>
-          <h3 className="text-lg font-semibold text-slate-900">{selectedAgent.name}</h3>
+          <h3 className="text-lg font-semibold text-foreground">{selectedAgent.name}</h3>
           <Badge 
             variant="secondary" 
             className={cn("mt-2", config.bg, config.color)}
@@ -72,14 +73,14 @@ export const DetailPanel = ({
 
         {/* Current Task */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-2">Current Task</h4>
-          <p className="text-sm text-slate-600 mb-3">{selectedAgent.currentTask}</p>
+          <h4 className="font-medium text-foreground mb-2">Current Task</h4>
+          <p className="text-sm text-muted-foreground mb-3">{selectedAgent.currentTask}</p>
           
           {selectedAgent.status === "working" && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Progress</span>
-                <span className="text-slate-700 font-medium">{selectedAgent.progress}%</span>
+                <span className="text-muted-foreground">Progress</span>
+                <span className="text-foreground font-medium">{selectedAgent.progress}%</span>
               </div>
               <Progress value={selectedAgent.progress} className="h-2" />
             </div>
@@ -88,28 +89,28 @@ export const DetailPanel = ({
 
         {/* Agent Stats */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-3">Statistics</h4>
+          <h4 className="font-medium text-foreground mb-3">Statistics</h4>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Last Active</span>
-              <span className="text-sm text-slate-900">
+              <span className="text-sm text-muted-foreground">Last Active</span>
+              <span className="text-sm text-foreground">
                 {new Date(selectedAgent.lastActive).toLocaleTimeString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Status Duration</span>
-              <span className="text-sm text-slate-900">2h 15m</span>
+              <span className="text-sm text-muted-foreground">Status Duration</span>
+              <span className="text-sm text-foreground">2h 15m</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Tasks Completed</span>
-              <span className="text-sm text-slate-900">12</span>
+              <span className="text-sm text-muted-foreground">Tasks Completed</span>
+              <span className="text-sm text-foreground">12</span>
             </div>
           </div>
         </Card>
 
         {/* Agent Controls */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-3">Controls</h4>
+          <h4 className="font-medium text-foreground mb-3">Controls</h4>
           <div className="space-y-2">
             <Button 
               variant="outline" 
@@ -150,26 +151,26 @@ export const DetailPanel = ({
     const agent = agents.find(a => a.type === selectedTask.assignedAgent);
     
     const statusConfig = {
-      pending: { icon: Clock, color: "text-yellow-600", bg: "bg-yellow-50" },
-      "in-progress": { icon: Play, color: "text-blue-600", bg: "bg-blue-50" },
-      completed: { icon: CheckCircle, color: "text-green-600", bg: "bg-green-50" },
-      blocked: { icon: AlertCircle, color: "text-red-600", bg: "bg-red-50" }
+      pending: { icon: Clock, color: "text-yellow-600 dark:text-yellow-400", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
+      "in-progress": { icon: Play, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/20" },
+      completed: { icon: CheckCircle, color: "text-green-600 dark:text-green-400", bg: "bg-green-50 dark:bg-green-900/20" },
+      blocked: { icon: AlertCircle, color: "text-red-600 dark:text-red-400", bg: "bg-red-50 dark:bg-red-900/20" }
     };
 
     const config = statusConfig[selectedTask.status];
     const StatusIcon = config.icon;
 
     const priorityConfig = {
-      high: "bg-red-50 text-red-700",
-      medium: "bg-yellow-50 text-yellow-700",
-      low: "bg-green-50 text-green-700"
+      high: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300",
+      medium: "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300",
+      low: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
     };
 
     return (
       <div className="space-y-6">
         {/* Task Header */}
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">{selectedTask.title}</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">{selectedTask.title}</h3>
           <div className="flex items-center space-x-2">
             <Badge 
               variant="secondary" 
@@ -189,33 +190,33 @@ export const DetailPanel = ({
 
         {/* Task Description */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-2">Description</h4>
-          <p className="text-sm text-slate-600">{selectedTask.description}</p>
+          <h4 className="font-medium text-foreground mb-2">Description</h4>
+          <p className="text-sm text-muted-foreground">{selectedTask.description}</p>
         </Card>
 
         {/* Task Details */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-3">Details</h4>
+          <h4 className="font-medium text-foreground mb-3">Details</h4>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Assigned Agent</span>
-              <span className="text-sm text-slate-900">{agent?.name}</span>
+              <span className="text-sm text-muted-foreground">Assigned Agent</span>
+              <span className="text-sm text-foreground">{agent?.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Created</span>
-              <span className="text-sm text-slate-900">
+              <span className="text-sm text-muted-foreground">Created</span>
+              <span className="text-sm text-foreground">
                 {new Date(selectedTask.createdAt).toLocaleDateString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Deadline</span>
-              <span className="text-sm text-slate-900">
+              <span className="text-sm text-muted-foreground">Deadline</span>
+              <span className="text-sm text-foreground">
                 {new Date(selectedTask.deadline).toLocaleDateString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Task ID</span>
-              <span className="text-sm text-slate-900 font-mono">{selectedTask.id}</span>
+              <span className="text-sm text-muted-foreground">Task ID</span>
+              <span className="text-sm text-foreground font-mono">{selectedTask.id}</span>
             </div>
           </div>
         </Card>
@@ -223,11 +224,11 @@ export const DetailPanel = ({
         {/* Progress */}
         {agent?.status === "working" && selectedTask.status === "in-progress" && (
           <Card className="p-4">
-            <h4 className="font-medium text-slate-900 mb-3">Progress</h4>
+            <h4 className="font-medium text-foreground mb-3">Progress</h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Completion</span>
-                <span className="text-slate-700 font-medium">{agent.progress}%</span>
+                <span className="text-muted-foreground">Completion</span>
+                <span className="text-foreground font-medium">{agent.progress}%</span>
               </div>
               <Progress value={agent.progress} className="h-2" />
             </div>
@@ -241,9 +242,9 @@ export const DetailPanel = ({
     if (!selectedMessage) return null;
 
     const typeConfig = {
-      request: { color: "text-blue-600", bg: "bg-blue-50" },
-      response: { color: "text-green-600", bg: "bg-green-50" },
-      notification: { color: "text-yellow-600", bg: "bg-yellow-50" }
+      request: { color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/20" },
+      response: { color: "text-green-600 dark:text-green-400", bg: "bg-green-50 dark:bg-green-900/20" },
+      notification: { color: "text-yellow-600 dark:text-yellow-400", bg: "bg-yellow-50 dark:bg-yellow-900/20" }
     };
 
     const config = typeConfig[selectedMessage.type];
@@ -252,18 +253,18 @@ export const DetailPanel = ({
       <div className="space-y-6">
         {/* Message Header */}
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-3">Message Details</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-3">Message Details</h3>
           <div className="flex items-center space-x-3 mb-3">
             <Badge 
               variant="secondary"
-              className="text-blue-600 bg-blue-50"
+              className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
             >
               {getAgentName(selectedMessage.from)}
             </Badge>
-            <ArrowRight className="w-4 h-4 text-slate-400" />
+            <ArrowRight className="w-4 h-4 text-muted-foreground" />
             <Badge 
               variant="secondary"
-              className="text-teal-600 bg-teal-50"
+              className="text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/20"
             >
               {getAgentName(selectedMessage.to)}
             </Badge>
@@ -279,9 +280,9 @@ export const DetailPanel = ({
 
         {/* Message Content */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-3">Content</h4>
-          <div className="p-3 bg-slate-50 rounded-lg">
-            <p className="text-sm text-slate-700 leading-relaxed">
+          <h4 className="font-medium text-foreground mb-3">Content</h4>
+          <div className="p-3 bg-muted rounded-lg">
+            <p className="text-sm text-foreground leading-relaxed">
               {selectedMessage.content}
             </p>
           </div>
@@ -289,21 +290,21 @@ export const DetailPanel = ({
 
         {/* Message Metadata */}
         <Card className="p-4">
-          <h4 className="font-medium text-slate-900 mb-3">Metadata</h4>
+          <h4 className="font-medium text-foreground mb-3">Metadata</h4>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Timestamp</span>
-              <span className="text-sm text-slate-900">
+              <span className="text-sm text-muted-foreground">Timestamp</span>
+              <span className="text-sm text-foreground">
                 {new Date(selectedMessage.timestamp).toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Message ID</span>
-              <span className="text-sm text-slate-900 font-mono">{selectedMessage.id}</span>
+              <span className="text-sm text-muted-foreground">Message ID</span>
+              <span className="text-sm text-foreground font-mono">{selectedMessage.id}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-slate-600">Type</span>
-              <span className="text-sm text-slate-900">{selectedMessage.type}</span>
+              <span className="text-sm text-muted-foreground">Type</span>
+              <span className="text-sm text-foreground">{selectedMessage.type}</span>
             </div>
           </div>
         </Card>
@@ -313,11 +314,11 @@ export const DetailPanel = ({
 
   const renderDefaultContent = () => (
     <div className="text-center py-12">
-      <div className="w-16 h-16 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-        <Bot className="w-8 h-8 text-slate-400" />
+      <div className="w-16 h-16 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center">
+        <Bot className="w-8 h-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium text-slate-900 mb-2">No Selection</h3>
-      <p className="text-sm text-slate-600 max-w-xs mx-auto">
+      <h3 className="text-lg font-medium text-foreground mb-2">No Selection</h3>
+      <p className="text-sm text-muted-foreground max-w-xs mx-auto">
         Select an agent, task, or message from the main area to view detailed information and controls.
       </p>
     </div>
@@ -326,7 +327,7 @@ export const DetailPanel = ({
   const hasSelection = selectedAgent || selectedTask || selectedMessage;
 
   return (
-    <div className="w-80 bg-white border-l border-slate-200 p-6 overflow-y-auto">
+    <div className="w-80 bg-card border-l border-border p-6 overflow-y-auto">
       {selectedAgent && renderAgentDetails()}
       {selectedTask && !selectedAgent && renderTaskDetails()}
       {selectedMessage && !selectedAgent && !selectedTask && renderMessageDetails()}
