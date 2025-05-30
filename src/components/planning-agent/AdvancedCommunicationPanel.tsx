@@ -1,15 +1,17 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Agent, Message } from "@/types";
+import { AdvancedCommunicationVisualization } from "./AdvancedCommunicationVisualization";
 import { CommunicationGraphVisualization } from "./CommunicationGraphVisualization";
 import { MessageInspectionTools } from "./MessageInspectionTools";
 import { PatternAnalysisDashboard } from "./PatternAnalysisDashboard";
 import { CommunicationFilters } from "./CommunicationFilters";
 import { HistoricalAnalysis } from "./HistoricalAnalysis";
 import { OptimizationSuggestions } from "./OptimizationSuggestions";
-import { MessageSquare, TrendingUp, Filter, Search, BarChart, Lightbulb } from "lucide-react";
+import { MessageSquare, TrendingUp, Filter, Search, BarChart, Lightbulb, Zap } from "lucide-react";
 
 interface AdvancedCommunicationPanelProps {
   agents: Agent[];
@@ -24,7 +26,7 @@ export const AdvancedCommunicationPanel = ({
   selectedMessage,
   onMessageSelect
 }: AdvancedCommunicationPanelProps) => {
-  const [activeTab, setActiveTab] = useState("graph");
+  const [activeTab, setActiveTab] = useState("advanced");
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
@@ -37,6 +39,12 @@ export const AdvancedCommunicationPanel = ({
     activeAgents: agents.filter(a => a.status === "working").length,
     responseTime: "1.2s", // Mock average response time
     throughput: `${Math.round(messages.length / 24)}msg/h` // Mock throughput
+  };
+
+  const handleIntervention = (type: string, agentId: string, data: any) => {
+    console.log(`Intervention: ${type} for agent ${agentId}`, data);
+    // Handle intervention logic here
+    // This would typically communicate with the backend
   };
 
   return (
@@ -110,7 +118,11 @@ export const AdvancedCommunicationPanel = ({
 
       {/* Main Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="advanced">
+            <Zap className="w-4 h-4 mr-2" />
+            Advanced
+          </TabsTrigger>
           <TabsTrigger value="graph">
             <MessageSquare className="w-4 h-4 mr-2" />
             Graph
@@ -136,6 +148,14 @@ export const AdvancedCommunicationPanel = ({
             Advanced
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="advanced" className="space-y-4">
+          <AdvancedCommunicationVisualization
+            agents={agents}
+            messages={filteredMessages}
+            onIntervention={handleIntervention}
+          />
+        </TabsContent>
 
         <TabsContent value="graph" className="space-y-4">
           <CommunicationGraphVisualization
