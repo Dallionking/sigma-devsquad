@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package, Download, Settings, Activity } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { MCPInstallationWizard } from "@/components/mcp/MCPInstallationWizard";
+import { EnhancedMCPManager } from "@/components/mcp/EnhancedMCPManager";
 import { Agent } from "@/types";
 
 const MCPManagement = () => {
@@ -80,11 +81,11 @@ const MCPManagement = () => {
       />
       
       <div className="p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground">MCP Management</h1>
-              <p className="text-muted-foreground mt-2">Manage Model Context Protocol packages and extensions</p>
+              <p className="text-muted-foreground mt-2">Manage Model Context Protocol packages with enhanced controls and team access</p>
             </div>
             <Badge variant="secondary" className="bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300">
               <Activity className="w-3 h-3 mr-1" />
@@ -92,11 +93,15 @@ const MCPManagement = () => {
             </Badge>
           </div>
 
-          <Tabs defaultValue="packages" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+          <Tabs defaultValue="enhanced" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="enhanced" className="flex items-center space-x-2">
+                <Package className="w-4 h-4" />
+                <span>Enhanced Manager</span>
+              </TabsTrigger>
               <TabsTrigger value="packages" className="flex items-center space-x-2">
                 <Package className="w-4 h-4" />
-                <span>Packages</span>
+                <span>Basic View</span>
               </TabsTrigger>
               <TabsTrigger value="install" className="flex items-center space-x-2">
                 <Download className="w-4 h-4" />
@@ -107,6 +112,10 @@ const MCPManagement = () => {
                 <span>Settings</span>
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="enhanced">
+              <EnhancedMCPManager />
+            </TabsContent>
 
             <TabsContent value="packages">
               <div className="grid gap-4">
@@ -143,8 +152,20 @@ const MCPManagement = () => {
 
             <TabsContent value="settings">
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">MCP Configuration</h3>
-                <p className="text-muted-foreground">Configure global MCP settings and preferences.</p>
+                <h3 className="text-lg font-semibold">Global MCP Configuration</h3>
+                <p className="text-muted-foreground">Configure system-wide MCP settings and security policies.</p>
+                
+                <div className="grid gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">Security Settings</h4>
+                    <p className="text-sm text-muted-foreground">Configure default permissions and access controls for new MCP packages.</p>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">Auto-Update Policy</h4>
+                    <p className="text-sm text-muted-foreground">Set automatic update preferences for installed packages.</p>
+                  </div>
+                </div>
               </div>
             </TabsContent>
           </Tabs>
