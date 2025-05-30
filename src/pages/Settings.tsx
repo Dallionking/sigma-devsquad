@@ -1,8 +1,8 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 import { GeneralSettings } from "@/components/settings/GeneralSettings";
+import { APIKeySettings } from "@/components/settings/APIKeySettings";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
 import { PerformanceSettings } from "@/components/settings/PerformanceSettings";
 import { SecuritySettings } from "@/components/settings/SecuritySettings";
@@ -23,7 +23,6 @@ export const Settings = () => {
   const [performanceMode, setPerformanceMode] = useState("balanced");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock agents data for header
   const mockAgents: Agent[] = [
     { 
       id: "1", 
@@ -117,6 +116,10 @@ export const Settings = () => {
             <div className="mt-8">
               <TabsContent value="general" className="space-y-6 fade-in">
                 <GeneralSettings searchQuery={searchQuery} />
+              </TabsContent>
+
+              <TabsContent value="api-keys" className="space-y-6 fade-in">
+                <APIKeySettings searchQuery={searchQuery} />
               </TabsContent>
 
               <TabsContent value="appearance" className="space-y-6 fade-in">
