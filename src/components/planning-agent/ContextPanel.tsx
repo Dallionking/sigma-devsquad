@@ -4,27 +4,31 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { FileText, Users, Calendar, Target, RefreshCcw } from "lucide-react";
+import { useProjects } from "@/contexts/ProjectContext";
+import { useAgents } from "@/contexts/AgentContext";
 
 interface ContextPanelProps {
   selectedProject: string;
 }
 
 export const ContextPanel = ({ selectedProject }: ContextPanelProps) => {
-  const projectInfo = {
-    name: "AI Development Workforce",
-    description: "A comprehensive platform for managing AI agents in software development workflows",
-    status: "In Progress",
-    progress: 65,
-    startDate: "2024-05-01",
-    targetDate: "2024-07-15",
-    team: ["Planning Agent", "Frontend Agent", "Backend Agent", "QA Agent"],
-    objectives: [
-      "Create intuitive agent management interface",
-      "Implement real-time workflow visualization",
-      "Integrate multiple development tools",
-      "Ensure scalable architecture"
-    ]
-  };
+  const { currentProject, getProjectById } = useProjects();
+  const { agents } = useAgents();
+
+  // Get the project info from context or fallback to selected project
+  const projectInfo = currentProject || getProjectById(selectedProject);
+
+  if (!projectInfo) {
+    return (
+      <div className="h-full overflow-y-auto p-responsive">
+        <Card className="card-enhanced">
+          <CardContent className="p-6 text-center">
+            <p className="text-muted-foreground">No project selected</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const recentActivity = [
     {
@@ -68,7 +72,7 @@ export const ContextPanel = ({ selectedProject }: ContextPanelProps) => {
 
           <div className="flex items-center justify-between">
             <span className="text-responsive-sm font-medium">Progress</span>
-            <Badge variant="secondary" className="status-success">{projectInfo.status}</Badge>
+            <Badge variant="secondary" className="status-success capitalize">{projectInfo.status}</Badge>
           </div>
           <Progress value={projectInfo.progress} className="h-2" />
 
@@ -85,7 +89,7 @@ export const ContextPanel = ({ selectedProject }: ContextPanelProps) => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Team Members */}
+      {/* Enhanced Team Members - Using real agent data */}
       <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 heading-secondary text-lg">
@@ -95,10 +99,20 @@ export const ContextPanel = ({ selectedProject }: ContextPanelProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {projectInfo.team.map((agent, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors duration-200">
-                <span className="text-responsive-sm font-medium">{agent}</span>
-                <Badge variant="outline" className="status-success text-xs">Active</Badge>
+            {agents.map((agent) => (
+              <div key={agent.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors duration-200">
+                <span className="text-responsive-sm font-medium">{agent.name}</span>
+                <Badge 
+                  variant="outline" 
+                  className={`text-xs ${
+                    agent.status === 'working' ? 'status-success' : 
+                    agent.status === 'idle' ? 'bg-gray-100 text-gray-800' :
+                    agent.status === 'waiting' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {agent.status === 'working' ? 'Active' : agent.status}
+                </Badge>
               </div>
             ))}
           </div>

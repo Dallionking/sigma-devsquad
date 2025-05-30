@@ -8,8 +8,9 @@ import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
 import { useAgents } from "@/contexts/AgentContext";
+import { useTasks } from "@/contexts/TaskContext";
+import { useMessages } from "@/contexts/MessageContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
-import { mockTasks, mockMessages } from "@/data/mockData";
 
 const Index = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -18,7 +19,10 @@ const Index = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [showFooter, setShowFooter] = useState(true);
 
+  // Use centralized state management
   const { agents } = useAgents();
+  const { tasks } = useTasks();
+  const { messages } = useMessages();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
@@ -68,8 +72,8 @@ const Index = () => {
             <MainWorkflowArea 
               viewMode={viewMode}
               agents={agents}
-              tasks={mockTasks}
-              messages={mockMessages}
+              tasks={tasks}
+              messages={messages}
               selectedAgent={selectedAgent}
               selectedTask={selectedTask}
               selectedMessage={selectedMessage}
@@ -95,7 +99,7 @@ const Index = () => {
         <div className="slide-in-from-bottom">
           <SystemFooter 
             onToggle={() => setShowFooter(!showFooter)}
-            messages={mockMessages}
+            messages={messages}
           />
         </div>
       )}

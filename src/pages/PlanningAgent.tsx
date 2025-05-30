@@ -5,60 +5,33 @@ import { PlanningAgentHeader } from "@/components/planning-agent/PlanningAgentHe
 import { PlanningAgentSidebar } from "@/components/planning-agent/PlanningAgentSidebar";
 import { PlanningAgentTabs } from "@/components/planning-agent/PlanningAgentTabs";
 import { Header } from "@/components/dashboard/Header";
-import { Agent } from "@/types";
+import { useAgents } from "@/contexts/AgentContext";
+import { useTasks } from "@/contexts/TaskContext";
+import { useMessages } from "@/contexts/MessageContext";
+import { useProjects } from "@/contexts/ProjectContext";
 
 const PlanningAgent = () => {
-  const [selectedProject, setSelectedProject] = useState("ai-workforce");
   const [showTaskAssignment, setShowTaskAssignment] = useState(false);
   const [showWorkflowTracker, setShowWorkflowTracker] = useState(false);
 
-  // Mock agents data for header
-  const mockAgents: Agent[] = [
-    { 
-      id: "1", 
-      type: "planning", 
-      name: "Planning Agent", 
-      status: "working", 
-      currentTask: "Active", 
-      progress: 75, 
-      lastActive: "2024-05-30T10:30:00Z",
-      capabilities: ["requirement-analysis", "project-planning"],
-      specialization: "Project Planning",
-      background: "Expert in project planning and requirements analysis",
-      description: "Analyzes requirements and creates project roadmaps"
-    },
-    { 
-      id: "2", 
-      type: "frontend", 
-      name: "Frontend Agent", 
-      status: "idle", 
-      currentTask: "Idle", 
-      progress: 0, 
-      lastActive: "2024-05-30T10:25:00Z",
-      capabilities: ["react-development", "ui-design"],
-      specialization: "Frontend Development",
-      background: "Expert in React and modern frontend technologies",
-      description: "Builds user interfaces and client-side functionality"
-    },
-    { 
-      id: "3", 
-      type: "backend", 
-      name: "Backend Agent", 
-      status: "working", 
-      currentTask: "Active", 
-      progress: 45, 
-      lastActive: "2024-05-30T10:32:00Z",
-      capabilities: ["api-development", "database-design"],
-      specialization: "Backend Development",
-      background: "Expert in server-side development and APIs",
-      description: "Develops server-side logic and API endpoints"
-    }
-  ];
+  // Use centralized state management
+  const { agents } = useAgents();
+  const { addTask } = useTasks();
+  const { addMessage } = useMessages();
+  const { currentProject } = useProjects();
 
   const handleTaskCreate = (taskData: any) => {
     console.log("Creating task:", taskData);
+    addTask(taskData);
     setShowTaskAssignment(false);
-    // Here you would typically send the task data to your backend
+    
+    // Also create a message about the task creation
+    addMessage({
+      from: "planning",
+      to: taskData.assignedAgent,
+      content: `New task assigned: ${taskData.title}`,
+      type: "notification"
+    });
   };
 
   const handleWorkflowAction = (action: string, ...args: any[]) => {
@@ -80,7 +53,7 @@ const PlanningAgent = () => {
       <Header 
         viewMode="workflow" 
         onViewModeChange={() => {}}
-        agents={mockAgents}
+        agents={agents}
       />
 
       <main id="main-content" className="container-responsive py-responsive fade-in">
@@ -91,7 +64,7 @@ const PlanningAgent = () => {
 
         {/* Enhanced grid layout with better responsive design */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-responsive">
-          <PlanningAgentSidebar selectedProject={selectedProject} />
+          <PlanningAgentSidebar selectedProject={currentProject?.id || "ai-workforce"} />
           <PlanningAgentTabs onWorkflowAction={handleWorkflowAction} />
         </div>
 

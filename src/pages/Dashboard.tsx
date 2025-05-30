@@ -8,8 +8,9 @@ import { EnhancedAgentCard } from "@/components/cards/EnhancedAgentCard";
 import { EnhancedTaskCard } from "@/components/cards/EnhancedTaskCard";
 import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
 import { useAgents } from "@/contexts/AgentContext";
+import { useTasks } from "@/contexts/TaskContext";
+import { useMessages } from "@/contexts/MessageContext";
 import { Agent, Task, Message } from "@/types";
-import { mockTasks, mockMessages } from "@/data/mockData";
 
 const Dashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -17,7 +18,10 @@ const Dashboard = () => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [activeView, setActiveView] = useState<"workflow" | "communication" | "tasks">("workflow");
 
+  // Use centralized state management
   const { agents } = useAgents();
+  const { tasks } = useTasks();
+  const { messages } = useMessages();
 
   const handleAgentSelect = (agent: Agent | null) => {
     setSelectedAgent(agent);
@@ -31,7 +35,7 @@ const Dashboard = () => {
         return (
           <WorkflowVisualization
             agents={agents}
-            tasks={mockTasks}
+            tasks={tasks}
             selectedAgent={selectedAgent}
             onAgentSelect={handleAgentSelect}
           />
@@ -40,7 +44,7 @@ const Dashboard = () => {
         return (
           <CommunicationGraph
             agents={agents}
-            messages={mockMessages}
+            messages={messages}
             selectedAgent={selectedAgent}
             onAgentSelect={handleAgentSelect}
             onMessageSelect={setSelectedMessage}
@@ -49,7 +53,7 @@ const Dashboard = () => {
       case "tasks":
         return (
           <TaskManagement
-            tasks={mockTasks}
+            tasks={tasks}
             agents={agents}
             selectedTask={selectedTask}
             onTaskSelect={setSelectedTask}
