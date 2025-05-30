@@ -69,19 +69,41 @@ const AgentCreation = () => {
     }
   ];
 
-  const filteredSteps = creationMethod === "clone" 
-    ? steps.filter(step => step.id !== "role" && step.id !== "specialization")
-    : steps.filter(step => step.id !== "method" || currentStep === 0);
+  const getFilteredSteps = () => {
+    if (creationMethod === "clone") {
+      // For clone: method -> clone selection -> capabilities -> background -> naming -> review
+      return steps.filter(step => 
+        step.id === "method" || 
+        step.id === "capabilities" || 
+        step.id === "background" || 
+        step.id === "naming" || 
+        step.id === "review"
+      ).map((step, index) => {
+        if (index === 1) {
+          return { ...step, id: "clone", title: "Clone Agent", description: "Select agent to clone" };
+        }
+        return step;
+      });
+    } else {
+      // For new: method -> role -> specialization -> capabilities -> background -> naming -> review
+      return steps;
+    }
+  };
+
+  const filteredSteps = getFilteredSteps();
 
   const canProceed = () => {
-    switch (currentStep) {
-      case 0: return true; // Method selection
-      case 1: return creationMethod === "clone" ? selectedCloneAgent !== null : selectedRole !== null;
-      case 2: return specialization !== "";
-      case 3: return Object.keys(capabilities).length > 0;
-      case 4: return true; // Background is optional
-      case 5: return agentName.trim() !== "";
-      case 6: return true; // Review step
+    const stepId = filteredSteps[currentStep]?.id;
+    
+    switch (stepId) {
+      case "method": return true;
+      case "role": return selectedRole !== null;
+      case "clone": return selectedCloneAgent !== null;
+      case "specialization": return specialization !== "";
+      case "capabilities": return Object.keys(capabilities).length > 0;
+      case "background": return true; // Background is optional
+      case "naming": return agentName.trim() !== "";
+      case "review": return true;
       default: return false;
     }
   };
@@ -172,6 +194,15 @@ const AgentCreation = () => {
           />
         );
       
+      case "clone":
+        return (
+          <CloneAgentStep
+            selectedAgent={selectedCloneAgent}
+            onAgentSelect={setSelectedCloneAgent}
+            availableAgents={mockAgents}
+          />
+        );
+      
       case "specialization":
         return (
           <SpecializationStep
@@ -208,16 +239,7 @@ const AgentCreation = () => {
           />
         );
       
-      default:
-        if (creationMethod === "clone" && currentStep === 1) {
-          return (
-            <CloneAgentStep
-              selectedAgent={selectedCloneAgent}
-              onAgentSelect={setSelectedCloneAgent}
-              availableAgents={mockAgents}
-            />
-          );
-        }
+      case "review":
         return (
           <div className="space-y-6">
             <div className="text-center space-y-2">
@@ -244,6 +266,9 @@ const AgentCreation = () => {
             </Card>
           </div>
         );
+      
+      default:
+        return <div>Step not found</div>;
     }
   };
 
