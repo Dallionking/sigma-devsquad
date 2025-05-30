@@ -4,16 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { RefreshCcw, CheckCircle, AlertTriangle, Clock, Download, Upload } from "lucide-react";
-
-interface IDE {
-  name: string;
-  id: string;
-  status: string;
-  version: string;
-  extensions: string[];
-  lastSync: string;
-}
+import { RefreshCw, CheckCircle, AlertTriangle, Clock, Download, Upload } from "lucide-react";
+import { IDE } from "./IDEConnectionStatus";
 
 interface SyncTabProps {
   ides: IDE[];
@@ -76,7 +68,7 @@ export const SyncTab = ({ ides, selectedIDE }: SyncTabProps) => {
       case "syncing":
         return <Clock className="w-4 h-4 text-blue-500" />;
       default:
-        return <RefreshCcw className="w-4 h-4 text-gray-500" />;
+        return <RefreshCw className="w-4 h-4 text-gray-500" />;
     }
   };
 
@@ -137,7 +129,7 @@ export const SyncTab = ({ ides, selectedIDE }: SyncTabProps) => {
 
           <div className="flex space-x-2">
             <Button className="flex-1">
-              <RefreshCcw className="w-4 h-4 mr-1" />
+              <RefreshCw className="w-4 h-4 mr-1" />
               Force Sync
             </Button>
             <Button variant="outline" className="flex-1">

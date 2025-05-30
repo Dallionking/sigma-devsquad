@@ -6,15 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-
-interface IDE {
-  name: string;
-  id: string;
-  status: string;
-  version: string;
-  extensions: string[];
-  lastSync: string;
-}
+import { IDE } from "./IDEConnectionStatus";
 
 interface ConfigurationTabProps {
   selectedIDE: string;

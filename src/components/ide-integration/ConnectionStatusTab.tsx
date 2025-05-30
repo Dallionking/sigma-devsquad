@@ -3,15 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Monitor, Wifi, WifiOff, Settings, RefreshCw } from "lucide-react";
-
-interface IDE {
-  name: string;
-  id: string;
-  status: string;
-  version: string;
-  extensions: string[];
-  lastSync: string;
-}
+import { IDE } from "./IDEConnectionStatus";
 
 interface ConnectionStatusTabProps {
   ides: IDE[];
