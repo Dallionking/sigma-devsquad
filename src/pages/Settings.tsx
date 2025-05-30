@@ -27,10 +27,20 @@ export const Settings = () => {
   const [searchFilters, setSearchFilters] = useState({});
   const [activeTab, setActiveTab] = useState("general");
 
-  // Keyboard navigation setup
+  // Get keyboard navigation functions first
   const { focusNext, focusPrevious } = useKeyboardNavigation({
     onEscape: () => {
       // Clear search when pressing Escape
+      if (searchQuery) {
+        setSearchQuery("");
+      }
+    },
+    enableArrowNavigation: true,
+  });
+
+  // Set up keyboard navigation with the functions now available
+  useKeyboardNavigation({
+    onEscape: () => {
       if (searchQuery) {
         setSearchQuery("");
       }
