@@ -24,19 +24,12 @@ const PlanningAgent = () => {
     addTask(taskData);
     setShowTaskAssignment(false);
     
-    // Find the assigned agent to get the proper IDs
-    const assignedAgent = agents.find(agent => agent.type === taskData.assignedAgent);
-    const planningAgent = agents.find(agent => agent.type === "planning");
-    
     // Also create a message about the task creation
     addMessage({
       from: "planning",
       to: taskData.assignedAgent,
-      senderId: planningAgent?.id || "1",
-      receiverId: assignedAgent?.id || "",
       content: `New task assigned: ${taskData.title}`,
-      type: "notification",
-      status: "delivered"
+      type: "notification"
     });
   };
 

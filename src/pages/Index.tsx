@@ -1,9 +1,12 @@
 
 import { useState } from "react";
-import { CollapsibleAgentSidebar } from "@/components/dashboard/CollapsibleAgentSidebar";
-import { ContextAwarePanel } from "@/components/dashboard/ContextAwarePanel";
-import { IntegratedCommunicationHub } from "@/components/dashboard/IntegratedCommunicationHub";
-import { OptimizedHeader } from "@/components/dashboard/OptimizedHeader";
+import { AgentSidebar } from "@/components/dashboard/AgentSidebar";
+import { MainWorkflowArea } from "@/components/dashboard/MainWorkflowArea";
+import { DetailPanel } from "@/components/dashboard/DetailPanel";
+import { Header } from "@/components/dashboard/Header";
+import { SystemFooter } from "@/components/dashboard/SystemFooter";
+import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
+import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
@@ -14,105 +17,98 @@ const Index = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [rightPanelVisible, setRightPanelVisible] = useState(false);
+  const [showFooter, setShowFooter] = useState(true);
 
   // Use centralized state management
   const { agents } = useAgents();
   const { tasks } = useTasks();
   const { messages } = useMessages();
 
-  const handleAgentSelect = (agent: Agent | null) => {
-    setSelectedAgent(agent);
-    setSelectedTask(null);
-    setSelectedMessage(null);
-    setRightPanelVisible(!!agent);
-  };
-
-  const handleTaskSelect = (task: Task | null) => {
-    setSelectedTask(task);
-    setSelectedAgent(null);
-    setSelectedMessage(null);
-    setRightPanelVisible(!!task);
-  };
-
-  const handleMessageSelect = (message: Message | null) => {
-    setSelectedMessage(message);
-    setSelectedAgent(null);
-    setSelectedTask(null);
-    setRightPanelVisible(!!message);
-  };
-
-  const handlePanelDismiss = () => {
-    setRightPanelVisible(false);
-    setSelectedAgent(null);
-    setSelectedTask(null);
-    setSelectedMessage(null);
-  };
-
   return (
-    <div className="min-h-screen bg-[#0F172A] flex flex-col">
-      {/* Skip to main content for accessibility */}
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
+      {/* Enhanced skip to main content for accessibility */}
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50"
+        className="sr-only-focusable"
         aria-label="Skip to main content"
       >
         Skip to main content
       </a>
       
-      {/* Optimized Header */}
-      <OptimizedHeader 
-        sidebarCollapsed={sidebarCollapsed}
-        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+      {/* Enhanced header with better responsive design */}
+      <Header 
+        viewMode={viewMode} 
+        onViewModeChange={setViewMode}
         agents={agents}
       />
       
-      {/* Main Layout */}
+      {/* Enhanced main layout with improved responsive behavior */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Collapsible Agent Sidebar */}
-        <CollapsibleAgentSidebar 
+        <AgentSidebar 
           agents={agents}
           selectedAgent={selectedAgent}
-          onAgentSelect={handleAgentSelect}
-          collapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onAgentSelect={setSelectedAgent}
         />
         
-        {/* Main Content Area */}
+        {/* Enhanced main content area with better responsive design and accessibility */}
         <main 
           id="main-content"
-          className={`flex-1 flex transition-all duration-300 ease-in-out ${
-            sidebarCollapsed ? 'ml-16' : 'ml-70'
-          } ${rightPanelVisible ? 'mr-80' : 'mr-0'}`}
+          className="flex-1 flex flex-col min-w-0 bg-gradient-to-br from-background via-background to-muted/20"
           role="main"
           aria-label="Main dashboard content"
         >
-          <IntegratedCommunicationHub 
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            agents={agents}
-            tasks={tasks}
-            messages={messages}
-            selectedAgent={selectedAgent}
-            selectedTask={selectedTask}
-            selectedMessage={selectedMessage}
-            onAgentSelect={handleAgentSelect}
-            onTaskSelect={handleTaskSelect}
-            onMessageSelect={handleMessageSelect}
-          />
+          {/* Enhanced dashboard overview section with improved spacing and transitions */}
+          {viewMode === "workflow" && (
+            <div className="fade-in">
+              <DashboardOverview 
+                agents={agents}
+                onAgentSelect={setSelectedAgent}
+              />
+            </div>
+          )}
+          
+          {/* Enhanced main workflow area with better transitions and responsive design */}
+          <div className="flex-1 transition-all duration-300 ease-in-out">
+            <MainWorkflowArea 
+              viewMode={viewMode}
+              agents={agents}
+              tasks={tasks}
+              messages={messages}
+              selectedAgent={selectedAgent}
+              selectedTask={selectedTask}
+              selectedMessage={selectedMessage}
+              onAgentSelect={setSelectedAgent}
+              onTaskSelect={setSelectedTask}
+              onMessageSelect={setSelectedMessage}
+            />
+          </div>
         </main>
         
-        {/* Context-Aware Right Panel */}
-        {rightPanelVisible && (
-          <ContextAwarePanel 
-            selectedAgent={selectedAgent}
-            selectedTask={selectedTask}
-            selectedMessage={selectedMessage}
-            agents={agents}
-            onDismiss={handlePanelDismiss}
+        {/* Enhanced detail panel with improved responsive behavior */}
+        <DetailPanel 
+          selectedAgent={selectedAgent}
+          selectedTask={selectedTask}
+          selectedMessage={selectedMessage}
+          viewMode={viewMode}
+          agents={agents}
+        />
+      </div>
+      
+      {/* Enhanced footer with smooth animations and better responsive design */}
+      {showFooter && (
+        <div className="slide-in-from-bottom">
+          <SystemFooter 
+            onToggle={() => setShowFooter(!showFooter)}
+            messages={messages}
           />
-        )}
+        </div>
+      )}
+      
+      {/* Enhanced floating action button with better positioning and animations */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="hover-scale">
+          <AgentCreationButton />
+        </div>
       </div>
     </div>
   );

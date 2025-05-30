@@ -1,4 +1,3 @@
-
 import { Agent, Task, Message } from "@/types";
 
 export const mockAgents: Agent[] = [
@@ -88,9 +87,7 @@ export const mockTasks: Task[] = [
     title: "User Authentication Module",
     description: "Implement complete user authentication with JWT tokens",
     status: "in-progress",
-    type: "development",
     assignedAgent: "backend",
-    assignedTo: "3",
     priority: "high",
     deadline: "2024-06-05",
     createdAt: "2024-05-28T09:00:00Z"
@@ -100,9 +97,7 @@ export const mockTasks: Task[] = [
     title: "Login UI Components",
     description: "Create responsive login and signup forms",
     status: "pending",
-    type: "ui-development",
     assignedAgent: "frontend",
-    assignedTo: "2",
     priority: "high",
     deadline: "2024-06-03",
     createdAt: "2024-05-29T14:30:00Z"
@@ -112,9 +107,7 @@ export const mockTasks: Task[] = [
     title: "API Documentation",
     description: "Document authentication endpoints",
     status: "in-progress",
-    type: "documentation",
     assignedAgent: "documentation",
-    assignedTo: "5",
     priority: "medium",
     deadline: "2024-06-07",
     createdAt: "2024-05-29T16:00:00Z"
@@ -126,33 +119,24 @@ export const mockMessages: Message[] = [
     id: "1",
     from: "planning",
     to: "backend",
-    senderId: "1",
-    receiverId: "3",
     content: "Authentication requirements finalized. JWT with refresh tokens, OAuth integration required.",
     timestamp: "2024-05-30T10:30:00Z",
-    type: "request",
-    status: "delivered"
+    type: "request"
   },
   {
     id: "2",
     from: "backend",
     to: "planning",
-    senderId: "3",
-    receiverId: "1",
     content: "Requirements received. Estimated completion: 2 days.",
     timestamp: "2024-05-30T10:32:00Z",
-    type: "response",
-    status: "delivered"
+    type: "response"
   },
   {
     id: "3",
     from: "backend",
     to: "frontend",
-    senderId: "3",
-    receiverId: "2",
     content: "API specifications ready for authentication endpoints.",
     timestamp: "2024-05-30T10:35:00Z",
-    type: "notification",
-    status: "delivered"
+    type: "notification"
   }
 ];
