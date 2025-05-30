@@ -6,6 +6,7 @@ import { DetailPanel } from "@/components/dashboard/DetailPanel";
 import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
+import { AgentCreationButton } from "@/components/agent-creation/AgentCreationButton";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { mockAgents, mockTasks, mockMessages } from "@/data/mockData";
 
@@ -73,6 +74,9 @@ const Index = () => {
           messages={mockMessages}
         />
       )}
+      
+      {/* Add the Agent Creation Button */}
+      <AgentCreationButton />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Plus, Bot, Layers, Code, Server, TestTube, FileText, Settings as SettingsIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { EnhancedAgentCard } from "@/components/cards/EnhancedAgentCard";
 import { Agent } from "@/types";
 
 interface EnhancedAgentOverviewProps {
@@ -79,46 +80,21 @@ export const EnhancedAgentOverview = ({ agents, onAgentSelect }: EnhancedAgentOv
               <p className="text-xs">Create your first agent to get started</p>
             </div>
           ) : (
-            agents.slice(0, 3).map((agent) => {
-              const Icon = getAgentIcon(agent.type);
-              const colorClass = getAgentColor(agent.type);
-              const statusColorClass = getStatusColor(agent.status);
-              
-              return (
-                <div
+            <div className="grid grid-cols-1 gap-3">
+              {agents.slice(0, 2).map((agent) => (
+                <EnhancedAgentCard
                   key={agent.id}
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent/50 cursor-pointer transition-colors"
-                  onClick={() => onAgentSelect(agent)}
-                >
-                  <Avatar className="w-10 h-10">
-                    <AvatarFallback className={`${colorClass} text-white`}>
-                      <Icon className="w-5 h-5" />
-                    </AvatarFallback>
-                  </Avatar>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h3 className="text-sm font-medium truncate">{agent.name}</h3>
-                      <Badge className={`text-xs ${statusColorClass}`}>
-                        {agent.status}
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {agent.currentTask}
-                    </p>
-                  </div>
-                  
-                  <div className="text-right">
-                    <div className="text-xs text-muted-foreground">
-                      {agent.progress}%
-                    </div>
-                  </div>
-                </div>
-              );
-            })
+                  agent={agent}
+                  compact={true}
+                  onInteract={() => console.log("Interact with agent:", agent.name)}
+                  onConfigure={() => console.log("Configure agent:", agent.name)}
+                  onToggleStatus={() => console.log("Toggle agent status:", agent.name)}
+                />
+              ))}
+            </div>
           )}
           
-          {agents.length > 3 && (
+          {agents.length > 2 && (
             <div className="pt-2 text-center">
               <Button 
                 variant="ghost" 
