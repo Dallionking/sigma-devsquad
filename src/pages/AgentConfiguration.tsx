@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Bot, Layers, Code, Server, TestTube, FileText, Settings as SettingsIcon, Save, RotateCcw } from "lucide-react";
 import { AgentConfigCard } from "@/components/agent-config/AgentConfigCard";
 import { Header } from "@/components/dashboard/Header";
-import { ViewMode, Agent } from "@/pages/Index";
+import { ViewMode, Agent } from "@/types";
 
 export type AgentType = "planning" | "frontend" | "backend" | "qa" | "documentation" | "devops";
 

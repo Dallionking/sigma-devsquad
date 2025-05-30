@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { ChatInterface } from "@/components/planning-agent/ChatInterface";
@@ -12,7 +11,7 @@ import { WorkflowTemplates } from "@/components/planning-agent/WorkflowTemplates
 import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare, FileText, Search, Layers, CheckSquare, Workflow, File, Network } from "lucide-react";
-import { Agent, Message } from "@/pages/Index";
+import { Agent, Message } from "@/types";
 
 export const PlanningAgent = () => {
   const [selectedProject, setSelectedProject] = useState("current-project");

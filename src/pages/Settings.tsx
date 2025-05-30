@@ -12,7 +12,7 @@ import { SecuritySettings } from "@/components/settings/SecuritySettings";
 import { NotificationSettings } from "@/components/settings/NotificationSettings";
 import { BackupSettings } from "@/components/settings/BackupSettings";
 import { Header } from "@/components/dashboard/Header";
-import { ViewMode, Agent } from "@/pages/Index";
+import { ViewMode, Agent } from "@/types";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export const Settings = () => {

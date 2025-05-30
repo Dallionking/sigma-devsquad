@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +20,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
-import { Agent, ViewMode } from "@/pages/Index";
+import { Agent, ViewMode } from "@/types";
 
 // Mock data for MCP protocols
 const availableMCPs = [
