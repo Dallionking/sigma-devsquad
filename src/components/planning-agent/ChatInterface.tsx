@@ -6,15 +6,32 @@ import { Badge } from "@/components/ui/badge";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
-import { Plus, Target, Activity, Menu } from "lucide-react";
+import { EnhancedFileAttachment } from "./EnhancedFileAttachment";
+import { ContextualTools } from "./ContextualTools";
+import { Plus, Target, Activity, Menu, Paperclip } from "lucide-react";
 
 type ChatMessage = {
   id: string;
   type: "user" | "agent";
   content: string;
   timestamp: Date;
-  agent?: string; // Optional for user messages
+  agent?: string;
+  attachments?: Array<{
+    type: "code" | "document" | "idea" | "file";
+    content: string;
+    title: string;
+    fileId?: string;
+  }>;
 };
+
+interface AttachedFile {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  content?: string;
+  url?: string;
+}
 
 interface ChatInterfaceProps {
   onCreateTask?: () => void;
@@ -34,25 +51,48 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
   ]);
 
   const [isTyping, setIsTyping] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
+  const [showFileAttachment, setShowFileAttachment] = useState(false);
 
   const handleSendMessage = (content: string) => {
     const newMessage: ChatMessage = {
       id: Date.now().toString(),
       type: "user",
       content,
-      timestamp: new Date()
+      timestamp: new Date(),
+      attachments: attachedFiles.length > 0 ? attachedFiles.map(file => ({
+        type: "file" as const,
+        content: file.content || file.name,
+        title: file.name,
+        fileId: file.id
+      })) : undefined
     };
     setMessages(prev => [...prev, newMessage]);
+
+    // Clear attached files after sending
+    setAttachedFiles([]);
+    setShowFileAttachment(false);
 
     // Set typing indicator
     setIsTyping(true);
 
-    // Simulate agent response
+    // Enhanced agent response based on context
     setTimeout(() => {
+      let responseContent = "I understand. Let me analyze that and provide you with a structured breakdown...";
+      
+      // Context-aware responses
+      if (content.toLowerCase().includes('prd') || content.toLowerCase().includes('requirements')) {
+        responseContent = "I'll help you create a comprehensive PRD. Let me generate a structured document with all the necessary sections.";
+      } else if (content.toLowerCase().includes('task') || content.toLowerCase().includes('feature')) {
+        responseContent = "Great! I'll break this down into manageable tasks and subtasks. Let me create a detailed breakdown for you.";
+      } else if (content.toLowerCase().includes('research') || content.toLowerCase().includes('investigate')) {
+        responseContent = "I'll help you research this topic. Let me gather relevant information and best practices.";
+      }
+
       const agentResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: "agent",
-        content: "I understand. Let me analyze that and provide you with a structured breakdown...",
+        content: responseContent,
         timestamp: new Date(),
         agent: "Planning Agent"
       };
@@ -60,6 +100,23 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
       setIsTyping(false);
     }, 1000);
   };
+
+  const handleFileAttach = (files: AttachedFile[]) => {
+    setAttachedFiles(prev => [...prev, ...files]);
+  };
+
+  const handleFileRemove = (fileId: string) => {
+    setAttachedFiles(prev => prev.filter(file => file.id !== fileId));
+  };
+
+  const handleToolSelect = (toolId: string) => {
+    console.log("Tool selected:", toolId);
+    // This would trigger the appropriate tool in the canvas
+  };
+
+  const conversationContext = messages
+    .slice(-5) // Last 5 messages for context
+    .map(msg => msg.content);
 
   return (
     <div className="flex flex-col h-full">
@@ -92,6 +149,20 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
             </Button>
             <Button
               variant="outline"
+              onClick={() => setShowFileAttachment(!showFileAttachment)}
+              className={`gap-2 ${attachedFiles.length > 0 ? 'bg-primary/10' : ''}`}
+              size="sm"
+            >
+              <Paperclip className="w-4 h-4" />
+              <span className="hidden sm:inline">Files</span>
+              {attachedFiles.length > 0 && (
+                <Badge variant="secondary" className="text-xs">
+                  {attachedFiles.length}
+                </Badge>
+              )}
+            </Button>
+            <Button
+              variant="outline"
               onClick={onToggleCanvas}
               className="gap-2"
               size="sm"
@@ -107,7 +178,32 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
         <div className="flex-1 overflow-hidden mb-4">
           <ChatMessageList messages={messages} isTyping={isTyping} />
         </div>
-        <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping} />
+
+        {/* File Attachment Panel */}
+        {showFileAttachment && (
+          <div className="mb-4 border rounded-lg p-4 bg-muted/30">
+            <EnhancedFileAttachment
+              onFileAttach={handleFileAttach}
+              attachedFiles={attachedFiles}
+              onFileRemove={handleFileRemove}
+            />
+          </div>
+        )}
+
+        {/* Contextual Tools Panel */}
+        <div className="mb-4">
+          <ContextualTools
+            currentMessage={messages[messages.length - 1]?.content}
+            conversationContext={conversationContext}
+            onToolSelect={handleToolSelect}
+          />
+        </div>
+
+        <ChatInput 
+          onSendMessage={handleSendMessage} 
+          isTyping={isTyping}
+          hasAttachments={attachedFiles.length > 0}
+        />
       </CardContent>
     </div>
   );

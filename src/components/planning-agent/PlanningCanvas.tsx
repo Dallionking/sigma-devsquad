@@ -9,11 +9,13 @@ import {
   ListTodo, 
   Brain, 
   Search,
-  Plus
+  Plus,
+  FileText
 } from "lucide-react";
 import { CanvasTaskMaster } from "./CanvasTaskMaster";
 import { ContextPanel } from "./ContextPanel";
 import { ResearchPanel } from "./ResearchPanel";
+import { EnhancedPRDGenerator } from "./EnhancedPRDGenerator";
 
 interface PlanningCanvasProps {
   selectedProject: string;
@@ -30,6 +32,13 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, class
       icon: ListTodo,
       badge: "15 tasks",
       component: <CanvasTaskMaster />
+    },
+    {
+      id: "prd",
+      title: "PRD Generator",
+      icon: FileText,
+      badge: "Enhanced",
+      component: <EnhancedPRDGenerator />
     },
     {
       id: "context",
@@ -57,6 +66,7 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, class
           <div className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-semibold">Planning Canvas</h2>
+            <Badge variant="secondary" className="text-xs">Enhanced</Badge>
           </div>
           <Button
             onClick={onToggle}
@@ -71,7 +81,7 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, class
         {/* Canvas Content */}
         <div className="flex-1 overflow-hidden">
           <Tabs defaultValue="taskmaster" className="h-full flex flex-col">
-            <TabsList className="grid grid-cols-3 m-4 bg-muted/50">
+            <TabsList className="grid grid-cols-4 m-4 bg-muted/50">
               {canvasModules.map((module) => (
                 <TabsTrigger 
                   key={module.id} 
@@ -108,7 +118,7 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, class
         {/* Canvas Footer */}
         <div className="border-t p-4 bg-muted/30">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>Canvas Mode</span>
+            <span>Enhanced Canvas Mode</span>
             <Button variant="outline" size="sm">
               <Plus className="w-4 h-4 mr-1" />
               Add Module

@@ -2,14 +2,16 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { Send, Mic, Paperclip } from "lucide-react";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   isTyping: boolean;
+  hasAttachments?: boolean;
 }
 
-export const ChatInput = ({ onSendMessage, isTyping }: ChatInputProps) => {
+export const ChatInput = ({ onSendMessage, isTyping, hasAttachments = false }: ChatInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -37,12 +39,20 @@ export const ChatInput = ({ onSendMessage, isTyping }: ChatInputProps) => {
 
   const handleVoiceInput = () => {
     setIsRecording(!isRecording);
-    // Voice input functionality would be implemented here
     console.log("Voice input toggled:", !isRecording);
   };
 
   return (
     <div className="border-t border-border p-4 bg-muted/30">
+      {hasAttachments && (
+        <div className="mb-2">
+          <Badge variant="secondary" className="text-xs">
+            <Paperclip className="w-3 h-3 mr-1" />
+            Files attached
+          </Badge>
+        </div>
+      )}
+      
       <div className="flex gap-2 items-end">
         <div className="flex-1 relative">
           <Textarea
@@ -64,14 +74,6 @@ export const ChatInput = ({ onSendMessage, isTyping }: ChatInputProps) => {
               disabled={isTyping}
             >
               <Mic className={`w-4 h-4 ${isRecording ? 'text-red-500' : 'text-muted-foreground'}`} />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              disabled={isTyping}
-            >
-              <Paperclip className="w-4 h-4 text-muted-foreground" />
             </Button>
           </div>
         </div>
