@@ -1,8 +1,9 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch } from "lucide-react";
+import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface HeaderProps {
   viewMode: ViewMode;
@@ -11,6 +12,8 @@ interface HeaderProps {
 }
 
 export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const activeAgents = agents.filter(agent => agent.status === "working").length;
   const totalAgents = agents.length;
   
@@ -20,6 +23,9 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
     tasks: { icon: CheckSquare, label: "Tasks" },
     messages: { icon: Activity, label: "Messages" }
   };
+
+  const isSettingsPage = location.pathname === "/settings";
+  const isLLMPage = location.pathname === "/llm-integration";
 
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4">
@@ -32,23 +38,26 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
             </p>
           </div>
           
-          <div className="flex items-center space-x-1 bg-slate-100 rounded-lg p-1">
-            {Object.entries(viewModeConfig).map(([mode, config]) => {
-              const Icon = config.icon;
-              return (
-                <Button
-                  key={mode}
-                  variant={viewMode === mode ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => onViewModeChange(mode as ViewMode)}
-                  className="h-8 px-3"
-                >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {config.label}
-                </Button>
-              );
-            })}
-          </div>
+          {/* Show view mode selector only on the main dashboard */}
+          {location.pathname === "/" && (
+            <div className="flex items-center space-x-1 bg-slate-100 rounded-lg p-1">
+              {Object.entries(viewModeConfig).map(([mode, config]) => {
+                const Icon = config.icon;
+                return (
+                  <Button
+                    key={mode}
+                    variant={viewMode === mode ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => onViewModeChange(mode as ViewMode)}
+                    className="h-8 px-3"
+                  >
+                    <Icon className="w-4 h-4 mr-2" />
+                    {config.label}
+                  </Button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -61,6 +70,33 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
               <Users className="w-3 h-3 mr-1" />
               {activeAgents} Active
             </Badge>
+          </div>
+          
+          {/* Navigation buttons */}
+          <div className="flex items-center space-x-2">
+            <Button 
+              variant={location.pathname === "/" ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/")}
+            >
+              Dashboard
+            </Button>
+            <Button 
+              variant={isLLMPage ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/llm-integration")}
+            >
+              <Brain className="w-4 h-4 mr-2" />
+              LLM Integration
+            </Button>
+            <Button 
+              variant={isSettingsPage ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/settings")}
+            >
+              <Cog className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
           </div>
           
           <Button variant="ghost" size="sm">
