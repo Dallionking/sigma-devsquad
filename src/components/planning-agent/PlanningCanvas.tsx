@@ -19,9 +19,10 @@ interface PlanningCanvasProps {
   selectedProject: string;
   isOpen?: boolean;
   onToggle?: () => void;
+  className?: string;
 }
 
-export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle }: PlanningCanvasProps) => {
+export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle, className }: PlanningCanvasProps) => {
   const canvasModules = [
     {
       id: "taskmaster",
@@ -49,81 +50,72 @@ export const PlanningCanvas = ({ selectedProject, isOpen = true, onToggle }: Pla
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Canvas Overlay */}
-      <div 
-        className="fixed inset-0 bg-black/50 z-50 transition-opacity duration-300"
-        onClick={onToggle}
-      />
+    <div className={`bg-background border-l shadow-lg lg:shadow-none ${className}`}>
+      <div className="flex flex-col h-full">
+        {/* Canvas Header */}
+        <div className="flex items-center justify-between p-4 border-b bg-muted/30">
+          <div className="flex items-center gap-2">
+            <Brain className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold">Planning Canvas</h2>
+          </div>
+          <Button
+            onClick={onToggle}
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
 
-      {/* Canvas Panel */}
-      <div className="fixed top-0 right-0 h-full w-full sm:w-2/3 lg:w-1/2 xl:w-2/5 bg-background border-l shadow-2xl z-50">
-        <div className="flex flex-col h-full">
-          {/* Canvas Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-muted/30">
-            <div className="flex items-center gap-2">
-              <Brain className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold">Planning Canvas</h2>
+        {/* Canvas Content */}
+        <div className="flex-1 overflow-hidden">
+          <Tabs defaultValue="taskmaster" className="h-full flex flex-col">
+            <TabsList className="grid grid-cols-3 m-4 bg-muted/50">
+              {canvasModules.map((module) => (
+                <TabsTrigger 
+                  key={module.id} 
+                  value={module.id}
+                  className="flex flex-col items-center gap-1 p-2 lg:p-3 data-[state=active]:bg-background"
+                >
+                  <div className="flex items-center gap-1 lg:gap-2">
+                    <module.icon className="w-4 h-4" />
+                    <span className="text-xs font-medium hidden sm:inline">{module.title}</span>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    {module.badge}
+                  </Badge>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            <div className="flex-1 overflow-hidden px-4 pb-4">
+              {canvasModules.map((module) => (
+                <TabsContent 
+                  key={module.id} 
+                  value={module.id} 
+                  className="h-full overflow-y-auto mt-0"
+                >
+                  <div className="space-y-4">
+                    {module.component}
+                  </div>
+                </TabsContent>
+              ))}
             </div>
-            <Button
-              onClick={onToggle}
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-            >
-              <X className="w-4 h-4" />
+          </Tabs>
+        </div>
+
+        {/* Canvas Footer */}
+        <div className="border-t p-4 bg-muted/30">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>Canvas Mode</span>
+            <Button variant="outline" size="sm">
+              <Plus className="w-4 h-4 mr-1" />
+              Add Module
             </Button>
-          </div>
-
-          {/* Canvas Content */}
-          <div className="flex-1 overflow-hidden">
-            <Tabs defaultValue="taskmaster" className="h-full flex flex-col">
-              <TabsList className="grid grid-cols-3 m-4 bg-muted/50">
-                {canvasModules.map((module) => (
-                  <TabsTrigger 
-                    key={module.id} 
-                    value={module.id}
-                    className="flex flex-col items-center gap-1 p-3 data-[state=active]:bg-background"
-                  >
-                    <div className="flex items-center gap-2">
-                      <module.icon className="w-4 h-4" />
-                      <span className="text-xs font-medium hidden sm:inline">{module.title}</span>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      {module.badge}
-                    </Badge>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              <div className="flex-1 overflow-hidden px-4 pb-4">
-                {canvasModules.map((module) => (
-                  <TabsContent 
-                    key={module.id} 
-                    value={module.id} 
-                    className="h-full overflow-y-auto mt-0"
-                  >
-                    <div className="space-y-4">
-                      {module.component}
-                    </div>
-                  </TabsContent>
-                ))}
-              </div>
-            </Tabs>
-          </div>
-
-          {/* Canvas Footer */}
-          <div className="border-t p-4 bg-muted/30">
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>Canvas Mode</span>
-              <Button variant="outline" size="sm">
-                <Plus className="w-4 h-4 mr-1" />
-                Add Module
-              </Button>
-            </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
