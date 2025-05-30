@@ -1,245 +1,174 @@
 
 import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckSquare, Plus, Clock, User, Flag, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  ListTodo, 
+  GitBranch, 
+  Plus, 
+  BarChart3, 
+  Target,
+  Workflow,
+  Eye
+} from "lucide-react";
+import { VisualTaskBreakdown } from "./VisualTaskBreakdown";
+import { TaskDependencyVisualizer } from "./TaskDependencyVisualizer";
+import { EnhancedTaskCreator } from "./EnhancedTaskCreator";
 
 export const TaskMasterIntegration = () => {
-  const [newTaskTitle, setNewTaskTitle] = useState("");
-  const [selectedAgent, setSelectedAgent] = useState("");
-  const [selectedPriority, setSelectedPriority] = useState("");
+  const [activeView, setActiveView] = useState("breakdown");
 
-  const tasks = [
-    {
-      id: 1,
-      title: "Implement user authentication system",
-      agent: "Backend Agent",
-      priority: "high",
-      status: "in-progress",
-      dueDate: "2024-06-05",
-      progress: 75
-    },
-    {
-      id: 2,
-      title: "Design dashboard wireframes",
-      agent: "Frontend Agent",
-      priority: "medium",
-      status: "pending",
-      dueDate: "2024-06-03",
-      progress: 0
-    },
-    {
-      id: 3,
-      title: "Write API documentation",
-      agent: "Documentation Agent",
-      priority: "low",
-      status: "completed",
-      dueDate: "2024-05-30",
-      progress: 100
-    }
-  ];
-
-  const agents = [
-    "Planning Agent",
-    "Frontend Agent",
-    "Backend Agent",
-    "QA Agent",
-    "Documentation Agent",
-    "DevOps Agent"
-  ];
-
-  const handleCreateTask = () => {
-    if (!newTaskTitle.trim() || !selectedAgent || !selectedPriority) return;
-    
-    console.log("Creating task:", {
-      title: newTaskTitle,
-      agent: selectedAgent,
-      priority: selectedPriority
-    });
-    
-    // Reset form
-    setNewTaskTitle("");
-    setSelectedAgent("");
-    setSelectedPriority("");
+  const handleCreateTask = (taskData: any) => {
+    console.log("Creating enhanced task:", taskData);
+    // Integration with task context would happen here
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300";
-      case "medium":
-        return "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300";
-      case "low":
-        return "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300";
-      default:
-        return "bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300";
-    }
+  const handleCreateSubtask = (parentId: string) => {
+    console.log("Creating subtask for:", parentId);
+    // Handle subtask creation
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300";
-      case "in-progress":
-        return "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300";
-      case "pending":
-        return "bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300";
-      default:
-        return "bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300";
-    }
+  const taskStats = {
+    total: 15,
+    completed: 3,
+    inProgress: 6,
+    pending: 4,
+    blocked: 2
   };
 
   return (
-    <div className="h-full overflow-y-auto p-4 space-y-4">
-      {/* Task Creation */}
-      <Card>
+    <div className="h-full overflow-y-auto space-y-4">
+      {/* Header with Stats */}
+      <Card className="card-enhanced">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Create New Task
+            <ListTodo className="w-5 h-5" />
+            TaskMaster Integration
           </CardTitle>
-          <CardDescription>Generate tasks from planning discussions</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Input
-            value={newTaskTitle}
-            onChange={(e) => setNewTaskTitle(e.target.value)}
-            placeholder="Enter task title..."
-          />
-
-          <Select value={selectedAgent} onValueChange={setSelectedAgent}>
-            <SelectTrigger>
-              <SelectValue placeholder="Assign to agent" />
-            </SelectTrigger>
-            <SelectContent>
-              {agents.map((agent) => (
-                <SelectItem key={agent} value={agent}>
-                  {agent}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-            <SelectTrigger>
-              <SelectValue placeholder="Set priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="high">High Priority</SelectItem>
-              <SelectItem value="medium">Medium Priority</SelectItem>
-              <SelectItem value="low">Low Priority</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button 
-            onClick={handleCreateTask}
-            disabled={!newTaskTitle.trim() || !selectedAgent || !selectedPriority}
-            className="w-full"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Create Task
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Active Tasks */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckSquare className="w-4 h-4" />
-            Active Tasks
-          </CardTitle>
+          <CardDescription>
+            Visual task management with intelligent breakdown and dependency tracking
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {tasks.map((task) => (
-              <div key={task.id} className="border border-border rounded-lg p-3 space-y-3">
-                <div className="flex items-start justify-between gap-2">
-                  <h4 className="font-medium text-sm leading-tight">{task.title}</h4>
-                  <Badge variant="outline" className={getStatusColor(task.status)}>
-                    {task.status}
-                  </Badge>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <User className="w-3 h-3" />
-                  <span>{task.agent}</span>
-                  <Flag className="w-3 h-3 ml-2" />
-                  <Badge variant="outline" className={getPriorityColor(task.priority)}>
-                    {task.priority}
-                  </Badge>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Clock className="w-3 h-3" />
-                    <span>Due: {task.dueDate}</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">{task.progress}%</span>
-                </div>
-
-                {task.status === "in-progress" && (
-                  <div className="w-full bg-muted rounded-full h-1">
-                    <div 
-                      className="bg-primary h-1 rounded-full transition-all duration-300"
-                      style={{ width: `${task.progress}%` }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Task Management</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <Button variant="outline" size="sm" className="w-full justify-start">
-              <ArrowRight className="w-3 h-3 mr-2" />
-              Convert chat to tasks
-            </Button>
-            <Button variant="outline" size="sm" className="w-full justify-start">
-              <CheckSquare className="w-3 h-3 mr-2" />
-              View all tasks
-            </Button>
-            <Button variant="outline" size="sm" className="w-full justify-start">
-              <Clock className="w-3 h-3 mr-2" />
-              Set task reminders
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Task Statistics */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Task Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="grid grid-cols-5 gap-2 text-center">
             <div className="p-2 bg-muted/50 rounded-md">
-              <div className="text-lg font-bold text-foreground">8</div>
+              <div className="text-lg font-bold text-foreground">{taskStats.total}</div>
               <div className="text-xs text-muted-foreground">Total</div>
             </div>
-            <div className="p-2 bg-muted/50 rounded-md">
-              <div className="text-lg font-bold text-blue-600">3</div>
+            <div className="p-2 bg-green-50 rounded-md">
+              <div className="text-lg font-bold text-green-600">{taskStats.completed}</div>
+              <div className="text-xs text-muted-foreground">Done</div>
+            </div>
+            <div className="p-2 bg-blue-50 rounded-md">
+              <div className="text-lg font-bold text-blue-600">{taskStats.inProgress}</div>
               <div className="text-xs text-muted-foreground">Active</div>
             </div>
-            <div className="p-2 bg-muted/50 rounded-md">
-              <div className="text-lg font-bold text-green-600">5</div>
-              <div className="text-xs text-muted-foreground">Done</div>
+            <div className="p-2 bg-gray-50 rounded-md">
+              <div className="text-lg font-bold text-gray-600">{taskStats.pending}</div>
+              <div className="text-xs text-muted-foreground">Pending</div>
+            </div>
+            <div className="p-2 bg-red-50 rounded-md">
+              <div className="text-lg font-bold text-red-600">{taskStats.blocked}</div>
+              <div className="text-xs text-muted-foreground">Blocked</div>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Enhanced Task Management Tabs */}
+      <Tabs value={activeView} onValueChange={setActiveView} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4 bg-muted/50 p-1 rounded-lg">
+          <TabsTrigger 
+            value="breakdown" 
+            className="flex items-center gap-2 text-xs data-[state=active]:bg-background"
+          >
+            <GitBranch className="w-4 h-4" />
+            Breakdown
+          </TabsTrigger>
+          <TabsTrigger 
+            value="dependencies" 
+            className="flex items-center gap-2 text-xs data-[state=active]:bg-background"
+          >
+            <Workflow className="w-4 h-4" />
+            Dependencies
+          </TabsTrigger>
+          <TabsTrigger 
+            value="create" 
+            className="flex items-center gap-2 text-xs data-[state=active]:bg-background"
+          >
+            <Plus className="w-4 h-4" />
+            Create
+          </TabsTrigger>
+          <TabsTrigger 
+            value="analytics" 
+            className="flex items-center gap-2 text-xs data-[state=active]:bg-background"
+          >
+            <BarChart3 className="w-4 h-4" />
+            Analytics
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="breakdown" className="space-y-4">
+          <VisualTaskBreakdown 
+            onCreateSubtask={handleCreateSubtask}
+            onUpdateTask={(taskId, updates) => console.log("Update task:", taskId, updates)}
+          />
+        </TabsContent>
+
+        <TabsContent value="dependencies" className="space-y-4">
+          <TaskDependencyVisualizer />
+        </TabsContent>
+
+        <TabsContent value="create" className="space-y-4">
+          <EnhancedTaskCreator onCreateTask={handleCreateTask} />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <Card className="card-enhanced">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" />
+                Task Analytics
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Completion Rate</h4>
+                  <div className="text-2xl font-bold text-green-600">76%</div>
+                  <div className="text-xs text-muted-foreground">Last 30 days</div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Avg. Task Duration</h4>
+                  <div className="text-2xl font-bold text-blue-600">3.2d</div>
+                  <div className="text-xs text-muted-foreground">Across all agents</div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">Agent Performance</h4>
+                <div className="space-y-2">
+                  {["Frontend Agent", "Backend Agent", "QA Agent"].map((agent) => (
+                    <div key={agent} className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                      <span className="text-sm">{agent}</span>
+                      <Badge variant="outline" className="bg-green-50 text-green-700">
+                        {Math.floor(Math.random() * 20 + 80)}% efficiency
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Button variant="outline" className="w-full">
+                <Eye className="w-4 h-4 mr-2" />
+                View Detailed Reports
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
