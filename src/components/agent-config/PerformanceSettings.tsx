@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Lightbulb, TrendingUp, Clock, Cpu, MemoryStick, Zap } from "lucide-react";
-import { AgentType } from "@/pages/AgentConfiguration";
+import { AgentType } from "@/types";
 
 interface PerformanceSettingsProps {
   agentType: AgentType;

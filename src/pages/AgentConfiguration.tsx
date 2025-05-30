@@ -34,6 +34,17 @@ const AgentConfiguration = () => {
     }
   ];
 
+  // Mock agent for configuration
+  const mockAgent: Agent = mockAgents[0];
+
+  const handleSave = (config: any) => {
+    console.log("Saving agent configuration:", config);
+  };
+
+  const handleCancel = () => {
+    console.log("Canceling agent configuration");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header 
@@ -49,7 +60,11 @@ const AgentConfiguration = () => {
             <p className="text-muted-foreground mt-2">Configure and manage your AI agents</p>
           </div>
 
-          <AgentConfigurationFlow />
+          <AgentConfigurationFlow 
+            agent={mockAgent}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
         </div>
       </div>
     </div>

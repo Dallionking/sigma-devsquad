@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Package, CheckCircle, AlertCircle, Settings } from "lucide-react";
-import { AgentType } from "@/pages/AgentConfiguration";
+import { AgentType } from "@/types";
 
 interface MCPConfigurationProps {
   agentType: AgentType;

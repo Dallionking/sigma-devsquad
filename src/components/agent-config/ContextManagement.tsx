@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Plus, Trash2, Upload, BookOpen, Database, Link } from "lucide-react";
-import { AgentType } from "@/pages/AgentConfiguration";
+import { AgentType } from "@/types";
 
 interface KnowledgeSource {
   id: string;
