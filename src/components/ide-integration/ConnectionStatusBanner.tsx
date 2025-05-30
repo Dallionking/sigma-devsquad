@@ -1,8 +1,9 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, AlertCircle, XCircle, Settings, Wifi, WifiOff } from "lucide-react";
+import { ConnectionStatusIcon } from "./ConnectionStatusIcon";
+import { ConnectionStatusInfo } from "./ConnectionStatusInfo";
+import { ConnectionStatusActions } from "./ConnectionStatusActions";
+import { ConnectionStatusDetails } from "./ConnectionStatusDetails";
 
 interface ConnectionStatusBannerProps {
   connectionStatus: string;
@@ -11,112 +12,34 @@ interface ConnectionStatusBannerProps {
 export const ConnectionStatusBanner = ({ connectionStatus }: ConnectionStatusBannerProps) => {
   const connectionStatuses = {
     connected: { 
-      icon: CheckCircle, 
-      color: "text-green-600 dark:text-green-400", 
       bg: "bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950 dark:to-green-900",
-      badge: "status-success",
       pulse: "animate-pulse-subtle"
     },
     connecting: { 
-      icon: AlertCircle, 
-      color: "text-yellow-600 dark:text-yellow-400", 
       bg: "bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-950 dark:to-yellow-900",
-      badge: "status-warning",
       pulse: "animate-pulse"
     },
     disconnected: { 
-      icon: XCircle, 
-      color: "text-red-600 dark:text-red-400", 
       bg: "bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900",
-      badge: "status-error",
       pulse: ""
     }
   };
 
   const statusConfig = connectionStatuses[connectionStatus as keyof typeof connectionStatuses];
-  const StatusIcon = statusConfig.icon;
-  const ConnectivityIcon = connectionStatus === 'connected' ? Wifi : WifiOff;
 
   return (
     <Card className={`card-enhanced border-2 ${statusConfig.bg} ${statusConfig.pulse} transition-all duration-300`}>
       <CardContent className="p-responsive">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-          {/* Enhanced status information section */}
           <div className="flex items-start sm:items-center space-x-4 flex-1">
-            {/* Enhanced status icon with better styling */}
-            <div className={`p-3 rounded-full bg-background/80 backdrop-blur-sm shadow-md ${statusConfig.pulse} hover-scale`}>
-              <StatusIcon className={`w-6 h-6 sm:w-7 sm:h-7 ${statusConfig.color}`} />
-            </div>
-            
-            {/* Enhanced status details with better typography */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
-                <h3 className="heading-secondary text-xl sm:text-2xl text-foreground">
-                  VS Code Integration
-                </h3>
-                <ConnectivityIcon className={`w-5 h-5 ${statusConfig.color} hidden sm:block`} />
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <p className="text-muted-enhanced">
-                  Connection Status: 
-                  <span className={`ml-2 font-semibold capitalize ${statusConfig.color}`}>
-                    {connectionStatus}
-                  </span>
-                </p>
-                
-                {connectionStatus === 'connected' && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-subtle"></div>
-                    <span>Live sync active</span>
-                  </div>
-                )}
-              </div>
-            </div>
+            <ConnectionStatusIcon connectionStatus={connectionStatus} />
+            <ConnectionStatusInfo connectionStatus={connectionStatus} />
           </div>
           
-          {/* Enhanced action controls with better responsive design */}
-          <div className="flex items-center space-x-3 w-full sm:w-auto">
-            <Badge 
-              variant={connectionStatus === "connected" ? "default" : "secondary"}
-              className={`${statusConfig.badge} px-3 py-1 font-medium transition-all duration-200 hover:scale-105`}
-            >
-              {connectionStatus === "connected" ? "Active" : "Inactive"}
-            </Badge>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="btn-secondary-enhanced gap-2 min-w-fit hover-scale"
-              aria-label={`Configure ${connectionStatus} IDE connection`}
-            >
-              <Settings className="w-4 h-4" />
-              <span className="hidden sm:inline">Configure</span>
-            </Button>
-          </div>
+          <ConnectionStatusActions connectionStatus={connectionStatus} />
         </div>
         
-        {/* Enhanced additional status information with better styling */}
-        {connectionStatus === 'connecting' && (
-          <div className="mt-4 p-3 bg-background/50 rounded-lg border border-border/50 fade-in">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-              </div>
-              <span>Establishing connection to IDE...</span>
-            </div>
-          </div>
-        )}
-        
-        {connectionStatus === 'disconnected' && (
-          <div className="mt-4 p-3 bg-background/50 rounded-lg border border-border/50 fade-in">
-            <p className="text-sm text-muted-foreground">
-              Please check your IDE extension and try reconnecting.
-            </p>
-          </div>
-        )}
+        <ConnectionStatusDetails connectionStatus={connectionStatus} />
       </CardContent>
     </Card>
   );
