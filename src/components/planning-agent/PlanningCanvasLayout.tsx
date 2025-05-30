@@ -1,9 +1,7 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ChatInterface } from "./ChatInterface";
 import { PlanningCanvas } from "./PlanningCanvas";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 
 interface PlanningCanvasLayoutProps {
   selectedProject: string;
@@ -12,7 +10,7 @@ interface PlanningCanvasLayoutProps {
 }
 
 export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWorkflow }: PlanningCanvasLayoutProps) => {
-  const [isCanvasOpen, setIsCanvasOpen] = useState(true);
+  const [isCanvasOpen, setIsCanvasOpen] = useState(false);
 
   const handleToggleCanvas = () => {
     setIsCanvasOpen(!isCanvasOpen);
@@ -20,38 +18,32 @@ export const PlanningCanvasLayout = ({ selectedProject, onCreateTask, onTrackWor
 
   return (
     <div className="relative h-full">
-      {/* Desktop Layout with Resizable Panels */}
+      {/* Desktop Layout - Sidebar approach */}
       <div className="hidden lg:block h-full">
-        {isCanvasOpen ? (
-          <ResizablePanelGroup direction="horizontal" className="h-full">
-            <ResizablePanel defaultSize={35} minSize={25} maxSize={60}>
-              <Card className="h-full card-enhanced">
-                <ChatInterface 
-                  onCreateTask={onCreateTask}
-                  onTrackWorkflow={onTrackWorkflow}
-                  onToggleCanvas={handleToggleCanvas}
-                />
-              </Card>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={65} minSize={40}>
-              <PlanningCanvas 
-                selectedProject={selectedProject} 
-                isOpen={isCanvasOpen}
-                onToggle={handleToggleCanvas}
-                className="h-full"
+        <div className={`flex h-full transition-all duration-300 ${isCanvasOpen ? 'mr-[50vw]' : ''}`}>
+          {/* Chat Interface - Full width when canvas closed, half width when open */}
+          <div className="w-full h-full">
+            <Card className="h-full card-enhanced">
+              <ChatInterface 
+                onCreateTask={onCreateTask}
+                onTrackWorkflow={onTrackWorkflow}
+                onToggleCanvas={handleToggleCanvas}
               />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        ) : (
-          <Card className="h-full card-enhanced">
-            <ChatInterface 
-              onCreateTask={onCreateTask}
-              onTrackWorkflow={onTrackWorkflow}
-              onToggleCanvas={handleToggleCanvas}
-            />
-          </Card>
-        )}
+            </Card>
+          </div>
+        </div>
+
+        {/* Canvas Sidebar - Slides from right */}
+        <div className={`fixed top-0 right-0 h-full w-1/2 z-40 transform transition-transform duration-300 ${
+          isCanvasOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}>
+          <PlanningCanvas 
+            selectedProject={selectedProject} 
+            isOpen={isCanvasOpen}
+            onToggle={handleToggleCanvas}
+            className="h-full"
+          />
+        </div>
       </div>
 
       {/* Mobile/Tablet Layout (unchanged) */}

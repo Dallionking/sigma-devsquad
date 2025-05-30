@@ -49,7 +49,7 @@ const PlanningAgent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-hidden">
       {/* Enhanced skip to main content for accessibility */}
       <a 
         href="#main-content" 
@@ -65,19 +65,21 @@ const PlanningAgent = () => {
         agents={agents}
       />
 
-      <main id="main-content" className="container-responsive py-responsive fade-in">
-        <PlanningAgentHeader 
-          onCreateTask={handleCreateTask}
-          onTrackWorkflow={handleTrackWorkflow}
-        />
-
-        {/* New Canvas-based Layout */}
-        <div className="h-[calc(100vh-200px)] min-h-[600px]">
-          <PlanningCanvasLayout 
-            selectedProject={currentProject?.id || "ai-workforce"}
+      <main id="main-content" className="h-[calc(100vh-64px)]">
+        <div className="container-responsive py-responsive h-full">
+          <PlanningAgentHeader 
             onCreateTask={handleCreateTask}
             onTrackWorkflow={handleTrackWorkflow}
           />
+
+          {/* Canvas-based Layout - Full viewport management */}
+          <div className="h-[calc(100%-80px)] min-h-[600px]">
+            <PlanningCanvasLayout 
+              selectedProject={currentProject?.id || "ai-workforce"}
+              onCreateTask={handleCreateTask}
+              onTrackWorkflow={handleTrackWorkflow}
+            />
+          </div>
         </div>
 
         {/* Enhanced Dialog Manager */}
