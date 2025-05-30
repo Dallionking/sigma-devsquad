@@ -4,3 +4,30 @@
 @import './styles/components.css';
 @import './styles/animations.css';
 @import './styles/utilities.css';
+
+/* Enhanced responsive typography and brand colors */
+@layer utilities {
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .heading-responsive {
+    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl;
+  }
+  
+  .gradient-brand {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, #3b82f6 50%, #8b5cf6 100%);
+  }
+  
+  .text-gradient-brand {
+    @apply bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+}
+
+/* Touch-friendly sizing for mobile */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
