@@ -49,6 +49,10 @@ export const TeamCreationDialog = ({ children }: TeamCreationDialogProps) => {
     setObjectives(objectives.filter((_, i) => i !== index));
   };
 
+  const handleTeamTypeChange = (value: string) => {
+    setType(value as TeamType);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -118,7 +122,7 @@ export const TeamCreationDialog = ({ children }: TeamCreationDialogProps) => {
 
           <div className="space-y-2">
             <Label htmlFor="team-type">Team Type *</Label>
-            <Select value={type} onValueChange={setType}>
+            <Select value={type} onValueChange={handleTeamTypeChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select team type" />
               </SelectTrigger>

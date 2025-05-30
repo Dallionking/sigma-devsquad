@@ -65,6 +65,14 @@ export const AgentAdditionDialog = ({ teamId, children }: AgentAdditionDialogPro
     setFrameworks(frameworks.filter((_, i) => i !== index));
   };
 
+  const handleRoleChange = (value: string) => {
+    setRole(value as TeamRole);
+  };
+
+  const handleSpecializationChange = (value: string) => {
+    setSpecialization(value as AgentSpecialization);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -139,7 +147,7 @@ export const AgentAdditionDialog = ({ teamId, children }: AgentAdditionDialogPro
 
           <div className="space-y-2">
             <Label htmlFor="agent-role">Role *</Label>
-            <Select value={role} onValueChange={setRole}>
+            <Select value={role} onValueChange={handleRoleChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
@@ -155,7 +163,7 @@ export const AgentAdditionDialog = ({ teamId, children }: AgentAdditionDialogPro
 
           <div className="space-y-2">
             <Label htmlFor="agent-specialization">Specialization *</Label>
-            <Select value={specialization} onValueChange={setSpecialization}>
+            <Select value={specialization} onValueChange={handleSpecializationChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select specialization" />
               </SelectTrigger>
