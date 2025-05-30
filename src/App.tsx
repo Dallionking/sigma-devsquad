@@ -11,6 +11,7 @@ import LLMIntegration from "./pages/LLMIntegration";
 import AgentConfiguration from "./pages/AgentConfiguration";
 import MCPManagement from "./pages/MCPManagement";
 import IDEIntegration from "./pages/IDEIntegration";
+import PlanningAgent from "./pages/PlanningAgent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/agent-configuration" element={<AgentConfiguration />} />
             <Route path="/mcp-management" element={<MCPManagement />} />
             <Route path="/ide-integration" element={<IDEIntegration />} />
+            <Route path="/planning-agent" element={<PlanningAgent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

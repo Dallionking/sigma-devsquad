@@ -1,5 +1,5 @@
 
-import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun } from "lucide-react";
+import { Bell, Settings, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ViewMode, Agent } from "@/pages/Index";
@@ -32,6 +32,7 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
   const isAgentConfigPage = location.pathname === "/agent-configuration";
   const isMCPPage = location.pathname === "/mcp-management";
   const isIDEPage = location.pathname === "/ide-integration";
+  const isPlanningAgentPage = location.pathname === "/planning-agent";
 
   return (
     <header className="bg-card border-b border-border px-6 py-4">
@@ -94,6 +95,14 @@ export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
               onClick={() => navigate("/")}
             >
               Dashboard
+            </Button>
+            <Button 
+              variant={isPlanningAgentPage ? "default" : "ghost"} 
+              size="sm"
+              onClick={() => navigate("/planning-agent")}
+            >
+              <Layers className="w-4 h-4 mr-2" />
+              Planning Agent
             </Button>
             <Button 
               variant={isAgentConfigPage ? "default" : "ghost"} 
