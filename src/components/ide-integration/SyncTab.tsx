@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { Sync, RefreshCw, CheckCircle, AlertTriangle, Clock, Download, Upload } from "lucide-react";
+import { RefreshCcw, CheckCircle, AlertTriangle, Clock, Download, Upload } from "lucide-react";
 
 interface IDE {
   name: string;
@@ -76,7 +76,7 @@ export const SyncTab = ({ ides, selectedIDE }: SyncTabProps) => {
       case "syncing":
         return <Clock className="w-4 h-4 text-blue-500" />;
       default:
-        return <RefreshCw className="w-4 h-4 text-gray-500" />;
+        return <RefreshCcw className="w-4 h-4 text-gray-500" />;
     }
   };
 
@@ -99,7 +99,7 @@ export const SyncTab = ({ ides, selectedIDE }: SyncTabProps) => {
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Sync className={`w-5 h-5 ${syncStatus.isActive ? 'text-green-500 animate-spin' : 'text-gray-500'}`} />
+              <RefreshCcw className={`w-5 h-5 ${syncStatus.isActive ? 'text-green-500 animate-spin' : 'text-gray-500'}`} />
               <div>
                 <p className="font-medium text-card-foreground">
                   {syncStatus.isActive ? 'Synchronizing...' : 'Sync Disabled'}
@@ -137,7 +137,7 @@ export const SyncTab = ({ ides, selectedIDE }: SyncTabProps) => {
 
           <div className="flex space-x-2">
             <Button className="flex-1">
-              <RefreshCw className="w-4 h-4 mr-1" />
+              <RefreshCcw className="w-4 h-4 mr-1" />
               Force Sync
             </Button>
             <Button variant="outline" className="flex-1">

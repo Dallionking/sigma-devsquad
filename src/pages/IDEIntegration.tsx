@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Monitor, FolderOpen, Terminal, Play, Sync, Code } from "lucide-react";
+import { Monitor, FolderOpen, Terminal, Play, RefreshCcw, Code } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { ConnectionStatusTab } from "@/components/ide-integration/ConnectionStatusTab";
 import { ConfigurationTab } from "@/components/ide-integration/ConfigurationTab";
@@ -117,7 +117,7 @@ export const IDEIntegration = () => {
                 <span>Execute</span>
               </TabsTrigger>
               <TabsTrigger value="sync" className="flex items-center space-x-2">
-                <Sync className="w-4 h-4" />
+                <RefreshCcw className="w-4 h-4" />
                 <span>Sync</span>
               </TabsTrigger>
             </TabsList>
