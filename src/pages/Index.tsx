@@ -43,8 +43,8 @@ const Index = () => {
   const { tasks } = taskContext;
   const { messages } = messageContext;
 
-  // Check if there's any selection to show the detail panel
-  const hasSelection = selectedAgent || selectedTask || selectedMessage || selectedTeam || selectedAgentProfile;
+  // Check if there's any selection to show the detail panel - properly convert to boolean
+  const hasSelection = Boolean(selectedAgent || selectedTask || selectedMessage || selectedTeam || selectedAgentProfile);
 
   const handleDismissSelection = () => {
     setSelectedAgent(null);
