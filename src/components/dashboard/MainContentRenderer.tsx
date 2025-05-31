@@ -4,6 +4,7 @@ import { MainWorkflowArea } from "./MainWorkflowArea";
 import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { DashboardOverview } from "./DashboardOverview";
+import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 
@@ -82,8 +83,14 @@ export const MainContentRenderer = ({
       )}
       
       {/* Main content area */}
-      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6">
+      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6 space-y-6">
         {renderMainContent()}
+        
+        {/* User Presence UI - Always visible for collaboration */}
+        <UserPresenceUI 
+          componentId={showTeamView ? 'team-view' : 'individual-view'}
+          projectId="main-dashboard"
+        />
       </div>
     </>
   );
