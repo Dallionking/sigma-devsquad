@@ -6,6 +6,7 @@ import { AgentSidebar } from "./AgentSidebar";
 import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
 import { CompactTeamHierarchy } from "../teams/CompactTeamHierarchy";
+import { cn } from "@/lib/utils";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -50,8 +51,14 @@ export const SidebarRenderer = ({
   // In team view, show Compact Team Hierarchy
   if (showTeamView) {
     return (
-      <div className="h-full bg-card/50 dark:bg-card/50">
-        <div className="p-3">
+      <div className={cn(
+        "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300",
+        collapsed ? "w-16" : "w-64"
+      )}>
+        <div className={cn(
+          "transition-all duration-300",
+          collapsed ? "p-2" : "p-4"
+        )}>
           <CompactTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
@@ -77,8 +84,14 @@ export const SidebarRenderer = ({
       );
     case 'communication':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className={collapsed ? "p-2" : "p-4"}>
+        <div className={cn(
+          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300",
+          collapsed ? "w-16" : "w-80"
+        )}>
+          <div className={cn(
+            "h-full transition-all duration-300",
+            collapsed ? "p-2" : "p-0"
+          )}>
             <CommunicationHistory
               messages={messages}
               selectedMessage={selectedMessage}
@@ -89,8 +102,14 @@ export const SidebarRenderer = ({
       );
     case 'tasks':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className={collapsed ? "p-2" : "p-4"}>
+        <div className={cn(
+          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300",
+          collapsed ? "w-16" : "w-80"
+        )}>
+          <div className={cn(
+            "h-full transition-all duration-300",
+            collapsed ? "p-2" : "p-4"
+          )}>
             <TaskManagement
               tasks={tasks}
               agents={agents}
@@ -102,8 +121,14 @@ export const SidebarRenderer = ({
       );
     case 'messages':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className={collapsed ? "p-2" : "p-4"}>
+        <div className={cn(
+          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300",
+          collapsed ? "w-16" : "w-80"
+        )}>
+          <div className={cn(
+            "h-full transition-all duration-300",
+            collapsed ? "p-2" : "p-4"
+          )}>
             <CommunicationHistory
               messages={messages}
               selectedMessage={selectedMessage}

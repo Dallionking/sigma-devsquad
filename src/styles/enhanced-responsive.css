@@ -9,3 +9,128 @@
 @import './performance-utilities.css';
 @import './layout-consistency.css';
 @import './mobile/index.css';
+
+@layer utilities {
+  /* Sidebar specific responsive utilities */
+  .sidebar-responsive {
+    @apply transition-all duration-300 ease-in-out;
+    min-width: 0; /* Prevent sidebar from breaking layout */
+  }
+
+  .sidebar-collapsed {
+    @apply w-16;
+  }
+
+  .sidebar-expanded {
+    @apply w-80 xl:w-96 2xl:w-[400px];
+  }
+
+  /* Navigation item responsive utilities */
+  .nav-item-collapsed {
+    @apply h-12 w-12 p-0 flex items-center justify-center;
+  }
+
+  .nav-item-expanded {
+    @apply h-11 px-3 py-2 justify-start;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  .interactive-element {
+    @apply transition-all duration-200 ease-in-out;
+    @apply hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Better badge responsive behavior */
+  .badge-responsive {
+    @apply px-2 py-1 min-w-[1.5rem] h-6 flex items-center justify-center;
+    @apply transition-all duration-200;
+  }
+
+  /* Improved card hover effects */
+  .card-interactive {
+    @apply transition-all duration-200 hover:shadow-md;
+    @apply hover:scale-[1.02] active:scale-[0.98];
+    @apply border border-border hover:border-primary/20;
+  }
+
+  /* Avatar with status indicator */
+  .avatar-with-status {
+    @apply relative ring-2 ring-background;
+  }
+
+  .status-indicator {
+    @apply absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-background;
+    @apply transition-all duration-200;
+  }
+
+  /* Responsive text truncation with better tooltips */
+  .text-truncate-responsive {
+    @apply truncate min-w-0;
+    max-width: 100%;
+  }
+
+  /* Better focus states for accessibility */
+  .focus-enhanced {
+    @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none;
+  }
+
+  /* Smooth backdrop blur for overlays */
+  .backdrop-blur-responsive {
+    @apply backdrop-blur-sm bg-background/95;
+  }
+
+  /* Enhanced scroll areas */
+  .scroll-area-enhanced {
+    @apply overflow-hidden;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .scroll-area-enhanced::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-area-enhanced::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-area-enhanced::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  .scroll-area-enhanced::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--border)) / 0.8;
+  }
+}
+
+/* Dark mode adjustments for better contrast */
+@media (prefers-color-scheme: dark) {
+  .sidebar-responsive {
+    border-color: hsl(var(--border) / 0.5);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-responsive,
+  .interactive-element,
+  .card-interactive,
+  .status-indicator,
+  .badge-responsive {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .sidebar-responsive {
+    border-width: 2px;
+  }
+  
+  .card-interactive {
+    border-width: 2px;
+  }
+}

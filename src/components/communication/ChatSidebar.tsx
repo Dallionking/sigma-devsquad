@@ -11,11 +11,11 @@ import {
   Search, 
   History,
   Plus,
-  Menu,
   X
 } from "lucide-react";
 import { useAgents } from "@/contexts/AgentContext";
 import { ResponsiveText } from "./ResponsiveText";
+import { DynamicText, TruncatedText } from "@/components/ui/dynamic-text";
 import { cn } from "@/lib/utils";
 
 interface ChatSidebarProps {
@@ -49,132 +49,172 @@ export const ChatSidebar = ({
 
   return (
     <div className={cn(
+      // Base container with proper transitions
+      "flex flex-col h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 ease-in-out",
       // Mobile: Full overlay when open, hidden when closed
-      "absolute inset-0 z-50 bg-background transform transition-transform duration-300 ease-in-out lg:relative lg:transform-none lg:z-auto",
-      // Mobile positioning
+      "absolute inset-0 z-50 transform lg:relative lg:transform-none lg:z-auto",
+      // Mobile positioning with smooth animations
       isMobile && !isSidebarOpen && "-translate-x-full",
       isMobile && isSidebarOpen && "translate-x-0",
-      // Desktop sizing
+      // Desktop sizing with responsive widths
       "lg:w-80 xl:w-96 2xl:w-[400px]",
-      "lg:border-r lg:bg-muted/20"
+      // Background and borders
+      "lg:bg-sidebar-background"
     )}>
-      <div className="h-full flex flex-col">
-        {/* Sidebar Header */}
-        <div className="p-3 sm:p-4 lg:p-4 xl:p-6 border-b flex-shrink-0">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
-              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-              <ResponsiveText 
-                variant="heading" 
-                truncate={true}
-                className="text-high-contrast"
-              >
-                Agent Communication
-              </ResponsiveText>
-            </div>
-            
-            {isMobile && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsSidebarOpen(false)}
-                className="touch-target shrink-0 min-h-[44px] min-w-[44px] p-2"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            )}
+      {/* Sidebar Header - Fixed */}
+      <div className="flex-shrink-0 p-4 border-b border-sidebar-border bg-sidebar-background/95 backdrop-blur-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <MessageSquare className="w-5 h-5 flex-shrink-0 text-primary" />
+            <DynamicText 
+              variant="lg" 
+              className="font-semibold text-sidebar-foreground truncate"
+              highContrast
+            >
+              Agent Communication
+            </DynamicText>
           </div>
           
-          {/* View Toggle Buttons - Enhanced for touch */}
-          <div className="flex gap-1 mb-4">
+          {isMobile && (
             <Button
-              variant={activeView === "chat" ? "default" : "outline"}
+              variant="ghost"
               size="sm"
-              onClick={() => setActiveView("chat")}
-              className="flex-1 text-responsive-xs px-2 sm:px-3 btn-mobile min-h-[44px] touch-manipulation"
+              onClick={() => setIsSidebarOpen(false)}
+              className="flex-shrink-0 h-10 w-10 p-0 hover:bg-sidebar-accent transition-colors"
             >
-              Chat
+              <X className="w-4 h-4" />
             </Button>
-            <Button
-              variant={activeView === "history" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveView("history")}
-              className="flex-1 text-responsive-xs px-2 sm:px-3 btn-mobile min-h-[44px] touch-manipulation"
-            >
-              <History className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="hidden xs:inline truncate">History</span>
-            </Button>
-            <Button
-              variant={activeView === "tasks" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveView("tasks")}
-              className="flex-1 text-responsive-xs px-2 sm:px-3 btn-mobile min-h-[44px] touch-manipulation"
-            >
-              <Plus className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="hidden xs:inline truncate">Task</span>
-            </Button>
-          </div>
-
-          {/* Search Bar for History */}
-          {activeView === "history" && (
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search messages..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 text-responsive-sm h-11 no-zoom min-h-[44px]"
-              />
-            </div>
           )}
         </div>
+        
+        {/* View Toggle Buttons - Enhanced for better spacing */}
+        <div className="flex gap-1 mb-4">
+          <Button
+            variant={activeView === "chat" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setActiveView("chat")}
+            className={cn(
+              "flex-1 h-10 px-3 transition-all duration-200",
+              "hover:scale-[1.02] active:scale-[0.98]",
+              activeView === "chat" && "shadow-md"
+            )}
+          >
+            <MessageSquare className="w-4 h-4 mr-2" />
+            <DynamicText variant="sm" className="font-medium">
+              Chat
+            </DynamicText>
+          </Button>
+          <Button
+            variant={activeView === "history" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setActiveView("history")}
+            className={cn(
+              "flex-1 h-10 px-3 transition-all duration-200",
+              "hover:scale-[1.02] active:scale-[0.98]",
+              activeView === "history" && "shadow-md"
+            )}
+          >
+            <History className="w-4 h-4 mr-2" />
+            <DynamicText variant="sm" className="font-medium">
+              History
+            </DynamicText>
+          </Button>
+          <Button
+            variant={activeView === "tasks" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setActiveView("tasks")}
+            className={cn(
+              "flex-1 h-10 px-3 transition-all duration-200",
+              "hover:scale-[1.02] active:scale-[0.98]",
+              activeView === "tasks" && "shadow-md"
+            )}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            <DynamicText variant="sm" className="font-medium">
+              Task
+            </DynamicText>
+          </Button>
+        </div>
 
-        {/* Sidebar Content */}
-        <ScrollArea className="flex-1">
-          <div className="p-3 sm:p-4 space-y-2">
-            {getAvailableAgents().map(agent => (
-              <div
-                key={agent.id}
-                className={cn(
-                  "flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors touch-target min-h-[60px]",
-                  "touch-manipulation active:scale-95 transition-transform duration-150",
-                  selectedAgent === agent.id ? "bg-primary text-primary-foreground" : "hover:bg-muted active:bg-muted/80"
-                )}
-                onClick={() => setSelectedAgent(agent.id)}
-              >
-                <div className="relative shrink-0">
-                  <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
+        {/* Search Bar for History - Improved styling */}
+        {activeView === "history" && (
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search messages..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-10 bg-background border-border focus:ring-2 focus:ring-primary"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Sidebar Content - Scrollable */}
+      <ScrollArea className="flex-1 overflow-hidden">
+        <div className="p-4 space-y-3">
+          {getAvailableAgents().map(agent => (
+            <Card
+              key={agent.id}
+              className={cn(
+                "p-3 cursor-pointer transition-all duration-200 group hover:shadow-md",
+                "border border-border hover:border-primary/20",
+                "hover:scale-[1.02] active:scale-[0.98]",
+                selectedAgent === agent.id 
+                  ? "bg-primary/10 border-primary shadow-md ring-1 ring-primary/20" 
+                  : "bg-card hover:bg-accent/50"
+              )}
+              onClick={() => setSelectedAgent(agent.id)}
+            >
+              <div className="flex items-center gap-3">
+                <div className="relative flex-shrink-0">
+                  <Avatar className="w-10 h-10 ring-2 ring-background">
                     <AvatarImage src={agent.avatar} />
-                    <AvatarFallback className="text-responsive-xs">
-                      {agent.name.split(' ').map(n => n[0]).join('')}
+                    <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                      <DynamicText variant="sm" className="font-bold">
+                        {agent.name.split(' ').map(n => n[0]).join('')}
+                      </DynamicText>
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+                  <div className={cn(
+                    "absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-background transition-all",
+                    agent.status === "active" ? "bg-green-500" : "bg-yellow-500"
+                  )} />
                 </div>
+                
                 <div className="flex-1 min-w-0">
-                  <ResponsiveText 
-                    variant="default" 
-                    truncate={true}
-                    className="font-weight-responsive contrast-enhanced"
+                  <TruncatedText 
+                    lines={1}
+                    className="font-semibold text-card-foreground group-hover:text-primary transition-colors"
                   >
                     {agent.name}
-                  </ResponsiveText>
-                  <ResponsiveText 
-                    variant="muted" 
-                    truncate={true}
-                    className="contrast-enhanced-muted"
+                  </TruncatedText>
+                  <TruncatedText 
+                    lines={1}
+                    className="text-muted-foreground mt-1 capitalize"
                   >
                     {agent.specialization.replace(/-/g, ' ')}
-                  </ResponsiveText>
+                  </TruncatedText>
                 </div>
-                <Badge variant="secondary" className="text-responsive-xs px-2 py-1 shrink-0">
-                  {agent.status}
-                </Badge>
+                
+                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                  <Badge 
+                    variant={agent.status === "active" ? "default" : "secondary"} 
+                    className={cn(
+                      "text-xs px-2 py-1 transition-all",
+                      agent.status === "active" && "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                    )}
+                  >
+                    <DynamicText variant="xs" className="font-medium capitalize">
+                      {agent.status}
+                    </DynamicText>
+                  </Badge>
+                </div>
               </div>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
+            </Card>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 };

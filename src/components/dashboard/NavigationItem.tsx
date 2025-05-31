@@ -37,41 +37,44 @@ export const NavigationItem = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        // Base styles
-        "w-full justify-start transition-all duration-200 ease-in-out group relative",
-        // Collapsed styles
-        isCollapsed && "h-10 w-10 p-0",
-        // Active state styles
+        // Base styles with improved responsive behavior
+        "w-full justify-start transition-all duration-300 ease-in-out group relative",
+        "hover:scale-[1.02] active:scale-[0.98]",
+        // Collapsed styles with better spacing
+        isCollapsed ? "h-12 w-12 p-0 flex items-center justify-center" : "h-11 px-3 py-2",
+        // Active state styles with better contrast
         isActive && [
-          "bg-primary text-primary-foreground shadow-sm",
-          "hover:bg-primary/90"
+          "bg-primary text-primary-foreground shadow-md",
+          "hover:bg-primary/90 hover:shadow-lg"
         ],
-        // Inactive state styles
+        // Inactive state styles with smooth transitions
         !isActive && [
           "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-          "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-accent-foreground"
+          "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-accent-foreground",
+          "hover:shadow-sm"
         ],
         // Disabled styles
-        disabled && "opacity-50 cursor-not-allowed",
+        disabled && "opacity-50 cursor-not-allowed hover:scale-100",
         // Focus styles for accessibility
-        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
         className
       )}
       asChild={href ? true : false}
     >
       {href ? (
-        <a href={href} className="flex items-center gap-3 w-full">
+        <a href={href} className="flex items-center gap-3 w-full min-w-0">
           <Icon className={cn(
-            "w-4 h-4 flex-shrink-0 transition-transform duration-200",
-            "group-hover:scale-110"
+            "flex-shrink-0 transition-all duration-300",
+            isCollapsed ? "w-5 h-5" : "w-4 h-4",
+            "group-hover:scale-110 group-active:scale-95"
           )} />
           {!isCollapsed && (
             <>
               <TruncatedText 
                 lines={1} 
-                variant="label"
-                className="flex-1 text-left font-medium"
-                expandOnHover={true}
+                className="flex-1 text-left font-medium text-dynamic-sm min-w-0"
+                expandOnHover={false}
+                showTooltip={false}
               >
                 {label}
               </TruncatedText>
@@ -79,7 +82,8 @@ export const NavigationItem = ({
                 <Badge 
                   variant={isActive ? "secondary" : "outline"} 
                   className={cn(
-                    "text-xs px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center",
+                    "text-xs px-2 py-1 min-w-[1.5rem] h-6 flex items-center justify-center flex-shrink-0",
+                    "transition-all duration-200",
                     isActive && "bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30"
                   )}
                 >
@@ -92,18 +96,19 @@ export const NavigationItem = ({
           )}
         </a>
       ) : (
-        <>
+        <div className="flex items-center gap-3 w-full min-w-0">
           <Icon className={cn(
-            "w-4 h-4 flex-shrink-0 transition-transform duration-200",
-            "group-hover:scale-110"
+            "flex-shrink-0 transition-all duration-300",
+            isCollapsed ? "w-5 h-5" : "w-4 h-4",
+            "group-hover:scale-110 group-active:scale-95"
           )} />
           {!isCollapsed && (
             <>
               <TruncatedText 
                 lines={1} 
-                variant="label"
-                className="flex-1 text-left font-medium"
-                expandOnHover={true}
+                className="flex-1 text-left font-medium text-dynamic-sm min-w-0"
+                expandOnHover={false}
+                showTooltip={false}
               >
                 {label}
               </TruncatedText>
@@ -111,7 +116,8 @@ export const NavigationItem = ({
                 <Badge 
                   variant={isActive ? "secondary" : "outline"} 
                   className={cn(
-                    "text-xs px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center",
+                    "text-xs px-2 py-1 min-w-[1.5rem] h-6 flex items-center justify-center flex-shrink-0",
+                    "transition-all duration-200",
                     isActive && "bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30"
                   )}
                 >
@@ -122,7 +128,7 @@ export const NavigationItem = ({
               )}
             </>
           )}
-        </>
+        </div>
       )}
     </Button>
   );
@@ -131,28 +137,28 @@ export const NavigationItem = ({
   if (isCollapsed) {
     return (
       <TooltipProvider>
-        <Tooltip delayDuration={0}>
+        <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
             <div className="relative">
               {buttonContent}
               {badge && (
                 <Badge 
                   variant="destructive" 
-                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
+                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center animate-pulse"
                 >
-                  <DynamicText variant="xs" className="font-medium">
+                  <DynamicText variant="xs" className="font-bold">
                     {badge}
                   </DynamicText>
                 </Badge>
               )}
             </div>
           </TooltipTrigger>
-          <TooltipContent side="right" className="font-medium">
+          <TooltipContent side="right" className="font-medium z-50">
             <DynamicText variant="sm" className="font-medium">
               {label}
             </DynamicText>
             {badge && (
-              <DynamicText variant="xs" className="opacity-70">
+              <DynamicText variant="xs" className="opacity-70 mt-1">
                 {badge} items
               </DynamicText>
             )}
