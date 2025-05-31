@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Clock, Memory, Activity } from "lucide-react";
+import { Zap, Clock, MemoryStick, Activity } from "lucide-react";
 
 interface PerformanceData {
   renderTime?: number;
@@ -58,7 +57,7 @@ export const PerformanceMetrics = ({ metrics, showDetails = true }: PerformanceM
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
-            <Memory className="w-4 h-4" />
+            <MemoryStick className="w-4 h-4" />
             Memory Usage
           </CardTitle>
         </CardHeader>

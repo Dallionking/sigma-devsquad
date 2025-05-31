@@ -39,6 +39,9 @@ export const StateDebugger = ({
     clearDebugHistory
   } = useStateDebugger({
     sliceId: selectedStateSlice,
+    maxEntries: 1000,
+    captureStackTrace: false,
+    autoCapture: autoRefresh,
     enableRealTimeTracking: autoRefresh,
     trackPerformance: true
   });

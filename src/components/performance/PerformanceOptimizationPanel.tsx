@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, Zap, Memory, Cpu, HardDrive } from "lucide-react";
+import { Settings, Zap, MemoryStick, Cpu, HardDrive } from "lucide-react";
 
 interface OptimizationSettings {
   enableMemoization: boolean;
@@ -180,7 +179,7 @@ export const PerformanceOptimizationPanel = () => {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <Memory className="w-8 h-8 mx-auto mb-2 text-green-500" />
+                  <MemoryStick className="w-8 h-8 mx-auto mb-2 text-green-500" />
                   <div className="text-sm font-medium">Memory Efficiency</div>
                   <div className="text-2xl font-bold">87%</div>
                 </CardContent>
