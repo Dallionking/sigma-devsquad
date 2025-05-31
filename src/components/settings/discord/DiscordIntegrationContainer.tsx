@@ -35,12 +35,21 @@ export const DiscordIntegrationContainer = ({ searchQuery = "" }: DiscordIntegra
 
   const { toast } = useToast();
 
-  // Calculate configuration status
+  // Calculate configuration status - convert notification settings to Record<string, boolean>
+  const notificationSettingsRecord: Record<string, boolean> = {
+    agentStatus: notificationSettings.agentStatus,
+    taskCompletion: notificationSettings.taskCompletion,
+    systemError: notificationSettings.systemError,
+    planningAgent: notificationSettings.planningAgent,
+    directMessaging: notificationSettings.directMessaging,
+    roleBasedNotifications: notificationSettings.roleBasedNotifications
+  };
+
   const { status, details } = useConfigurationStatus({
     connectionInfo,
     webhookConfig,
     selectedChannels,
-    notificationSettings,
+    notificationSettings: notificationSettingsRecord,
     platform: 'discord'
   });
 
@@ -183,7 +192,12 @@ export const DiscordIntegrationContainer = ({ searchQuery = "" }: DiscordIntegra
 
         {connectionInfo.isConnected && (
           <DiscordNotificationSettings
-            {...notificationSettings}
+            agentStatusNotifications={notificationSettings.agentStatus}
+            taskCompletionNotifications={notificationSettings.taskCompletion}
+            systemErrorNotifications={notificationSettings.systemError}
+            planningAgentNotifications={notificationSettings.planningAgent}
+            directMessaging={notificationSettings.directMessaging}
+            roleBasedNotifications={notificationSettings.roleBasedNotifications}
             onAgentStatusChange={(value) => setNotificationSettings(prev => ({ ...prev, agentStatus: value }))}
             onTaskCompletionChange={(value) => setNotificationSettings(prev => ({ ...prev, taskCompletion: value }))}
             onSystemErrorChange={(value) => setNotificationSettings(prev => ({ ...prev, systemError: value }))}

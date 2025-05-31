@@ -35,12 +35,20 @@ export const TelegramIntegrationContainer = ({ searchQuery = "" }: TelegramInteg
 
   const { toast } = useToast();
 
-  // Calculate configuration status
+  // Calculate configuration status - convert notification settings to Record<string, boolean>
+  const notificationSettingsRecord: Record<string, boolean> = {
+    agentStatus: notificationSettings.agentStatus,
+    taskCompletion: notificationSettings.taskCompletion,
+    systemError: notificationSettings.systemError,
+    planningAgent: notificationSettings.planningAgent,
+    directMessaging: notificationSettings.directMessaging
+  };
+
   const { status, details } = useConfigurationStatus({
     connectionInfo,
     webhookConfig,
     selectedChannels,
-    notificationSettings,
+    notificationSettings: notificationSettingsRecord,
     platform: 'telegram'
   });
 
@@ -175,7 +183,11 @@ export const TelegramIntegrationContainer = ({ searchQuery = "" }: TelegramInteg
 
         {connectionInfo.isConnected && (
           <TelegramNotificationSettings
-            {...notificationSettings}
+            agentStatusNotifications={notificationSettings.agentStatus}
+            taskCompletionNotifications={notificationSettings.taskCompletion}
+            systemErrorNotifications={notificationSettings.systemError}
+            planningAgentNotifications={notificationSettings.planningAgent}
+            directMessaging={notificationSettings.directMessaging}
             onAgentStatusChange={(value) => setNotificationSettings(prev => ({ ...prev, agentStatus: value }))}
             onTaskCompletionChange={(value) => setNotificationSettings(prev => ({ ...prev, taskCompletion: value }))}
             onSystemErrorChange={(value) => setNotificationSettings(prev => ({ ...prev, systemError: value }))}

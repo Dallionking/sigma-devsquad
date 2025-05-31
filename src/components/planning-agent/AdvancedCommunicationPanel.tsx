@@ -11,6 +11,8 @@ import { PatternAnalysisDashboard } from "./PatternAnalysisDashboard";
 import { CommunicationFilters } from "./CommunicationFilters";
 import { HistoricalAnalysis } from "./HistoricalAnalysis";
 import { OptimizationSuggestions } from "./OptimizationSuggestions";
+import { CommunicationToolsHeader } from "./communication/CommunicationToolsHeader";
+import { AdvancedOptionsMenu } from "./communication/AdvancedOptionsMenu";
 import { MessageSquare, TrendingUp, Filter, Search, BarChart, Lightbulb, Zap } from "lucide-react";
 
 interface AdvancedCommunicationPanelProps {
@@ -26,26 +28,80 @@ export const AdvancedCommunicationPanel = ({
   selectedMessage,
   onMessageSelect
 }: AdvancedCommunicationPanelProps) => {
-  const [activeTab, setActiveTab] = useState("advanced");
+  const [activeTab, setActiveTab] = useState("realtime");
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const [messageTypeFilter, setMessageTypeFilter] = useState<string>("all");
   const [timeRange, setTimeRange] = useState<string>("24h");
+  const [isRealTimeActive, setIsRealTimeActive] = useState(true);
 
   // Calculate communication statistics
+  const communicationMetrics = {
+    activeConnections: messages.filter(m => 
+      new Date(m.timestamp).getTime() > Date.now() - 5 * 60 * 1000
+    ).length,
+    bottlenecks: agents.filter(a => a.status === "waiting").length,
+    decisionsPending: messages.filter(m => m.type === "request").length,
+    interventionsNeeded: agents.filter(a => a.status === "error").length
+  };
+
   const communicationStats = {
     totalMessages: messages.length,
     activeAgents: agents.filter(a => a.status === "working").length,
-    responseTime: "1.2s", // Mock average response time
-    throughput: `${Math.round(messages.length / 24)}msg/h` // Mock throughput
+    responseTime: "1.2s",
+    throughput: `${Math.round(messages.length / 24)}msg/h`
   };
 
   const handleIntervention = (type: string, agentId: string, data: any) => {
     console.log(`Intervention: ${type} for agent ${agentId}`, data);
-    // Handle intervention logic here
-    // This would typically communicate with the backend
   };
+
+  // Advanced options for the consolidated menu
+  const advancedOptions = [
+    {
+      id: "realtime-flow",
+      label: "Real-time Flow Analysis",
+      description: "Monitor live agent communication patterns and message flow with real-time updates",
+      icon: Zap,
+      action: () => setActiveTab("realtime")
+    },
+    {
+      id: "communication-graph",
+      label: "Network Graph View",
+      description: "Visualize agent relationships and communication pathways as an interactive network",
+      icon: MessageSquare,
+      action: () => setActiveTab("graph")
+    },
+    {
+      id: "message-inspection",
+      label: "Deep Message Analysis",
+      description: "Inspect individual messages with detailed metadata and content analysis",
+      icon: Search,
+      action: () => setActiveTab("inspection")
+    },
+    {
+      id: "pattern-analysis",
+      label: "Pattern Recognition",
+      description: "Identify communication patterns, trends, and behavioral insights across agents",
+      icon: BarChart,
+      action: () => setActiveTab("patterns")
+    },
+    {
+      id: "historical-trends",
+      label: "Historical Timeline",
+      description: "Analyze communication evolution and performance trends over time",
+      icon: TrendingUp,
+      action: () => setActiveTab("historical")
+    },
+    {
+      id: "optimization-suite",
+      label: "Performance Optimization",
+      description: "Get AI-powered suggestions for improving communication efficiency and workflow",
+      icon: Lightbulb,
+      action: () => setActiveTab("optimization")
+    }
+  ];
 
   return (
     <div className="space-y-6">
@@ -54,7 +110,7 @@ export const AdvancedCommunicationPanel = ({
           Advanced Agent Communication Panel
         </h2>
         <p className="text-muted-foreground">
-          Comprehensive analysis and visualization of agent interactions
+          Comprehensive analysis and visualization of agent interactions with AI-powered insights
         </p>
       </div>
 
@@ -101,6 +157,21 @@ export const AdvancedCommunicationPanel = ({
         </Card>
       </div>
 
+      {/* Enhanced Communication Tools Header */}
+      <CommunicationToolsHeader
+        isRealTimeActive={isRealTimeActive}
+        onToggleRealTime={() => setIsRealTimeActive(!isRealTimeActive)}
+        metrics={communicationMetrics}
+      />
+
+      {/* Consolidated Advanced Options */}
+      <AdvancedOptionsMenu
+        options={advancedOptions}
+        onOptionSelect={(optionId) => {
+          console.log(`Selected advanced option: ${optionId}`);
+        }}
+      />
+
       {/* Advanced Filters */}
       <CommunicationFilters
         agents={agents}
@@ -118,38 +189,16 @@ export const AdvancedCommunicationPanel = ({
 
       {/* Main Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="advanced">
-            <Zap className="w-4 h-4 mr-2" />
-            Advanced
-          </TabsTrigger>
-          <TabsTrigger value="graph">
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Graph
-          </TabsTrigger>
-          <TabsTrigger value="inspection">
-            <Search className="w-4 h-4 mr-2" />
-            Inspection
-          </TabsTrigger>
-          <TabsTrigger value="patterns">
-            <BarChart className="w-4 h-4 mr-2" />
-            Patterns
-          </TabsTrigger>
-          <TabsTrigger value="historical">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            Historical
-          </TabsTrigger>
-          <TabsTrigger value="optimization">
-            <Lightbulb className="w-4 h-4 mr-2" />
-            Optimize
-          </TabsTrigger>
-          <TabsTrigger value="filters">
-            <Filter className="w-4 h-4 mr-2" />
-            Advanced
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="realtime">Real-time</TabsTrigger>
+          <TabsTrigger value="graph">Network</TabsTrigger>
+          <TabsTrigger value="inspection">Analysis</TabsTrigger>
+          <TabsTrigger value="patterns">Patterns</TabsTrigger>
+          <TabsTrigger value="historical">Timeline</TabsTrigger>
+          <TabsTrigger value="optimization">Optimize</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="advanced" className="space-y-4">
+        <TabsContent value="realtime" className="space-y-4">
           <AdvancedCommunicationVisualization
             agents={agents}
             messages={filteredMessages}
@@ -195,47 +244,6 @@ export const AdvancedCommunicationPanel = ({
             messages={filteredMessages}
             agents={agents}
           />
-        </TabsContent>
-
-        <TabsContent value="filters" className="space-y-4">
-          <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">Advanced Filter Configuration</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium">Selected Agents</label>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {selectedAgents.map(agentId => {
-                      const agent = agents.find(a => a.id === agentId);
-                      return (
-                        <Badge key={agentId} variant="secondary">
-                          {agent?.name}
-                        </Badge>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Message Types</label>
-                  <Badge variant="outline" className="mt-2">
-                    {messageTypeFilter === "all" ? "All Types" : messageTypeFilter}
-                  </Badge>
-                </div>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium">Time Range</label>
-                <Badge variant="outline" className="ml-2">{timeRange}</Badge>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium">Search Query</label>
-                <div className="text-sm text-muted-foreground mt-1">
-                  {searchTerm || "No search term applied"}
-                </div>
-              </div>
-            </div>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
