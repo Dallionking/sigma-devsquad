@@ -10,6 +10,7 @@ import { AgentProvider } from "@/contexts/AgentContext";
 import { TaskProvider } from "@/contexts/TaskContext";
 import { MessageProvider } from "@/contexts/MessageContext";
 import { TeamProvider } from "@/contexts/TeamContext";
+import { FilterProvider } from "@/contexts/FilterContext";
 import { CurrentUserProvider } from "@/contexts/CurrentUserContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { DataPersistenceProvider } from "@/contexts/DataPersistenceContext";
@@ -33,31 +34,33 @@ const App = () => (
           <TaskProvider>
             <MessageProvider>
               <TeamProvider>
-                <CurrentUserProvider>
-                  <DataPersistenceProvider>
-                    {/* Wrap with WebSocket for real-time collaboration */}
-                    <WebSocketProvider userId="current-user" userName="Current User">
-                      <TooltipProvider>
-                        <Toaster />
-                        <Sonner />
-                        <BrowserRouter>
-                          <Routes>
-                            <Route path="/" element={<Index />} />
-                            <Route path="/settings" element={<Settings />} />
-                            <Route path="/llm-integration" element={<LLMIntegration />} />
-                            <Route path="/agent-configuration" element={<AgentConfiguration />} />
-                            <Route path="/agent-creation" element={<AgentCreation />} />
-                            <Route path="/mcp-management" element={<MCPManagement />} />
-                            <Route path="/ide-integration" element={<IDEIntegration />} />
-                            <Route path="/planning-agent" element={<PlanningAgent />} />
-                            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
-                        </BrowserRouter>
-                      </TooltipProvider>
-                    </WebSocketProvider>
-                  </DataPersistenceProvider>
-                </CurrentUserProvider>
+                <FilterProvider>
+                  <CurrentUserProvider>
+                    <DataPersistenceProvider>
+                      {/* Wrap with WebSocket for real-time collaboration */}
+                      <WebSocketProvider userId="current-user" userName="Current User">
+                        <TooltipProvider>
+                          <Toaster />
+                          <Sonner />
+                          <BrowserRouter>
+                            <Routes>
+                              <Route path="/" element={<Index />} />
+                              <Route path="/settings" element={<Settings />} />
+                              <Route path="/llm-integration" element={<LLMIntegration />} />
+                              <Route path="/agent-configuration" element={<AgentConfiguration />} />
+                              <Route path="/agent-creation" element={<AgentCreation />} />
+                              <Route path="/mcp-management" element={<MCPManagement />} />
+                              <Route path="/ide-integration" element={<IDEIntegration />} />
+                              <Route path="/planning-agent" element={<PlanningAgent />} />
+                              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                              <Route path="*" element={<NotFound />} />
+                            </Routes>
+                          </BrowserRouter>
+                        </TooltipProvider>
+                      </WebSocketProvider>
+                    </DataPersistenceProvider>
+                  </CurrentUserProvider>
+                </FilterProvider>
               </TeamProvider>
             </MessageProvider>
           </TaskProvider>

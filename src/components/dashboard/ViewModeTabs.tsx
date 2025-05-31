@@ -7,9 +7,13 @@ import {
   MessageSquare, 
   CheckSquare, 
   Mail,
-  Activity
+  Activity,
+  Filter
 } from "lucide-react";
 import { ViewMode } from "@/types";
+import { useFilters } from "@/contexts/FilterContext";
+import { FilterManager } from "./FilterManager";
+import { BreadcrumbNavigation } from "./BreadcrumbNavigation";
 import { cn } from "@/lib/utils";
 
 interface ViewModeTabsProps {
@@ -21,13 +25,18 @@ interface ViewModeTabsProps {
     tasks: number;
     messages: number;
   };
+  showFilters?: boolean;
 }
 
 export const ViewModeTabs = ({ 
   viewMode, 
   onViewModeChange, 
-  notificationCounts 
+  notificationCounts,
+  showFilters = true
 }: ViewModeTabsProps) => {
+  const { isFilterActive, filters } = useFilters();
+  const [showFilterPanel, setShowFilterPanel] = React.useState(false);
+
   const tabs = [
     {
       key: 'workflow' as ViewMode,
@@ -107,48 +116,86 @@ export const ViewModeTabs = ({
             </div>
           </div>
           
-          <div className="flex items-center gap-2 bg-background/60 backdrop-blur-sm rounded-xl p-1.5 border border-border/30">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = viewMode === tab.key;
-              
-              return (
-                <Button
-                  key={tab.key}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onViewModeChange(tab.key)}
-                  className={cn(
-                    "relative h-8 px-3 py-1.5 rounded-lg transition-all duration-300 border-1.5",
-                    "hover:shadow-md hover:scale-105 transform",
-                    isActive 
-                      ? `${tab.colors.activeBg} ${tab.colors.activeText} ${tab.colors.activeBorder} shadow-md` 
-                      : `${tab.colors.bg} ${tab.colors.text} ${tab.colors.border} hover:${tab.colors.activeBg}/20`
-                  )}
-                  title={tab.description}
-                >
-                  <Icon className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="font-medium text-xs">{tab.label}</span>
-                  
-                  {tab.count > 0 && (
-                    <Badge 
-                      variant="secondary" 
-                      className={cn(
-                        "ml-1.5 h-4 w-4 p-0 text-xs flex items-center justify-center rounded-full",
-                        isActive 
-                          ? "bg-white/20 text-white border-white/30" 
-                          : "bg-primary/80 text-primary-foreground"
-                      )}
-                    >
-                      {tab.count}
-                    </Badge>
-                  )}
-                </Button>
-              );
-            })}
+          <div className="flex items-center gap-2">
+            {/* Filter Toggle */}
+            {showFilters && (
+              <Button
+                variant={showFilterPanel ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowFilterPanel(!showFilterPanel)}
+                className={cn(
+                  "h-8 relative",
+                  isFilterActive && "ring-2 ring-primary/50"
+                )}
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filters
+                {isFilterActive && (
+                  <Badge variant="secondary" className="ml-1 h-4 w-4 p-0 text-xs bg-primary text-primary-foreground rounded-full">
+                    {filters.activeFiltersCount}
+                  </Badge>
+                )}
+              </Button>
+            )}
+            
+            {/* View Mode Tabs */}
+            <div className="flex items-center gap-2 bg-background/60 backdrop-blur-sm rounded-xl p-1.5 border border-border/30">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = viewMode === tab.key;
+                
+                return (
+                  <Button
+                    key={tab.key}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onViewModeChange(tab.key)}
+                    className={cn(
+                      "relative h-8 px-3 py-1.5 rounded-lg transition-all duration-300 border-1.5",
+                      "hover:shadow-md hover:scale-105 transform",
+                      isActive 
+                        ? `${tab.colors.activeBg} ${tab.colors.activeText} ${tab.colors.activeBorder} shadow-md` 
+                        : `${tab.colors.bg} ${tab.colors.text} ${tab.colors.border} hover:${tab.colors.activeBg}/20`
+                    )}
+                    title={tab.description}
+                  >
+                    <Icon className="w-3.5 h-3.5 mr-1.5" />
+                    <span className="font-medium text-xs">{tab.label}</span>
+                    
+                    {tab.count > 0 && (
+                      <Badge 
+                        variant="secondary" 
+                        className={cn(
+                          "ml-1.5 h-4 w-4 p-0 text-xs flex items-center justify-center rounded-full",
+                          isActive 
+                            ? "bg-white/20 text-white border-white/30" 
+                            : "bg-primary/80 text-primary-foreground"
+                        )}
+                      >
+                        {tab.count}
+                      </Badge>
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Breadcrumb Navigation */}
+      <BreadcrumbNavigation
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+      />
+
+      {/* Filter Panel */}
+      {showFilterPanel && showFilters && (
+        <FilterManager 
+          viewMode={viewMode}
+          className="animate-in slide-in-from-top duration-200"
+        />
+      )}
     </div>
   );
 };
