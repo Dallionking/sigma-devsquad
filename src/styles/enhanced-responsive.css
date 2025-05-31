@@ -27,6 +27,8 @@
   .xs\:h-\[calc\(100vh-180px\)\] { @media (min-width: 320px) { height: calc(100vh - 180px); } }
   .xs\:h-\[calc\(100\%-100px\)\] { @media (min-width: 320px) { height: calc(100% - 100px); } }
   .xs\:-translate-x-full { @media (min-width: 320px) { transform: translateX(-100%); } }
+  .xs\:inline { @media (min-width: 320px) { display: inline; } }
+  .xs\:hidden { @media (min-width: 320px) { display: none; } }
 
   /* Small mobile devices (375px) */
   .sm-mobile\:text-sm { @media (min-width: 375px) { font-size: 0.875rem; line-height: 1.25rem; } }
@@ -103,53 +105,86 @@
   .\32xl\:p-8 { @media (min-width: 1920px) { padding: 2rem; } }
   .\32xl\:text-2xl { @media (min-width: 1920px) { font-size: 1.5rem; line-height: 2rem; } }
 
-  /* Container responsive with fluid scaling */
-  .container-responsive {
-    @apply w-full mx-auto;
-    padding-left: clamp(1rem, 4vw, 3rem);
-    padding-right: clamp(1rem, 4vw, 3rem);
-    max-width: 1400px;
-  }
-
-  /* Touch-friendly targets */
+  /* Touch-friendly targets for mobile */
   .touch-target {
-    min-height: clamp(44px, 10vw, 48px);
-    min-width: clamp(44px, 10vw, 48px);
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Responsive typography scale */
-  .text-responsive-xs { font-size: clamp(0.75rem, 2vw, 0.875rem); }
-  .text-responsive-sm { font-size: clamp(0.875rem, 2.5vw, 1rem); }
-  .text-responsive-base { font-size: clamp(1rem, 3vw, 1.125rem); }
-  .text-responsive-lg { font-size: clamp(1.125rem, 3.5vw, 1.25rem); }
-  .text-responsive-xl { font-size: clamp(1.25rem, 4vw, 1.5rem); }
-
-  /* Responsive spacing utilities */
-  .space-y-responsive > :not([hidden]) ~ :not([hidden]) {
-    margin-top: clamp(1rem, 3vw, 2rem);
+  /* Safe area handling for mobile devices */
+  .mobile-safe-area {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
   }
 
-  .space-x-responsive > :not([hidden]) ~ :not([hidden]) {
-    margin-left: clamp(0.5rem, 2vw, 1.5rem);
+  /* Improved text overflow handling */
+  .break-words-mobile {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
   }
 
-  /* Mobile-first grid patterns */
-  .grid-responsive-auto {
-    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-  }
-
-  .grid-responsive-cards {
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  }
-
-  /* Better scroll behavior */
-  .scroll-smooth-enhanced {
+  /* Better scroll behavior for mobile */
+  .scroll-smooth-mobile {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
-  /* Performance optimizations */
-  .gpu-accelerated {
+  /* Prevent zoom on input focus on iOS */
+  .no-zoom {
+    font-size: 16px;
+  }
+
+  @media (max-width: 767px) {
+    .no-zoom {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Flexbox utilities for better mobile layouts */
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+
+  .min-w-0 {
+    min-width: 0;
+  }
+
+  /* Better container responsive with mobile-first approach */
+  .container-mobile {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-mobile {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-mobile {
+      max-width: 1024px;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  /* Performance optimizations for mobile */
+  .gpu-accelerated-mobile {
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
@@ -157,119 +192,40 @@
   }
 
   /* Accessibility improvements */
-  .mobile-safe-area {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-
-  /* Text overflow handling with responsive line clamping */
-  .line-clamp-responsive-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-
-  .line-clamp-responsive-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  @media (max-width: 374px) {
-    .line-clamp-responsive-2 {
-      -webkit-line-clamp: 3;
+  @media (prefers-reduced-motion: reduce) {
+    .reduce-motion-mobile {
+      animation: none !important;
+      transition: none !important;
     }
   }
 
-  /* Enhanced breakword handling for chat messages */
-  .break-words-responsive {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .high-contrast-mobile {
+      border-width: 2px;
+      background-color: black;
+      color: white;
+    }
   }
-}
 
-/* Enhanced mobile-first breakpoints with better coverage */
-@media (max-width: 320px) {
-  .ultra-small\:text-xs { font-size: 0.75rem; line-height: 1rem; }
-  .ultra-small\:p-1 { padding: 0.25rem; }
-  .ultra-small\:gap-1 { gap: 0.25rem; }
-}
-
-@media (min-width: 320px) and (max-width: 374px) {
-  .xs-only\:text-xs { font-size: 0.75rem; line-height: 1rem; }
-  .xs-only\:p-2 { padding: 0.5rem; }
-}
-
-@media (min-width: 375px) and (max-width: 427px) {
-  .sm-mobile-only\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-  .sm-mobile-only\:p-3 { padding: 0.75rem; }
-}
-
-@media (min-width: 428px) and (max-width: 767px) {
-  .lg-mobile-only\:text-base { font-size: 1rem; line-height: 1.5rem; }
-  .lg-mobile-only\:p-4 { padding: 1rem; }
-}
-
-@media (min-width: 768px) and (max-width: 833px) {
-  .tablet-portrait\:w-72 { width: 18rem; }
-  .tablet-portrait\:text-base { font-size: 1rem; line-height: 1.5rem; }
-}
-
-@media (min-width: 834px) and (max-width: 1023px) {
-  .tablet-landscape\:w-80 { width: 20rem; }
-  .tablet-landscape\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-}
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .desktop-sm\:w-96 { width: 24rem; }
-  .desktop-sm\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-}
-
-@media (min-width: 1280px) and (max-width: 1439px) {
-  .desktop-md\:w-\[400px\] { width: 400px; }
-  .desktop-md\:text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-}
-
-@media (min-width: 1440px) and (max-width: 1919px) {
-  .desktop-lg\:w-\[420px\] { width: 420px; }
-  .desktop-lg\:text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-}
-
-@media (min-width: 1920px) {
-  .ultra-wide\:w-\[480px\] { width: 480px; }
-  .ultra-wide\:text-2xl { font-size: 1.5rem; line-height: 2rem; }
-  .ultra-wide\:p-8 { padding: 2rem; }
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .reduce-motion-safe {
-    animation: none !important;
-    transition: none !important;
+  /* Better focus states for mobile */
+  .focus-mobile:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
   }
-  
-  .transition-transform {
-    transition: none !important;
-  }
-}
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .high-contrast\:border-2 {
-    border-width: 2px;
+  /* Improved button sizing for mobile */
+  .btn-mobile {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
   }
-  
-  .high-contrast\:bg-black {
-    background-color: black;
-  }
-  
-  .high-contrast\:text-white {
-    color: white;
+
+  @media (min-width: 640px) {
+    .btn-mobile {
+      font-size: 1rem;
+      padding: 0.75rem 1.25rem;
+    }
   }
 }
