@@ -13,6 +13,7 @@ import NotFound from '@/pages/NotFound';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { AgentProvider } from '@/contexts/AgentContext';
 import { TaskProvider } from '@/contexts/TaskContext';
 import { MessageProvider } from '@/contexts/MessageContext';
@@ -29,38 +30,40 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <CurrentUserProvider>
-          <ProjectProvider>
-            <AgentProvider>
-              <TaskProvider>
-                <MessageProvider>
-                  <TeamProvider>
-                    <FilterProvider>
-                      <WebSocketProvider userId="current-user" userName="Current User">
-                        <div className="min-h-screen bg-background font-vibe-body">
-                          <Routes>
-                            <Route path="/" element={<LandingPage />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/app" element={<Index />} />
-                            <Route path="/settings" element={<Settings />} />
-                            <Route path="/planning" element={<PlanningAgent />} />
-                            <Route path="/agents/create" element={<AgentCreation />} />
-                            <Route path="/agents/config" element={<AgentConfiguration />} />
-                            <Route path="/ide" element={<IDEIntegration />} />
-                            <Route path="/llm" element={<LLMIntegration />} />
-                            <Route path="/mcp" element={<MCPManagement />} />
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
-                          <Toaster />
-                        </div>
-                      </WebSocketProvider>
-                    </FilterProvider>
-                  </TeamProvider>
-                </MessageProvider>
-              </TaskProvider>
-            </AgentProvider>
-          </ProjectProvider>
-        </CurrentUserProvider>
+        <TooltipProvider>
+          <CurrentUserProvider>
+            <ProjectProvider>
+              <AgentProvider>
+                <TaskProvider>
+                  <MessageProvider>
+                    <TeamProvider>
+                      <FilterProvider>
+                        <WebSocketProvider userId="current-user" userName="Current User">
+                          <div className="min-h-screen bg-background font-vibe-body">
+                            <Routes>
+                              <Route path="/" element={<LandingPage />} />
+                              <Route path="/dashboard" element={<Dashboard />} />
+                              <Route path="/app" element={<Index />} />
+                              <Route path="/settings" element={<Settings />} />
+                              <Route path="/planning" element={<PlanningAgent />} />
+                              <Route path="/agents/create" element={<AgentCreation />} />
+                              <Route path="/agents/config" element={<AgentConfiguration />} />
+                              <Route path="/ide" element={<IDEIntegration />} />
+                              <Route path="/llm" element={<LLMIntegration />} />
+                              <Route path="/mcp" element={<MCPManagement />} />
+                              <Route path="*" element={<NotFound />} />
+                            </Routes>
+                            <Toaster />
+                          </div>
+                        </WebSocketProvider>
+                      </FilterProvider>
+                    </TeamProvider>
+                  </MessageProvider>
+                </TaskProvider>
+              </AgentProvider>
+            </ProjectProvider>
+          </CurrentUserProvider>
+        </TooltipProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
