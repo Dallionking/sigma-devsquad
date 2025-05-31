@@ -1,4 +1,5 @@
 
+import { Settings, Shield, Bell } from "lucide-react";
 import { ConfigurationSettings } from "../ConfigurationSettings";
 import { GeneralSettings } from "../GeneralSettings";
 import { APIKeySettings } from "../APIKeySettings";
@@ -14,55 +15,55 @@ export const settingsTabDefinitions = [
     label: "General",
     description: "Basic application settings",
     component: GeneralSettings,
-    icon: "settings"
+    icon: Settings
   },
   {
     id: "configuration",
     label: "Configuration",
     description: "Advanced state management and collaboration settings",
     component: ConfigurationSettings,
-    icon: "settings"
+    icon: Settings
   },
   {
     id: "api-keys",
     label: "API Keys",
     description: "Manage API keys and integrations",
     component: APIKeySettings,
-    icon: "shield"
+    icon: Shield
   },
   {
     id: "appearance",
     label: "Appearance",
     description: "Customize the look and feel",
     component: AppearanceSettings,
-    icon: "settings"
+    icon: Settings
   },
   {
     id: "performance",
     label: "Performance",
     description: "Performance and optimization settings",
     component: PerformanceSettings,
-    icon: "settings"
+    icon: Settings
   },
   {
     id: "security",
     label: "Security",
     description: "Security and privacy settings",
     component: SecuritySettings,
-    icon: "shield"
+    icon: Shield
   },
   {
     id: "notifications",
     label: "Notifications",
     description: "Notification preferences",
     component: NotificationSettings,
-    icon: "bell"
+    icon: Bell
   },
   {
     id: "backup",
     label: "Backup",
     description: "Backup and restore settings",
     component: BackupSettings,
-    icon: "settings"
+    icon: Settings
   }
 ];
