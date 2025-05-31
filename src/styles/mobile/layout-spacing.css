@@ -1,0 +1,101 @@
+
+@layer utilities {
+  /* Mobile scrolling improvements */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-nav-spacing {
+    padding-bottom: 4rem;
+  }
+
+  /* Better mobile card spacing */
+  .mobile-card-spacing {
+    @apply p-4 m-2;
+  }
+
+  /* Enhanced mobile button groups */
+  .mobile-button-group {
+    @apply flex flex-col gap-3;
+  }
+
+  .mobile-button-group .btn {
+    @apply w-full justify-center min-h-[48px];
+  }
+
+  /* Mobile-first grid layouts */
+  .mobile-grid-stack {
+    @apply grid grid-cols-1 gap-4;
+  }
+
+  .mobile-grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+
+  /* Touch-friendly spacing */
+  .touch-spacing {
+    @apply p-4 m-2;
+  }
+
+  /* Mobile typography scaling */
+  .mobile-text-scale {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  /* Improved mobile dropdown positioning */
+  .mobile-dropdown {
+    @apply bottom-0 left-0 right-0 top-auto;
+    transform: none;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  /* Better touch scrolling */
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+
+  .touch-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .touch-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .touch-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+
+  /* Better mobile modal handling */
+  .mobile-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: hsl(var(--background));
+    touch-action: none;
+  }
+
+  /* Enhanced mobile sheet/drawer */
+  .mobile-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: hsl(var(--background));
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    max-height: 90vh;
+    touch-action: none;
+  }
+}

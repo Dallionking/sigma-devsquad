@@ -1,0 +1,105 @@
+
+@layer utilities {
+  /* Enhanced touch optimizations */
+  .touch-optimized {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  /* Touch feedback animations */
+  .touch-feedback {
+    transition: transform 0.1s ease-out, background-color 0.1s ease-out;
+  }
+
+  .touch-feedback:active {
+    transform: scale(0.95);
+    background-color: hsl(var(--muted) / 0.8);
+  }
+
+  /* Improved tap highlights for different elements */
+  .tap-highlight-primary:active {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+
+  .tap-highlight-secondary:active {
+    background-color: hsl(var(--secondary) / 0.1);
+  }
+
+  .tap-highlight-destructive:active {
+    background-color: hsl(var(--destructive) / 0.1);
+  }
+
+  /* Swipe gesture areas */
+  .swipe-area {
+    touch-action: pan-x pan-y;
+    position: relative;
+  }
+
+  /* Swipe indicators */
+  .swipe-indicator {
+    position: relative;
+  }
+
+  .swipe-indicator::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 4px;
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+
+  /* Improved gesture zones */
+  .gesture-zone {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+  }
+
+  /* Better mobile focus styles */
+  .mobile-focus {
+    @apply focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none;
+  }
+
+  /* Enhanced focus-visible for touch devices */
+  .touch-focus:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Remove focus on touch but keep for keyboard */
+  @media (pointer: coarse) {
+    .touch-focus:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
+
+  /* Long press feedback */
+  .long-press-feedback {
+    position: relative;
+  }
+
+  .long-press-feedback::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: hsl(var(--primary) / 0.1);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .long-press-feedback.long-pressing::after {
+    opacity: 1;
+    animation: pulse 0.5s ease-in-out infinite;
+  }
+}

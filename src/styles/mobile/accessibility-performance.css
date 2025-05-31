@@ -1,0 +1,59 @@
+
+@layer utilities {
+  /* Performance optimizations for mobile */
+  .mobile-optimized {
+    contain: layout style paint;
+    content-visibility: auto;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Improved mobile pointer events */
+  @media (pointer: coarse) {
+    /* Larger touch targets on coarse pointer devices */
+    .adaptive-touch-target {
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    /* Remove hover states on touch devices */
+    .hover-only:hover {
+      background-color: transparent;
+    }
+  }
+
+  @media (pointer: fine) {
+    /* Smaller targets on precise pointer devices */
+    .adaptive-touch-target {
+      min-height: 32px;
+      min-width: 32px;
+    }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    border-width: 2px;
+    font-weight: 600;
+  }
+
+  .touch-target {
+    border: 2px solid hsl(var(--border));
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .reduce-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ripple::before,
+  .touch-feedback {
+    transition: none !important;
+    animation: none !important;
+  }
+}
