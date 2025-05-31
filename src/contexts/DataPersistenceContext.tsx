@@ -4,6 +4,9 @@ import { useSessionManager } from '@/hooks/useSessionManager';
 import { useDataSync } from '@/hooks/useDataSync';
 import { useBackupManager } from '@/hooks/useBackupManager';
 import { useViewContextManager } from '@/hooks/useViewContextManager';
+import { useEventBus } from '@/hooks/useEventBus';
+import { useStateMiddleware } from '@/hooks/useStateMiddleware';
+import { useStateDebugger } from '@/hooks/useStateDebugger';
 
 interface DataPersistenceContextType {
   // Session management
@@ -26,6 +29,32 @@ interface DataPersistenceContextType {
   saveViewContext: (view: string, context: any) => void;
   loadViewContext: (view: string) => any;
   currentView: string;
+  
+  // Cross-component communication
+  eventBus: {
+    subscribe: <T>(eventType: string, handler: (data: T) => void) => () => void;
+    emit: <T>(eventType: string, data: T, source?: string) => void;
+    getEventHistory: () => any[];
+    getActiveListeners: () => Map<string, number>;
+  };
+  
+  // State debugging
+  debugger: {
+    isCapturing: boolean;
+    setIsCapturing: (capturing: boolean) => void;
+    debugEntries: any[];
+    clearDebugEntries: () => void;
+    exportDebugData: () => void;
+    getDebugStats: () => any;
+  };
+  
+  // Middleware management
+  middleware: {
+    addMiddleware: (middleware: any, config: any) => void;
+    removeMiddleware: (id: string) => void;
+    enableMiddleware: (id: string, enabled: boolean) => void;
+    getMiddlewareList: () => any[];
+  };
 }
 
 const DataPersistenceContext = createContext<DataPersistenceContextType | undefined>(undefined);
@@ -47,6 +76,15 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
   });
   const backupManager = useBackupManager();
   const viewContextManager = useViewContextManager();
+  
+  // New communication system hooks
+  const eventBus = useEventBus();
+  const middleware = useStateMiddleware();
+  const debugger = useStateDebugger({
+    maxEntries: 1000,
+    captureStackTrace: false,
+    autoCapture: true
+  });
 
   const value: DataPersistenceContextType = {
     // Session management
@@ -68,7 +106,33 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     // View context management
     saveViewContext: viewContextManager.saveViewContext,
     loadViewContext: viewContextManager.loadViewContext,
-    currentView: viewContextManager.currentView
+    currentView: viewContextManager.currentView,
+    
+    // Cross-component communication
+    eventBus: {
+      subscribe: eventBus.subscribe,
+      emit: eventBus.emit,
+      getEventHistory: eventBus.getEventHistory,
+      getActiveListeners: eventBus.getActiveListeners
+    },
+    
+    // State debugging
+    debugger: {
+      isCapturing: debugger.isCapturing,
+      setIsCapturing: debugger.setIsCapturing,
+      debugEntries: debugger.debugEntries,
+      clearDebugEntries: debugger.clearDebugEntries,
+      exportDebugData: debugger.exportDebugData,
+      getDebugStats: debugger.getDebugStats
+    },
+    
+    // Middleware management
+    middleware: {
+      addMiddleware: middleware.addMiddleware,
+      removeMiddleware: middleware.removeMiddleware,
+      enableMiddleware: middleware.enableMiddleware,
+      getMiddlewareList: middleware.getMiddlewareList
+    }
   };
 
   return (
