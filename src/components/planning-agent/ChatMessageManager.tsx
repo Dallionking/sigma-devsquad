@@ -1,6 +1,6 @@
-
 import { useState } from "react";
 import { useTelegramIntegration } from "@/hooks/useTelegramIntegration";
+import { useDiscordIntegration } from "@/hooks/useDiscordIntegration";
 
 type ChatMessage = {
   id: string;
@@ -37,7 +37,8 @@ export const useChatMessageManager = () => {
   ]);
 
   const [isTyping, setIsTyping] = useState(false);
-  const { notifyPlanningAgentUpdate } = useTelegramIntegration();
+  const { notifyPlanningAgentUpdate: notifyTelegram } = useTelegramIntegration();
+  const { notifyPlanningAgentUpdate: notifyDiscord } = useDiscordIntegration();
 
   const handleSendMessage = (content: string, attachedFiles: AttachedFile[]) => {
     const newMessage: ChatMessage = {
@@ -81,11 +82,21 @@ export const useChatMessageManager = () => {
       setMessages(prev => [...prev, agentResponse]);
       setIsTyping(false);
 
-      // Send Telegram notification for Planning Agent responses
+      // Send notifications to both Telegram and Discord
+      const notificationMessage = `New response: ${responseContent.substring(0, 100)}${responseContent.length > 100 ? '...' : ''}`;
+      
       try {
-        await notifyPlanningAgentUpdate(`New response: ${responseContent.substring(0, 100)}${responseContent.length > 100 ? '...' : ''}`);
+        // Send Telegram notification
+        await notifyTelegram(notificationMessage);
       } catch (error) {
         console.error('Failed to send Telegram notification:', error);
+      }
+
+      try {
+        // Send Discord notification with optional role context
+        await notifyDiscord(notificationMessage, 'Planning Team');
+      } catch (error) {
+        console.error('Failed to send Discord notification:', error);
       }
     }, 1000);
   };

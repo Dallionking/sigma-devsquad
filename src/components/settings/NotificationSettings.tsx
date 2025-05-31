@@ -3,8 +3,8 @@ import { useState } from "react";
 import { SettingsSection } from "./SettingsSection";
 import { SettingItem } from "./SettingItem";
 import { TelegramIntegration } from "./TelegramIntegration";
+import { DiscordIntegration } from "./DiscordIntegration";
 import { OptimizedStack } from "@/components/layout/SpaceOptimizedContainer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface NotificationSettingsProps {
   notifications: boolean;
@@ -114,6 +114,9 @@ export const NotificationSettings = ({ notifications, setNotifications, searchQu
 
       {/* Telegram Integration */}
       <TelegramIntegration searchQuery={searchQuery} />
+
+      {/* Discord Integration */}
+      <DiscordIntegration searchQuery={searchQuery} />
     </OptimizedStack>
   );
 };
