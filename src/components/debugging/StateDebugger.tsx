@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -63,7 +62,7 @@ export const StateDebugger = ({
     const matchesFilter = debugFilter === 'all' || 
       (debugFilter === 'errors' && entry.type === 'error') ||
       (debugFilter === 'warnings' && entry.type === 'warning') ||
-      (debugFilter === 'updates' && entry.type === 'state_update');
+      (debugFilter === 'updates' && entry.type === 'state-update');
     
     return matchesSearch && matchesFilter;
   });
