@@ -5,7 +5,6 @@ import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
 import { UnifiedCommunicationInterface } from "@/components/communication/UnifiedCommunicationInterface";
-import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -82,21 +81,8 @@ export const MainContentRenderer = ({
         </div>
       );
     } else {
-      // Individual view mode content
-      if (viewMode === "communication") {
-        return (
-          <div className="h-full">
-            <AdvancedCommunicationPanel
-              agents={agents}
-              messages={messages}
-              selectedMessage={selectedMessage}
-              onMessageSelect={onMessageSelect}
-            />
-          </div>
-        );
-      }
-      
-      if (viewMode === "messages") {
+      // Individual view mode content - unified communication for both communication and messages
+      if (viewMode === "communication" || viewMode === "messages") {
         return (
           <div className="h-full">
             <UnifiedCommunicationInterface />
