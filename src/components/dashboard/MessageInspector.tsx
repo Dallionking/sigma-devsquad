@@ -26,9 +26,17 @@ export const MessageInspector = ({ messages, agents, selectedMessage, onMessageS
     return true;
   }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-  const getAgentName = (agentType: AgentType) => {
-    const agent = agents.find(a => a.type === agentType);
-    return agent?.name || agentType;
+  const getAgentName = (agentIdentifier: AgentType | string) => {
+    // First try to find by type (for AgentType)
+    const agentByType = agents.find(a => a.type === agentIdentifier);
+    if (agentByType) return agentByType.name;
+    
+    // Then try to find by id (for string ids)
+    const agentById = agents.find(a => a.id === agentIdentifier);
+    if (agentById) return agentById.name;
+    
+    // Return the identifier as fallback
+    return agentIdentifier;
   };
 
   const getTypeColor = (type: string) => {
@@ -46,6 +54,14 @@ export const MessageInspector = ({ messages, agents, selectedMessage, onMessageS
     responses: messages.filter(m => m.type === "response").length,
     notifications: messages.filter(m => m.type === "notification").length
   };
+
+  // Get unique agent identifiers for filters
+  const uniqueAgentIdentifiers = Array.from(
+    new Set([
+      ...messages.map(m => m.from),
+      ...messages.map(m => m.to)
+    ])
+  );
 
   return (
     <div className="space-y-6">
@@ -111,9 +127,9 @@ export const MessageInspector = ({ messages, agents, selectedMessage, onMessageS
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Agents</SelectItem>
-              {agents.map(agent => (
-                <SelectItem key={`from-${agent.id}`} value={agent.type}>
-                  {agent.name}
+              {uniqueAgentIdentifiers.map(identifier => (
+                <SelectItem key={`from-${identifier}`} value={identifier}>
+                  {getAgentName(identifier)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -125,9 +141,9 @@ export const MessageInspector = ({ messages, agents, selectedMessage, onMessageS
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Agents</SelectItem>
-              {agents.map(agent => (
-                <SelectItem key={`to-${agent.id}`} value={agent.type}>
-                  {agent.name}
+              {uniqueAgentIdentifiers.map(identifier => (
+                <SelectItem key={`to-${identifier}`} value={identifier}>
+                  {getAgentName(identifier)}
                 </SelectItem>
               ))}
             </SelectContent>
