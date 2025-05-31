@@ -3,6 +3,7 @@
 
 /* Import all utility modules */
 @import './text-utilities.css';
+@import './dynamic-typography.css';
 @import './layout-utilities.css';
 @import './accessibility-utilities.css';
 @import './performance-utilities.css';

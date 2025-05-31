@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { DynamicText, DynamicHeading, TruncatedText } from '@/components/ui/dynamic-text';
 import { cn } from '@/lib/utils';
 
 interface ResponsiveTextProps {
@@ -10,14 +11,6 @@ interface ResponsiveTextProps {
   responsive?: boolean;
   weight?: 'normal' | 'medium' | 'semibold' | 'bold';
 }
-
-const variantClasses = {
-  title: 'text-xl sm:text-2xl lg:text-3xl xl:text-4xl',
-  heading: 'text-lg sm:text-xl lg:text-2xl',
-  subheading: 'text-base sm:text-lg lg:text-xl',
-  body: 'text-sm sm:text-base',
-  caption: 'text-xs sm:text-sm'
-};
 
 const weightClasses = {
   normal: 'font-normal',
@@ -34,24 +27,36 @@ export const ResponsiveText = ({
   responsive = true,
   weight = 'normal'
 }: ResponsiveTextProps) => {
-  const getTruncateClasses = () => {
-    if (truncate === true) return 'truncate';
-    if (typeof truncate === 'number') return `line-clamp-${truncate}`;
-    return '';
+  const variantMap = {
+    title: 'xl' as const,
+    heading: 'lg' as const,
+    subheading: 'base' as const,
+    body: 'body' as const,
+    caption: 'caption' as const
   };
 
+  if (truncate) {
+    const lines = typeof truncate === 'number' ? (truncate as 1 | 2 | 3) : 1;
+    return (
+      <TruncatedText
+        lines={lines}
+        variant={variantMap[variant]}
+        className={cn(weightClasses[weight], className)}
+      >
+        {children}
+      </TruncatedText>
+    );
+  }
+
   return (
-    <div className={cn(
-      responsive && variantClasses[variant],
-      !responsive && variant === 'body' && 'text-sm',
-      !responsive && variant === 'heading' && 'text-lg',
-      !responsive && variant === 'title' && 'text-xl',
-      weightClasses[weight],
-      getTruncateClasses(),
-      className
-    )}>
+    <DynamicText
+      variant={variantMap[variant]}
+      className={cn(weightClasses[weight], className)}
+      accessible={responsive}
+      highContrast={variant === 'heading' || variant === 'title'}
+    >
       {children}
-    </div>
+    </DynamicText>
   );
 };
 
@@ -60,24 +65,14 @@ export const ResponsiveHeading = ({ children, className, level = 1 }: {
   children: React.ReactNode; 
   className?: string; 
   level?: 1 | 2 | 3 | 4;
-}) => {
-  const variants = {
-    1: 'title',
-    2: 'heading',
-    3: 'subheading',
-    4: 'body'
-  } as const;
-
-  return (
-    <ResponsiveText
-      variant={variants[level]}
-      weight="semibold"
-      className={className}
-    >
-      {children}
-    </ResponsiveText>
-  );
-};
+}) => (
+  <DynamicHeading
+    level={level}
+    className={className}
+  >
+    {children}
+  </DynamicHeading>
+);
 
 export const TruncatedText = ({ 
   children, 
@@ -85,14 +80,13 @@ export const TruncatedText = ({
   className 
 }: { 
   children: React.ReactNode; 
-  lines?: number; 
+  lines?: 1 | 2 | 3; 
   className?: string;
 }) => (
-  <ResponsiveText
-    variant="body"
-    truncate={lines}
+  <TruncatedText
+    lines={lines}
     className={className}
   >
     {children}
-  </ResponsiveText>
+  </TruncatedText>
 );

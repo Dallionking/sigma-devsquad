@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
+import { DynamicText, TruncatedText } from '@/components/ui/dynamic-text';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 
@@ -66,9 +67,14 @@ export const NavigationItem = ({
           )} />
           {!isCollapsed && (
             <>
-              <span className="flex-1 text-left truncate font-medium">
+              <TruncatedText 
+                lines={1} 
+                variant="label"
+                className="flex-1 text-left font-medium"
+                expandOnHover={true}
+              >
                 {label}
-              </span>
+              </TruncatedText>
               {badge && (
                 <Badge 
                   variant={isActive ? "secondary" : "outline"} 
@@ -77,7 +83,9 @@ export const NavigationItem = ({
                     isActive && "bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30"
                   )}
                 >
-                  {badge}
+                  <DynamicText variant="xs" className="font-medium">
+                    {badge}
+                  </DynamicText>
                 </Badge>
               )}
             </>
@@ -91,9 +99,14 @@ export const NavigationItem = ({
           )} />
           {!isCollapsed && (
             <>
-              <span className="flex-1 text-left truncate font-medium">
+              <TruncatedText 
+                lines={1} 
+                variant="label"
+                className="flex-1 text-left font-medium"
+                expandOnHover={true}
+              >
                 {label}
-              </span>
+              </TruncatedText>
               {badge && (
                 <Badge 
                   variant={isActive ? "secondary" : "outline"} 
@@ -102,7 +115,9 @@ export const NavigationItem = ({
                     isActive && "bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30"
                   )}
                 >
-                  {badge}
+                  <DynamicText variant="xs" className="font-medium">
+                    {badge}
+                  </DynamicText>
                 </Badge>
               )}
             </>
@@ -125,14 +140,22 @@ export const NavigationItem = ({
                   variant="destructive" 
                   className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
                 >
-                  {badge}
+                  <DynamicText variant="xs" className="font-medium">
+                    {badge}
+                  </DynamicText>
                 </Badge>
               )}
             </div>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-medium">
-            <p>{label}</p>
-            {badge && <p className="text-xs opacity-70">{badge} items</p>}
+            <DynamicText variant="sm" className="font-medium">
+              {label}
+            </DynamicText>
+            {badge && (
+              <DynamicText variant="xs" className="opacity-70">
+                {badge} items
+              </DynamicText>
+            )}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
