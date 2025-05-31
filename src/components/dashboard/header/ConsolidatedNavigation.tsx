@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,11 +16,7 @@ import {
   Cog, 
   Layers, 
   ChevronDown,
-  Home,
-  GitBranch,
-  MessageSquare,
-  CheckSquare,
-  Activity
+  Home
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
@@ -57,29 +52,6 @@ export const ConsolidatedNavigation = ({
     navigate(path);
   };
 
-  const viewModeConfig = {
-    workflow: { 
-      icon: GitBranch, 
-      label: "Workflow",
-      notifications: notificationCounts.workflow
-    },
-    communication: { 
-      icon: MessageSquare, 
-      label: "Communication",
-      notifications: notificationCounts.communication
-    },
-    tasks: { 
-      icon: CheckSquare, 
-      label: "Tasks",
-      notifications: notificationCounts.tasks
-    },
-    messages: { 
-      icon: Activity, 
-      label: "Messages",
-      notifications: notificationCounts.messages
-    }
-  };
-
   const primaryNavItems = [
     { path: "/", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
@@ -113,47 +85,6 @@ export const ConsolidatedNavigation = ({
           );
         })}
       </div>
-
-      {/* View Mode Selector - Only on Dashboard */}
-      {isDashboardPage && (
-        <>
-          <div className="w-px h-6 bg-border mx-2" />
-          <div className="flex items-center space-x-1 bg-muted/50 rounded-lg p-1">
-            {Object.entries(viewModeConfig).map(([mode, config]) => {
-              const Icon = config.icon;
-              const isActive = viewMode === mode;
-              const hasNotifications = config.notifications > 0;
-              
-              return (
-                <Button
-                  key={mode}
-                  variant={isActive ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => onViewModeChange(mode as ViewMode)}
-                  className={cn(
-                    "h-8 px-3 relative",
-                    isActive 
-                      ? "bg-background shadow-sm text-foreground" 
-                      : "hover:bg-background/50 text-muted-foreground"
-                  )}
-                >
-                  <Icon className="w-4 h-4 mr-1.5" />
-                  <span className="hidden sm:inline text-xs font-medium">{config.label}</span>
-                  
-                  {hasNotifications && (
-                    <Badge 
-                      variant="destructive" 
-                      className="ml-1 px-1 py-0 text-xs h-4 min-w-4 flex items-center justify-center"
-                    >
-                      {config.notifications > 9 ? "9+" : config.notifications}
-                    </Badge>
-                  )}
-                </Button>
-              );
-            })}
-          </div>
-        </>
-      )}
 
       {/* Configuration Dropdown */}
       <div className="w-px h-6 bg-border mx-2" />

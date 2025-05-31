@@ -31,6 +31,7 @@ interface MainLayoutProps {
   onTeamSelect: (team: Team | null) => void;
   onAgentProfileSelect: (profile: AgentProfile | null) => void;
   onDismissSelection: () => void;
+  onViewModeChange: (mode: ViewMode) => void;
 }
 
 export const MainLayout = ({
@@ -55,6 +56,7 @@ export const MainLayout = ({
   onTeamSelect,
   onAgentProfileSelect,
   onDismissSelection,
+  onViewModeChange,
 }: MainLayoutProps) => {
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -94,6 +96,7 @@ export const MainLayout = ({
           onTaskSelect={onTaskSelect}
           onMessageSelect={onMessageSelect}
           onAgentProfileSelect={onAgentProfileSelect}
+          onViewModeChange={onViewModeChange}
         />
       </main>
       

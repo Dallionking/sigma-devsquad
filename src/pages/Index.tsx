@@ -111,6 +111,7 @@ const Index = () => {
         onTeamSelect={setSelectedTeam}
         onAgentProfileSelect={setSelectedAgentProfile}
         onDismissSelection={handleDismissSelection}
+        onViewModeChange={setViewMode}
       />
       
       {/* Enhanced footer with smooth animations */}

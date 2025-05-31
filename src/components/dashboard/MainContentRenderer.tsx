@@ -5,6 +5,7 @@ import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
+import { ViewModeTabs } from "./ViewModeTabs";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -25,6 +26,7 @@ interface MainContentRendererProps {
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
   onAgentProfileSelect: (profile: AgentProfile | null) => void;
+  onViewModeChange: (mode: ViewMode) => void;
 }
 
 export const MainContentRenderer = ({
@@ -42,6 +44,7 @@ export const MainContentRenderer = ({
   onTaskSelect,
   onMessageSelect,
   onAgentProfileSelect,
+  onViewModeChange,
 }: MainContentRendererProps) => {
   const renderMainContent = () => {
     if (showTeamView) {
@@ -99,6 +102,20 @@ export const MainContentRenderer = ({
             onAgentSelect={onAgentSelect}
           />
         </div>
+      )}
+      
+      {/* View Mode Tabs - Only show in individual view */}
+      {!showTeamView && (
+        <ViewModeTabs 
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+          notificationCounts={{
+            workflow: 0,
+            communication: 0,
+            tasks: 0,
+            messages: 0
+          }}
+        />
       )}
       
       {/* Main content area */}
