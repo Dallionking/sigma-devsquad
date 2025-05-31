@@ -1,13 +1,11 @@
 
-import { useState } from "react";
 import { SettingsSection } from "./SettingsSection";
 import { SettingItem } from "./SettingItem";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useDataPersistence } from "@/contexts/DataPersistenceContext";
-import { useToast } from "@/hooks/use-toast";
+import { useConfigurationSettings } from "@/hooks/useConfigurationSettings";
 import { Settings, Users, Database, Zap } from "lucide-react";
 
 interface ConfigurationSettingsProps {
@@ -15,80 +13,22 @@ interface ConfigurationSettingsProps {
 }
 
 export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSettingsProps) => {
-  // State Management Settings
-  const [updateFrequency, setUpdateFrequency] = useState("medium");
-  const [cachingStrategy, setCachingStrategy] = useState("smart");
-  const [persistenceMode, setPersistenceMode] = useState("session");
-  const [debugMode, setDebugMode] = useState(false);
-  const [performanceLevel, setPerformanceLevel] = useState("balanced");
-  const [compressionEnabled, setCompressionEnabled] = useState(false);
-
-  // Collaboration Settings
-  const [realtimeUpdates, setRealtimeUpdates] = useState(true);
-  const [presenceVisibility, setPresenceVisibility] = useState("team");
-  const [conflictResolution, setConflictResolution] = useState("merge");
-  const [notificationLevel, setNotificationLevel] = useState("important");
-  const [permissionLevel, setPermissionLevel] = useState("collaborator");
-  const [activityBroadcast, setActivityBroadcast] = useState("selective");
-
-  const { debugger: stateDebugger, performance } = useDataPersistence();
-  const { toast } = useToast();
-
-  const handleSaveStateSettings = () => {
-    const settings = {
-      updateFrequency,
-      cachingStrategy,
-      persistenceMode,
-      debugMode,
-      performanceLevel,
-      compressionEnabled
-    };
+  const {
+    // State Management
+    stateConfig,
+    updateStateConfig,
+    saveStateSettings,
+    resetStateSettings,
     
-    // Apply debug mode setting
-    stateDebugger.setIsCapturing(debugMode);
+    // Collaboration
+    collaborationConfig,
+    updateCollaborationConfig,
+    saveCollaborationSettings,
+    resetCollaborationSettings,
     
-    console.log("Saving state management settings:", settings);
-    toast({
-      title: "State Settings Saved",
-      description: "State management configuration has been updated"
-    });
-  };
-
-  const handleSaveCollaborationSettings = () => {
-    const settings = {
-      realtimeUpdates,
-      presenceVisibility,
-      conflictResolution,
-      notificationLevel,
-      permissionLevel,
-      activityBroadcast
-    };
-    
-    console.log("Saving collaboration settings:", settings);
-    toast({
-      title: "Collaboration Settings Saved",
-      description: "Collaboration preferences have been updated"
-    });
-  };
-
-  const handleResetStateSettings = () => {
-    setUpdateFrequency("medium");
-    setCachingStrategy("smart");
-    setPersistenceMode("session");
-    setDebugMode(false);
-    setPerformanceLevel("balanced");
-    setCompressionEnabled(false);
-    stateDebugger.setIsCapturing(false);
-  };
-
-  const handleResetCollaborationSettings = () => {
-    setRealtimeUpdates(true);
-    setPresenceVisibility("team");
-    setConflictResolution("merge");
-    setNotificationLevel("important");
-    setPermissionLevel("collaborator");
-    setActivityBroadcast("selective");
-  };
+    // Utilities
+    exportConfiguration
+  } = useConfigurationSettings();
 
   return (
     <div className="space-y-6">
@@ -119,8 +59,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
               <SettingsSection
                 title="State Management Settings"
                 description="Configure how the application manages and persists state"
-                onSave={handleSaveStateSettings}
-                onReset={handleResetStateSettings}
+                onSave={saveStateSettings}
+                onReset={resetStateSettings}
                 searchQuery={searchQuery}
               >
                 <SettingItem
@@ -128,8 +68,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Update Frequency"
                   description="How often state updates are processed"
-                  value={updateFrequency}
-                  onValueChange={setUpdateFrequency}
+                  value={stateConfig.updateFrequency}
+                  onValueChange={(value) => updateStateConfig({ updateFrequency: value })}
                   options={[
                     { value: "high", label: "High (16ms)" },
                     { value: "medium", label: "Medium (50ms)" },
@@ -143,8 +83,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Caching Strategy"
                   description="How data is cached and retrieved"
-                  value={cachingStrategy}
-                  onValueChange={setCachingStrategy}
+                  value={stateConfig.cachingStrategy}
+                  onValueChange={(value) => updateStateConfig({ cachingStrategy: value })}
                   options={[
                     { value: "aggressive", label: "Aggressive - Cache everything" },
                     { value: "smart", label: "Smart - Cache frequently used" },
@@ -158,8 +98,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Persistence Preferences"
                   description="Where and how state data is stored"
-                  value={persistenceMode}
-                  onValueChange={setPersistenceMode}
+                  value={stateConfig.persistenceMode}
+                  onValueChange={(value) => updateStateConfig({ persistenceMode: value })}
                   options={[
                     { value: "session", label: "Session Storage" },
                     { value: "local", label: "Local Storage" },
@@ -173,8 +113,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="switch"
                   label="Debug Mode"
                   description="Enable detailed state debugging and logging"
-                  checked={debugMode}
-                  onCheckedChange={setDebugMode}
+                  checked={stateConfig.debugMode}
+                  onCheckedChange={(checked) => updateStateConfig({ debugMode: checked })}
                 />
 
                 <SettingItem
@@ -182,8 +122,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Performance Optimization"
                   description="Level of performance optimizations applied"
-                  value={performanceLevel}
-                  onValueChange={setPerformanceLevel}
+                  value={stateConfig.performanceLevel}
+                  onValueChange={(value) => updateStateConfig({ performanceLevel: value })}
                   options={[
                     { value: "maximum", label: "Maximum - All optimizations" },
                     { value: "balanced", label: "Balanced - Smart optimizations" },
@@ -197,50 +137,9 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="switch"
                   label="Data Compression"
                   description="Compress large state objects to save memory"
-                  checked={compressionEnabled}
-                  onCheckedChange={setCompressionEnabled}
+                  checked={stateConfig.compressionEnabled}
+                  onCheckedChange={(checked) => updateStateConfig({ compressionEnabled: checked })}
                 />
-
-                {/* Debug Stats Display */}
-                {debugMode && (
-                  <Card className="mt-4 bg-muted/50">
-                    <CardHeader>
-                      <CardTitle className="text-sm">Debug Statistics</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="font-medium">Debug Entries:</span>
-                          <Badge variant="outline" className="ml-2">
-                            {stateDebugger.debugEntries.length}
-                          </Badge>
-                        </div>
-                        <div>
-                          <span className="font-medium">Capturing:</span>
-                          <Badge variant={stateDebugger.isCapturing ? "default" : "secondary"} className="ml-2">
-                            {stateDebugger.isCapturing ? "Active" : "Inactive"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 mt-3">
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={stateDebugger.clearDebugEntries}
-                        >
-                          Clear Entries
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={stateDebugger.exportDebugData}
-                        >
-                          Export Debug Data
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
               </SettingsSection>
             </TabsContent>
 
@@ -248,8 +147,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
               <SettingsSection
                 title="Collaboration Settings"
                 description="Configure real-time collaboration and team interaction features"
-                onSave={handleSaveCollaborationSettings}
-                onReset={handleResetCollaborationSettings}
+                onSave={saveCollaborationSettings}
+                onReset={resetCollaborationSettings}
                 searchQuery={searchQuery}
               >
                 <SettingItem
@@ -257,8 +156,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="switch"
                   label="Real-time Update Preferences"
                   description="Enable live updates from other collaborators"
-                  checked={realtimeUpdates}
-                  onCheckedChange={setRealtimeUpdates}
+                  checked={collaborationConfig.realtimeUpdates}
+                  onCheckedChange={(checked) => updateCollaborationConfig({ realtimeUpdates: checked })}
                 />
 
                 <SettingItem
@@ -266,8 +165,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Presence Visibility Controls"
                   description="Who can see your activity and presence"
-                  value={presenceVisibility}
-                  onValueChange={setPresenceVisibility}
+                  value={collaborationConfig.presenceVisibility}
+                  onValueChange={(value) => updateCollaborationConfig({ presenceVisibility: value })}
                   options={[
                     { value: "everyone", label: "Everyone - All users" },
                     { value: "team", label: "Team - Team members only" },
@@ -281,8 +180,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Conflict Resolution Strategy"
                   description="How to handle conflicting changes"
-                  value={conflictResolution}
-                  onValueChange={setConflictResolution}
+                  value={collaborationConfig.conflictResolution}
+                  onValueChange={(value) => updateCollaborationConfig({ conflictResolution: value })}
                   options={[
                     { value: "merge", label: "Auto-merge - Automatic resolution" },
                     { value: "prompt", label: "Prompt - Ask before resolving" },
@@ -296,8 +195,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Notification Preferences"
                   description="Level of collaboration notifications to receive"
-                  value={notificationLevel}
-                  onValueChange={setNotificationLevel}
+                  value={collaborationConfig.notificationLevel}
+                  onValueChange={(value) => updateCollaborationConfig({ notificationLevel: value })}
                   options={[
                     { value: "all", label: "All - Every activity" },
                     { value: "important", label: "Important - Key changes only" },
@@ -311,8 +210,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Collaboration Permission Level"
                   description="Your default permission level for new collaborations"
-                  value={permissionLevel}
-                  onValueChange={setPermissionLevel}
+                  value={collaborationConfig.permissionLevel}
+                  onValueChange={(value) => updateCollaborationConfig({ permissionLevel: value })}
                   options={[
                     { value: "owner", label: "Owner - Full control" },
                     { value: "editor", label: "Editor - Edit and manage" },
@@ -326,8 +225,8 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                   type="select"
                   label="Activity Broadcast Options"
                   description="What activities to broadcast to other users"
-                  value={activityBroadcast}
-                  onValueChange={setActivityBroadcast}
+                  value={collaborationConfig.activityBroadcast}
+                  onValueChange={(value) => updateCollaborationConfig({ activityBroadcast: value })}
                   options={[
                     { value: "all", label: "All - Broadcast everything" },
                     { value: "selective", label: "Selective - Important actions only" },
@@ -348,26 +247,26 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="font-medium">Real-time:</span>
-                        <Badge variant={realtimeUpdates ? "default" : "secondary"} className="ml-2">
-                          {realtimeUpdates ? "Enabled" : "Disabled"}
+                        <Badge variant={collaborationConfig.realtimeUpdates ? "default" : "secondary"} className="ml-2">
+                          {collaborationConfig.realtimeUpdates ? "Enabled" : "Disabled"}
                         </Badge>
                       </div>
                       <div>
                         <span className="font-medium">Visibility:</span>
                         <Badge variant="outline" className="ml-2">
-                          {presenceVisibility}
+                          {collaborationConfig.presenceVisibility}
                         </Badge>
                       </div>
                       <div>
                         <span className="font-medium">Conflicts:</span>
                         <Badge variant="outline" className="ml-2">
-                          {conflictResolution}
+                          {collaborationConfig.conflictResolution}
                         </Badge>
                       </div>
                       <div>
                         <span className="font-medium">Notifications:</span>
                         <Badge variant="outline" className="ml-2">
-                          {notificationLevel}
+                          {collaborationConfig.notificationLevel}
                         </Badge>
                       </div>
                     </div>
@@ -376,6 +275,17 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
               </SettingsSection>
             </TabsContent>
           </Tabs>
+
+          {/* Export Configuration */}
+          <div className="mt-6 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={exportConfiguration}
+              className="w-full"
+            >
+              Export Configuration Settings
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
