@@ -1,13 +1,13 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { SettingsSection } from "./SettingsSection";
 import { OptimizedStack } from "@/components/layout/SpaceOptimizedContainer";
-import { DiscordConnectionStatus } from "./discord/DiscordConnectionStatus";
 import { DiscordNotificationSettings } from "./discord/DiscordNotificationSettings";
 import { DiscordTestConnection } from "./discord/DiscordTestConnection";
 import { ChannelSelector } from "./shared/ChannelSelector";
 import { MessageFormatCustomizer } from "./shared/MessageFormatCustomizer";
+import { WebhookConfiguration } from "./shared/WebhookConfiguration";
+import { EnhancedConnectionStatus } from "./shared/EnhancedConnectionStatus";
 import { WebhookConfig, ChannelConfig, MessageTemplate } from "@/types/webhook";
 
 interface DiscordIntegrationProps {
@@ -15,9 +15,17 @@ interface DiscordIntegrationProps {
 }
 
 export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps) => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [serverName, setServerName] = useState("");
-  const [channelName, setChannelName] = useState("");
+  // Connection state
+  const [connectionInfo, setConnectionInfo] = useState({
+    isConnected: false,
+    connectionType: undefined as 'oauth' | 'webhook' | 'token' | undefined,
+    lastConnected: undefined as Date | undefined,
+    userName: "",
+    serverName: "",
+    channelName: "",
+    permissions: [] as string[],
+    expiresAt: undefined as Date | undefined
+  });
   
   // Webhook configuration
   const [webhookConfig, setWebhookConfig] = useState<WebhookConfig>({
@@ -67,6 +75,49 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
 
   const { toast } = useToast();
 
+  const handleConnect = async (type: 'oauth' | 'webhook' | 'token') => {
+    // Simulate connection process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const mockData = {
+      isConnected: true,
+      connectionType: type,
+      lastConnected: new Date(),
+      userName: type === 'oauth' ? 'VibeDevSquad#1234' : undefined,
+      serverName: 'Vibe Development',
+      channelName: 'notifications',
+      permissions: type === 'oauth' ? ['Send Messages', 'Embed Links', 'Manage Webhooks'] : ['Send Messages'],
+      expiresAt: type === 'oauth' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : undefined // 30 days
+    };
+    
+    setConnectionInfo(mockData);
+  };
+
+  const handleDisconnect = () => {
+    setConnectionInfo({
+      isConnected: false,
+      connectionType: undefined,
+      lastConnected: undefined,
+      userName: "",
+      serverName: "",
+      channelName: "",
+      permissions: [],
+      expiresAt: undefined
+    });
+  };
+
+  const handleRefresh = async () => {
+    // Simulate refresh process
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    if (connectionInfo.connectionType === 'oauth') {
+      setConnectionInfo(prev => ({
+        ...prev,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // Extend by 30 days
+      }));
+    }
+  };
+
   const handleWebhookConfigChange = (config: WebhookConfig) => {
     setWebhookConfig(config);
   };
@@ -89,9 +140,7 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
 
   const handleSave = () => {
     console.log("Saving Discord settings:", {
-      isConnected,
-      serverName,
-      channelName,
+      connectionInfo,
       webhookConfig,
       selectedChannels,
       agentStatusNotifications,
@@ -132,18 +181,25 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
       searchQuery={searchQuery}
     >
       <OptimizedStack gap="md">
-        {/* Connection Status */}
-        <DiscordConnectionStatus 
-          isConnected={isConnected}
-          onConnectionChange={setIsConnected}
-          serverName={serverName}
-          channelName={channelName}
-          onServerNameChange={setServerName}
-          onChannelNameChange={setChannelName}
+        {/* Enhanced Connection Status */}
+        <EnhancedConnectionStatus
+          platform="discord"
+          connectionInfo={connectionInfo}
+          onConnect={handleConnect}
+          onDisconnect={handleDisconnect}
+          onRefresh={handleRefresh}
+        />
+
+        {/* Webhook Configuration */}
+        <WebhookConfiguration
+          config={webhookConfig}
+          onConfigChange={setWebhookConfig}
+          platform="discord"
+          isConnected={connectionInfo.isConnected}
         />
 
         {/* Channel Configuration */}
-        {isConnected && (
+        {connectionInfo.isConnected && (
           <ChannelSelector
             channels={availableChannels}
             selectedChannels={selectedChannels}
@@ -153,7 +209,7 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
         )}
 
         {/* Message Format Customization */}
-        {isConnected && (
+        {connectionInfo.isConnected && (
           <MessageFormatCustomizer
             templates={messageTemplates}
             selectedTemplate={selectedTemplate}
@@ -164,7 +220,7 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
         )}
 
         {/* Notification Settings */}
-        {isConnected && (
+        {connectionInfo.isConnected && (
           <DiscordNotificationSettings
             agentStatusNotifications={agentStatusNotifications}
             taskCompletionNotifications={taskCompletionNotifications}
@@ -182,7 +238,7 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
         )}
 
         {/* Test Connection */}
-        {isConnected && <DiscordTestConnection />}
+        {connectionInfo.isConnected && <DiscordTestConnection />}
       </OptimizedStack>
     </SettingsSection>
   );

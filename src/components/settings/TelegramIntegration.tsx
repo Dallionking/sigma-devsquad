@@ -1,13 +1,13 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { SettingsSection } from "./SettingsSection";
 import { OptimizedStack } from "@/components/layout/SpaceOptimizedContainer";
-import { TelegramConnectionStatus } from "./telegram/TelegramConnectionStatus";
 import { TelegramNotificationSettings } from "./telegram/TelegramNotificationSettings";
 import { TelegramTestConnection } from "./telegram/TelegramTestConnection";
 import { ChannelSelector } from "./shared/ChannelSelector";
 import { MessageFormatCustomizer } from "./shared/MessageFormatCustomizer";
+import { WebhookConfiguration } from "./shared/WebhookConfiguration";
+import { EnhancedConnectionStatus } from "./shared/EnhancedConnectionStatus";
 import { WebhookConfig, ChannelConfig, MessageTemplate } from "@/types/webhook";
 
 interface TelegramIntegrationProps {
@@ -15,7 +15,17 @@ interface TelegramIntegrationProps {
 }
 
 export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationProps) => {
-  const [isConnected, setIsConnected] = useState(false);
+  // Connection state
+  const [connectionInfo, setConnectionInfo] = useState({
+    isConnected: false,
+    connectionType: undefined as 'oauth' | 'webhook' | 'token' | undefined,
+    lastConnected: undefined as Date | undefined,
+    userName: "",
+    serverName: "",
+    channelName: "",
+    permissions: [] as string[],
+    expiresAt: undefined as Date | undefined
+  });
   
   // Webhook configuration
   const [webhookConfig, setWebhookConfig] = useState<WebhookConfig>({
@@ -116,6 +126,43 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
     });
   };
 
+  const handleConnect = async (type: 'oauth' | 'webhook' | 'token') => {
+    // Simulate connection process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const mockData = {
+      isConnected: true,
+      connectionType: type,
+      lastConnected: new Date(),
+      userName: '@VibeDevSquadBot',
+      serverName: undefined,
+      channelName: undefined,
+      permissions: ['Send Messages', 'Send Photos', 'Send Documents'],
+      expiresAt: undefined // Telegram bot tokens don't expire
+    };
+    
+    setConnectionInfo(mockData);
+  };
+
+  const handleDisconnect = () => {
+    setConnectionInfo({
+      isConnected: false,
+      connectionType: undefined,
+      lastConnected: undefined,
+      userName: "",
+      serverName: "",
+      channelName: "",
+      permissions: [],
+      expiresAt: undefined
+    });
+  };
+
+  const handleRefresh = async () => {
+    // Simulate refresh process
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Telegram doesn't need token refresh, just validate connection
+  };
+
   return (
     <SettingsSection
       title="Telegram Integration"
@@ -125,14 +172,25 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
       searchQuery={searchQuery}
     >
       <OptimizedStack gap="md">
-        {/* Connection Status */}
-        <TelegramConnectionStatus 
-          isConnected={isConnected}
-          onConnectionChange={setIsConnected}
+        {/* Enhanced Connection Status */}
+        <EnhancedConnectionStatus
+          platform="telegram"
+          connectionInfo={connectionInfo}
+          onConnect={handleConnect}
+          onDisconnect={handleDisconnect}
+          onRefresh={handleRefresh}
+        />
+
+        {/* Webhook Configuration */}
+        <WebhookConfiguration
+          config={webhookConfig}
+          onConfigChange={setWebhookConfig}
+          platform="telegram"
+          isConnected={connectionInfo.isConnected}
         />
 
         {/* Channel Configuration */}
-        {isConnected && (
+        {connectionInfo.isConnected && (
           <ChannelSelector
             channels={availableChannels}
             selectedChannels={selectedChannels}
@@ -142,7 +200,7 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
         )}
 
         {/* Message Format Customization */}
-        {isConnected && (
+        {connectionInfo.isConnected && (
           <MessageFormatCustomizer
             templates={messageTemplates}
             selectedTemplate={selectedTemplate}
@@ -153,7 +211,7 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
         )}
 
         {/* Notification Settings */}
-        {isConnected && (
+        {connectionInfo.isConnected && (
           <TelegramNotificationSettings
             agentStatusNotifications={agentStatusNotifications}
             taskCompletionNotifications={taskCompletionNotifications}
@@ -169,7 +227,7 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
         )}
 
         {/* Test Connection */}
-        {isConnected && <TelegramTestConnection />}
+        {connectionInfo.isConnected && <TelegramTestConnection />}
       </OptimizedStack>
     </SettingsSection>
   );
