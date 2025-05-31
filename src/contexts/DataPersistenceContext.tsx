@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { useDataSync } from '@/hooks/useDataSync';
@@ -21,6 +20,7 @@ interface DataPersistenceContextType {
   isOnline: boolean;
   pendingSync: number;
   forceSync: () => void;
+  clearSyncQueue: () => void;
   
   // Backup management
   backups: any[];
@@ -128,6 +128,7 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     isOnline: dataSync.isOnline,
     pendingSync: dataSync.pendingSync,
     forceSync: dataSync.forceSync,
+    clearSyncQueue: dataSync.clearSyncQueue,
     
     // Backup management
     backups: backupManager.backups,

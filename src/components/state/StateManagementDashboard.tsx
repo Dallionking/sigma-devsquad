@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +10,7 @@ import { PerformanceMonitoringCard } from "./PerformanceMonitoringCard";
 import { EnhancedSyncStatusCard } from "./EnhancedSyncStatusCard";
 import { SyncActivityLog } from "./SyncActivityLog";
 import { SyncTroubleshootingPanel } from "./SyncTroubleshootingPanel";
-import { Database, Sync, Activity, Settings, AlertTriangle, CheckCircle } from "lucide-react";
+import { Database, RotateCcw, Activity, Settings, AlertTriangle, CheckCircle } from "lucide-react";
 
 export const StateManagementDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -25,7 +24,7 @@ export const StateManagementDashboard = () => {
 
   const getSyncStatus = () => {
     if (!isOnline) return { status: 'offline', color: 'destructive', icon: AlertTriangle };
-    if (pendingSync > 0) return { status: 'syncing', color: 'warning', icon: Sync };
+    if (pendingSync > 0) return { status: 'syncing', color: 'warning', icon: RotateCcw };
     return { status: 'synced', color: 'default', icon: CheckCircle };
   };
 
@@ -70,7 +69,7 @@ export const StateManagementDashboard = () => {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Sync className="w-4 h-4 text-green-500" />
+              <RotateCcw className="w-4 h-4 text-green-500" />
               <span className="text-sm font-medium">Pending Items</span>
             </div>
             <div className="text-2xl font-bold mt-1">{pendingSync}</div>

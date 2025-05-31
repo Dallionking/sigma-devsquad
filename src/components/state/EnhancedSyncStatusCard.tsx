@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useDataPersistence } from "@/contexts/DataPersistenceContext";
 import { 
-  Sync, 
+  RotateCcw, 
   Database, 
   CheckCircle, 
   AlertTriangle, 
