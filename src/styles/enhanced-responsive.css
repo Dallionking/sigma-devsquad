@@ -105,6 +105,74 @@
   .\32xl\:p-8 { @media (min-width: 1920px) { padding: 2rem; } }
   .\32xl\:text-2xl { @media (min-width: 1920px) { font-size: 1.5rem; line-height: 2rem; } }
 
+  /* Enhanced text handling utilities */
+  .text-responsive-xs {
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
+    line-height: 1.4;
+  }
+
+  .text-responsive-sm {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    line-height: 1.5;
+  }
+
+  .text-responsive-base {
+    font-size: clamp(1rem, 3vw, 1.125rem);
+    line-height: 1.6;
+  }
+
+  .text-responsive-lg {
+    font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+    line-height: 1.7;
+  }
+
+  .text-responsive-xl {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    line-height: 1.75;
+  }
+
+  /* Enhanced text overflow handling with tooltips */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    text-overflow: ellipsis;
+  }
+
+  /* Enhanced word breaking for mobile */
+  .break-words-mobile {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+  }
+
+  /* High contrast text for better readability */
+  .text-high-contrast {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   /* Touch-friendly targets for mobile */
   .touch-target {
     min-height: 44px;
@@ -120,16 +188,6 @@
     padding-bottom: env(safe-area-inset-bottom, 0);
     padding-left: env(safe-area-inset-left, 0);
     padding-right: env(safe-area-inset-right, 0);
-  }
-
-  /* Improved text overflow handling */
-  .break-words-mobile {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
   }
 
   /* Better scroll behavior for mobile */
@@ -226,6 +284,34 @@
     .btn-mobile {
       font-size: 1rem;
       padding: 0.75rem 1.25rem;
+    }
+  }
+
+  /* Enhanced text contrast for better readability */
+  .contrast-enhanced {
+    color: hsl(var(--foreground));
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .contrast-enhanced-muted {
+    color: hsl(var(--muted-foreground));
+    opacity: 0.8;
+  }
+
+  /* Responsive font weight adjustments */
+  .font-weight-responsive {
+    font-weight: 400;
+  }
+
+  @media (min-width: 768px) {
+    .font-weight-responsive {
+      font-weight: 500;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .font-weight-responsive {
+      font-weight: 600;
     }
   }
 }

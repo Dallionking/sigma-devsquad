@@ -26,6 +26,7 @@ import { useMessages } from "@/contexts/MessageContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useToast } from "@/hooks/use-toast";
 import { useResponsiveBreakpoints } from "@/hooks/useResponsiveBreakpoints";
+import { ResponsiveText } from "./ResponsiveText";
 import { cn } from "@/lib/utils";
 
 export const ResponsiveUnifiedChatInterface = () => {
@@ -205,11 +206,15 @@ export const ResponsiveUnifiedChatInterface = () => {
           {/* Sidebar Header */}
           <div className="p-3 sm:p-4 lg:p-4 xl:p-6 border-b flex-shrink-0">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
-                <h2 className="font-semibold text-sm sm:text-base lg:text-lg xl:text-xl truncate">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <ResponsiveText 
+                  variant="heading" 
+                  truncate={true}
+                  className="text-high-contrast"
+                >
                   Agent Communication
-                </h2>
+                </ResponsiveText>
               </div>
               
               {isMobile && (
@@ -230,7 +235,7 @@ export const ResponsiveUnifiedChatInterface = () => {
                 variant={activeView === "chat" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setActiveView("chat")}
-                className="flex-1 text-xs sm:text-sm px-2 sm:px-3"
+                className="flex-1 text-responsive-xs px-2 sm:px-3 btn-mobile"
               >
                 Chat
               </Button>
@@ -238,19 +243,19 @@ export const ResponsiveUnifiedChatInterface = () => {
                 variant={activeView === "history" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setActiveView("history")}
-                className="flex-1 text-xs sm:text-sm px-2 sm:px-3"
+                className="flex-1 text-responsive-xs px-2 sm:px-3 btn-mobile"
               >
-                <History className="w-3 h-3 mr-1" />
-                <span className="hidden xs:inline">History</span>
+                <History className="w-3 h-3 mr-1 flex-shrink-0" />
+                <span className="hidden xs:inline truncate">History</span>
               </Button>
               <Button
                 variant={activeView === "tasks" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setActiveView("tasks")}
-                className="flex-1 text-xs sm:text-sm px-2 sm:px-3"
+                className="flex-1 text-responsive-xs px-2 sm:px-3 btn-mobile"
               >
-                <Plus className="w-3 h-3 mr-1" />
-                <span className="hidden xs:inline">Task</span>
+                <Plus className="w-3 h-3 mr-1 flex-shrink-0" />
+                <span className="hidden xs:inline truncate">Task</span>
               </Button>
             </div>
 
@@ -262,7 +267,7 @@ export const ResponsiveUnifiedChatInterface = () => {
                   placeholder="Search messages..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 text-sm h-9"
+                  className="pl-10 text-responsive-sm h-9 no-zoom"
                 />
               </div>
             )}
@@ -283,21 +288,29 @@ export const ResponsiveUnifiedChatInterface = () => {
                   <div className="relative shrink-0">
                     <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
                       <AvatarImage src={agent.avatar} />
-                      <AvatarFallback className="text-xs sm:text-sm">
+                      <AvatarFallback className="text-responsive-xs">
                         {agent.name.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
                     <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate text-sm sm:text-base">
+                    <ResponsiveText 
+                      variant="default" 
+                      truncate={true}
+                      className="font-weight-responsive contrast-enhanced"
+                    >
                       {agent.name}
-                    </p>
-                    <p className="opacity-70 truncate text-xs sm:text-sm">
+                    </ResponsiveText>
+                    <ResponsiveText 
+                      variant="muted" 
+                      truncate={true}
+                      className="contrast-enhanced-muted"
+                    >
                       {agent.specialization.replace(/-/g, ' ')}
-                    </p>
+                    </ResponsiveText>
                   </div>
-                  <Badge variant="secondary" className="text-xs px-2 py-1 shrink-0">
+                  <Badge variant="secondary" className="text-responsive-xs px-2 py-1 shrink-0">
                     {agent.status}
                   </Badge>
                 </div>
@@ -320,7 +333,9 @@ export const ResponsiveUnifiedChatInterface = () => {
             >
               <Menu className="w-4 h-4" />
             </Button>
-            <h1 className="text-base font-semibold truncate">Communication</h1>
+            <ResponsiveText variant="heading" className="text-high-contrast">
+              Communication
+            </ResponsiveText>
             <div className="w-10" />
           </div>
         )}
@@ -333,32 +348,36 @@ export const ResponsiveUnifiedChatInterface = () => {
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <Avatar className="w-8 h-8 sm:w-10 sm:h-10 shrink-0">
                     <AvatarImage src={agents.find(a => a.id === selectedAgent)?.avatar} />
-                    <AvatarFallback className="text-xs sm:text-sm">
+                    <AvatarFallback className="text-responsive-xs">
                       {getAgentName(selectedAgent)[0]}
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-medium truncate text-sm sm:text-base">
+                    <ResponsiveText 
+                      variant="heading" 
+                      truncate={true}
+                      className="text-high-contrast"
+                    >
                       {getAgentName(selectedAgent)}
-                    </h3>
-                    <p className="text-muted-foreground text-xs sm:text-sm">
+                    </ResponsiveText>
+                    <ResponsiveText variant="muted">
                       Online
-                    </p>
+                    </ResponsiveText>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                  <Button variant="outline" size="sm" className="px-2 sm:px-3">
+                  <Button variant="outline" size="sm" className="px-2 sm:px-3 btn-mobile">
                     <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
-                  <Button variant="outline" size="sm" className="px-2 sm:px-3">
+                  <Button variant="outline" size="sm" className="px-2 sm:px-3 btn-mobile">
                     <Video className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={() => setShowTaskForm(!showTaskForm)}
-                    className="px-2 sm:px-3"
+                    className="px-2 sm:px-3 btn-mobile"
                   >
                     <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
@@ -384,7 +403,7 @@ export const ResponsiveUnifiedChatInterface = () => {
                             )}
                           >
                             <Avatar className="w-6 h-6 sm:w-8 sm:h-8 shrink-0">
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback className="text-responsive-xs">
                                 {isFromUser ? "U" : getAgentName(selectedAgent)[0]}
                               </AvatarFallback>
                             </Avatar>
@@ -395,7 +414,7 @@ export const ResponsiveUnifiedChatInterface = () => {
                             )}>
                               <div
                                 className={cn(
-                                  "rounded-lg px-3 py-2 text-sm break-words",
+                                  "rounded-lg px-3 py-2 break-words-mobile",
                                   isFromUser
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-muted text-foreground"
@@ -404,16 +423,29 @@ export const ResponsiveUnifiedChatInterface = () => {
                                 {msg.type === "task_assignment" ? (
                                   <div className="flex items-center gap-2">
                                     <Calendar className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
-                                    <span className="min-w-0">{msg.content}</span>
+                                    <ResponsiveText 
+                                      variant="small" 
+                                      className="min-w-0 contrast-enhanced"
+                                    >
+                                      {msg.content}
+                                    </ResponsiveText>
                                   </div>
                                 ) : (
-                                  <span>{msg.content}</span>
+                                  <ResponsiveText 
+                                    variant="small" 
+                                    className="contrast-enhanced"
+                                  >
+                                    {msg.content}
+                                  </ResponsiveText>
                                 )}
                               </div>
                               
-                              <div className="text-muted-foreground mt-1 text-xs">
+                              <ResponsiveText 
+                                variant="muted" 
+                                className="mt-1 contrast-enhanced-muted"
+                              >
                                 {formatTime(msg.timestamp)}
-                              </div>
+                              </ResponsiveText>
                             </div>
                           </div>
                         );
@@ -422,7 +454,7 @@ export const ResponsiveUnifiedChatInterface = () => {
                       {isTyping && (
                         <div className="flex gap-2 sm:gap-3">
                           <Avatar className="w-6 h-6 sm:w-8 sm:h-8 shrink-0">
-                            <AvatarFallback className="text-xs">
+                            <AvatarFallback className="text-responsive-xs">
                               {getAgentName(selectedAgent)[0]}
                             </AvatarFallback>
                           </Avatar>
@@ -453,19 +485,19 @@ export const ResponsiveUnifiedChatInterface = () => {
                             handleSendMessage();
                           }
                         }}
-                        className="min-h-[60px] resize-none text-sm flex-1"
+                        className="min-h-[60px] resize-none text-responsive-sm flex-1 no-zoom"
                         rows={2}
                       />
                       
                       <div className="flex flex-col gap-2 shrink-0">
-                        <Button variant="outline" size="sm" className="px-2">
+                        <Button variant="outline" size="sm" className="px-2 btn-mobile">
                           <Paperclip className="w-4 h-4" />
                         </Button>
                         <Button
                           size="sm"
                           onClick={handleSendMessage}
                           disabled={!message.trim()}
-                          className="px-2"
+                          className="px-2 btn-mobile"
                         >
                           <Send className="w-4 h-4" />
                         </Button>
@@ -484,28 +516,42 @@ export const ResponsiveUnifiedChatInterface = () => {
                         <CardContent className="p-3 sm:p-4">
                           <div className="flex items-start gap-3">
                             <Avatar className="w-6 h-6 sm:w-8 sm:h-8 shrink-0">
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback className="text-responsive-xs">
                                 {getAgentName(msg.from)[0]}
                               </AvatarFallback>
                             </Avatar>
                             
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <span className="font-medium truncate text-sm">
+                                <ResponsiveText 
+                                  variant="default" 
+                                  truncate={true}
+                                  className="font-weight-responsive contrast-enhanced"
+                                >
                                   {getAgentName(msg.from)}
-                                </span>
-                                <span className="text-muted-foreground text-xs">→</span>
-                                <span className="text-muted-foreground truncate text-sm">
+                                </ResponsiveText>
+                                <span className="text-muted-foreground text-responsive-xs">→</span>
+                                <ResponsiveText 
+                                  variant="muted" 
+                                  truncate={true}
+                                  className="contrast-enhanced-muted"
+                                >
                                   {getAgentName(msg.to)}
-                                </span>
-                                <span className="text-muted-foreground ml-auto shrink-0 text-xs">
+                                </ResponsiveText>
+                                <ResponsiveText 
+                                  variant="muted" 
+                                  className="ml-auto shrink-0 contrast-enhanced-muted"
+                                >
                                   {formatDate(msg.timestamp)}
-                                </span>
+                                </ResponsiveText>
                               </div>
                               
-                              <p className="break-words text-sm">
+                              <ResponsiveText 
+                                variant="small" 
+                                className="break-words-mobile contrast-enhanced"
+                              >
                                 {msg.content}
-                              </p>
+                              </ResponsiveText>
                             </div>
                           </div>
                         </CardContent>
@@ -520,37 +566,46 @@ export const ResponsiveUnifiedChatInterface = () => {
                 <div className="p-3 sm:p-4 space-y-4 overflow-y-auto">
                   <div className="space-y-4">
                     <div>
-                      <label className="font-medium mb-2 block text-sm">
+                      <ResponsiveText 
+                        variant="default" 
+                        className="font-weight-responsive mb-2 block contrast-enhanced"
+                      >
                         Task Title
-                      </label>
+                      </ResponsiveText>
                       <Input
                         placeholder="Enter task title"
                         value={taskData.title}
                         onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                        className="text-sm"
+                        className="text-responsive-sm no-zoom"
                       />
                     </div>
 
                     <div>
-                      <label className="font-medium mb-2 block text-sm">
+                      <ResponsiveText 
+                        variant="default" 
+                        className="font-weight-responsive mb-2 block contrast-enhanced"
+                      >
                         Description
-                      </label>
+                      </ResponsiveText>
                       <Textarea
                         placeholder="Describe the task..."
                         value={taskData.description}
                         onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
                         rows={3}
-                        className="text-sm"
+                        className="text-responsive-sm no-zoom"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-medium mb-2 block text-sm">
+                        <ResponsiveText 
+                          variant="default" 
+                          className="font-weight-responsive mb-2 block contrast-enhanced"
+                        >
                           Priority
-                        </label>
+                        </ResponsiveText>
                         <Select value={taskData.priority} onValueChange={(value: any) => setTaskData({ ...taskData, priority: value })}>
-                          <SelectTrigger className="text-sm">
+                          <SelectTrigger className="text-responsive-sm">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -563,27 +618,30 @@ export const ResponsiveUnifiedChatInterface = () => {
                       </div>
 
                       <div>
-                        <label className="font-medium mb-2 block text-sm">
+                        <ResponsiveText 
+                          variant="default" 
+                          className="font-weight-responsive mb-2 block contrast-enhanced"
+                        >
                           Due Date
-                        </label>
+                        </ResponsiveText>
                         <Input
                           type="datetime-local"
                           value={taskData.dueDate}
                           onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
-                          className="text-sm"
+                          className="text-responsive-sm no-zoom"
                         />
                       </div>
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <Button onClick={handleSubmitTask} className="flex-1 text-sm">
+                      <Button onClick={handleSubmitTask} className="flex-1 text-responsive-sm btn-mobile">
                         <Send className="w-4 h-4 mr-2" />
                         Assign Task
                       </Button>
                       <Button 
                         variant="outline" 
                         onClick={() => setTaskData({ title: "", description: "", priority: "medium", dueDate: "" })}
-                        className="text-sm"
+                        className="text-responsive-sm btn-mobile"
                       >
                         Clear
                       </Button>
@@ -597,12 +655,18 @@ export const ResponsiveUnifiedChatInterface = () => {
           <div className="flex items-center justify-center h-full p-6">
             <div className="text-center max-w-md">
               <MessageSquare className="mx-auto text-muted-foreground mb-4 w-8 h-8 sm:w-12 sm:h-12" />
-              <h3 className="font-medium mb-2 text-base sm:text-lg">
+              <ResponsiveText 
+                variant="heading" 
+                className="mb-2 text-high-contrast"
+              >
                 Select an agent to start
-              </h3>
-              <p className="text-muted-foreground text-sm">
+              </ResponsiveText>
+              <ResponsiveText 
+                variant="muted" 
+                className="contrast-enhanced-muted"
+              >
                 Choose an agent from the sidebar to begin communicating, view history, or assign tasks
-              </p>
+              </ResponsiveText>
             </div>
           </div>
         )}
