@@ -48,9 +48,6 @@ export const SidebarRenderer = ({
     return (
       <TeamDashboard
         team={selectedTeam}
-        selectedAgentProfile={selectedAgentProfile}
-        onTeamSelect={onTeamSelect}
-        onAgentProfileSelect={onAgentProfileSelect}
       />
     );
   }

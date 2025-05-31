@@ -8,11 +8,23 @@ import { TrendingUp, TrendingDown, Minus, Users, Target, Clock, CheckCircle } fr
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 
 interface TeamDashboardProps {
-  team: Team;
+  team: Team | null;
 }
 
 export const TeamDashboard = ({ team }: TeamDashboardProps) => {
   const { getTeamMembers, getTeamTasks, getAgentProfileById } = useTeams();
+  
+  // Early return if no team is selected
+  if (!team) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <h3 className="text-lg font-medium mb-2">No Team Selected</h3>
+          <p className="text-muted-foreground">Select a team to view its dashboard</p>
+        </div>
+      </div>
+    );
+  }
   
   const members = getTeamMembers(team.id);
   const tasks = getTeamTasks(team.id);

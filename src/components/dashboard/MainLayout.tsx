@@ -116,6 +116,7 @@ export const MainLayout = ({
             onMessageSelect={onMessageSelect}
             onTeamSelect={onTeamSelect}
             onAgentProfileSelect={onAgentProfileSelect}
+            onViewModeChange={onViewModeChange}
           />
         </div>
 
