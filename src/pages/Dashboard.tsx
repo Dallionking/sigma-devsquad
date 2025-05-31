@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [showTeamView, setShowTeamView] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [syncPanelCollapsed, setSyncPanelCollapsed] = useState(false);
+  const [syncPanelCollapsed, setSyncPanelCollapsed] = useState(true); // Default to collapsed since sync is in header
 
   // Use centralized state management
   const { agents } = useAgents();
@@ -65,7 +65,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
-      {/* Streamlined Header */}
+      {/* Streamlined Header with integrated sync status */}
       <StreamlinedHeader
         activeAgents={activeAgents}
         totalAgents={agents.length}
@@ -82,11 +82,11 @@ const Dashboard = () => {
           </div>
         )}
         
-        {/* Main Layout */}
+        {/* Main Layout - sync panel always collapsed since sync is in header */}
         <MainLayout
           showTeamView={showTeamView}
           sidebarCollapsed={sidebarCollapsed}
-          syncPanelCollapsed={syncPanelCollapsed}
+          syncPanelCollapsed={true}
           agents={agents}
           tasks={tasks}
           messages={messages}
@@ -98,7 +98,7 @@ const Dashboard = () => {
           viewMode={viewMode}
           hasSelection={hasSelection}
           onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
+          onSyncPanelToggle={() => {}} // No-op since sync is in header
           onAgentSelect={handleAgentSelect}
           onTaskSelect={handleTaskSelect}
           onMessageSelect={handleMessageSelect}
