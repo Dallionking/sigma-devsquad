@@ -67,13 +67,15 @@ export const MainLayout = ({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background">
-      {/* View Mode Tabs - Moved above content */}
+      {/* View Mode Tabs - Only show in individual view */}
       {!showTeamView && (
-        <ViewModeTabs
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-          notificationCounts={notificationCounts}
-        />
+        <div className="border-b border-border/60 bg-card/30 dark:bg-card/30">
+          <ViewModeTabs
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            notificationCounts={notificationCounts}
+          />
+        </div>
       )}
 
       {/* Main Content Area */}
