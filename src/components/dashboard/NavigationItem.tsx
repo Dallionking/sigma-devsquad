@@ -38,10 +38,15 @@ export const NavigationItem = ({
       disabled={disabled}
       className={cn(
         // Base styles with improved responsive behavior
-        "w-full justify-start transition-all duration-300 ease-in-out group relative",
+        "w-full transition-all duration-300 ease-in-out group relative overflow-hidden",
         "hover:scale-[1.02] active:scale-[0.98]",
-        // Collapsed styles with better spacing
-        isCollapsed ? "h-12 w-12 p-0 flex items-center justify-center" : "h-11 px-3 py-2",
+        // Collapsed styles - fixed dimensions to prevent squishing
+        isCollapsed ? [
+          "h-12 w-12 p-0 flex items-center justify-center flex-shrink-0",
+          "min-w-[3rem] min-h-[3rem]"
+        ] : [
+          "h-11 px-3 py-2 justify-start min-w-0"
+        ],
         // Active state styles with better contrast
         isActive && [
           "bg-primary text-primary-foreground shadow-md",
@@ -62,18 +67,18 @@ export const NavigationItem = ({
       asChild={href ? true : false}
     >
       {href ? (
-        <a href={href} className="flex items-center gap-3 w-full min-w-0">
+        <a href={href} className="flex items-center gap-3 w-full min-w-0 overflow-hidden">
           <Icon className={cn(
             "flex-shrink-0 transition-all duration-300",
             isCollapsed ? "w-5 h-5" : "w-4 h-4",
             "group-hover:scale-110 group-active:scale-95"
           )} />
           {!isCollapsed && (
-            <>
+            <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
               <TruncatedText 
                 lines={1} 
-                className="flex-1 text-left font-medium text-dynamic-sm min-w-0"
-                expandOnHover={false}
+                className="flex-1 text-left font-medium min-w-0 overflow-hidden"
+                variant="sm"
                 showTooltip={false}
               >
                 {label}
@@ -92,22 +97,22 @@ export const NavigationItem = ({
                   </DynamicText>
                 </Badge>
               )}
-            </>
+            </div>
           )}
         </a>
       ) : (
-        <div className="flex items-center gap-3 w-full min-w-0">
+        <div className="flex items-center gap-3 w-full min-w-0 overflow-hidden">
           <Icon className={cn(
             "flex-shrink-0 transition-all duration-300",
             isCollapsed ? "w-5 h-5" : "w-4 h-4",
             "group-hover:scale-110 group-active:scale-95"
           )} />
           {!isCollapsed && (
-            <>
+            <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
               <TruncatedText 
                 lines={1} 
-                className="flex-1 text-left font-medium text-dynamic-sm min-w-0"
-                expandOnHover={false}
+                className="flex-1 text-left font-medium min-w-0 overflow-hidden"
+                variant="sm"
                 showTooltip={false}
               >
                 {label}
@@ -126,7 +131,7 @@ export const NavigationItem = ({
                   </DynamicText>
                 </Badge>
               )}
-            </>
+            </div>
           )}
         </div>
       )}
@@ -144,7 +149,7 @@ export const NavigationItem = ({
               {badge && (
                 <Badge 
                   variant="destructive" 
-                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center animate-pulse"
+                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center animate-pulse z-10"
                 >
                   <DynamicText variant="xs" className="font-bold">
                     {badge}
