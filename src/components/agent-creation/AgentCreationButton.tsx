@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -10,6 +10,10 @@ export const AgentCreationButton = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
+  const handleOpenChange = useCallback((newOpen: boolean) => {
+    setOpen(newOpen);
+  }, []);
+
   const creationMethods = [
     {
       id: "new",
@@ -17,10 +21,10 @@ export const AgentCreationButton = () => {
       description: "Build from scratch with custom configuration",
       icon: Bot,
       color: "bg-blue-100 text-blue-600",
-      action: () => {
+      action: useCallback(() => {
         setOpen(false);
         navigate("/agent-creation");
-      }
+      }, [navigate])
     },
     {
       id: "template",
@@ -28,10 +32,10 @@ export const AgentCreationButton = () => {
       description: "Start with pre-configured agent templates",
       icon: Sparkles,
       color: "bg-purple-100 text-purple-600",
-      action: () => {
+      action: useCallback(() => {
         setOpen(false);
         navigate("/agent-creation?template=true");
-      }
+      }, [navigate])
     },
     {
       id: "clone",
@@ -39,19 +43,20 @@ export const AgentCreationButton = () => {
       description: "Duplicate and modify an existing agent",
       icon: Copy,
       color: "bg-green-100 text-green-600",
-      action: () => {
+      action: useCallback(() => {
         setOpen(false);
         navigate("/agent-creation?method=clone");
-      }
+      }, [navigate])
     }
   ];
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button 
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-50"
+          className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
           size="lg"
+          aria-label="Create new agent"
         >
           <Plus className="w-6 h-6" />
         </Button>
