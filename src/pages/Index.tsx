@@ -10,12 +10,14 @@ import { ViewToggle } from "@/components/dashboard/ViewToggle";
 import { SidebarRenderer } from "@/components/dashboard/SidebarRenderer";
 import { MainContentRenderer } from "@/components/dashboard/MainContentRenderer";
 import { DetailPanelRenderer } from "@/components/dashboard/DetailPanelRenderer";
+import { Button } from "@/components/ui/button";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
 import { useTeams } from "@/contexts/TeamContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Index = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -27,6 +29,7 @@ const Index = () => {
   const [showFooter, setShowFooter] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showTeamView, setShowTeamView] = useState(true);
+  const [syncPanelCollapsed, setSyncPanelCollapsed] = useState(false);
 
   // Use centralized state management with proper error handling
   const agentContext = useAgents();
@@ -153,10 +156,44 @@ const Index = () => {
           </div>
         )}
         
-        {/* Sync Status Panel - Fixed position sidebar */}
-        <div className="w-80 border-l bg-background/95 backdrop-blur-sm">
-          <div className="h-full overflow-y-auto p-4">
-            <SyncStatusPanel />
+        {/* Sync Status Panel - Collapsible sidebar */}
+        <div className={`border-l bg-background/95 backdrop-blur-sm transition-all duration-300 ${
+          syncPanelCollapsed ? 'w-12' : 'w-80'
+        }`}>
+          <div className="h-full flex flex-col">
+            {/* Collapse toggle button */}
+            <div className="flex justify-between items-center p-2 border-b">
+              {!syncPanelCollapsed && (
+                <span className="text-sm font-medium text-muted-foreground">Sync Status</span>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
+                className="p-1 h-8 w-8"
+              >
+                {syncPanelCollapsed ? (
+                  <ChevronLeft className="w-4 h-4" />
+                ) : (
+                  <ChevronRight className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+            
+            {/* Panel content */}
+            <div className="flex-1 overflow-y-auto">
+              {syncPanelCollapsed ? (
+                <div className="p-2 flex flex-col items-center space-y-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                </div>
+              ) : (
+                <div className="p-4">
+                  <SyncStatusPanel />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
