@@ -5,6 +5,7 @@ import { LandingFooter } from '@/components/landing/LandingFooter';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { LandingProblemSection } from '@/components/landing/LandingProblemSection';
 import { LandingSolutionSection } from '@/components/landing/LandingSolutionSection';
+import { LandingHowItWorksSection } from '@/components/landing/LandingHowItWorksSection';
 import { LandingFeaturesSection } from '@/components/landing/LandingFeaturesSection';
 
 export const LandingPage = () => {
@@ -31,6 +32,9 @@ export const LandingPage = () => {
         
         {/* Solution Section */}
         <LandingSolutionSection />
+        
+        {/* How It Works Section */}
+        <LandingHowItWorksSection />
         
         {/* Features Section */}
         <LandingFeaturesSection />
