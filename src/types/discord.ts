@@ -8,9 +8,14 @@ export interface DiscordConfig {
 
 export interface DiscordNotificationPayload {
   message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  priority?: 'low' | 'normal' | 'high' | 'critical';
+  type: 'info' | 'success' | 'warning' | 'error' | 'agent_status' | 'task_completion' | 'system_error' | 'planning_agent' | 'direct_message';
+  priority?: 'low' | 'normal' | 'medium' | 'high' | 'critical';
   metadata?: Record<string, any>;
+  title?: string;
+  agentName?: string;
+  taskId?: string;
+  userRole?: string;
+  timestamp?: Date;
 }
 
 export interface DiscordNotificationSettings {

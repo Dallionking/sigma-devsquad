@@ -13,7 +13,7 @@ export class DiscordNotificationHelpers {
       title: '🔄 Agent Status Changed',
       message: `${agentName} status changed from "${oldStatus}" to "${newStatus}"`,
       agentName,
-      priority: 'medium',
+      priority: 'normal',
       userRole
     };
   }
@@ -30,7 +30,7 @@ export class DiscordNotificationHelpers {
       message: `Task "${taskTitle}" has been completed successfully`,
       agentName,
       taskId,
-      priority: 'medium',
+      priority: 'normal',
       userRole
     };
   }
@@ -55,7 +55,7 @@ export class DiscordNotificationHelpers {
       type: 'planning_agent',
       title: '📋 Planning Agent Update',
       message,
-      priority: 'medium',
+      priority: 'normal',
       userRole
     };
   }

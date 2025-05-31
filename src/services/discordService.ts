@@ -1,25 +1,5 @@
 
-export interface DiscordConfig {
-  webhookUrl: string;
-  isEnabled: boolean;
-  serverName?: string;
-  channelName?: string;
-}
-
-export interface DiscordNotificationPayload {
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  priority?: 'low' | 'normal' | 'high' | 'critical';
-  metadata?: Record<string, any>;
-}
-
-export interface DiscordNotificationSettings {
-  agentStatusNotifications: boolean;
-  taskCompletionNotifications: boolean;
-  systemErrorNotifications: boolean;
-  planningAgentNotifications: boolean;
-  directMessaging: boolean;
-}
+import { DiscordConfig, DiscordNotificationPayload, DiscordNotificationSettings } from '@/types/discord';
 
 class DiscordService {
   private config: DiscordConfig | null = null;
@@ -81,7 +61,9 @@ class DiscordService {
     
     return await this.sendNotification({
       message: `Agent **${agentName}** status changed from ${oldStatus} to ${newStatus}`,
-      type: 'info',
+      type: 'agent_status',
+      agentName,
+      userRole,
       metadata: { agentName, oldStatus, newStatus, userRole }
     });
   }
@@ -91,7 +73,10 @@ class DiscordService {
     
     return await this.sendNotification({
       message: `Task **${taskTitle}** completed${agentName ? ` by ${agentName}` : ''}`,
-      type: 'success',
+      type: 'task_completion',
+      taskId,
+      agentName,
+      userRole,
       metadata: { taskId, taskTitle, agentName, userRole }
     });
   }
@@ -101,7 +86,7 @@ class DiscordService {
     
     return await this.sendNotification({
       message: `System ${priority === 'critical' ? 'Critical' : 'High Priority'} Alert: ${error}`,
-      type: 'error',
+      type: 'system_error',
       priority,
       metadata: { error, priority }
     });
@@ -112,7 +97,8 @@ class DiscordService {
     
     return await this.sendNotification({
       message: `Planning Agent Update: ${message}`,
-      type: 'info',
+      type: 'planning_agent',
+      userRole,
       metadata: { source: 'planning-agent', userRole }
     });
   }
@@ -127,13 +113,18 @@ class DiscordService {
       info: 0x3B82F6,    // Electric blue
       success: 0x10B981, // Success green
       warning: 0xF59E0B, // Warning amber
-      error: 0xEF4444    // Error red
+      error: 0xEF4444,   // Error red
+      agent_status: 0x9b59b6, // Purple
+      task_completion: 0x2ecc71, // Green
+      system_error: 0xe74c3c, // Red
+      planning_agent: 0xf39c12, // Orange
+      direct_message: 0x1abc9c // Teal
     };
 
     return {
-      title: 'Vibe DevSquad Notification',
+      title: payload.title || 'Vibe DevSquad Notification',
       description: payload.message,
-      color: colors[payload.type],
+      color: colors[payload.type] || colors.info,
       timestamp: new Date().toISOString(),
       footer: {
         text: 'AI Collaboration Hub'
