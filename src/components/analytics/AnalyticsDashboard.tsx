@@ -53,7 +53,9 @@ export const AnalyticsDashboard = ({ agents, onAgentSelect }: AnalyticsDashboard
             </div>
           </div>
         </CardHeader>
-      </CardContent>
+        <CardContent>
+        </CardContent>
+      </Card>
 
       {/* Customizable Layout Toggle */}
       {isCustomizing && (
