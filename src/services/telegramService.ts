@@ -8,7 +8,7 @@ export interface TelegramConfig {
 export interface NotificationPayload {
   message: string;
   type: 'info' | 'success' | 'warning' | 'error';
-  priority?: 'low' | 'normal' | 'high' | 'critical';
+  priority?: 'low' | 'normal' | 'medium' | 'high' | 'critical';
   metadata?: Record<string, any>;
 }
 

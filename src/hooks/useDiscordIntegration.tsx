@@ -9,8 +9,6 @@ interface DiscordIntegrationState {
   isConfigured: boolean;
   lastMessageSent: Date | null;
   messageCount: number;
-  serverName?: string;
-  channelName?: string;
 }
 
 export const useDiscordIntegration = () => {
@@ -28,9 +26,7 @@ export const useDiscordIntegration = () => {
     setState(prev => ({
       ...prev,
       isConnected: config.isEnabled,
-      isConfigured: true,
-      serverName: config.serverName,
-      channelName: config.channelName
+      isConfigured: true
     }));
   }, []);
 
@@ -79,7 +75,7 @@ export const useDiscordIntegration = () => {
     return await discordService.notifyPlanningAgentUpdate(message, userRole);
   }, []);
 
-  const updateNotificationSettings = useCallback((settings: DiscordNotificationSettings) => {
+  const updateNotificationSettings = useCallback((settings: Partial<DiscordNotificationSettings>) => {
     discordService.updateNotificationSettings(settings);
   }, []);
 
