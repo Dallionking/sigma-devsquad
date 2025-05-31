@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useWebSocket, RealtimeUpdate } from '@/contexts/WebSocketContext';
-import { Bell, X, Check, AlertTriangle, users } from 'lucide-react';
+import { Bell, X, Check, AlertTriangle, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Notification {

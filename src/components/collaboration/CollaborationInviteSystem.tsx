@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { users, Bell, Copy, Send, UserPlus, Mail } from 'lucide-react';
+import { Users, Bell, Copy, Send, UserPlus, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Invitation {
@@ -123,7 +123,7 @@ export const CollaborationInviteSystem = ({
     <div className={cn("space-y-4", className)}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold flex items-center gap-2">
-          <users className="w-5 h-5" />
+          <Users className="w-5 h-5" />
           Collaboration
         </h3>
         

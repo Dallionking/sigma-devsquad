@@ -7,7 +7,7 @@ import { NotificationCenter } from './NotificationCenter';
 import { CollaborationInviteSystem } from './CollaborationInviteSystem';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { users, activity, Bell, UserPlus } from 'lucide-react';
+import { Users, Activity, Bell, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface UserPresenceUIProps {
@@ -31,7 +31,7 @@ export const UserPresenceUI = ({
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <users className="w-5 h-5" />
+              <Users className="w-5 h-5" />
               User Presence & Collaboration
             </div>
             <div className="flex items-center gap-2">
@@ -49,11 +49,11 @@ export const UserPresenceUI = ({
           <Tabs defaultValue="activity" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="activity" className="flex items-center gap-2">
-                <activity className="w-4 h-4" />
+                <Activity className="w-4 h-4" />
                 Activity
               </TabsTrigger>
               <TabsTrigger value="presence" className="flex items-center gap-2">
-                <users className="w-4 h-4" />
+                <Users className="w-4 h-4" />
                 Presence
               </TabsTrigger>
               <TabsTrigger value="invite" className="flex items-center gap-2">

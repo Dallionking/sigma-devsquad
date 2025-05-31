@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useWebSocket, RealtimeUpdate } from '@/contexts/WebSocketContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { activity, users, Bell } from 'lucide-react';
+import { Activity, Users, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ActivityEvent {
@@ -99,7 +99,7 @@ export const UserActivityTimeline = ({
     <Card className={cn("h-full", className)}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <activity className="w-5 h-5" />
+          <Activity className="w-5 h-5" />
           Activity Timeline
           <Badge variant="secondary" className="ml-auto">
             {activities.length}
@@ -112,7 +112,7 @@ export const UserActivityTimeline = ({
           <div className="space-y-3 p-4">
             {activities.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
                 <p>No recent activity</p>
                 <p className="text-sm">Activity will appear here as users collaborate</p>
               </div>

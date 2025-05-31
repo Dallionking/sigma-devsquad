@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useWebSocket } from '@/contexts/WebSocketContext';
-import { users, Bell } from 'lucide-react';
+import { Users, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PresenceAwarenessProps {
