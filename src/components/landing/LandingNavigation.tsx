@@ -46,14 +46,14 @@ export const LandingNavigation = () => {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="#" className="flex items-center space-x-2">
+            <button onClick={() => navigate('/')} className="flex items-center space-x-2 cursor-pointer">
               <div className="w-8 h-8 sm:w-10 sm:h-10 vibe-gradient-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg sm:text-xl">V</span>
               </div>
               <span className="vibe-heading-md text-foreground">
                 Vibe <span className="vibe-gradient-text">DevSquad</span>
               </span>
-            </a>
+            </button>
           </div>
 
           {/* Desktop Navigation */}

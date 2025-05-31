@@ -13,12 +13,12 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
   const location = useLocation();
   
   const isSettingsPage = location.pathname === "/settings";
-  const isLLMPage = location.pathname === "/llm-integration";
-  const isAgentConfigPage = location.pathname === "/agent-configuration";
-  const isMCPPage = location.pathname === "/mcp-management";
-  const isIDEPage = location.pathname === "/ide-integration";
-  const isPlanningAgentPage = location.pathname === "/planning-agent";
-  const isDashboardPage = location.pathname === "/";
+  const isLLMPage = location.pathname === "/llm";
+  const isAgentConfigPage = location.pathname === "/agents/config";
+  const isMCPPage = location.pathname === "/mcp";
+  const isIDEPage = location.pathname === "/ide";
+  const isPlanningAgentPage = location.pathname === "/planning";
+  const isDashboardPage = location.pathname === "/dashboard";
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -35,7 +35,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isDashboardPage && !showTeamView ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/")}
+        onClick={() => handleNavigation("/dashboard")}
         className="h-8"
       >
         Dashboard
@@ -54,7 +54,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isPlanningAgentPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/planning-agent")}
+        onClick={() => handleNavigation("/planning")}
         className="h-8"
       >
         <Layers className="w-4 h-4 mr-2" />
@@ -63,7 +63,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isAgentConfigPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/agent-configuration")}
+        onClick={() => handleNavigation("/agents/config")}
         className="h-8"
       >
         <Bot className="w-4 h-4 mr-2" />
@@ -72,7 +72,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isMCPPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/mcp-management")}
+        onClick={() => handleNavigation("/mcp")}
         className="h-8"
       >
         <Package className="w-4 h-4 mr-2" />
@@ -81,7 +81,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isLLMPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/llm-integration")}
+        onClick={() => handleNavigation("/llm")}
         className="h-8"
       >
         <Brain className="w-4 h-4 mr-2" />
@@ -90,7 +90,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isIDEPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/ide-integration")}
+        onClick={() => handleNavigation("/ide")}
         className="h-8"
       >
         <Monitor className="w-4 h-4 mr-2" />
