@@ -30,7 +30,7 @@ export const AgentChatPanel = ({ onClose }: AgentChatPanelProps) => {
             </div>
           </div>
           <div className="flex-1 min-h-0 p-3">
-            <UnifiedCommunicationHub showPresence={true} />
+            <UnifiedCommunicationHub />
           </div>
         </div>
       </div>

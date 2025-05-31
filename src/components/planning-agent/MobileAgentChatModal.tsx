@@ -27,7 +27,7 @@ export const MobileAgentChatModal = ({ onClose }: MobileAgentChatModalProps) => 
             </Button>
           </div>
           <div className="flex-1 min-h-0 p-4">
-            <UnifiedCommunicationHub showPresence={true} />
+            <UnifiedCommunicationHub />
           </div>
         </div>
       </div>

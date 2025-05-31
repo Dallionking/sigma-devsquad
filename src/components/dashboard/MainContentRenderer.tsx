@@ -102,7 +102,6 @@ export const MainContentRenderer = ({
             {/* Unified Communication Hub */}
             <UnifiedCommunicationHub 
               defaultTab="chat"
-              showPresence={true}
             />
           </div>
         );
