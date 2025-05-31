@@ -8,7 +8,7 @@ import { HeadingsTab } from './HeadingsTab';
 import { TruncationTab } from './TruncationTab';
 import { TestResultsTab } from './TestResultsTab';
 
-interface TestContent {
+interface TestContent extends Record<string, string> {
   short: string;
   medium: string;
   long: string;
