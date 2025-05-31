@@ -34,7 +34,7 @@ export const useConfigurationStatus = (config: IntegrationConfig) => {
     // Check connection status
     if (!connectionInfo.isConnected) {
       details.push('Not connected to ' + platform);
-      return { status: 'unconfigured', details };
+      return { status, details };
     }
     
     // Connection is established
@@ -50,7 +50,7 @@ export const useConfigurationStatus = (config: IntegrationConfig) => {
         }
       } else {
         details.push('Webhook URL missing');
-        return { status: 'partial', details };
+        return { status, details };
       }
     }
     

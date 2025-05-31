@@ -1,17 +1,16 @@
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
 import { OptimizedStack } from "@/components/layout/SpaceOptimizedContainer";
-import { Webhook, Shield, TestTube, Clock, AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { Webhook, Shield, Info } from "lucide-react";
 import { WebhookConfig } from "@/types/webhook";
+import { WebhookUrlInput } from "./webhook/WebhookUrlInput";
+import { WebhookTestSection } from "./webhook/WebhookTestSection";
+import { Input } from "@/components/ui/input";
 
 interface WebhookConfigurationProps {
   config: WebhookConfig;
@@ -26,87 +25,8 @@ export const WebhookConfiguration = ({
   platform,
   isConnected
 }: WebhookConfigurationProps) => {
-  const [isTestingWebhook, setIsTestingWebhook] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
-  const { toast } = useToast();
-
   const handleConfigUpdate = (updates: Partial<WebhookConfig>) => {
     onConfigChange({ ...config, ...updates });
-  };
-
-  const validateWebhookUrl = (url: string): boolean => {
-    if (platform === 'discord') {
-      return url.includes('discord.com/api/webhooks/') && url.startsWith('https://');
-    }
-    if (platform === 'telegram') {
-      return url.includes('api.telegram.org/bot') && url.startsWith('https://');
-    }
-    return false;
-  };
-
-  const handleTestWebhook = async () => {
-    if (!config.url || !validateWebhookUrl(config.url)) {
-      toast({
-        title: "Invalid Webhook URL",
-        description: `Please provide a valid ${platform} webhook URL`,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsTestingWebhook(true);
-    setTestResult(null);
-
-    try {
-      const testPayload = platform === 'discord' 
-        ? {
-            embeds: [{
-              title: "🧪 Webhook Test",
-              description: "This is a test message from Vibe DevSquad",
-              color: 0x00ff00,
-              timestamp: new Date().toISOString()
-            }]
-          }
-        : {
-            text: "🧪 *Webhook Test*\nThis is a test message from Vibe DevSquad",
-            parse_mode: "Markdown"
-          };
-
-      const response = await fetch(config.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(config.useAuth && config.authToken ? {
-            'Authorization': `Bearer ${config.authToken}`
-          } : {})
-        },
-        body: JSON.stringify(testPayload)
-      });
-
-      if (response.ok) {
-        setTestResult({ success: true, message: "Webhook test successful!" });
-        toast({
-          title: "Test Successful",
-          description: "Webhook is working correctly",
-        });
-      } else {
-        setTestResult({ success: false, message: `HTTP ${response.status}: ${response.statusText}` });
-        toast({
-          title: "Test Failed",
-          description: `Webhook test failed: ${response.statusText}`,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      setTestResult({ success: false, message: error instanceof Error ? error.message : "Unknown error" });
-      toast({
-        title: "Test Failed",
-        description: "Failed to test webhook connection",
-        variant: "destructive",
-      });
-    } finally {
-      setIsTestingWebhook(false);
-    }
   };
 
   if (!isConnected) {
@@ -144,7 +64,6 @@ export const WebhookConfiguration = ({
       </CardHeader>
       <CardContent>
         <OptimizedStack gap="sm">
-          {/* Enable/Disable Webhook */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label htmlFor="webhook-enabled">Enable Webhook</Label>
@@ -159,27 +78,12 @@ export const WebhookConfiguration = ({
 
           {config.isEnabled && (
             <>
-              {/* Webhook URL */}
-              <div className="space-y-2">
-                <Label htmlFor="webhook-url">Webhook URL</Label>
-                <Input
-                  id="webhook-url"
-                  type="url"
-                  placeholder={platform === 'discord' 
-                    ? "https://discord.com/api/webhooks/..." 
-                    : "https://api.telegram.org/bot..."}
-                  value={config.url}
-                  onChange={(e) => handleConfigUpdate({ url: e.target.value })}
-                  className={!config.url || validateWebhookUrl(config.url) ? "" : "border-red-500"}
-                />
-                {config.url && !validateWebhookUrl(config.url) && (
-                  <p className="text-xs text-red-500">
-                    Invalid {platform} webhook URL format
-                  </p>
-                )}
-              </div>
+              <WebhookUrlInput
+                url={config.url}
+                platform={platform}
+                onUrlChange={(url) => handleConfigUpdate({ url })}
+              />
 
-              {/* Retry Configuration */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="retry-attempts">Retry Attempts</Label>
@@ -219,7 +123,6 @@ export const WebhookConfiguration = ({
                 </div>
               </div>
 
-              {/* Authentication Configuration */}
               <div className="space-y-3 p-3 bg-gray-50 rounded-md">
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4" />
@@ -255,37 +158,12 @@ export const WebhookConfiguration = ({
                 )}
               </div>
 
-              {/* Test Webhook */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label>Test Webhook</Label>
-                    <p className="text-xs text-gray-500">Send a test message to verify configuration</p>
-                  </div>
-                  <Button
-                    onClick={handleTestWebhook}
-                    disabled={isTestingWebhook || !config.url || !validateWebhookUrl(config.url)}
-                    size="sm"
-                    className="flex items-center gap-1"
-                  >
-                    <TestTube className="w-4 h-4" />
-                    {isTestingWebhook ? "Testing..." : "Test Webhook"}
-                  </Button>
-                </div>
-
-                {testResult && (
-                  <Alert variant={testResult.success ? "default" : "destructive"}>
-                    {testResult.success ? (
-                      <CheckCircle className="w-4 h-4" />
-                    ) : (
-                      <AlertTriangle className="w-4 h-4" />
-                    )}
-                    <AlertDescription>
-                      {testResult.message}
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </div>
+              <WebhookTestSection
+                webhookUrl={config.url}
+                platform={platform}
+                useAuth={config.useAuth}
+                authToken={config.authToken}
+              />
             </>
           )}
         </OptimizedStack>
