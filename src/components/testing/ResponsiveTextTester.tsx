@@ -70,6 +70,11 @@ export const ResponsiveTextTester = () => {
     headingLevels.forEach(level => runAccessibilityTest(`heading-${level}`));
   };
 
+  const handleBreakpointChange = (breakpoint: { name: string; width: number; class: string }) => {
+    setCurrentBreakpoint(breakpoint);
+    setContainerWidth([breakpoint.width]);
+  };
+
   useEffect(() => {
     // Run accessibility tests on mount and when breakpoint changes
     const timer = setTimeout(() => {
@@ -93,7 +98,7 @@ export const ResponsiveTextTester = () => {
             containerWidth={containerWidth}
             setContainerWidth={setContainerWidth}
             currentBreakpoint={currentBreakpoint}
-            setCurrentBreakpoint={setCurrentBreakpoint}
+            setCurrentBreakpoint={handleBreakpointChange}
             testLanguage={testLanguage}
             setTestLanguage={setTestLanguage}
             showGridlines={showGridlines}
