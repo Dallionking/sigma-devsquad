@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { useDataSync } from '@/hooks/useDataSync';
 import { useBackupManager } from '@/hooks/useBackupManager';
@@ -88,6 +88,7 @@ export const useDataPersistence = () => {
 };
 
 export const DataPersistenceProvider = ({ children }: { children: ReactNode }) => {
+  // Core hooks - always call in the same order
   const sessionManager = useSessionManager();
   const dataSync = useDataSync({
     syncInterval: 30000,
@@ -96,8 +97,6 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
   });
   const backupManager = useBackupManager();
   const viewContextManager = useViewContextManager();
-  
-  // Communication system hooks
   const eventBus = useEventBus();
   const middleware = useStateMiddleware();
   const stateDebugger = useStateDebugger({
@@ -105,14 +104,11 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     captureStackTrace: false,
     autoCapture: true
   });
-
-  // Performance optimization hooks
   const performanceMonitoring = usePerformanceMonitoring({
     maxRenderTime: 16,
     maxMemoryUsage: 50 * 1024 * 1024,
     maxStateUpdateTime: 5
   });
-
   const batchedUpdates = useBatchedUpdates({
     maxBatchSize: 10,
     batchDelay: 16,
@@ -120,7 +116,8 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     enableDeduplication: true
   });
 
-  const value: DataPersistenceContextType = {
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo((): DataPersistenceContextType => ({
     // Session management
     sessionData: sessionManager.sessionData,
     updateActivity: sessionManager.updateActivity,
@@ -185,7 +182,17 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
         clearQueues: batchedUpdates.clearQueues
       }
     }
-  };
+  }), [
+    sessionManager,
+    dataSync,
+    backupManager,
+    viewContextManager,
+    eventBus,
+    middleware,
+    stateDebugger,
+    performanceMonitoring,
+    batchedUpdates
+  ]);
 
   return (
     <DataPersistenceContext.Provider value={value}>
