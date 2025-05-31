@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { RealtimeNotifications } from "@/components/collaboration/RealtimeNotifications";
-import { SyncStatusHeader } from "@/components/dashboard/SyncStatusHeader";
 import { ViewToggle } from "@/components/dashboard/ViewToggle";
 import { LoadingScreen } from "@/components/dashboard/LoadingScreen";
 import { SkipToContentLink } from "@/components/dashboard/SkipToContentLink";
@@ -69,7 +68,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Header Navigation with Team Toggle */}
+      {/* Streamlined Header with Consolidated Navigation */}
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
@@ -77,9 +76,6 @@ const Index = () => {
         sidebarCollapsed={sidebarCollapsed}
         onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      
-      {/* Sync Status Header */}
-      <SyncStatusHeader />
       
       {/* Real-time Notifications */}
       <div className="px-4 py-2">
