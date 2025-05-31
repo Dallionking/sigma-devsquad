@@ -5,6 +5,7 @@ import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { UnifiedCommunicationHub } from "@/components/communication/UnifiedCommunicationHub";
 import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
+import { InteractiveTeamCommunicationFlow } from "@/components/analytics/InteractiveTeamCommunicationFlow";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -84,7 +85,21 @@ export const MainContentRenderer = ({
       // Individual view mode content
       if (viewMode === "communication") {
         return (
-          <div className="h-full p-6">
+          <div className="h-full p-6 space-y-6">
+            {/* Agent Heat Map and Communication Flow */}
+            <InteractiveTeamCommunicationFlow 
+              agents={agents}
+              onAgentClick={(agentId) => {
+                const agent = agents.find(a => a.id === agentId);
+                if (agent) onAgentSelect(agent);
+              }}
+              onTeamClick={(teamId) => {
+                // Handle team selection if needed
+                console.log("Team clicked:", teamId);
+              }}
+            />
+            
+            {/* Unified Communication Hub */}
             <UnifiedCommunicationHub 
               defaultTab="chat"
               showPresence={true}
@@ -96,9 +111,11 @@ export const MainContentRenderer = ({
       if (viewMode === "messages") {
         return (
           <div className="h-full p-6">
-            <UnifiedCommunicationHub 
-              defaultTab="activity"
-              showPresence={true}
+            <AdvancedCommunicationPanel
+              agents={agents}
+              messages={messages}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
             />
           </div>
         );
