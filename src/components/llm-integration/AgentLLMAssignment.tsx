@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -38,8 +37,6 @@ const ROLE_BASED_DEFAULTS: Record<AgentType, Partial<AgentLLMConfig>> = {
   backend: { primaryModel: "gpt-4o", fallbackModel: "claude-3-sonnet", temperature: 0.1, maxTokens: 3000 },
   devops: { primaryModel: "claude-3-opus", fallbackModel: "gpt-4o", temperature: 0.1, maxTokens: 2000 },
   qa: { primaryModel: "gpt-4o-mini", fallbackModel: "claude-3-sonnet", temperature: 0.2, maxTokens: 2000 },
-  data: { primaryModel: "gpt-4o", fallbackModel: "claude-3-opus", temperature: 0.1, maxTokens: 4000 },
-  design: { primaryModel: "claude-3-sonnet", fallbackModel: "gpt-4o-mini", temperature: 0.4, maxTokens: 2000 },
   documentation: { primaryModel: "gpt-4o-mini", fallbackModel: "claude-3-sonnet", temperature: 0.3, maxTokens: 3000 }
 };
 
