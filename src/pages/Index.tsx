@@ -88,7 +88,7 @@ const Index = () => {
         onToggleView={handleToggleView}
       />
       
-      {/* Main layout with Vibe DevSquad responsive behavior */}
+      {/* Main layout with integrated User Presence Panel */}
       <MainLayout
         showTeamView={showTeamView}
         sidebarCollapsed={sidebarCollapsed}
