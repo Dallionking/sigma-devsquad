@@ -5,6 +5,7 @@ import { Team, AgentProfile } from "@/types/teams";
 import { AgentSidebar } from "./AgentSidebar";
 import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
+import { TeamHierarchy } from "../teams/TeamHierarchy";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -42,12 +43,21 @@ export const SidebarRenderer = ({
   onAgentProfileSelect,
 }: SidebarRendererProps) => {
   
-  // Don't render sidebar content in team view - let main content handle it
+  // In team view, show Team Hierarchy
   if (showTeamView) {
-    return null;
+    return (
+      <div className="h-full p-4">
+        <TeamHierarchy
+          onTeamSelect={onTeamSelect}
+          onAgentSelect={onAgentProfileSelect}
+          selectedTeamId={selectedTeam?.id}
+          selectedAgentId={selectedAgentProfile?.id}
+        />
+      </div>
+    );
   }
 
-  // Render content based on view mode
+  // Render content based on view mode for individual view
   switch (viewMode) {
     case 'workflow':
       return (
@@ -59,28 +69,34 @@ export const SidebarRenderer = ({
       );
     case 'communication':
       return (
-        <CommunicationHistory
-          messages={messages}
-          selectedMessage={selectedMessage}
-          onMessageSelect={onMessageSelect}
-        />
+        <div className="h-full bg-card dark:bg-card">
+          <CommunicationHistory
+            messages={messages}
+            selectedMessage={selectedMessage}
+            onMessageSelect={onMessageSelect}
+          />
+        </div>
       );
     case 'tasks':
       return (
-        <TaskManagement
-          tasks={tasks}
-          agents={agents}
-          selectedTask={selectedTask}
-          onTaskSelect={onTaskSelect}
-        />
+        <div className="h-full bg-card dark:bg-card">
+          <TaskManagement
+            tasks={tasks}
+            agents={agents}
+            selectedTask={selectedTask}
+            onTaskSelect={onTaskSelect}
+          />
+        </div>
       );
     case 'messages':
       return (
-        <CommunicationHistory
-          messages={messages}
-          selectedMessage={selectedMessage}
-          onMessageSelect={onMessageSelect}
-        />
+        <div className="h-full bg-card dark:bg-card">
+          <CommunicationHistory
+            messages={messages}
+            selectedMessage={selectedMessage}
+            onMessageSelect={onMessageSelect}
+          />
+        </div>
       );
     default:
       return (

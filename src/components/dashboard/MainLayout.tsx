@@ -6,6 +6,8 @@ import { SidebarRenderer } from "./SidebarRenderer";
 import { MainContentRenderer } from "./MainContentRenderer";
 import { DetailPanelRenderer } from "./DetailPanelRenderer";
 import { ViewModeTabs } from "./ViewModeTabs";
+import { Button } from "@/components/ui/button";
+import { PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -76,9 +78,12 @@ export const MainLayout = ({
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - Hide in team view or when collapsed */}
-        {!showTeamView && !sidebarCollapsed && (
-          <div className="w-80 bg-card border-r transition-all duration-300 overflow-hidden">
+        {/* Sidebar - Show in both team and individual view, but collapsible */}
+        {!sidebarCollapsed && (
+          <div className={cn(
+            "bg-card border-r transition-all duration-300 overflow-hidden",
+            showTeamView ? "w-64" : "w-80"
+          )}>
             <SidebarRenderer
               viewMode={viewMode}
               agents={agents}
@@ -96,6 +101,20 @@ export const MainLayout = ({
               onTeamSelect={onTeamSelect}
               onAgentProfileSelect={onAgentProfileSelect}
             />
+          </div>
+        )}
+
+        {/* Sidebar Toggle Button - Show when collapsed */}
+        {sidebarCollapsed && (
+          <div className="border-r bg-card">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSidebarToggle}
+              className="m-2 h-8 w-8 p-0"
+            >
+              <PanelLeft className="w-4 h-4" />
+            </Button>
           </div>
         )}
 

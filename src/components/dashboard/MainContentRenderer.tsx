@@ -3,7 +3,6 @@ import React from 'react';
 import { MainWorkflowArea } from "./MainWorkflowArea";
 import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
-import { TeamHierarchy } from "@/components/teams/TeamHierarchy";
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
 import { Button } from "@/components/ui/button";
@@ -52,7 +51,7 @@ export const MainContentRenderer = ({
     if (showTeamView) {
       if (selectedTeam) {
         return (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Back navigation button */}
             <div className="flex items-center gap-4">
               <Button
@@ -71,21 +70,11 @@ export const MainContentRenderer = ({
         );
       }
       return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <TeamHierarchy
-              onTeamSelect={onTeamSelect}
-              onAgentSelect={onAgentProfileSelect}
-              selectedTeamId={selectedTeam?.id}
-              selectedAgentId={selectedAgentProfile?.id}
-            />
-          </div>
-          <div className="lg:col-span-2">
-            <TeamsWorkflowVisualization
-              onTeamSelect={onTeamSelect}
-              onAgentSelect={onAgentProfileSelect}
-            />
-          </div>
+        <div className="w-full">
+          <TeamsWorkflowVisualization
+            onTeamSelect={onTeamSelect}
+            onAgentSelect={onAgentProfileSelect}
+          />
         </div>
       );
     } else {
@@ -119,7 +108,7 @@ export const MainContentRenderer = ({
       )}
       
       {/* Main content area */}
-      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6 space-y-6 overflow-auto">
+      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6 space-y-6 overflow-auto bg-background dark:bg-background">
         {renderMainContent()}
         
         {/* User Presence UI - Always visible for collaboration */}

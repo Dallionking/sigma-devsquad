@@ -47,10 +47,7 @@ const Dashboard = () => {
     setSelectedTeam(team);
     setSelectedAgentProfile(null);
     setShowTeamView(!!team);
-    // Auto-expand sidebar when entering team view to show team content
-    if (team) {
-      setSidebarCollapsed(false);
-    }
+    // Don't auto-expand sidebar when entering team view - let user control it
   };
 
   const handleAgentProfileSelect = (profile: AgentProfile | null) => {
@@ -82,7 +79,7 @@ const Dashboard = () => {
   const activeAgents = agents.filter(agent => agent.status === "working").length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10 dark:from-background dark:via-background dark:to-muted/10">
       {/* Streamlined Header with integrated sync status */}
       <StreamlinedHeader
         activeAgents={activeAgents}
@@ -97,7 +94,7 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Vibe Brand Header - only show on main dashboard */}
         {!selectedTeam && !showTeamView && (
-          <div className="px-6 py-8 border-b bg-gradient-to-r from-background/80 to-background/60 backdrop-blur-sm">
+          <div className="px-6 py-8 border-b bg-gradient-to-r from-background/80 to-background/60 backdrop-blur-sm dark:from-background/80 dark:to-background/60">
             <VibeBrandHeader />
           </div>
         )}
