@@ -65,10 +65,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Streamlined Header with Consolidated Navigation */}
+      {/* Vibe DevSquad Enhanced Header */}
       <Header 
         viewMode={viewMode} 
         onViewModeChange={setViewMode}
@@ -77,18 +77,18 @@ const Index = () => {
         onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       
-      {/* Real-time Notifications */}
+      {/* Real-time Notifications with Vibe styling */}
       <div className="px-4 py-2">
         <RealtimeNotifications />
       </div>
       
-      {/* View Toggle */}
+      {/* Enhanced View Toggle with Vibe branding */}
       <ViewToggle 
         showTeamView={showTeamView}
         onToggleView={handleToggleView}
       />
       
-      {/* Main layout with responsive behavior */}
+      {/* Main layout with Vibe DevSquad responsive behavior */}
       <MainLayout
         showTeamView={showTeamView}
         sidebarCollapsed={sidebarCollapsed}
@@ -114,7 +114,7 @@ const Index = () => {
         onViewModeChange={setViewMode}
       />
       
-      {/* Enhanced footer with smooth animations */}
+      {/* Enhanced footer with Vibe branding and smooth animations */}
       {showFooter && (
         <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0">
           <SystemFooter 
@@ -124,8 +124,15 @@ const Index = () => {
         </div>
       )}
       
-      {/* Enhanced floating action button */}
+      {/* Enhanced floating action button with Vibe styling */}
       <FloatingActionButton />
+      
+      {/* Vibe DevSquad subtle background effects */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-vibe-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-vibe-secondary/5 rounded-full blur-3xl" />
+        <div className="absolute top-3/4 right-1/3 w-48 h-48 bg-vibe-accent/5 rounded-full blur-3xl" />
+      </div>
     </div>
   );
 };

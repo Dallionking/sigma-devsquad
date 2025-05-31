@@ -1,0 +1,240 @@
+
+@layer utilities {
+  /* Vibe DevSquad Typography System */
+  .vibe-heading-xl {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .vibe-heading-lg {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #6366F1;
+  }
+
+  .vibe-heading-md {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: 600;
+    line-height: 1.3;
+    color: #8B5CF6;
+  }
+
+  .vibe-body-lg {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 400;
+    line-height: 1.6;
+    color: hsl(var(--foreground));
+  }
+
+  .vibe-body {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: hsl(var(--foreground));
+  }
+
+  .vibe-body-sm {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+    font-weight: 400;
+    line-height: 1.4;
+    color: #64748B;
+  }
+
+  /* Vibe DevSquad Interactive Elements */
+  .vibe-btn-primary {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    color: white;
+    padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.25);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vibe-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -4px rgba(99, 102, 241, 0.4);
+  }
+
+  .vibe-btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .vibe-btn-secondary {
+    background: linear-gradient(135deg, #06B6D4 0%, #10B981 100%);
+    color: white;
+    padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.25);
+  }
+
+  .vibe-btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -4px rgba(6, 182, 212, 0.4);
+  }
+
+  /* Vibe DevSquad Cards */
+  .vibe-card {
+    background: hsl(var(--card));
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border-radius: 1rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vibe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -4px rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.2);
+  }
+
+  .vibe-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);
+    background-size: 200% 100%;
+    animation: flow 3s ease-in-out infinite;
+  }
+
+  /* Vibe DevSquad Status Indicators */
+  .vibe-status-active {
+    background: linear-gradient(135deg, #22C55E 0%, #10B981 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .vibe-status-warning {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .vibe-status-error {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  /* Vibe DevSquad Animations */
+  .vibe-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .vibe-bounce {
+    animation: bounce 1s infinite;
+  }
+
+  .vibe-flow {
+    animation: flow 2s ease-in-out infinite;
+  }
+
+  /* Vibe DevSquad Gradients */
+  .vibe-gradient-primary {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  }
+
+  .vibe-gradient-secondary {
+    background: linear-gradient(135deg, #06B6D4 0%, #10B981 100%);
+  }
+
+  .vibe-gradient-accent {
+    background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+  }
+
+  .vibe-gradient-text {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+
+  /* Responsive Accessibility */
+  @media (max-width: 768px) {
+    .vibe-btn-primary,
+    .vibe-btn-secondary {
+      min-height: 44px;
+      min-width: 44px;
+      touch-action: manipulation;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .vibe-card {
+      border-width: 2px;
+      border-color: #6366F1;
+    }
+
+    .vibe-btn-primary,
+    .vibe-btn-secondary {
+      border: 2px solid currentColor;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .vibe-heading-xl,
+    .vibe-card::before {
+      animation: none !important;
+    }
+
+    .vibe-btn-primary:hover,
+    .vibe-btn-secondary:hover,
+    .vibe-card:hover {
+      transform: none !important;
+    }
+  }
+}
