@@ -19,7 +19,7 @@ import { MessageProvider } from '@/contexts/MessageContext';
 import { TeamProvider } from '@/contexts/TeamContext';
 import { CurrentUserProvider } from '@/contexts/CurrentUserContext';
 import { FilterProvider } from '@/contexts/FilterContext';
-import { WebSocketProvider } from '@/contexts/WebSocketProvider';
+import { WebSocketProvider } from '@/contexts/WebSocketContext';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -34,7 +34,7 @@ function App() {
               <MessageProvider>
                 <TeamProvider>
                   <FilterProvider>
-                    <WebSocketProvider>
+                    <WebSocketProvider userId="current-user" userName="Current User">
                       <div className="min-h-screen bg-background font-vibe-body">
                         <Routes>
                           <Route path="/" element={<LandingPage />} />
