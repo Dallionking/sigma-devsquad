@@ -11,4 +11,8 @@ export { OptimizationSuggestions } from './OptimizationSuggestions';
 export { MemoryStatusCards } from './memory/MemoryStatusCards';
 export { MemoryCharts } from './memory/MemoryCharts';
 export { MemoryDetails } from './memory/MemoryDetails';
+export { StateTransitionAnimations } from './memory/StateTransitionAnimations';
 export * from './memory/memoryUtils';
+
+// Performance hooks
+export { useStateTransitions } from '../hooks/performance/useStateTransitions';
