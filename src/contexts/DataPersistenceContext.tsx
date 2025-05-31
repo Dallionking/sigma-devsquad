@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo, useState, useRef } from 'react';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { useDataSync } from '@/hooks/useDataSync';
 import { useBackupManager } from '@/hooks/useBackupManager';
@@ -75,6 +75,16 @@ interface DataPersistenceContextType {
       clearQueues: () => void;
     };
   };
+  
+  // Real-time collaboration
+  collaboration: {
+    presenceUsers: any[];
+    sendPresence: (presence: any) => void;
+    onConflictDetected: (callback: (conflict: any) => void) => () => void;
+    resolveConflict: (conflictId: string, resolution: string, content?: string) => void;
+    isTyping: (componentId: string, isTyping: boolean) => void;
+    getTypingUsers: (componentId: string) => any[];
+  };
 }
 
 const DataPersistenceContext = createContext<DataPersistenceContextType | undefined>(undefined);
@@ -115,6 +125,46 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     priority: 'normal',
     enableDeduplication: true
   });
+
+  // Add collaboration state
+  const [conflicts, setConflicts] = useState<Map<string, any>>(new Map());
+  const [typingUsers, setTypingUsers] = useState<Map<string, any[]>>(new Map());
+  const conflictCallbacksRef = useRef<Set<(conflict: any) => void>>(new Set());
+
+  // Collaboration functions
+  const onConflictDetected = (callback: (conflict: any) => void) => {
+    conflictCallbacksRef.current.add(callback);
+    return () => {
+      conflictCallbacksRef.current.delete(callback);
+    };
+  };
+
+  const resolveConflict = (conflictId: string, resolution: string, content?: string) => {
+    conflicts.delete(conflictId);
+    setConflicts(new Map(conflicts));
+    
+    // Send resolution update through event bus
+    eventBus.emit('conflict-resolved', {
+      conflictId,
+      resolution,
+      content,
+      timestamp: new Date().toISOString()
+    });
+  };
+
+  const isTyping = (componentId: string, isTyping: boolean) => {
+    // Send typing indicator through event bus
+    eventBus.emit('typing-indicator', {
+      componentId,
+      isTyping,
+      userId: 'current-user',
+      timestamp: new Date().toISOString()
+    });
+  };
+
+  const getTypingUsers = (componentId: string) => {
+    return typingUsers.get(componentId) || [];
+  };
 
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo((): DataPersistenceContextType => ({
@@ -182,6 +232,21 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
         getQueueStats: batchedUpdates.getQueueStats,
         clearQueues: batchedUpdates.clearQueues
       }
+    },
+    
+    // Real-time collaboration
+    collaboration: {
+      presenceUsers: [], // This would be populated from WebSocket context
+      sendPresence: (presence: any) => {
+        eventBus.emit('presence-update', {
+          ...presence,
+          timestamp: new Date().toISOString()
+        });
+      },
+      onConflictDetected,
+      resolveConflict,
+      isTyping,
+      getTypingUsers
     }
   }), [
     sessionManager,
@@ -192,7 +257,9 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     middleware,
     stateDebugger,
     performanceMonitoring,
-    batchedUpdates
+    batchedUpdates,
+    conflicts,
+    typingUsers
   ]);
 
   return (

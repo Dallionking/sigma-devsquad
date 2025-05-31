@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +16,8 @@ import {
   Clock,
   TrendingUp
 } from "lucide-react";
+import { PresenceIndicators } from "../collaboration/PresenceIndicators";
+import { TypingIndicator } from "../collaboration/TypingIndicator";
 
 interface SyncComponent {
   id: string;
@@ -107,6 +108,7 @@ export const EnhancedSyncStatusCard = ({ detailed = false }: EnhancedSyncStatusC
             Enhanced Sync Status
           </div>
           <div className="flex items-center gap-2">
+            <PresenceIndicators maxVisible={3} />
             {isOnline ? (
               <Wifi className="w-4 h-4 text-green-500" />
             ) : (
@@ -169,6 +171,9 @@ export const EnhancedSyncStatusCard = ({ detailed = false }: EnhancedSyncStatusC
             </div>
           ))}
         </div>
+
+        {/* Add typing indicator for sync operations */}
+        <TypingIndicator componentId="sync-status" />
 
         {/* Sync Actions */}
         <div className="flex gap-2 pt-2 border-t">
