@@ -10,7 +10,6 @@ import { LandingFeaturesSection } from '@/components/landing/LandingFeaturesSect
 import { LandingTestimonialsSection } from '@/components/landing/LandingTestimonialsSection';
 import { LandingPricingSection } from '@/components/landing/LandingPricingSection';
 import { LandingFAQSection } from '@/components/landing/LandingFAQSection';
-import { LandingCTASection } from '@/components/landing/LandingCTASection';
 
 export const LandingPage = () => {
   return (
@@ -52,8 +51,15 @@ export const LandingPage = () => {
         {/* FAQ Section */}
         <LandingFAQSection />
         
-        {/* Final CTA Section */}
-        <LandingCTASection />
+        {/* Additional sections will be added here */}
+        <section className="py-20 px-4">
+          <div className="container-responsive text-center">
+            <h2 className="vibe-heading-lg mb-6">Coming Soon</h2>
+            <p className="vibe-body-lg max-w-2xl mx-auto text-muted-foreground">
+              More exciting sections are being developed to showcase the full power of Vibe DevSquad.
+            </p>
+          </div>
+        </section>
       </main>
       
       {/* Footer */}
