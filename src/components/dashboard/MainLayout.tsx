@@ -76,29 +76,28 @@ export const MainLayout = ({
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
-        <div className={cn(
-          "bg-card border-r transition-all duration-300 overflow-hidden",
-          sidebarCollapsed ? "w-0" : "w-80"
-        )}>
-          <SidebarRenderer
-            viewMode={viewMode}
-            agents={agents}
-            tasks={tasks}
-            messages={messages}
-            selectedAgent={selectedAgent}
-            selectedTask={selectedTask}
-            selectedMessage={selectedMessage}
-            selectedTeam={selectedTeam}
-            selectedAgentProfile={selectedAgentProfile}
-            showTeamView={showTeamView}
-            onAgentSelect={onAgentSelect}
-            onTaskSelect={onTaskSelect}
-            onMessageSelect={onMessageSelect}
-            onTeamSelect={onTeamSelect}
-            onAgentProfileSelect={onAgentProfileSelect}
-          />
-        </div>
+        {/* Sidebar - Hide in team view or when collapsed */}
+        {!showTeamView && !sidebarCollapsed && (
+          <div className="w-80 bg-card border-r transition-all duration-300 overflow-hidden">
+            <SidebarRenderer
+              viewMode={viewMode}
+              agents={agents}
+              tasks={tasks}
+              messages={messages}
+              selectedAgent={selectedAgent}
+              selectedTask={selectedTask}
+              selectedMessage={selectedMessage}
+              selectedTeam={selectedTeam}
+              selectedAgentProfile={selectedAgentProfile}
+              showTeamView={showTeamView}
+              onAgentSelect={onAgentSelect}
+              onTaskSelect={onTaskSelect}
+              onMessageSelect={onMessageSelect}
+              onTeamSelect={onTeamSelect}
+              onAgentProfileSelect={onAgentProfileSelect}
+            />
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -122,8 +121,8 @@ export const MainLayout = ({
           />
         </div>
 
-        {/* Detail Panel */}
-        {hasSelection && (
+        {/* Detail Panel - Only show when not in team view and has selection */}
+        {!showTeamView && hasSelection && (
           <div className="w-96 bg-card border-l overflow-hidden flex-shrink-0">
             <DetailPanelRenderer
               selectedAgent={selectedAgent}

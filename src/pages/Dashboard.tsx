@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("workflow");
   const [showTeamView, setShowTeamView] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [syncPanelCollapsed, setSyncPanelCollapsed] = useState(true); // Default to collapsed since sync is in header
+  const [syncPanelCollapsed, setSyncPanelCollapsed] = useState(true);
 
   // Use centralized state management
   const { agents } = useAgents();
@@ -46,6 +46,11 @@ const Dashboard = () => {
   const handleTeamSelect = (team: Team | null) => {
     setSelectedTeam(team);
     setSelectedAgentProfile(null);
+    setShowTeamView(!!team);
+    // Auto-expand sidebar when entering team view to show team content
+    if (team) {
+      setSidebarCollapsed(false);
+    }
   };
 
   const handleAgentProfileSelect = (profile: AgentProfile | null) => {
@@ -60,6 +65,10 @@ const Dashboard = () => {
     setSelectedAgentProfile(null);
   };
 
+  const handleSidebarToggle = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
   const hasSelection = !!(selectedAgent || selectedTask || selectedMessage || selectedAgentProfile);
   const activeAgents = agents.filter(agent => agent.status === "working").length;
 
@@ -69,7 +78,7 @@ const Dashboard = () => {
       <StreamlinedHeader
         activeAgents={activeAgents}
         totalAgents={agents.length}
-        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onSidebarToggle={handleSidebarToggle}
         sidebarCollapsed={sidebarCollapsed}
       />
       
@@ -82,11 +91,11 @@ const Dashboard = () => {
           </div>
         )}
         
-        {/* Main Layout - sync panel always collapsed since sync is in header */}
+        {/* Main Layout */}
         <MainLayout
           showTeamView={showTeamView}
           sidebarCollapsed={sidebarCollapsed}
-          syncPanelCollapsed={true}
+          syncPanelCollapsed={syncPanelCollapsed}
           agents={agents}
           tasks={tasks}
           messages={messages}
@@ -97,8 +106,8 @@ const Dashboard = () => {
           selectedAgentProfile={selectedAgentProfile}
           viewMode={viewMode}
           hasSelection={hasSelection}
-          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onSyncPanelToggle={() => {}} // No-op since sync is in header
+          onSidebarToggle={handleSidebarToggle}
+          onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
           onAgentSelect={handleAgentSelect}
           onTaskSelect={handleTaskSelect}
           onMessageSelect={handleMessageSelect}

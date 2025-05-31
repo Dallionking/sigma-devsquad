@@ -5,7 +5,6 @@ import { Team, AgentProfile } from "@/types/teams";
 import { AgentSidebar } from "./AgentSidebar";
 import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
-import { TeamDashboard } from "../teams/TeamDashboard";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -43,16 +42,12 @@ export const SidebarRenderer = ({
   onAgentProfileSelect,
 }: SidebarRendererProps) => {
   
-  // Render team view if enabled
+  // Don't render sidebar content in team view - let main content handle it
   if (showTeamView) {
-    return (
-      <TeamDashboard
-        team={selectedTeam}
-      />
-    );
+    return null;
   }
 
-  // Render content based on view mode - NO SYNC COMPONENTS
+  // Render content based on view mode
   switch (viewMode) {
     case 'workflow':
       return (
