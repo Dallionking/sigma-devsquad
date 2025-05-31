@@ -10,7 +10,7 @@ import { AgentProvider } from "@/contexts/AgentContext";
 import { TaskProvider } from "@/contexts/TaskContext";
 import { MessageProvider } from "@/contexts/MessageContext";
 import { TeamProvider } from "@/contexts/TeamContext";
-import { CurrentUserProvider } from "@/contexts/CurrentUserProvider";
+import { CurrentUserProvider } from "@/contexts/CurrentUserContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { DataPersistenceProvider } from "@/contexts/DataPersistenceContext";
 import Index from "./pages/Index";
