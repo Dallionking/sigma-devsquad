@@ -4,15 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { GitMerge, History, Eye, AlertTriangle, Check, X } from "lucide-react";
-
-interface ConflictChange {
-  line: number;
-  type: 'added' | 'removed' | 'modified';
-  content: string;
-  context?: string;
-}
+import { AlertTriangle, GitMerge, FileText, User, Clock } from "lucide-react";
 
 interface ConflictData {
   id: string;
@@ -22,8 +14,18 @@ interface ConflictData {
   timestamp: string;
   conflictType: 'edit' | 'delete' | 'create';
   changes: {
-    local: ConflictChange[];
-    remote: ConflictChange[];
+    local: Array<{
+      line: number;
+      type: 'added' | 'removed' | 'modified';
+      content: string;
+      context?: string;
+    }>;
+    remote: Array<{
+      line: number;
+      type: 'added' | 'removed' | 'modified';
+      content: string;
+      context?: string;
+    }>;
   };
 }
 
@@ -33,230 +35,219 @@ interface ConflictVisualizationProps {
   onShowHistory: () => void;
 }
 
-export const ConflictVisualization = ({
-  conflict,
-  onResolve,
-  onShowHistory
-}: ConflictVisualizationProps) => {
+export const ConflictVisualization = ({ conflict, onResolve, onShowHistory }: ConflictVisualizationProps) => {
   const [selectedResolution, setSelectedResolution] = useState<'local' | 'remote' | 'merge' | null>(null);
   const [mergePreview, setMergePreview] = useState<string>('');
 
-  const renderDiffLine = (change: ConflictChange, side: 'local' | 'remote') => {
-    const bgColor = change.type === 'added' 
-      ? 'bg-green-50 dark:bg-green-950 border-l-4 border-l-green-500' 
-      : change.type === 'removed'
-      ? 'bg-red-50 dark:bg-red-950 border-l-4 border-l-red-500'
-      : 'bg-yellow-50 dark:bg-yellow-950 border-l-4 border-l-yellow-500';
-
-    const icon = change.type === 'added' 
-      ? <span className="text-green-600">+</span>
-      : change.type === 'removed'
-      ? <span className="text-red-600">-</span>
-      : <span className="text-yellow-600">~</span>;
-
+  const renderDiff = (changes: typeof conflict.changes.local, side: 'local' | 'remote') => {
     return (
-      <div key={`${side}-${change.line}`} className={`p-2 font-mono text-sm ${bgColor}`}>
-        <div className="flex items-start space-x-2">
-          <span className="w-4 flex-shrink-0">{icon}</span>
-          <span className="text-muted-foreground w-8 flex-shrink-0">{change.line}</span>
-          <span className="flex-1">{change.content}</span>
-        </div>
-        {change.context && (
-          <div className="ml-14 text-xs text-muted-foreground mt-1">
-            Context: {change.context}
+      <div className="space-y-1 font-mono text-sm">
+        {changes.map((change, index) => (
+          <div key={index} className={`p-2 rounded ${
+            change.type === 'added' ? 'bg-green-50 border-l-4 border-green-500' :
+            change.type === 'removed' ? 'bg-red-50 border-l-4 border-red-500' :
+            'bg-yellow-50 border-l-4 border-yellow-500'
+          }`}>
+            <div className="flex items-center gap-2 mb-1">
+              <Badge variant="outline" className="text-xs">
+                Line {change.line}
+              </Badge>
+              <Badge variant={
+                change.type === 'added' ? 'default' :
+                change.type === 'removed' ? 'destructive' : 'secondary'
+              } className="text-xs">
+                {change.type}
+              </Badge>
+              {change.context && (
+                <span className="text-xs text-muted-foreground">{change.context}</span>
+              )}
+            </div>
+            <div className="bg-white p-2 rounded border">
+              {change.content}
+            </div>
           </div>
-        )}
+        ))}
       </div>
     );
   };
 
-  const generateMergePreview = () => {
-    // Simple merge preview - in real implementation, this would be more sophisticated
-    const merged = `// Merged version preview
-// Local changes: ${conflict.changes.local.length} modifications
-// Remote changes: ${conflict.changes.remote.length} modifications
-${JSON.stringify(conflict.localVersion, null, 2)}
-// --- MERGE MARKER ---
-${JSON.stringify(conflict.remoteVersion, null, 2)}`;
-    
-    setMergePreview(merged);
+  const handleCreateMerge = () => {
+    // Simulate intelligent merge creation
+    const localChanges = conflict.changes.local.map(c => c.content).join('\n');
+    const remoteChanges = conflict.changes.remote.map(c => c.content).join('\n');
+    setMergePreview(`// Merged version:\n${localChanges}\n${remoteChanges}`);
     setSelectedResolution('merge');
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2">
-            <GitMerge className="w-5 h-5" />
-            <span>Conflict Resolution: {conflict.file}</span>
-          </CardTitle>
-          <div className="flex items-center space-x-2">
-            <Badge variant={conflict.conflictType === 'edit' ? 'destructive' : 'secondary'}>
-              {conflict.conflictType}
+    <div className="space-y-4">
+      {/* Conflict Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-yellow-500" />
+              Conflict in {conflict.file}
+            </div>
+            <Badge variant="outline">
+              {conflict.conflictType} conflict
             </Badge>
-            <Button variant="outline" size="sm" onClick={onShowHistory}>
-              <History className="w-4 h-4 mr-1" />
-              History
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Clock className="w-4 h-4" />
+              {new Date(conflict.timestamp).toLocaleString()}
+            </div>
+            <Button variant="link" size="sm" onClick={onShowHistory}>
+              View File History
             </Button>
           </div>
-        </div>
-      </CardHeader>
+        </CardContent>
+      </Card>
 
-      <CardContent className="space-y-4">
-        <Tabs defaultValue="diff" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="diff">Side-by-Side Diff</TabsTrigger>
-            <TabsTrigger value="unified">Unified Diff</TabsTrigger>
-            <TabsTrigger value="preview">Merge Preview</TabsTrigger>
-          </TabsList>
+      {/* Side-by-side Comparison */}
+      <Card>
+        <CardContent className="p-6">
+          <Tabs defaultValue="comparison" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="comparison">Compare Changes</TabsTrigger>
+              <TabsTrigger value="preview">Resolution Preview</TabsTrigger>
+              <TabsTrigger value="metadata">Conflict Details</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="diff" className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Local Version */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm flex items-center space-x-2">
-                    <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                    <span>Local Version</span>
-                    <Badge variant="outline" className="ml-auto">
-                      {conflict.changes.local.length} changes
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-64">
-                    <div className="space-y-1">
-                      {conflict.changes.local.map((change) => 
-                        renderDiffLine(change, 'local')
-                      )}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
+            <TabsContent value="comparison" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Local Changes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {renderDiff(conflict.changes.local, 'local')}
+                  </CardContent>
+                </Card>
 
-              {/* Remote Version */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm flex items-center space-x-2">
-                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                    <span>Remote Version</span>
-                    <Badge variant="outline" className="ml-auto">
-                      {conflict.changes.remote.length} changes
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-64">
-                    <div className="space-y-1">
-                      {conflict.changes.remote.map((change) => 
-                        renderDiffLine(change, 'remote')
-                      )}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Remote Changes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {renderDiff(conflict.changes.remote, 'remote')}
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
-          <TabsContent value="unified" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Unified Diff View</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-64">
-                  <div className="font-mono text-sm space-y-1">
-                    {/* Merge all changes and sort by line number */}
-                    {[...conflict.changes.local, ...conflict.changes.remote]
-                      .sort((a, b) => a.line - b.line)
-                      .map((change, index) => renderDiffLine(change, 'local'))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="preview" className="space-y-4">
-            {mergePreview ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Merge Preview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-64">
-                    <pre className="font-mono text-sm bg-muted p-4 rounded">
+            <TabsContent value="preview" className="space-y-4">
+              {selectedResolution === 'merge' && mergePreview ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Merge Preview</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="bg-muted p-4 rounded text-sm overflow-auto">
                       {mergePreview}
                     </pre>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="text-center py-8">
-                <Button onClick={generateMergePreview}>
-                  <Eye className="w-4 h-4 mr-2" />
-                  Generate Merge Preview
-                </Button>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  Select a resolution option to see preview
+                </div>
+              )}
+            </TabsContent>
 
-        {/* Resolution Actions */}
-        <div className="border-t pt-4">
-          <div className="grid grid-cols-3 gap-3">
+            <TabsContent value="metadata" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium">Local Version</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {JSON.stringify(conflict.localVersion, null, 2)}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium">Remote Version</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {JSON.stringify(conflict.remoteVersion, null, 2)}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* Resolution Options */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Resolution Options</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4">
             <Button
               variant={selectedResolution === 'local' ? 'default' : 'outline'}
-              onClick={() => {
-                setSelectedResolution('local');
-                onResolve('local');
-              }}
-              className="flex items-center space-x-2"
+              onClick={() => setSelectedResolution('local')}
+              className="h-auto p-4 flex flex-col items-center gap-2"
             >
-              <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-              <span>Use Local</span>
-              {selectedResolution === 'local' && <Check className="w-4 h-4" />}
+              <FileText className="w-6 h-6" />
+              <div className="text-center">
+                <div className="font-medium">Keep Local</div>
+                <div className="text-xs text-muted-foreground">
+                  Use your local changes
+                </div>
+              </div>
             </Button>
 
             <Button
               variant={selectedResolution === 'remote' ? 'default' : 'outline'}
-              onClick={() => {
-                setSelectedResolution('remote');
-                onResolve('remote');
-              }}
-              className="flex items-center space-x-2"
+              onClick={() => setSelectedResolution('remote')}
+              className="h-auto p-4 flex flex-col items-center gap-2"
             >
-              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-              <span>Use Remote</span>
-              {selectedResolution === 'remote' && <Check className="w-4 h-4" />}
+              <User className="w-6 h-6" />
+              <div className="text-center">
+                <div className="font-medium">Accept Remote</div>
+                <div className="text-xs text-muted-foreground">
+                  Use remote changes
+                </div>
+              </div>
             </Button>
 
             <Button
               variant={selectedResolution === 'merge' ? 'default' : 'outline'}
-              onClick={() => {
-                generateMergePreview();
-                onResolve('merge');
-              }}
-              className="flex items-center space-x-2"
+              onClick={handleCreateMerge}
+              className="h-auto p-4 flex flex-col items-center gap-2"
             >
-              <GitMerge className="w-4 h-4" />
-              <span>Merge Both</span>
-              {selectedResolution === 'merge' && <Check className="w-4 h-4" />}
+              <GitMerge className="w-6 h-6" />
+              <div className="text-center">
+                <div className="font-medium">Smart Merge</div>
+                <div className="text-xs text-muted-foreground">
+                  Combine both changes
+                </div>
+              </div>
             </Button>
           </div>
 
           {selectedResolution && (
-            <div className="mt-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="flex items-center space-x-2 text-green-700 dark:text-green-300">
-                <Check className="w-4 h-4" />
-                <span className="text-sm font-medium">
-                  Resolution selected: {selectedResolution === 'local' ? 'Local version' : selectedResolution === 'remote' ? 'Remote version' : 'Merged version'}
-                </span>
-              </div>
-            </div>
+            <Button
+              onClick={() => onResolve(selectedResolution)}
+              className="w-full mt-4"
+            >
+              Apply {selectedResolution} Resolution
+            </Button>
           )}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

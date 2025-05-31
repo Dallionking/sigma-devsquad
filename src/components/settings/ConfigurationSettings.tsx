@@ -3,9 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useConfigurationSettings } from "@/hooks/useConfigurationSettings";
-import { Settings, Users, Database } from "lucide-react";
+import { Settings, Users, Database, HardDrive } from "lucide-react";
 import { StateManagementTab } from "./tabs/StateManagementTab";
 import { CollaborationTab } from "./tabs/CollaborationTab";
+import { DataManagementTab } from "./tabs/DataManagementTab";
 
 interface ConfigurationSettingsProps {
   searchQuery?: string;
@@ -25,6 +26,12 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
     saveCollaborationSettings,
     resetCollaborationSettings,
     
+    // Data Management
+    dataConfig,
+    updateDataConfig,
+    saveDataSettings,
+    resetDataSettings,
+    
     // Utilities
     exportConfiguration
   } = useConfigurationSettings();
@@ -38,12 +45,12 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
             Configuration Options
           </CardTitle>
           <CardDescription>
-            Advanced settings for state management and collaboration features
+            Advanced settings for state management, collaboration, and data management features
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="state" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="state" className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 State Management
@@ -51,6 +58,10 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
               <TabsTrigger value="collaboration" className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
                 Collaboration
+              </TabsTrigger>
+              <TabsTrigger value="data" className="flex items-center gap-2">
+                <HardDrive className="w-4 h-4" />
+                Data Management
               </TabsTrigger>
             </TabsList>
 
@@ -70,6 +81,27 @@ export const ConfigurationSettings = ({ searchQuery = "" }: ConfigurationSetting
                 updateCollaborationConfig={updateCollaborationConfig}
                 saveCollaborationSettings={saveCollaborationSettings}
                 resetCollaborationSettings={resetCollaborationSettings}
+                searchQuery={searchQuery}
+              />
+            </TabsContent>
+
+            <TabsContent value="data" className="space-y-6 mt-6">
+              <DataManagementTab
+                dataConfig={dataConfig || {
+                  storageQuota: '100mb',
+                  compressionLevel: 'medium',
+                  retentionPeriod: '1month',
+                  encryptionEnabled: true,
+                  backupFrequency: 'daily',
+                  syncPriority: 'balanced',
+                  dataValidation: true,
+                  autoCleanup: true,
+                  indexingStrategy: 'standard',
+                  cachingPolicy: 'lru'
+                }}
+                updateDataConfig={updateDataConfig || (() => {})}
+                saveDataSettings={saveDataSettings || (() => {})}
+                resetDataSettings={resetDataSettings || (() => {})}
                 searchQuery={searchQuery}
               />
             </TabsContent>
