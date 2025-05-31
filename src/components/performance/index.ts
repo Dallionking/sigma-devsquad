@@ -14,5 +14,5 @@ export { MemoryDetails } from './memory/MemoryDetails';
 export { StateTransitionAnimations } from './memory/StateTransitionAnimations';
 export * from './memory/memoryUtils';
 
-// Performance hooks
-export { useStateTransitions } from '../hooks/performance/useStateTransitions';
+// Performance hooks - fixed import path
+export { useStateTransitions } from '../../hooks/performance/useStateTransitions';

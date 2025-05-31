@@ -1,6 +1,6 @@
 
 export { usePerformanceMonitoring } from './usePerformanceMonitoring';
-export { useMemoization } from './useMemoization';
+export { useAdvancedMemoization, useMemoizedSelector, useBatchMemoization, useMemoizationStats } from './useMemoization';
 export { useBatchedUpdates } from './useBatchedUpdates';
 export { useLazyLoading } from './useLazyLoading';
 export { useStateNormalization } from './useStateNormalization';
