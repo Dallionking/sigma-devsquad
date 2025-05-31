@@ -44,12 +44,12 @@ export const ImprovedChatSidebar = ({
   };
 
   return (
-    <Card className={cn("h-full flex flex-col bg-card dark:bg-card border-r", className)}>
-      <CardHeader className="pb-3 space-y-4">
+    <Card className={cn("h-full flex flex-col bg-card dark:bg-card border-r border-border", className)}>
+      <CardHeader className="pb-2 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground dark:text-foreground">
+            <MessageSquare className="w-4 h-4 text-primary" />
+            <h2 className="text-base font-semibold text-foreground dark:text-foreground">
               Communication
             </h2>
           </div>
@@ -57,8 +57,9 @@ export const ImprovedChatSidebar = ({
             variant="ghost"
             size="sm"
             onClick={() => setFilterOpen(!filterOpen)}
+            className="h-7 w-7 p-0"
           >
-            <Filter className="w-4 h-4" />
+            <Filter className="w-3 h-3" />
           </Button>
         </div>
         
@@ -68,7 +69,7 @@ export const ImprovedChatSidebar = ({
             variant={activeView === "chat" ? "default" : "outline"}
             size="sm"
             onClick={() => setActiveView("chat")}
-            className="flex-1 text-xs px-2 py-2"
+            className="flex-1 text-xs px-2 py-1 h-7"
           >
             <MessageSquare className="w-3 h-3 mr-1" />
             Chat
@@ -77,7 +78,7 @@ export const ImprovedChatSidebar = ({
             variant={activeView === "history" ? "default" : "outline"}
             size="sm"
             onClick={() => setActiveView("history")}
-            className="flex-1 text-xs px-2 py-2"
+            className="flex-1 text-xs px-2 py-1 h-7"
           >
             <History className="w-3 h-3 mr-1" />
             History
@@ -86,7 +87,7 @@ export const ImprovedChatSidebar = ({
             variant={activeView === "tasks" ? "default" : "outline"}
             size="sm"
             onClick={() => setActiveView("tasks")}
-            className="flex-1 text-xs px-2 py-2"
+            className="flex-1 text-xs px-2 py-1 h-7"
           >
             <Plus className="w-3 h-3 mr-1" />
             Tasks
@@ -96,12 +97,12 @@ export const ImprovedChatSidebar = ({
         {/* Search Bar */}
         {activeView === "history" && (
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+            <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 text-sm bg-background dark:bg-background border-border dark:border-border text-foreground dark:text-foreground"
+              className="pl-8 text-sm bg-background dark:bg-background border-border dark:border-border text-foreground dark:text-foreground h-8"
             />
           </div>
         )}
@@ -109,12 +110,12 @@ export const ImprovedChatSidebar = ({
 
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="p-3 space-y-2">
+          <div className="p-2 space-y-1">
             {getAvailableAgents().map(agent => (
               <div
                 key={agent.id}
                 className={cn(
-                  "flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200",
+                  "flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all duration-200",
                   "bg-background dark:bg-background hover:bg-muted dark:hover:bg-muted",
                   "border border-transparent hover:border-border dark:hover:border-border",
                   selectedAgent === agent.id && "bg-primary/10 dark:bg-primary/10 border-primary dark:border-primary"
@@ -122,13 +123,13 @@ export const ImprovedChatSidebar = ({
                 onClick={() => setSelectedAgent(agent.id)}
               >
                 <div className="relative shrink-0">
-                  <Avatar className="w-8 h-8">
+                  <Avatar className="w-6 h-6">
                     <AvatarImage src={agent.avatar} />
                     <AvatarFallback className="text-xs bg-muted dark:bg-muted text-foreground dark:text-foreground">
                       {agent.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background dark:border-background" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-background dark:border-background" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium text-foreground dark:text-foreground truncate">
@@ -140,7 +141,7 @@ export const ImprovedChatSidebar = ({
                 </div>
                 <Badge 
                   variant="secondary" 
-                  className="text-xs px-2 py-1 shrink-0 bg-muted dark:bg-muted text-muted-foreground dark:text-muted-foreground"
+                  className="text-xs px-1 py-0 shrink-0 bg-muted dark:bg-muted text-muted-foreground dark:text-muted-foreground"
                 >
                   {agent.status}
                 </Badge>

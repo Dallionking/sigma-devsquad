@@ -53,16 +53,16 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-border/60">
-        <div className="flex items-center justify-between mb-4">
+      {/* Compact Header */}
+      <div className="p-3 border-b border-border/60 flex-shrink-0">
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Task Management</h3>
-            <p className="text-sm text-muted-foreground">Monitor and manage all development tasks</p>
+            <h3 className="text-lg font-semibold text-foreground">Tasks</h3>
+            <p className="text-sm text-muted-foreground">Manage development tasks</p>
           </div>
           <Button size="sm" className="bg-primary hover:bg-primary/90">
             <Plus className="w-4 h-4 mr-2" />
-            New Task
+            New
           </Button>
         </div>
 
@@ -74,17 +74,17 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
               placeholder="Search tasks..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-background/80 border-border/60"
+              className="pl-10 bg-background/80 border-border/60 h-8"
             />
           </div>
 
           <div className="flex gap-2">
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-32 bg-background/80 border-border/60">
+              <SelectTrigger className="w-28 bg-background/80 border-border/60 h-8 text-xs">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+              <SelectContent className="bg-background border-border z-50">
+                <SelectItem value="all">All</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="in-progress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
@@ -93,11 +93,11 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
             </Select>
 
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-32 bg-background/80 border-border/60">
+              <SelectTrigger className="w-28 bg-background/80 border-border/60 h-8 text-xs">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priority</SelectItem>
+              <SelectContent className="bg-background border-border z-50">
+                <SelectItem value="all">All</SelectItem>
                 <SelectItem value="critical">Critical</SelectItem>
                 <SelectItem value="high">High</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
@@ -105,9 +105,8 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" className="border-border/60 hover:bg-muted/50">
-              <Filter className="w-4 h-4 mr-2" />
-              Clear Filters
+            <Button variant="outline" size="sm" className="border-border/60 hover:bg-muted/50 h-8 px-2">
+              <Filter className="w-3 h-3" />
             </Button>
           </div>
         </div>
@@ -115,7 +114,7 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
 
       {/* Task List */}
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-3">
+        <div className="p-3 space-y-2">
           {filteredTasks.map((task) => (
             <Card
               key={task.id}
@@ -126,10 +125,10 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
               )}
               onClick={() => onTaskSelect(task)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-3">
+              <CardContent className="p-3">
+                <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-foreground truncate mb-1">
+                    <h4 className="font-medium text-foreground truncate mb-1 text-sm">
                       {task.title}
                     </h4>
                     {task.description && (
@@ -138,18 +137,18 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
                       </p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 ml-3">
-                    <Badge variant="outline" className={getPriorityColor(task.priority)}>
+                  <div className="flex items-center gap-1 ml-2">
+                    <Badge variant="outline" className={cn("text-xs px-1 py-0", getPriorityColor(task.priority))}>
                       {task.priority}
                     </Badge>
-                    <Badge variant="outline" className={getStatusColor(task.status)}>
+                    <Badge variant="outline" className={cn("text-xs px-1 py-0", getStatusColor(task.status))}>
                       {task.status}
                     </Badge>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center gap-4">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center gap-3">
                     {task.assignedAgent && (
                       <div className="flex items-center gap-1">
                         <User className="w-3 h-3" />
@@ -164,7 +163,7 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
                     )}
                   </div>
                   {task.priority === "critical" && (
-                    <AlertCircle className="w-4 h-4 text-red-500" />
+                    <AlertCircle className="w-3 h-3 text-red-500" />
                   )}
                 </div>
               </CardContent>
@@ -172,8 +171,8 @@ export const TaskManagement = ({ tasks, agents, selectedTask, onTaskSelect }: Ta
           ))}
 
           {filteredTasks.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No tasks found matching your criteria.</p>
+            <div className="text-center py-6">
+              <p className="text-muted-foreground text-sm">No tasks found matching your criteria.</p>
             </div>
           )}
         </div>

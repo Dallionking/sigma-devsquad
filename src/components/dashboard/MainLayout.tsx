@@ -7,7 +7,7 @@ import { MainContentRenderer } from "./MainContentRenderer";
 import { DetailPanelRenderer } from "./DetailPanelRenderer";
 import { ViewModeTabs } from "./ViewModeTabs";
 import { Button } from "@/components/ui/button";
-import { PanelLeft } from "lucide-react";
+import { PanelLeft, PanelLeftClose } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -80,11 +80,28 @@ export const MainLayout = ({
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar Toggle Button - Always visible */}
+        <div className="flex-shrink-0 border-r border-border/60 bg-card/30 dark:bg-card/30">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onSidebarToggle}
+            className="m-2 h-8 w-8 p-0 hover:bg-primary/10"
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {sidebarCollapsed ? (
+              <PanelLeft className="w-4 h-4" />
+            ) : (
+              <PanelLeftClose className="w-4 h-4" />
+            )}
+          </Button>
+        </div>
+
         {/* Sidebar - Properly sized and responsive */}
         {!sidebarCollapsed && (
           <div className={cn(
             "bg-background border-r border-border/60 transition-all duration-300 overflow-hidden flex-shrink-0",
-            showTeamView ? "w-72" : "w-80"
+            showTeamView ? "w-64" : "w-80"
           )}>
             <SidebarRenderer
               viewMode={viewMode}
@@ -103,20 +120,6 @@ export const MainLayout = ({
               onTeamSelect={onTeamSelect}
               onAgentProfileSelect={onAgentProfileSelect}
             />
-          </div>
-        )}
-
-        {/* Sidebar Toggle Button - Show when collapsed */}
-        {sidebarCollapsed && (
-          <div className="border-r bg-card/30 dark:bg-card/30 border-border/60">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onSidebarToggle}
-              className="m-2 h-8 w-8 p-0 hover:bg-primary/10"
-            >
-              <PanelLeft className="w-4 h-4" />
-            </Button>
           </div>
         )}
 

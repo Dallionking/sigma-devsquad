@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { NavigationButtons } from "@/components/dashboard/header/NavigationButtons";
-import { Sidebar, Activity, Zap } from "lucide-react";
+import { PanelLeft, Activity, Zap } from "lucide-react";
 
 interface StreamlinedHeaderProps {
   activeAgents: number;
@@ -23,9 +23,9 @@ export const StreamlinedHeader = ({
 }: StreamlinedHeaderProps) => {
   return (
     <header className="bg-background/95 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
-      <div className="flex items-center justify-between h-16 px-6">
+      <div className="flex items-center justify-between h-14 px-4 lg:px-6">
         {/* Left Section - Logo and Navigation */}
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-br from-primary via-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
@@ -55,14 +55,7 @@ export const StreamlinedHeader = ({
 
         {/* Right Section - Controls */}
         <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onSidebarToggle}
-            className="lg:hidden"
-          >
-            <Sidebar className="w-4 h-4" />
-          </Button>
+          {/* Sidebar toggle moved to MainLayout for better UX */}
         </div>
       </div>
     </header>

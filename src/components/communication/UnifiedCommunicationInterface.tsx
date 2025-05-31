@@ -53,10 +53,10 @@ export const UnifiedCommunicationInterface = () => {
   return (
     <div className="h-full flex flex-col bg-background">
       {/* Enhanced Header */}
-      <div className="p-6 border-b border-border/60 bg-card/20 dark:bg-card/20">
-        <div className="flex items-center justify-between mb-4">
+      <div className="p-4 border-b border-border/60 bg-card/20 dark:bg-card/20 flex-shrink-0">
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-xl font-bold text-foreground">
               Communication Center
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
@@ -82,9 +82,9 @@ export const UnifiedCommunicationInterface = () => {
       </div>
 
       {/* Enhanced View Tabs */}
-      <Tabs value={activeView} onValueChange={setActiveView} className="flex-1 flex flex-col">
-        <div className="border-b border-border/60 bg-card/10 dark:bg-card/10 px-6 pt-4">
-          <TabsList className="grid w-full max-w-md grid-cols-3 h-10">
+      <Tabs value={activeView} onValueChange={setActiveView} className="flex-1 flex flex-col overflow-hidden">
+        <div className="border-b border-border/60 bg-card/10 dark:bg-card/10 px-4 pt-3 pb-1 flex-shrink-0">
+          <TabsList className="grid w-full max-w-md grid-cols-3 h-9">
             {views.map((view) => {
               const Icon = view.icon;
               return (
@@ -102,7 +102,7 @@ export const UnifiedCommunicationInterface = () => {
         </div>
 
         <div className="flex-1 overflow-hidden bg-background">
-          <TabsContent value="history" className="h-full mt-0 p-6">
+          <TabsContent value="history" className="h-full mt-0 p-4">
             <Card className="h-full border-border/60 bg-card/30 dark:bg-card/30">
               <CardContent className="p-0 h-full">
                 <CommunicationHistory 
@@ -115,7 +115,7 @@ export const UnifiedCommunicationInterface = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="direct" className="h-full mt-0 p-6">
+          <TabsContent value="direct" className="h-full mt-0 p-4">
             <Card className="h-full border-border/60 bg-card/30 dark:bg-card/30">
               <CardContent className="p-0 h-full">
                 <DirectMessagePanel agentId={selectedAgentId} />
@@ -123,9 +123,9 @@ export const UnifiedCommunicationInterface = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="tasks" className="h-full mt-0 p-6">
+          <TabsContent value="tasks" className="h-full mt-0 p-4">
             <Card className="h-full border-border/60 bg-card/30 dark:bg-card/30">
-              <CardContent className="p-6 h-full">
+              <CardContent className="p-4 h-full">
                 <TaskCreationView 
                   taskData={taskData}
                   setTaskData={setTaskData}

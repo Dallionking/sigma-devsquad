@@ -5,7 +5,7 @@ import { Team, AgentProfile } from "@/types/teams";
 import { AgentSidebar } from "./AgentSidebar";
 import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
-import { TeamHierarchy } from "../teams/TeamHierarchy";
+import { CompactTeamHierarchy } from "../teams/CompactTeamHierarchy";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -43,12 +43,12 @@ export const SidebarRenderer = ({
   onAgentProfileSelect,
 }: SidebarRendererProps) => {
   
-  // In team view, show Team Hierarchy
+  // In team view, show Compact Team Hierarchy
   if (showTeamView) {
     return (
-      <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
-        <div className="p-4">
-          <TeamHierarchy
+      <div className="h-full bg-card/50 dark:bg-card/50">
+        <div className="p-3">
+          <CompactTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
             selectedTeamId={selectedTeam?.id}
@@ -63,7 +63,7 @@ export const SidebarRenderer = ({
   switch (viewMode) {
     case 'workflow':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+        <div className="h-full bg-card/50 dark:bg-card/50">
           <AgentSidebar
             agents={agents}
             selectedAgent={selectedAgent}
@@ -73,7 +73,7 @@ export const SidebarRenderer = ({
       );
     case 'communication':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+        <div className="h-full bg-card/50 dark:bg-card/50">
           <div className="p-4">
             <CommunicationHistory
               messages={messages}
@@ -85,7 +85,7 @@ export const SidebarRenderer = ({
       );
     case 'tasks':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+        <div className="h-full bg-card/50 dark:bg-card/50">
           <div className="p-4">
             <TaskManagement
               tasks={tasks}
@@ -98,7 +98,7 @@ export const SidebarRenderer = ({
       );
     case 'messages':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+        <div className="h-full bg-card/50 dark:bg-card/50">
           <div className="p-4">
             <CommunicationHistory
               messages={messages}
@@ -110,7 +110,7 @@ export const SidebarRenderer = ({
       );
     default:
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+        <div className="h-full bg-card/50 dark:bg-card/50">
           <AgentSidebar
             agents={agents}
             selectedAgent={selectedAgent}

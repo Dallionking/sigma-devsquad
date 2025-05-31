@@ -68,19 +68,19 @@ export const ViewModeTabs = ({
   ];
 
   return (
-    <div className="border-b bg-background/95 backdrop-blur-sm">
+    <div className="bg-background/95 backdrop-blur-sm">
       {/* Vibe accent line */}
-      <div className="h-1 bg-gradient-to-r from-indigo-500 via-purple-500 via-blue-500 to-cyan-500 animate-pulse" />
+      <div className="h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 via-blue-500 to-cyan-500" />
       
-      <div className="flex items-center justify-center px-6 py-4">
-        <div className="flex items-center gap-2 mr-8">
-          <Zap className="w-5 h-5 text-primary" />
-          <h2 className="text-lg font-semibold vibe-gradient-text">
+      <div className="flex items-center justify-center px-4 py-3">
+        <div className="flex items-center gap-2 mr-6">
+          <Zap className="w-4 h-4 text-primary" />
+          <h2 className="text-base font-semibold vibe-gradient-text">
             Squad Dashboard
           </h2>
         </div>
         
-        <div className="flex space-x-2 bg-muted/30 rounded-2xl p-2 border border-border/50">
+        <div className="flex space-x-1 bg-muted/30 rounded-xl p-1 border border-border/50">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = viewMode === tab.key;
@@ -89,28 +89,28 @@ export const ViewModeTabs = ({
               <Button
                 key={tab.key}
                 variant="ghost"
-                size="lg"
+                size="sm"
                 onClick={() => onViewModeChange(tab.key)}
                 className={cn(
-                  "relative h-12 px-6 rounded-xl transition-all duration-300 group",
+                  "relative h-9 px-4 rounded-lg transition-all duration-300 group",
                   "border border-transparent font-medium text-sm",
                   isActive 
-                    ? `bg-gradient-to-r ${tab.activeColor} text-white shadow-lg scale-105 border-white/20` 
+                    ? `bg-gradient-to-r ${tab.activeColor} text-white shadow-md scale-105 border-white/20` 
                     : `hover:bg-gradient-to-r ${tab.hoverColor} hover:text-white text-muted-foreground hover:scale-102`
                 )}
                 title={tab.description}
               >
-                <Icon className="w-5 h-5 mr-3" />
-                <span className="font-semibold">{tab.label}</span>
+                <Icon className="w-4 h-4 mr-2" />
+                <span className="font-medium">{tab.label}</span>
                 
                 {tab.count > 0 && (
                   <Badge 
                     variant="secondary" 
                     className={cn(
-                      "ml-3 h-6 w-6 p-0 text-xs flex items-center justify-center",
+                      "ml-2 h-5 w-5 p-0 text-xs flex items-center justify-center",
                       isActive 
                         ? "bg-white/20 text-white border-white/30" 
-                        : "bg-primary/10 text-primary animate-pulse"
+                        : "bg-primary/10 text-primary"
                     )}
                   >
                     {tab.count}
@@ -119,7 +119,7 @@ export const ViewModeTabs = ({
                 
                 {/* Active indicator */}
                 {isActive && (
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-lg" />
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white rounded-full shadow-sm" />
                 )}
               </Button>
             );

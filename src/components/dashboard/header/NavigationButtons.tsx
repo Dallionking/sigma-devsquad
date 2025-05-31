@@ -21,7 +21,6 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
   const isDashboardPage = location.pathname === "/";
 
   const handleNavigation = (path: string) => {
-    // Always navigate to the specified path, regardless of current view mode
     navigate(path);
   };
 
@@ -32,19 +31,21 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
   };
 
   return (
-    <div className="hidden lg:flex items-center space-x-2">
+    <div className="hidden lg:flex items-center space-x-1">
       <Button 
         variant={isDashboardPage && !showTeamView ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/")}
+        className="h-8"
       >
         Dashboard
       </Button>
-      {isDashboardPage && (
+      {isDashboardPage && onTeamViewToggle && (
         <Button 
           variant={showTeamView ? "default" : "ghost"} 
           size="sm"
           onClick={handleTeamToggle}
+          className="h-8"
         >
           <Users className="w-4 h-4 mr-2" />
           Teams
@@ -54,6 +55,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
         variant={isPlanningAgentPage ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/planning-agent")}
+        className="h-8"
       >
         <Layers className="w-4 h-4 mr-2" />
         Planning
@@ -62,6 +64,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
         variant={isAgentConfigPage ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/agent-configuration")}
+        className="h-8"
       >
         <Bot className="w-4 h-4 mr-2" />
         Agents
@@ -70,6 +73,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
         variant={isMCPPage ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/mcp-management")}
+        className="h-8"
       >
         <Package className="w-4 h-4 mr-2" />
         MCP
@@ -78,6 +82,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
         variant={isLLMPage ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/llm-integration")}
+        className="h-8"
       >
         <Brain className="w-4 h-4 mr-2" />
         LLM
@@ -86,6 +91,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
         variant={isIDEPage ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/ide-integration")}
+        className="h-8"
       >
         <Monitor className="w-4 h-4 mr-2" />
         IDE
@@ -94,6 +100,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
         variant={isSettingsPage ? "default" : "ghost"} 
         size="sm"
         onClick={() => handleNavigation("/settings")}
+        className="h-8"
       >
         <Cog className="w-4 h-4 mr-2" />
         Settings
