@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -14,6 +13,7 @@ interface DynamicTextProps {
   highContrast?: boolean;
   accessible?: boolean;
   as?: 'span' | 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  id?: string;
 }
 
 export const DynamicText = ({
@@ -26,7 +26,8 @@ export const DynamicText = ({
   className,
   highContrast = false,
   accessible = true,
-  as: Component = 'span'
+  as: Component = 'span',
+  id
 }: DynamicTextProps) => {
   const [isTruncated, setIsTruncated] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -84,6 +85,7 @@ export const DynamicText = ({
   const textElement = (
     <Component
       ref={textRef as any}
+      id={id}
       className={textClasses}
       style={{ maxWidth }}
       onMouseEnter={() => expandOnHover && setIsExpanded(true)}
@@ -122,11 +124,13 @@ export const DynamicHeading = ({
   level = 1, 
   children, 
   className,
+  id,
   ...props 
 }: {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   children: React.ReactNode;
   className?: string;
+  id?: string;
 } & Omit<DynamicTextProps, 'as' | 'variant'>) => {
   const variants = {
     1: '3xl',
@@ -152,6 +156,7 @@ export const DynamicHeading = ({
       variant={variants[level]}
       className={cn('font-semibold', className)}
       highContrast
+      id={id}
       {...props}
     >
       {children}
