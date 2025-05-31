@@ -1,14 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
-import { DynamicText, DynamicHeading, TruncatedText } from '@/components/ui/dynamic-text';
-import { cn } from '@/lib/utils';
+import { TestingControls } from './TestingControls';
+import { TextVariantsTab } from './TextVariantsTab';
+import { HeadingsTab } from './HeadingsTab';
+import { TruncationTab } from './TruncationTab';
+import { TestResultsTab } from './TestResultsTab';
 
 interface TestContent {
   short: string;
@@ -51,17 +49,7 @@ export const ResponsiveTextTester = () => {
   const [showGridlines, setShowGridlines] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
   const [testLanguage, setTestLanguage] = useState('en');
-
   const [testResults, setTestResults] = useState<Record<string, boolean>>({});
-
-  // Simulate different viewport sizes
-  const containerStyle = {
-    width: `${containerWidth[0]}px`,
-    maxWidth: '100%',
-    margin: '0 auto',
-    border: showGridlines ? '1px dashed hsl(var(--border))' : 'none',
-    transition: 'all 0.3s ease'
-  };
 
   const runAccessibilityTest = (elementId: string) => {
     const element = document.getElementById(elementId);
@@ -77,11 +65,15 @@ export const ResponsiveTextTester = () => {
     return isAccessible;
   };
 
+  const handleRerunTests = () => {
+    textVariants.forEach(variant => runAccessibilityTest(`test-${variant}`));
+    headingLevels.forEach(level => runAccessibilityTest(`heading-${level}`));
+  };
+
   useEffect(() => {
     // Run accessibility tests on mount and when breakpoint changes
     const timer = setTimeout(() => {
-      textVariants.forEach(variant => runAccessibilityTest(`test-${variant}`));
-      headingLevels.forEach(level => runAccessibilityTest(`heading-${level}`));
+      handleRerunTests();
     }, 100);
 
     return () => clearTimeout(timer);
@@ -97,81 +89,19 @@ export const ResponsiveTextTester = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Testing Controls */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Viewport Width</label>
-              <Slider
-                value={containerWidth}
-                onValueChange={setContainerWidth}
-                min={320}
-                max={1920}
-                step={1}
-                className="w-full"
-              />
-              <span className="text-xs text-muted-foreground">{containerWidth[0]}px</span>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Breakpoint Preset</label>
-              <Select value={currentBreakpoint.name} onValueChange={(value) => {
-                const bp = breakpoints.find(b => b.name === value)!;
-                setCurrentBreakpoint(bp);
-                setContainerWidth([bp.width]);
-              }}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {breakpoints.map(bp => (
-                    <SelectItem key={bp.name} value={bp.name}>
-                      {bp.name} ({bp.width}px)
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Test Language</label>
-              <Select value={testLanguage} onValueChange={setTestLanguage}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="fr">Français</SelectItem>
-                  <SelectItem value="de">Deutsch</SelectItem>
-                  <SelectItem value="ja">日本語</SelectItem>
-                  <SelectItem value="ar">العربية</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="gridlines"
-                  checked={showGridlines}
-                  onCheckedChange={setShowGridlines}
-                />
-                <label htmlFor="gridlines" className="text-sm font-medium">
-                  Show Gridlines
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="high-contrast"
-                  checked={highContrast}
-                  onCheckedChange={setHighContrast}
-                />
-                <label htmlFor="high-contrast" className="text-sm font-medium">
-                  High Contrast
-                </label>
-              </div>
-            </div>
-          </div>
+          <TestingControls
+            containerWidth={containerWidth}
+            setContainerWidth={setContainerWidth}
+            currentBreakpoint={currentBreakpoint}
+            setCurrentBreakpoint={setCurrentBreakpoint}
+            testLanguage={testLanguage}
+            setTestLanguage={setTestLanguage}
+            showGridlines={showGridlines}
+            setShowGridlines={setShowGridlines}
+            highContrast={highContrast}
+            setHighContrast={setHighContrast}
+            breakpoints={breakpoints}
+          />
 
           <Tabs defaultValue="variants" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
@@ -182,155 +112,40 @@ export const ResponsiveTextTester = () => {
             </TabsList>
 
             <TabsContent value="variants" className="space-y-4">
-              <div style={containerStyle} className={cn(
-                "bg-card border rounded-lg p-6 space-y-6",
-                highContrast && "text-contrast-high"
-              )}>
-                {textVariants.map(variant => (
-                  <div key={variant} className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="font-mono text-xs">
-                        {variant}
-                      </Badge>
-                      {testResults[`test-${variant}`] !== undefined && (
-                        <Badge variant={testResults[`test-${variant}`] ? "default" : "destructive"}>
-                          {testResults[`test-${variant}`] ? "✓ WCAG AA" : "✗ Fails"}
-                        </Badge>
-                      )}
-                    </div>
-                    <DynamicText
-                      id={`test-${variant}`}
-                      variant={variant}
-                      className="text-wrap-responsive"
-                      accessible
-                      highContrast={highContrast}
-                    >
-                      {testContent.medium}
-                    </DynamicText>
-                  </div>
-                ))}
-              </div>
+              <TextVariantsTab
+                containerWidth={containerWidth}
+                showGridlines={showGridlines}
+                highContrast={highContrast}
+                testResults={testResults}
+                testContent={testContent}
+              />
             </TabsContent>
 
             <TabsContent value="headings" className="space-y-4">
-              <div style={containerStyle} className={cn(
-                "bg-card border rounded-lg p-6 space-y-4",
-                highContrast && "text-contrast-high"
-              )}>
-                {headingLevels.map(level => (
-                  <div key={level} className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="font-mono text-xs">
-                        H{level}
-                      </Badge>
-                      {testResults[`heading-${level}`] !== undefined && (
-                        <Badge variant={testResults[`heading-${level}`] ? "default" : "destructive"}>
-                          {testResults[`heading-${level}`] ? "✓ WCAG AA" : "✗ Fails"}
-                        </Badge>
-                      )}
-                    </div>
-                    <DynamicHeading
-                      id={`heading-${level}`}
-                      level={level}
-                      className="text-wrap-balanced"
-                    >
-                      Heading Level {level}: {testContent.medium}
-                    </DynamicHeading>
-                  </div>
-                ))}
-              </div>
+              <HeadingsTab
+                containerWidth={containerWidth}
+                showGridlines={showGridlines}
+                highContrast={highContrast}
+                testResults={testResults}
+                testContent={testContent}
+              />
             </TabsContent>
 
             <TabsContent value="truncation" className="space-y-4">
-              <div style={containerStyle} className={cn(
-                "bg-card border rounded-lg p-6 space-y-6",
-                highContrast && "text-contrast-high"
-              )}>
-                {Object.entries(testContent).map(([key, content]) => (
-                  <div key={key} className="space-y-3">
-                    <h4 className="font-semibold capitalize text-sm text-muted-foreground">
-                      {key} Text ({content.length} chars)
-                    </h4>
-                    <div className="grid gap-2">
-                      <div className="space-y-1">
-                        <span className="text-xs text-muted-foreground">1 line:</span>
-                        <TruncatedText lines={1} className="max-w-xs bg-muted p-2 rounded">
-                          {content}
-                        </TruncatedText>
-                      </div>
-                      <div className="space-y-1">
-                        <span className="text-xs text-muted-foreground">2 lines:</span>
-                        <TruncatedText lines={2} className="max-w-xs bg-muted p-2 rounded">
-                          {content}
-                        </TruncatedText>
-                      </div>
-                      <div className="space-y-1">
-                        <span className="text-xs text-muted-foreground">3 lines:</span>
-                        <TruncatedText lines={3} className="max-w-xs bg-muted p-2 rounded">
-                          {content}
-                        </TruncatedText>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <TruncationTab
+                containerWidth={containerWidth}
+                showGridlines={showGridlines}
+                highContrast={highContrast}
+                testContent={testContent}
+              />
             </TabsContent>
 
             <TabsContent value="results" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Accessibility Compliance Results</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold">Text Variants</h4>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {textVariants.map(variant => (
-                          <div key={variant} className="flex items-center gap-2">
-                            <Badge 
-                              variant={testResults[`test-${variant}`] ? "default" : "destructive"}
-                              className="w-full justify-center"
-                            >
-                              {variant}: {testResults[`test-${variant}`] ? "Pass" : "Fail"}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h4 className="font-semibold">Heading Levels</h4>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {headingLevels.map(level => (
-                          <div key={level} className="flex items-center gap-2">
-                            <Badge 
-                              variant={testResults[`heading-${level}`] ? "default" : "destructive"}
-                              className="w-full justify-center"
-                            >
-                              H{level}: {testResults[`heading-${level}`] ? "Pass" : "Fail"}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="pt-4 border-t">
-                      <div className="flex items-center gap-4">
-                        <Button onClick={() => {
-                          textVariants.forEach(variant => runAccessibilityTest(`test-${variant}`));
-                          headingLevels.forEach(level => runAccessibilityTest(`heading-${level}`));
-                        }}>
-                          Rerun Tests
-                        </Button>
-                        <span className="text-sm text-muted-foreground">
-                          Current viewport: {containerWidth[0]}px
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <TestResultsTab
+                testResults={testResults}
+                containerWidth={containerWidth}
+                onRerunTests={handleRerunTests}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>
