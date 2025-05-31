@@ -52,7 +52,7 @@ export const MemoryVisualization = ({ isRecording }: MemoryVisualizationProps) =
     return `${mb.toFixed(1)} MB`;
   };
 
-  const getMemoryStatus = () => {
+  const getMemoryStatus = (): { status: string, color: 'default' | 'secondary' | 'outline' | 'destructive' } => {
     if (!currentMemory) return { status: 'unknown', color: 'secondary' };
     
     const usagePercent = (currentMemory.usedJSHeapSize / currentMemory.jsHeapSizeLimit) * 100;
