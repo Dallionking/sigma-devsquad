@@ -218,11 +218,11 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     });
   };
 
-  const isTyping = (componentId: string, isTyping: boolean) => {
+  const isTyping = (componentId: string, typing: boolean) => {
     // Send typing indicator through event bus
     eventBus.emit('typing-indicator', {
       componentId,
-      isTyping,
+      isTyping: typing,
       userId: 'current-user',
       timestamp: new Date().toISOString()
     });

@@ -12,7 +12,7 @@ import { StateRecoveryPanel } from "./StateRecoveryPanel";
 import { EnhancedSyncStatusCard } from "./EnhancedSyncStatusCard";
 import { 
   Database, 
-  Sync, 
+  RefreshCw, 
   Activity, 
   AlertTriangle, 
   CheckCircle, 
@@ -302,7 +302,7 @@ export const StateManagementDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Sync className="w-4 h-4" />
+                <RefreshCw className="w-4 h-4" />
                 Cross-Component Synchronization
               </CardTitle>
             </CardHeader>

@@ -1,11 +1,13 @@
 
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
-  GitBranch,
-  MessageSquare,
-  CheckSquare,
-  Activity
+  GitBranch, 
+  MessageSquare, 
+  CheckSquare, 
+  Mail,
+  Zap
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
@@ -13,7 +15,7 @@ import { cn } from "@/lib/utils";
 interface ViewModeTabsProps {
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
-  notificationCounts?: {
+  notificationCounts: {
     workflow: number;
     communication: number;
     tasks: number;
@@ -24,64 +26,87 @@ interface ViewModeTabsProps {
 export const ViewModeTabs = ({ 
   viewMode, 
   onViewModeChange, 
-  notificationCounts = { workflow: 0, communication: 0, tasks: 0, messages: 0 }
+  notificationCounts 
 }: ViewModeTabsProps) => {
-  const viewModeConfig = {
-    workflow: { 
-      icon: GitBranch, 
-      label: "Workflow",
-      notifications: notificationCounts.workflow
+  const tabs = [
+    {
+      key: 'workflow' as ViewMode,
+      label: 'Workflow',
+      icon: GitBranch,
+      count: notificationCounts.workflow,
+      description: 'Agent collaboration flow'
     },
-    communication: { 
-      icon: MessageSquare, 
-      label: "Communication",
-      notifications: notificationCounts.communication
+    {
+      key: 'communication' as ViewMode,
+      label: 'Communication',
+      icon: MessageSquare,
+      count: notificationCounts.communication,
+      description: 'Team chat & updates'
     },
-    tasks: { 
-      icon: CheckSquare, 
-      label: "Tasks",
-      notifications: notificationCounts.tasks
+    {
+      key: 'tasks' as ViewMode,
+      label: 'Tasks',
+      icon: CheckSquare,
+      count: notificationCounts.tasks,
+      description: 'Active assignments'
     },
-    messages: { 
-      icon: Activity, 
-      label: "Messages",
-      notifications: notificationCounts.messages
+    {
+      key: 'messages' as ViewMode,
+      label: 'Messages',
+      icon: Mail,
+      count: notificationCounts.messages,
+      description: 'Direct communications'
     }
-  };
+  ];
 
   return (
-    <div className="border-b bg-background/95 backdrop-blur-sm">
-      <div className="flex items-center px-6 py-3">
-        <div className="flex items-center space-x-1">
-          {Object.entries(viewModeConfig).map(([mode, config]) => {
-            const Icon = config.icon;
-            const isActive = viewMode === mode;
-            const hasNotifications = config.notifications > 0;
+    <div className="border-b bg-background/60 backdrop-blur-sm">
+      {/* Vibe accent line */}
+      <div className="h-0.5 bg-gradient-to-r from-primary/30 via-blue-500/30 to-purple-500/30" />
+      
+      <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center gap-2">
+          <Zap className="w-5 h-5 text-primary" />
+          <h2 className="text-lg font-semibold vibe-gradient-text">
+            Squad Dashboard
+          </h2>
+        </div>
+        
+        <div className="flex space-x-1">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = viewMode === tab.key;
             
             return (
               <Button
-                key={mode}
-                variant="ghost"
+                key={tab.key}
+                variant={isActive ? "default" : "ghost"}
                 size="sm"
-                onClick={() => onViewModeChange(mode as ViewMode)}
+                onClick={() => onViewModeChange(tab.key)}
                 className={cn(
-                  "h-10 px-4 relative transition-all duration-200 border-b-2 rounded-none",
+                  "relative h-10 px-4 transition-all duration-200 group",
                   isActive 
-                    ? "bg-background/50 text-foreground border-b-primary shadow-sm" 
-                    : "hover:bg-background/30 text-muted-foreground border-b-transparent hover:text-foreground"
+                    ? "vibe-btn-primary shadow-lg" 
+                    : "hover:bg-primary/10 hover:text-primary"
                 )}
               >
                 <Icon className="w-4 h-4 mr-2" />
-                <span className="font-medium">{config.label}</span>
+                <span className="hidden sm:inline font-medium">{tab.label}</span>
                 
-                {hasNotifications && (
+                {tab.count > 0 && (
                   <Badge 
                     variant="destructive" 
-                    className="ml-2 px-1.5 py-0 text-xs h-5 min-w-5 flex items-center justify-center"
+                    className="ml-2 h-5 w-5 p-0 text-xs animate-pulse"
                   >
-                    {config.notifications > 9 ? "9+" : config.notifications}
+                    {tab.count}
                   </Badge>
                 )}
+                
+                {/* Hover tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-background/95 backdrop-blur-sm border rounded-lg px-3 py-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap shadow-lg">
+                  {tab.description}
+                  <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-background border-l border-t rotate-45" />
+                </div>
               </Button>
             );
           })}
