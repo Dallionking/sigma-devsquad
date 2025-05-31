@@ -215,8 +215,30 @@ export const UnifiedPlanningInterface = ({
       {isCommunicationOpen && (
         <>
           {/* Desktop Panel */}
-          <div className="hidden lg:block fixed top-16 right-0 h-[calc(100vh-4rem)] w-1/2 z-20 bg-background border-l shadow-lg p-4">
-            <UnifiedCommunicationHub showPresence={true} />
+          <div className="hidden lg:block fixed top-16 right-0 h-[calc(100vh-4rem)] w-1/2 z-20 bg-background/95 backdrop-blur-sm border-l border-border/30 shadow-lg">
+            <div className="h-full flex flex-col">
+              {/* Header with close button */}
+              <div className="border-b border-border/20 p-4 bg-gradient-to-r from-[#0A0E1A]/80 to-background/80">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-[#3B82F6]" />
+                    <h3 className="text-lg font-semibold">Team Communication</h3>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsCommunicationOpen(false)}
+                    className="border-red-500/30 hover:bg-red-500/10 hover:text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              {/* Communication Hub */}
+              <div className="flex-1 min-h-0 p-4">
+                <UnifiedCommunicationHub showPresence={true} />
+              </div>
+            </div>
           </div>
 
           {/* Mobile Panel */}
