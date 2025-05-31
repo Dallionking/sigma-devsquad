@@ -46,13 +46,15 @@ export const SidebarRenderer = ({
   // In team view, show Team Hierarchy
   if (showTeamView) {
     return (
-      <div className="h-full p-4">
-        <TeamHierarchy
-          onTeamSelect={onTeamSelect}
-          onAgentSelect={onAgentProfileSelect}
-          selectedTeamId={selectedTeam?.id}
-          selectedAgentId={selectedAgentProfile?.id}
-        />
+      <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+        <div className="p-4">
+          <TeamHierarchy
+            onTeamSelect={onTeamSelect}
+            onAgentSelect={onAgentProfileSelect}
+            selectedTeamId={selectedTeam?.id}
+            selectedAgentId={selectedAgentProfile?.id}
+          />
+        </div>
       </div>
     );
   }
@@ -61,50 +63,60 @@ export const SidebarRenderer = ({
   switch (viewMode) {
     case 'workflow':
       return (
-        <AgentSidebar
-          agents={agents}
-          selectedAgent={selectedAgent}
-          onAgentSelect={onAgentSelect}
-        />
+        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+          <AgentSidebar
+            agents={agents}
+            selectedAgent={selectedAgent}
+            onAgentSelect={onAgentSelect}
+          />
+        </div>
       );
     case 'communication':
       return (
-        <div className="h-full bg-card dark:bg-card">
-          <CommunicationHistory
-            messages={messages}
-            selectedMessage={selectedMessage}
-            onMessageSelect={onMessageSelect}
-          />
+        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+          <div className="p-4">
+            <CommunicationHistory
+              messages={messages}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         </div>
       );
     case 'tasks':
       return (
-        <div className="h-full bg-card dark:bg-card">
-          <TaskManagement
-            tasks={tasks}
-            agents={agents}
-            selectedTask={selectedTask}
-            onTaskSelect={onTaskSelect}
-          />
+        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+          <div className="p-4">
+            <TaskManagement
+              tasks={tasks}
+              agents={agents}
+              selectedTask={selectedTask}
+              onTaskSelect={onTaskSelect}
+            />
+          </div>
         </div>
       );
     case 'messages':
       return (
-        <div className="h-full bg-card dark:bg-card">
-          <CommunicationHistory
-            messages={messages}
-            selectedMessage={selectedMessage}
-            onMessageSelect={onMessageSelect}
-          />
+        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+          <div className="p-4">
+            <CommunicationHistory
+              messages={messages}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         </div>
       );
     default:
       return (
-        <AgentSidebar
-          agents={agents}
-          selectedAgent={selectedAgent}
-          onAgentSelect={onAgentSelect}
-        />
+        <div className="h-full bg-card/50 dark:bg-card/50 border-r border-border/60">
+          <AgentSidebar
+            agents={agents}
+            selectedAgent={selectedAgent}
+            onAgentSelect={onAgentSelect}
+          />
+        </div>
       );
   }
 };

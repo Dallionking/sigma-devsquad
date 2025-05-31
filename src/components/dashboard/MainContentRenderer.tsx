@@ -5,6 +5,7 @@ import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
+import { UnifiedCommunicationInterface } from "@/components/communication/UnifiedCommunicationInterface";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -47,30 +48,33 @@ export const MainContentRenderer = ({
   onAgentProfileSelect,
   onViewModeChange,
 }: MainContentRendererProps) => {
+  
   const renderMainContent = () => {
     if (showTeamView) {
       if (selectedTeam) {
         return (
           <div className="space-y-6">
             {/* Back navigation button */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 p-6 pb-0">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onTeamSelect(null)}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover:bg-primary/10"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Teams
               </Button>
-              <h1 className="text-2xl font-bold">{selectedTeam.name}</h1>
+              <h1 className="text-2xl font-bold text-foreground">{selectedTeam.name}</h1>
             </div>
-            <TeamDashboard team={selectedTeam} />
+            <div className="px-6">
+              <TeamDashboard team={selectedTeam} />
+            </div>
           </div>
         );
       }
       return (
-        <div className="w-full">
+        <div className="w-full p-6">
           <TeamsWorkflowVisualization
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
@@ -78,6 +82,15 @@ export const MainContentRenderer = ({
         </div>
       );
     } else {
+      // Individual view mode content
+      if (viewMode === "communication" || viewMode === "messages") {
+        return (
+          <div className="h-full">
+            <UnifiedCommunicationInterface />
+          </div>
+        );
+      }
+      
       return (
         <MainWorkflowArea 
           viewMode={viewMode}
@@ -96,26 +109,30 @@ export const MainContentRenderer = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0">
+    <div className="flex-1 flex flex-col min-h-0 bg-background">
       {/* Dashboard overview section - only show in workflow mode and individual view */}
       {viewMode === "workflow" && !showTeamView && (
-        <div className="animate-in fade-in-50 duration-300 flex-shrink-0">
-          <DashboardOverview 
-            agents={agents}
-            onAgentSelect={onAgentSelect}
-          />
+        <div className="animate-in fade-in-50 duration-300 flex-shrink-0 bg-card/20 dark:bg-card/20 border-b border-border/40">
+          <div className="p-6">
+            <DashboardOverview 
+              agents={agents}
+              onAgentSelect={onAgentSelect}
+            />
+          </div>
         </div>
       )}
       
       {/* Main content area */}
-      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6 space-y-6 overflow-auto bg-background dark:bg-background">
+      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 overflow-auto bg-background">
         {renderMainContent()}
         
         {/* User Presence UI - Always visible for collaboration */}
-        <UserPresenceUI 
-          componentId={showTeamView ? 'team-view' : 'individual-view'}
-          projectId="main-dashboard"
-        />
+        <div className="p-6">
+          <UserPresenceUI 
+            componentId={showTeamView ? 'team-view' : 'individual-view'}
+            projectId="main-dashboard"
+          />
+        </div>
       </div>
     </div>
   );

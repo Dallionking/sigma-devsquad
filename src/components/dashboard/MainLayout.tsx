@@ -66,23 +66,25 @@ export const MainLayout = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-background">
       {/* View Mode Tabs - Only show in individual view */}
       {!showTeamView && (
-        <ViewModeTabs
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-          notificationCounts={notificationCounts}
-        />
+        <div className="border-b border-border/60 bg-card/30 dark:bg-card/30">
+          <ViewModeTabs
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            notificationCounts={notificationCounts}
+          />
+        </div>
       )}
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - Show in both team and individual view, but collapsible */}
+        {/* Sidebar - Properly sized and responsive */}
         {!sidebarCollapsed && (
           <div className={cn(
-            "bg-card border-r transition-all duration-300 overflow-hidden",
-            showTeamView ? "w-64" : "w-80"
+            "bg-background border-r border-border/60 transition-all duration-300 overflow-hidden flex-shrink-0",
+            showTeamView ? "w-72" : "w-80"
           )}>
             <SidebarRenderer
               viewMode={viewMode}
@@ -106,12 +108,12 @@ export const MainLayout = ({
 
         {/* Sidebar Toggle Button - Show when collapsed */}
         {sidebarCollapsed && (
-          <div className="border-r bg-card">
+          <div className="border-r bg-card/30 dark:bg-card/30 border-border/60">
             <Button
               variant="ghost"
               size="sm"
               onClick={onSidebarToggle}
-              className="m-2 h-8 w-8 p-0"
+              className="m-2 h-8 w-8 p-0 hover:bg-primary/10"
             >
               <PanelLeft className="w-4 h-4" />
             </Button>
@@ -119,7 +121,7 @@ export const MainLayout = ({
         )}
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden bg-background">
           <MainContentRenderer
             viewMode={viewMode}
             agents={agents}
@@ -142,7 +144,7 @@ export const MainLayout = ({
 
         {/* Detail Panel - Only show when not in team view and has selection */}
         {!showTeamView && hasSelection && (
-          <div className="w-96 bg-card border-l overflow-hidden flex-shrink-0">
+          <div className="w-96 bg-card/30 dark:bg-card/30 border-l border-border/60 overflow-hidden flex-shrink-0">
             <DetailPanelRenderer
               selectedAgent={selectedAgent}
               selectedTask={selectedTask}
