@@ -8,6 +8,8 @@ import { ChannelSelector } from "./shared/ChannelSelector";
 import { MessageFormatCustomizer } from "./shared/MessageFormatCustomizer";
 import { WebhookConfiguration } from "./shared/WebhookConfiguration";
 import { EnhancedConnectionStatus } from "./shared/EnhancedConnectionStatus";
+import { ConfigurationStatusBadge } from "./shared/ConfigurationStatusBadge";
+import { useConfigurationStatus } from "@/hooks/useConfigurationStatus";
 import { WebhookConfig, ChannelConfig, MessageTemplate } from "@/types/webhook";
 
 interface DiscordIntegrationProps {
@@ -74,6 +76,22 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
   const [roleBasedNotifications, setRoleBasedNotifications] = useState(true);
 
   const { toast } = useToast();
+
+  // Calculate configuration status
+  const { status, details } = useConfigurationStatus({
+    connectionInfo,
+    webhookConfig,
+    selectedChannels,
+    notificationSettings: {
+      agentStatus: agentStatusNotifications,
+      taskCompletion: taskCompletionNotifications,
+      systemError: systemErrorNotifications,
+      planningAgent: planningAgentNotifications,
+      directMessaging,
+      roleBasedNotifications
+    },
+    platform: 'discord'
+  });
 
   const handleConnect = async (type: 'oauth' | 'webhook' | 'token') => {
     // Simulate connection process
@@ -179,6 +197,13 @@ export const DiscordIntegration = ({ searchQuery = "" }: DiscordIntegrationProps
       onSave={handleSave}
       onReset={handleReset}
       searchQuery={searchQuery}
+      headerElement={
+        <ConfigurationStatusBadge 
+          status={status} 
+          details={details} 
+          platform="Discord" 
+        />
+      }
     >
       <OptimizedStack gap="md">
         {/* Enhanced Connection Status */}

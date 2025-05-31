@@ -8,6 +8,8 @@ import { ChannelSelector } from "./shared/ChannelSelector";
 import { MessageFormatCustomizer } from "./shared/MessageFormatCustomizer";
 import { WebhookConfiguration } from "./shared/WebhookConfiguration";
 import { EnhancedConnectionStatus } from "./shared/EnhancedConnectionStatus";
+import { ConfigurationStatusBadge } from "./shared/ConfigurationStatusBadge";
+import { useConfigurationStatus } from "@/hooks/useConfigurationStatus";
 import { WebhookConfig, ChannelConfig, MessageTemplate } from "@/types/webhook";
 
 interface TelegramIntegrationProps {
@@ -74,6 +76,21 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
 
   const { toast } = useToast();
 
+  // Calculate configuration status
+  const { status, details } = useConfigurationStatus({
+    connectionInfo,
+    webhookConfig,
+    selectedChannels,
+    notificationSettings: {
+      agentStatus: agentStatusNotifications,
+      taskCompletion: taskCompletionNotifications,
+      systemError: systemErrorNotifications,
+      planningAgent: planningAgentNotifications,
+      directMessaging
+    },
+    platform: 'telegram'
+  });
+
   const handleWebhookConfigChange = (config: WebhookConfig) => {
     setWebhookConfig(config);
   };
@@ -96,7 +113,7 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
 
   const handleSave = () => {
     console.log("Saving Telegram settings:", {
-      isConnected,
+      connectionInfo,
       webhookConfig,
       selectedChannels,
       agentStatusNotifications,
@@ -170,6 +187,13 @@ export const TelegramIntegration = ({ searchQuery = "" }: TelegramIntegrationPro
       onSave={handleSave}
       onReset={handleReset}
       searchQuery={searchQuery}
+      headerElement={
+        <ConfigurationStatusBadge 
+          status={status} 
+          details={details} 
+          platform="Telegram" 
+        />
+      }
     >
       <OptimizedStack gap="md">
         {/* Enhanced Connection Status */}
