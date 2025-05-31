@@ -72,14 +72,23 @@ export const SidebarRenderer = ({
         </div>
       );
     case 'communication':
+    case 'messages': // Both communication and messages use the same sidebar
       return (
         <div className="h-full bg-card/50 dark:bg-card/50">
           <div className="p-4">
-            <CommunicationHistory
-              messages={messages}
-              selectedMessage={selectedMessage}
-              onMessageSelect={onMessageSelect}
-            />
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-semibold text-muted-foreground mb-3">Quick Filters</h3>
+                <div className="text-xs text-muted-foreground">
+                  Use the main communication interface for advanced filtering and search.
+                </div>
+              </div>
+              <CommunicationHistory
+                messages={messages}
+                selectedMessage={selectedMessage}
+                onMessageSelect={onMessageSelect}
+              />
+            </div>
           </div>
         </div>
       );
@@ -92,18 +101,6 @@ export const SidebarRenderer = ({
               agents={agents}
               selectedTask={selectedTask}
               onTaskSelect={onTaskSelect}
-            />
-          </div>
-        </div>
-      );
-    case 'messages':
-      return (
-        <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className="p-4">
-            <CommunicationHistory
-              messages={messages}
-              selectedMessage={selectedMessage}
-              onMessageSelect={onMessageSelect}
             />
           </div>
         </div>

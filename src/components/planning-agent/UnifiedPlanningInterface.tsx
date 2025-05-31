@@ -4,8 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChatInterface } from "./ChatInterface";
 import { PlanningCanvas } from "./PlanningCanvas";
-import { UnifiedCommunicationHub } from "@/components/communication/UnifiedCommunicationHub";
+import { CommunicationPanel } from "./CommunicationPanel";
 import { SpaceOptimizedContainer } from "@/components/layout/SpaceOptimizedContainer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useResponsiveBreakpoints } from "@/hooks/useResponsiveBreakpoints";
 import { Maximize2, Minimize2, MessageSquare, Brain, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -211,43 +212,11 @@ export const UnifiedPlanningInterface = ({
         </>
       )}
 
-      {/* Enhanced Communication Panel - Uses new unified hub */}
-      {isCommunicationOpen && (
-        <>
-          {/* Desktop Panel */}
-          <div className="hidden lg:block fixed top-16 right-0 h-[calc(100vh-4rem)] w-1/2 z-20 bg-background border-l shadow-lg p-4">
-            <UnifiedCommunicationHub showPresence={true} />
-          </div>
-
-          {/* Mobile Panel */}
-          <div className="lg:hidden fixed inset-0 z-50 bg-background p-4">
-            <div className="h-full flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5" />
-                  Agent Communication
-                </h2>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setIsCommunicationOpen(false)}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="flex-1 min-h-0">
-                <UnifiedCommunicationHub showPresence={true} />
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Backdrop */}
-          <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-40"
-            onClick={() => setIsCommunicationOpen(false)}
-          />
-        </>
-      )}
+      {/* Communication Panel - Enhanced for mobile */}
+      <CommunicationPanel 
+        isOpen={isCommunicationOpen}
+        onToggle={() => setIsCommunicationOpen(!isCommunicationOpen)}
+      />
     </div>
   );
 };
