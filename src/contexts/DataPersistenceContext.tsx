@@ -82,7 +82,7 @@ interface DataPersistenceContextType {
     sendPresence: (presence: any) => void;
     onConflictDetected: (callback: (conflict: any) => void) => () => void;
     resolveConflict: (conflictId: string, resolution: string, content?: string) => void;
-    isTyping: (componentId: string, isTyping: boolean) => isTyping;
+    isTyping: (componentId: string, typing: boolean) => void;
     getTypingUsers: (componentId: string) => any[];
   };
 
