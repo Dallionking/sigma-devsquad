@@ -1,5 +1,5 @@
 
-import { Settings as SettingsIcon, Monitor, Shield, Bell, Database, Palette, Key } from "lucide-react";
+import { ConfigurationSettings } from "../ConfigurationSettings";
 import { GeneralSettings } from "../GeneralSettings";
 import { APIKeySettings } from "../APIKeySettings";
 import { AppearanceSettings } from "../AppearanceSettings";
@@ -9,46 +9,60 @@ import { NotificationSettings } from "../NotificationSettings";
 import { BackupSettings } from "../BackupSettings";
 
 export const settingsTabDefinitions = [
-  { 
-    id: "general", 
-    label: "General", 
-    icon: SettingsIcon, 
-    component: GeneralSettings 
+  {
+    id: "general",
+    label: "General",
+    description: "Basic application settings",
+    component: GeneralSettings,
+    icon: "settings"
   },
-  { 
-    id: "api-keys", 
-    label: "API Keys", 
-    icon: Key, 
-    component: APIKeySettings 
+  {
+    id: "configuration",
+    label: "Configuration",
+    description: "Advanced state management and collaboration settings",
+    component: ConfigurationSettings,
+    icon: "settings"
   },
-  { 
-    id: "appearance", 
-    label: "Appearance", 
-    icon: Palette, 
-    component: AppearanceSettings 
+  {
+    id: "api-keys",
+    label: "API Keys",
+    description: "Manage API keys and integrations",
+    component: APIKeySettings,
+    icon: "shield"
   },
-  { 
-    id: "performance", 
-    label: "Performance", 
-    icon: Monitor, 
-    component: PerformanceSettings 
+  {
+    id: "appearance",
+    label: "Appearance",
+    description: "Customize the look and feel",
+    component: AppearanceSettings,
+    icon: "settings"
   },
-  { 
-    id: "security", 
-    label: "Security", 
-    icon: Shield, 
-    component: SecuritySettings 
+  {
+    id: "performance",
+    label: "Performance",
+    description: "Performance and optimization settings",
+    component: PerformanceSettings,
+    icon: "settings"
   },
-  { 
-    id: "notifications", 
-    label: "Notifications", 
-    icon: Bell, 
-    component: NotificationSettings 
+  {
+    id: "security",
+    label: "Security",
+    description: "Security and privacy settings",
+    component: SecuritySettings,
+    icon: "shield"
   },
-  { 
-    id: "backup", 
-    label: "Backup", 
-    icon: Database, 
-    component: BackupSettings 
+  {
+    id: "notifications",
+    label: "Notifications",
+    description: "Notification preferences",
+    component: NotificationSettings,
+    icon: "bell"
+  },
+  {
+    id: "backup",
+    label: "Backup",
+    description: "Backup and restore settings",
+    component: BackupSettings,
+    icon: "settings"
   }
 ];

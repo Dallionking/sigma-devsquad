@@ -1,6 +1,7 @@
 
 import { TabsContent } from "@/components/ui/tabs";
 import { GeneralSettings } from "./GeneralSettings";
+import { ConfigurationSettings } from "./ConfigurationSettings";
 import { APIKeySettings } from "./APIKeySettings";
 import { AppearanceSettings } from "./AppearanceSettings";
 import { PerformanceSettings } from "./PerformanceSettings";
@@ -43,6 +44,16 @@ export const SettingsContent = ({
         aria-labelledby="general-tab"
       >
         <GeneralSettings searchQuery={searchQuery} />
+      </TabsContent>
+
+      <TabsContent 
+        value="configuration" 
+        className={tabContentClasses}
+        tabIndex={-1}
+        role="tabpanel"
+        aria-labelledby="configuration-tab"
+      >
+        <ConfigurationSettings searchQuery={searchQuery} />
       </TabsContent>
 
       <TabsContent 
