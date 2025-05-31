@@ -11,6 +11,7 @@ import { TaskProvider } from "@/contexts/TaskContext";
 import { MessageProvider } from "@/contexts/MessageContext";
 import { TeamProvider } from "@/contexts/TeamContext";
 import { CurrentUserProvider } from "@/contexts/CurrentUserContext";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import LLMIntegration from "./pages/LLMIntegration";
@@ -32,24 +33,27 @@ const App = () => (
             <MessageProvider>
               <TeamProvider>
                 <CurrentUserProvider>
-                  <TooltipProvider>
-                    <Toaster />
-                    <Sonner />
-                    <BrowserRouter>
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/llm-integration" element={<LLMIntegration />} />
-                        <Route path="/agent-configuration" element={<AgentConfiguration />} />
-                        <Route path="/agent-creation" element={<AgentCreation />} />
-                        <Route path="/mcp-management" element={<MCPManagement />} />
-                        <Route path="/ide-integration" element={<IDEIntegration />} />
-                        <Route path="/planning-agent" element={<PlanningAgent />} />
-                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </BrowserRouter>
-                  </TooltipProvider>
+                  {/* Wrap with WebSocket for real-time collaboration */}
+                  <WebSocketProvider userId="current-user" userName="Current User">
+                    <TooltipProvider>
+                      <Toaster />
+                      <Sonner />
+                      <BrowserRouter>
+                        <Routes>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/llm-integration" element={<LLMIntegration />} />
+                          <Route path="/agent-configuration" element={<AgentConfiguration />} />
+                          <Route path="/agent-creation" element={<AgentCreation />} />
+                          <Route path="/mcp-management" element={<MCPManagement />} />
+                          <Route path="/ide-integration" element={<IDEIntegration />} />
+                          <Route path="/planning-agent" element={<PlanningAgent />} />
+                          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </BrowserRouter>
+                    </TooltipProvider>
+                  </WebSocketProvider>
                 </CurrentUserProvider>
               </TeamProvider>
             </MessageProvider>

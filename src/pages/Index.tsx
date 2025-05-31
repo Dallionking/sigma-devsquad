@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AgentSidebar } from "@/components/dashboard/AgentSidebar";
 import { MainWorkflowArea } from "@/components/dashboard/MainWorkflowArea";
@@ -11,6 +10,7 @@ import { TeamHierarchy } from "@/components/teams/TeamHierarchy";
 import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { AgentCommunicationInterface } from "@/components/teams/AgentCommunicationInterface";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
+import { RealtimeNotifications } from "@/components/collaboration/RealtimeNotifications";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
@@ -165,6 +165,11 @@ const Index = () => {
         sidebarCollapsed={sidebarCollapsed}
         onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
+      
+      {/* Real-time Notifications */}
+      <div className="px-4 py-2">
+        <RealtimeNotifications />
+      </div>
       
       {/* View Toggle */}
       <div className="bg-background border-b px-4 py-2">
