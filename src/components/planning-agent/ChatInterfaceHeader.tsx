@@ -1,8 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
-import { CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ResponsiveActionButtons } from "./ResponsiveActionButtons";
+import { ChatInterfaceTitle } from "./ChatInterfaceTitle";
+import { ChatInterfaceActions } from "./ChatInterfaceActions";
 
 interface ChatInterfaceHeaderProps {
   onCreateTask?: () => void;
@@ -48,27 +47,18 @@ export const ChatInterfaceHeader = ({
 
   return (
     <div ref={headerRef} className="flex items-center justify-between gap-4">
-      <div className="flex items-center gap-3 min-w-0">
-        <CardTitle className="text-lg font-semibold truncate">
-          Planning Assistant
-        </CardTitle>
-        <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
-          Online
-        </Badge>
-      </div>
+      <ChatInterfaceTitle />
       
-      <div className="flex-shrink-0">
-        <ResponsiveActionButtons
-          onCreateTask={onCreateTask}
-          onTrackWorkflow={onTrackWorkflow}
-          onToggleCanvas={onToggleCanvas}
-          onToggleFileAttachment={onToggleFileAttachment}
-          attachedFilesCount={attachedFilesCount}
-          showFileAttachment={showFileAttachment}
-          canvasOpen={canvasOpen}
-          containerWidth={containerWidth}
-        />
-      </div>
+      <ChatInterfaceActions
+        onCreateTask={onCreateTask}
+        onTrackWorkflow={onTrackWorkflow}
+        onToggleCanvas={onToggleCanvas}
+        onToggleFileAttachment={onToggleFileAttachment}
+        attachedFilesCount={attachedFilesCount}
+        showFileAttachment={showFileAttachment}
+        canvasOpen={canvasOpen}
+        containerWidth={containerWidth}
+      />
     </div>
   );
 };
