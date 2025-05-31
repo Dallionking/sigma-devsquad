@@ -60,12 +60,13 @@ export const Header = ({
           />
         </div>
         
-        {/* Right Section: Status and Actions */}
+        {/* Right Section: Status, Sync, and Actions */}
         <div className="flex items-center space-x-2">
           <StatusBadge 
             activeAgents={activeAgents}
             totalAgents={totalAgents}
           />
+          <div className="w-px h-6 bg-border/50" />
           <CompactSyncStatus />
           <ActionButtons />
         </div>
