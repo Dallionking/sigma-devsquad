@@ -86,7 +86,7 @@ export const MainContentRenderer = ({
       if (viewMode === "communication") {
         return (
           <div className="h-full p-6 space-y-6">
-            {/* Agent Heat Map and Communication Flow */}
+            {/* Enhanced Interactive Team Communication Flow */}
             <InteractiveTeamCommunicationFlow 
               agents={agents}
               onAgentClick={(agentId) => {
@@ -94,9 +94,9 @@ export const MainContentRenderer = ({
                 if (agent) onAgentSelect(agent);
               }}
               onTeamClick={(teamId) => {
-                // Handle team selection if needed
                 console.log("Team clicked:", teamId);
               }}
+              collapsed={false}
             />
             
             {/* Unified Communication Hub */}

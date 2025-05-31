@@ -3,7 +3,7 @@ import { ConsolidatedNavigation } from "./header/ConsolidatedNavigation";
 import { HeaderLogo } from "./header/HeaderLogo";
 import { StatusBadge } from "./header/StatusBadge";
 import { ActionButtons } from "./header/ActionButtons";
-import { CompactSyncStatus } from "./header/CompactSyncStatus";
+import { ConnectionStatusHeader } from "./header/ConnectionStatusHeader";
 import { ViewMode, Agent } from "@/types";
 import { useLocation } from "react-router-dom";
 
@@ -60,14 +60,14 @@ export const Header = ({
           />
         </div>
         
-        {/* Right Section: Status, Sync, and Actions */}
+        {/* Right Section: Status, Connection, and Actions */}
         <div className="flex items-center space-x-2">
           <StatusBadge 
             activeAgents={activeAgents}
             totalAgents={totalAgents}
           />
           <div className="w-px h-6 bg-border/50" />
-          <CompactSyncStatus />
+          <ConnectionStatusHeader />
           <ActionButtons />
         </div>
       </div>
