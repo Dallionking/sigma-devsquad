@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { History, GitBranch, User, Clock, Diff, Restore, Eye } from "lucide-react";
+import { History, GitBranch, User, Clock, Diff, RotateCcw, Eye } from "lucide-react";
 
 interface VersionEntry {
   id: string;
@@ -231,7 +231,7 @@ export const VersionHistoryViewer = ({
                           onRestoreVersion(version.id);
                         }}
                       >
-                        <Restore className="w-4 h-4" />
+                        <RotateCcw className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>

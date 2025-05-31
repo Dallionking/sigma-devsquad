@@ -255,7 +255,6 @@ export const ConflictDetectionSystem = () => {
                     <Switch 
                       checked={rule.autoResolve}
                       onCheckedChange={() => toggleRule(rule.id, 'autoResolve')}
-                      size="sm"
                     />
                   </div>
                 </div>
