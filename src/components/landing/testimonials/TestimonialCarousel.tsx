@@ -8,7 +8,6 @@ import { testimonials } from './testimonialData';
 export const TestimonialCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [visibleTestimonials, setVisibleTestimonials] = useState<Set<number>>(new Set());
 
   // Auto-play functionality
   useEffect(() => {
@@ -20,30 +19,6 @@ export const TestimonialCarousel: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
-
-  // Intersection observer for animations
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const testimonialId = entry.target.getAttribute('data-testimonial-id');
-          if (testimonialId) {
-            setVisibleTestimonials(prev => new Set([...prev, parseInt(testimonialId)]));
-          }
-        }
-      });
-    }, observerOptions);
-
-    const testimonialElements = document.querySelectorAll('[data-testimonial-id]');
-    testimonialElements.forEach(el => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -77,7 +52,6 @@ export const TestimonialCarousel: React.FC = () => {
               <div 
                 key={testimonial.id}
                 className="w-full flex-shrink-0 px-4"
-                data-testimonial-id={testimonial.id}
               >
                 <TestimonialCard 
                   testimonial={testimonial} 
@@ -150,12 +124,7 @@ export const TestimonialCarousel: React.FC = () => {
         {testimonials.map((testimonial, index) => (
           <div 
             key={testimonial.id}
-            data-testimonial-id={testimonial.id}
-            className={`transition-all duration-700 ${
-              visibleTestimonials.has(testimonial.id) 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-8'
-            }`}
+            className="transition-all duration-700 opacity-100 translate-y-0"
             style={{ transitionDelay: `${index * 150}ms` }}
           >
             <TestimonialCard 
@@ -170,7 +139,7 @@ export const TestimonialCarousel: React.FC = () => {
       {isAutoPlaying && (
         <div className="hidden md:block absolute bottom-0 left-0 right-0 h-1 bg-muted rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-vibe-primary to-vibe-secondary transition-all duration-100 ease-linear"
+            className="h-full bg-gradient-to-r from-vibe-primary to-vibe-secondary"
             style={{
               width: '100%',
               animation: 'testimonial-progress 5s linear infinite'

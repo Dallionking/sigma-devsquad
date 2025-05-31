@@ -24,7 +24,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
 
   return (
     <Card className={`relative overflow-hidden border-0 bg-gradient-to-br from-background to-muted/20 
-                     backdrop-blur-sm transition-all duration-500 ${
+                     backdrop-blur-sm transition-all duration-500 testimonial-card ${
                        isActive 
                          ? 'scale-105 shadow-2xl border-vibe-primary/20' 
                          : 'scale-100 shadow-lg hover:shadow-xl'
@@ -47,7 +47,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
         </div>
 
         {/* Testimonial Quote */}
-        <blockquote className={`vibe-body-lg leading-relaxed mb-8 transition-all duration-300 ${
+        <blockquote className={`text-lg leading-relaxed mb-8 transition-all duration-300 ${
           isActive ? 'text-foreground' : 'text-muted-foreground'
         }`}>
           "{testimonial.quote}"
