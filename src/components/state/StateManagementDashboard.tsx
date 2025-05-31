@@ -25,7 +25,7 @@ export const StateManagementDashboard = () => {
   const { 
     isOnline, 
     pendingSync, 
-    eventBus, 
+    eventBus,
     debugger,
     performance 
   } = useDataPersistence();
@@ -34,12 +34,12 @@ export const StateManagementDashboard = () => {
 
   // Mock state health data
   const stateHealth = {
-    overall: 'healthy',
+    overall: 'healthy' as const,
     components: [
-      { name: 'Agent Management', status: 'healthy', lastUpdate: new Date(), issues: 0 },
-      { name: 'Task Management', status: 'warning', lastUpdate: new Date(Date.now() - 300000), issues: 1 },
-      { name: 'Team Management', status: 'healthy', lastUpdate: new Date(Date.now() - 60000), issues: 0 },
-      { name: 'Message System', status: 'error', lastUpdate: new Date(Date.now() - 600000), issues: 2 }
+      { name: 'Agent Management', status: 'healthy' as const, lastUpdate: new Date(), issues: 0 },
+      { name: 'Task Management', status: 'warning' as const, lastUpdate: new Date(Date.now() - 300000), issues: 1 },
+      { name: 'Team Management', status: 'healthy' as const, lastUpdate: new Date(Date.now() - 60000), issues: 0 },
+      { name: 'Message System', status: 'error' as const, lastUpdate: new Date(Date.now() - 600000), issues: 2 }
     ],
     metrics: {
       totalOperations: 1247,
@@ -211,30 +211,30 @@ export const StateManagementDashboard = () => {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-muted/50 rounded-lg">
                     <div className="text-xl font-bold text-blue-600">
-                      {performance.monitoring.metrics?.renderTime || 12}ms
+                      {performance?.monitoring?.metrics?.renderTime || 12}ms
                     </div>
                     <div className="text-sm text-muted-foreground">Avg Render Time</div>
                   </div>
                   <div className="text-center p-4 bg-muted/50 rounded-lg">
                     <div className="text-xl font-bold text-green-600">
-                      {performance.monitoring.metrics?.memoryUsage || 45}MB
+                      {performance?.monitoring?.metrics?.memoryUsage || 45}MB
                     </div>
                     <div className="text-sm text-muted-foreground">Memory Usage</div>
                   </div>
                   <div className="text-center p-4 bg-muted/50 rounded-lg">
                     <div className="text-xl font-bold text-purple-600">
-                      {performance.batching.getQueueStats().pendingBatches || 3}
+                      {performance?.batching?.getQueueStats?.()?.pendingBatches || 3}
                     </div>
                     <div className="text-sm text-muted-foreground">Pending Batches</div>
                   </div>
                 </div>
 
                 {/* Debug Information */}
-                {debugger.isCapturing && (
+                {debugger?.isCapturing && (
                   <Alert>
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
-                      Debug mode is active. {debugger.debugEntries.length} entries captured.
+                      Debug mode is active. {debugger.debugEntries?.length || 0} entries captured.
                       <Button 
                         variant="outline" 
                         size="sm" 
@@ -259,11 +259,11 @@ export const StateManagementDashboard = () => {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Active Listeners</span>
-                  <Badge>{eventBus.getActiveListeners().size}</Badge>
+                  <Badge>{eventBus?.getActiveListeners?.()?.size || 0}</Badge>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Recent Events</span>
-                  <Badge>{eventBus.getEventHistory().length}</Badge>
+                  <Badge>{eventBus?.getEventHistory?.()?.length || 0}</Badge>
                 </div>
               </div>
             </CardContent>
