@@ -80,7 +80,7 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
   // New communication system hooks
   const eventBus = useEventBus();
   const middleware = useStateMiddleware();
-  const debugger = useStateDebugger({
+  const stateDebugger = useStateDebugger({
     maxEntries: 1000,
     captureStackTrace: false,
     autoCapture: true
@@ -118,12 +118,12 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     
     // State debugging
     debugger: {
-      isCapturing: debugger.isCapturing,
-      setIsCapturing: debugger.setIsCapturing,
-      debugEntries: debugger.debugEntries,
-      clearDebugEntries: debugger.clearDebugEntries,
-      exportDebugData: debugger.exportDebugData,
-      getDebugStats: debugger.getDebugStats
+      isCapturing: stateDebugger.isCapturing,
+      setIsCapturing: stateDebugger.setIsCapturing,
+      debugEntries: stateDebugger.debugEntries,
+      clearDebugEntries: stateDebugger.clearDebugEntries,
+      exportDebugData: stateDebugger.exportDebugData,
+      getDebugStats: stateDebugger.getDebugStats
     },
     
     // Middleware management
