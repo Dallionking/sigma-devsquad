@@ -162,25 +162,25 @@ export const EnhancedInfoDisplay = ({ type, data, className }: InfoDisplayProps)
         </Card>
         
         <Card className="p-3">
-          <div className="text-sm font-medium">Status</div>
+          <div className="text-sm font-medium">Availability</div>
           <div className="flex items-center space-x-2 mt-1">
             <div className={cn(
               "w-2 h-2 rounded-full",
-              profile.status === 'online' && "bg-green-500",
-              profile.status === 'offline' && "bg-gray-400",
-              profile.status === 'busy' && "bg-red-500"
+              profile.availability === 'available' && "bg-green-500",
+              profile.availability === 'offline' && "bg-gray-400",
+              profile.availability === 'busy' && "bg-red-500"
             )} />
-            <span className="text-sm capitalize">{profile.status}</span>
+            <span className="text-sm capitalize">{profile.availability}</span>
           </div>
         </Card>
       </div>
       
       <Card className="p-3">
-        <div className="text-sm font-medium mb-2">Expertise</div>
+        <div className="text-sm font-medium mb-2">Skills</div>
         <div className="flex flex-wrap gap-1">
-          {profile.expertise.map((skill, index) => (
+          {profile.skills.map((skill, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
-              {skill}
+              {skill.name}
             </Badge>
           ))}
         </div>

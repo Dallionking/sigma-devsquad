@@ -85,7 +85,7 @@ export const ContextAwarePanel = ({
         return {
           title: profile.name,
           subtitle: profile.role,
-          status: profile.status,
+          status: profile.availability,
           icon: Users,
           actions: [
             { label: 'Configure', icon: Settings, action: () => console.log('Configure profile') },
@@ -136,7 +136,7 @@ export const ContextAwarePanel = ({
                 {contextInfo.status && (
                   <Badge 
                     variant={
-                      contextInfo.status === "working" || contextInfo.status === "in-progress" ? "default" : 
+                      contextInfo.status === "working" || contextInfo.status === "in-progress" || contextInfo.status === "available" ? "default" : 
                       contextInfo.status === "error" || contextInfo.status === "blocked" ? "destructive" : 
                       "secondary"
                     }
