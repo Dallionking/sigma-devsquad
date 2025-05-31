@@ -18,6 +18,24 @@ interface DebuggerConfig {
   autoCapture: boolean;
 }
 
+interface StateSliceUpdateData {
+  sliceId: string;
+  updates: any;
+  source?: string;
+  timestamp: number;
+}
+
+interface SelectorUpdateData {
+  label: string;
+  value: any;
+  timestamp: number;
+}
+
+interface DebugEventData {
+  source?: string;
+  [key: string]: any;
+}
+
 export const useStateDebugger = (config: DebuggerConfig = {
   maxEntries: 1000,
   captureStackTrace: false,
@@ -63,21 +81,21 @@ export const useStateDebugger = (config: DebuggerConfig = {
 
     // Subscribe to state slice updates
     unsubscribers.push(
-      subscribe('state-slice-update', (data) => {
+      subscribe('state-slice-update', (data: StateSliceUpdateData) => {
         addDebugEntry('state-update', `slice:${data.sliceId}`, data);
       })
     );
 
     // Subscribe to state selector updates
     unsubscribers.push(
-      subscribe('state-selector-update', (data) => {
+      subscribe('state-selector-update', (data: SelectorUpdateData) => {
         addDebugEntry('selector-update', `selector:${data.label}`, data);
       })
     );
 
     // Subscribe to generic events
     unsubscribers.push(
-      subscribe('debug-event', (data) => {
+      subscribe('debug-event', (data: DebugEventData) => {
         addDebugEntry('event', data.source || 'unknown', data);
       })
     );

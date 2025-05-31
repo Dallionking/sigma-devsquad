@@ -63,41 +63,46 @@ class MiddlewareManager {
     }
   }
 
-  processData<T>(data: T, context: MiddlewareContext): Promise<T> {
-    return new Promise((resolve) => {
-      const enabledMiddleware = this.middleware.filter(m => m.enabled);
+  processDataSync<T>(data: T, context: MiddlewareContext): T {
+    const enabledMiddleware = this.middleware.filter(m => m.enabled);
+    
+    if (enabledMiddleware.length === 0) {
+      return data;
+    }
+
+    let currentIndex = 0;
+    let currentData = data;
+    let isComplete = false;
+
+    const next = (transformedData: T) => {
+      currentData = transformedData;
+      currentIndex++;
       
-      if (enabledMiddleware.length === 0) {
-        resolve(data);
-        return;
+      if (currentIndex >= enabledMiddleware.length) {
+        isComplete = true;
+      } else {
+        processNext();
       }
+    };
 
-      let currentIndex = 0;
-      let currentData = data;
+    const processNext = () => {
+      const { middleware } = enabledMiddleware[currentIndex];
+      try {
+        middleware(currentData, context, next);
+      } catch (error) {
+        console.error(`Error in middleware ${enabledMiddleware[currentIndex].id}:`, error);
+        next(currentData); // Continue with original data
+      }
+    };
 
-      const next = (transformedData: T) => {
-        currentData = transformedData;
-        currentIndex++;
-        
-        if (currentIndex >= enabledMiddleware.length) {
-          resolve(currentData);
-        } else {
-          processNext();
-        }
-      };
-
-      const processNext = () => {
-        const { middleware } = enabledMiddleware[currentIndex];
-        try {
-          middleware(currentData, context, next);
-        } catch (error) {
-          console.error(`Error in middleware ${enabledMiddleware[currentIndex].id}:`, error);
-          next(currentData); // Continue with original data
-        }
-      };
-
-      processNext();
-    });
+    processNext();
+    
+    // Wait for synchronous processing to complete
+    if (!isComplete) {
+      console.warn('Middleware processing did not complete synchronously');
+    }
+    
+    return currentData;
   }
 
   getMiddlewareList() {
@@ -144,14 +149,14 @@ export const useStateMiddleware = () => {
 
   // Setup event bus middleware integration
   useEffect(() => {
-    const eventMiddleware = async (event: any) => {
+    const eventMiddleware = (event: any) => {
       const context: MiddlewareContext = {
         timestamp: event.timestamp || Date.now(),
         source: event.source || 'unknown',
         type: event.type || 'unknown'
       };
 
-      const processedData = await middlewareRef.current.processData(event.data, context);
+      const processedData = middlewareRef.current.processDataSync(event.data, context);
       
       return {
         ...event,
