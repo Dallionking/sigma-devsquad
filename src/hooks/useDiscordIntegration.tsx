@@ -1,6 +1,7 @@
 
 import { useState, useCallback } from 'react';
-import { discordService, DiscordConfig, DiscordNotificationPayload } from '@/services/discordService';
+import { discordService } from '@/services/discordService';
+import { DiscordConfig, DiscordNotificationPayload, DiscordNotificationSettings } from '@/types/discord';
 import { useToast } from '@/hooks/use-toast';
 
 interface DiscordIntegrationState {
@@ -78,14 +79,7 @@ export const useDiscordIntegration = () => {
     return await discordService.notifyPlanningAgentUpdate(message, userRole);
   }, []);
 
-  const updateNotificationSettings = useCallback((settings: {
-    agentStatusNotifications: boolean;
-    taskCompletionNotifications: boolean;
-    systemErrorNotifications: boolean;
-    planningAgentNotifications: boolean;
-    directMessaging: boolean;
-    roleBasedNotifications: boolean;
-  }) => {
+  const updateNotificationSettings = useCallback((settings: DiscordNotificationSettings) => {
     discordService.updateNotificationSettings(settings);
   }, []);
 
