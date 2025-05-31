@@ -24,12 +24,14 @@ interface UnifiedCommunicationHubProps {
   className?: string;
   defaultTab?: string;
   showPresence?: boolean;
+  projectId?: string;
 }
 
 export const UnifiedCommunicationHub = ({ 
   className, 
   defaultTab = "chat",
-  showPresence = true 
+  showPresence = true,
+  projectId = "default-project"
 }: UnifiedCommunicationHubProps) => {
   const [presenceCollapsed, setPresenceCollapsed] = useState(true);
   const [activeTab, setActiveTab] = useState(defaultTab);
@@ -82,7 +84,7 @@ export const UnifiedCommunicationHub = ({
               </TabsContent>
               
               <TabsContent value="invite" className="flex-1 min-h-0 m-4 mt-0">
-                <CollaborationInviteSystem />
+                <CollaborationInviteSystem projectId={projectId} />
               </TabsContent>
             </Tabs>
           </CardContent>
