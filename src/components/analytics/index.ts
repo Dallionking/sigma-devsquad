@@ -5,3 +5,4 @@ export { ProductivityCharts } from './ProductivityCharts';
 export { CommunicationAnalytics } from './CommunicationAnalytics';
 export { SystemPerformanceMetrics } from './SystemPerformanceMetrics';
 export { CustomizableLayout } from './CustomizableLayout';
+export { TeamCommunicationFlow } from './TeamCommunicationFlow';
