@@ -4,12 +4,14 @@ import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 import { SidebarRenderer } from "./SidebarRenderer";
 import { MainContentRenderer } from "./MainContentRenderer";
-import { DetailPanelRenderer } from "./DetailPanelRenderer";
 import { ViewModeTabs } from "./ViewModeTabs";
 import { UserPresencePanel } from "./UserPresencePanel";
+import { ContextAwarePanel } from "./ContextAwarePanel";
 import { Button } from "@/components/ui/button";
 import { PanelLeft, PanelLeftClose } from "lucide-react";
 import { useCollapsibleSidebar } from "@/hooks/useCollapsibleSidebar";
+import { useContextAwarePanel } from "@/hooks/useContextAwarePanel";
+import { usePanelKeyboardShortcuts } from "@/hooks/usePanelKeyboardShortcuts";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -66,6 +68,36 @@ export const MainLayout = ({
     keyboardShortcut: 'b',
     storageKey: 'main-sidebar-collapsed'
   });
+
+  // Context-aware panel management
+  const { panelContext, showPanel, hidePanel } = useContextAwarePanel();
+
+  // Update panel when selections change
+  React.useEffect(() => {
+    if (selectedAgent) {
+      showPanel('agent', selectedAgent);
+    } else if (selectedTask) {
+      showPanel('task', selectedTask);
+    } else if (selectedMessage) {
+      showPanel('message', selectedMessage);
+    } else if (selectedAgentProfile) {
+      showPanel('agentProfile', selectedAgentProfile);
+    } else {
+      hidePanel();
+    }
+  }, [selectedAgent, selectedTask, selectedMessage, selectedAgentProfile, showPanel, hidePanel]);
+
+  // Handle panel dismissal
+  const handlePanelDismiss = () => {
+    hidePanel();
+    onDismissSelection();
+  };
+
+  // Keyboard shortcuts for panel
+  usePanelKeyboardShortcuts({
+    isVisible: panelContext.isVisible,
+    onDismiss: handlePanelDismiss
+  });
   
   const notificationCounts = {
     workflow: 3,
@@ -87,7 +119,7 @@ export const MainLayout = ({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden relative">
           {/* Sidebar Toggle Button - Always visible */}
           <div className="flex-shrink-0 border-r border-border/60 bg-card/30 dark:bg-card/30">
             <Button
@@ -132,8 +164,11 @@ export const MainLayout = ({
             />
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col overflow-hidden bg-background">
+          {/* Main Content - Adjusted width when panel is visible */}
+          <div className={cn(
+            "flex-1 flex flex-col overflow-hidden bg-background transition-all duration-300 ease-in-out",
+            panelContext.isVisible && "mr-96"
+          )}>
             <MainContentRenderer
               viewMode={viewMode}
               agents={agents}
@@ -154,18 +189,14 @@ export const MainLayout = ({
             />
           </div>
 
-          {/* Detail Panel - Only show when not in team view and has selection */}
-          {!showTeamView && hasSelection && (
-            <div className="w-96 bg-card/30 dark:bg-card/30 border-l border-border/60 overflow-hidden flex-shrink-0 animate-in slide-in-from-right duration-300">
-              <DetailPanelRenderer
-                selectedAgent={selectedAgent}
-                selectedTask={selectedTask}
-                selectedMessage={selectedMessage}
-                selectedAgentProfile={selectedAgentProfile}
-                onDismissSelection={onDismissSelection}
-              />
-            </div>
-          )}
+          {/* Context-Aware Panel - Only show when there's a selection */}
+          <ContextAwarePanel
+            type={panelContext.type}
+            data={panelContext.data}
+            isVisible={panelContext.isVisible}
+            agents={agents}
+            onDismiss={handlePanelDismiss}
+          />
         </div>
 
         {/* Enhanced Integrated User Presence Panel */}
