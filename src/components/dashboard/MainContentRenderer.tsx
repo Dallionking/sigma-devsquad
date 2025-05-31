@@ -3,6 +3,7 @@ import React from 'react';
 import { MainWorkflowArea } from "./MainWorkflowArea";
 import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
+import { TeamHierarchy } from "@/components/teams/TeamHierarchy";
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
 import { Button } from "@/components/ui/button";
@@ -70,10 +71,22 @@ export const MainContentRenderer = ({
         );
       }
       return (
-        <TeamsWorkflowVisualization
-          onTeamSelect={onTeamSelect}
-          onAgentSelect={onAgentProfileSelect}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <TeamHierarchy
+              onTeamSelect={onTeamSelect}
+              onAgentSelect={onAgentProfileSelect}
+              selectedTeamId={selectedTeam?.id}
+              selectedAgentId={selectedAgentProfile?.id}
+            />
+          </div>
+          <div className="lg:col-span-2">
+            <TeamsWorkflowVisualization
+              onTeamSelect={onTeamSelect}
+              onAgentSelect={onAgentProfileSelect}
+            />
+          </div>
+        </div>
       );
     } else {
       return (

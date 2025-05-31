@@ -69,6 +69,15 @@ const Dashboard = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
+  const handleTeamViewToggle = () => {
+    setShowTeamView(!showTeamView);
+    if (!showTeamView) {
+      // Clear individual selections when entering team view
+      handleDismissSelection();
+      setSelectedTeam(null);
+    }
+  };
+
   const hasSelection = !!(selectedAgent || selectedTask || selectedMessage || selectedAgentProfile);
   const activeAgents = agents.filter(agent => agent.status === "working").length;
 
@@ -80,12 +89,14 @@ const Dashboard = () => {
         totalAgents={agents.length}
         onSidebarToggle={handleSidebarToggle}
         sidebarCollapsed={sidebarCollapsed}
+        onTeamViewToggle={handleTeamViewToggle}
+        showTeamView={showTeamView}
       />
       
       {/* Main content area */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Vibe Brand Header - only show on main dashboard */}
-        {!selectedTeam && (
+        {!selectedTeam && !showTeamView && (
           <div className="px-6 py-8 border-b bg-gradient-to-r from-background/80 to-background/60 backdrop-blur-sm">
             <VibeBrandHeader />
           </div>
