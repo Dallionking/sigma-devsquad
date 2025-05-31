@@ -7,14 +7,10 @@ export interface DiscordConfig {
 }
 
 export interface DiscordNotificationPayload {
-  type: 'agent_status' | 'task_completion' | 'system_error' | 'planning_agent' | 'direct_message';
-  title: string;
   message: string;
-  agentName?: string;
-  taskId?: string;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-  timestamp?: Date;
-  userRole?: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  priority?: 'low' | 'normal' | 'high' | 'critical';
+  metadata?: Record<string, any>;
 }
 
 export interface DiscordNotificationSettings {
@@ -23,5 +19,4 @@ export interface DiscordNotificationSettings {
   systemErrorNotifications: boolean;
   planningAgentNotifications: boolean;
   directMessaging: boolean;
-  roleBasedNotifications: boolean;
 }

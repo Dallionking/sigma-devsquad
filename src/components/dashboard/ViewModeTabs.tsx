@@ -7,7 +7,7 @@ import {
   MessageSquare, 
   CheckSquare, 
   Mail,
-  Zap
+  Activity
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
@@ -36,12 +36,12 @@ export const ViewModeTabs = ({
       count: notificationCounts.workflow,
       description: 'Agent collaboration flow',
       colors: {
-        bg: 'bg-blue-500/10',
-        activeBg: 'bg-blue-500',
-        text: 'text-blue-700 dark:text-blue-300',
+        bg: 'bg-[#3B82F6]/10',
+        activeBg: 'bg-gradient-to-r from-[#3B82F6] to-[#3B82F6]/80',
+        text: 'text-[#3B82F6]',
         activeText: 'text-white',
-        border: 'border-blue-200 dark:border-blue-800',
-        activeBorder: 'border-blue-500'
+        border: 'border-[#3B82F6]/30',
+        activeBorder: 'border-[#3B82F6]'
       }
     },
     {
@@ -51,12 +51,12 @@ export const ViewModeTabs = ({
       count: notificationCounts.communication,
       description: 'Team chat & updates',
       colors: {
-        bg: 'bg-green-500/10',
-        activeBg: 'bg-green-500',
-        text: 'text-green-700 dark:text-green-300',
+        bg: 'bg-[#10B981]/10',
+        activeBg: 'bg-gradient-to-r from-[#10B981] to-[#10B981]/80',
+        text: 'text-[#10B981]',
         activeText: 'text-white',
-        border: 'border-green-200 dark:border-green-800',
-        activeBorder: 'border-green-500'
+        border: 'border-[#10B981]/30',
+        activeBorder: 'border-[#10B981]'
       }
     },
     {
@@ -66,12 +66,12 @@ export const ViewModeTabs = ({
       count: notificationCounts.tasks,
       description: 'Active assignments',
       colors: {
-        bg: 'bg-purple-500/10',
-        activeBg: 'bg-purple-500',
-        text: 'text-purple-700 dark:text-purple-300',
+        bg: 'bg-[#8B5CF6]/10',
+        activeBg: 'bg-gradient-to-r from-[#8B5CF6] to-[#8B5CF6]/80',
+        text: 'text-[#8B5CF6]',
         activeText: 'text-white',
-        border: 'border-purple-200 dark:border-purple-800',
-        activeBorder: 'border-purple-500'
+        border: 'border-[#8B5CF6]/30',
+        activeBorder: 'border-[#8B5CF6]'
       }
     },
     {
@@ -82,27 +82,32 @@ export const ViewModeTabs = ({
       description: 'Direct communications',
       colors: {
         bg: 'bg-orange-500/10',
-        activeBg: 'bg-orange-500',
-        text: 'text-orange-700 dark:text-orange-300',
+        activeBg: 'bg-gradient-to-r from-orange-500 to-orange-500/80',
+        text: 'text-orange-600',
         activeText: 'text-white',
-        border: 'border-orange-200 dark:border-orange-800',
+        border: 'border-orange-500/30',
         activeBorder: 'border-orange-500'
       }
     }
   ];
 
   return (
-    <div className="bg-background/95 backdrop-blur-sm border-b border-border/60">
+    <div className="bg-gradient-to-r from-[#0A0E1A]/95 via-background/95 to-background/95 backdrop-blur-sm border-b border-border/30">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Zap className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold">
-              Squad Dashboard
-            </h2>
+            <div className="w-6 h-6 bg-gradient-to-br from-[#3B82F6] via-[#8B5CF6] to-[#3B82F6] rounded-lg flex items-center justify-center">
+              <Activity className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] bg-clip-text text-transparent">
+                Vibe DevSquad Dashboard
+              </h2>
+              <p className="text-xs text-muted-foreground">AI Collaboration Hub</p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-2 bg-muted/30 rounded-2xl p-2 border border-border/50">
+          <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm rounded-2xl p-2 border border-border/30">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = viewMode === tab.key;

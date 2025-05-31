@@ -1,18 +1,15 @@
 
-interface TelegramConfig {
+export interface TelegramConfig {
   botToken: string;
   chatId: string;
   isEnabled: boolean;
 }
 
-interface NotificationPayload {
-  type: 'agent_status' | 'task_completion' | 'system_error' | 'planning_agent' | 'direct_message';
-  title: string;
+export interface NotificationPayload {
   message: string;
-  agentName?: string;
-  taskId?: string;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-  timestamp?: Date;
+  type: 'info' | 'success' | 'warning' | 'error';
+  priority?: 'low' | 'normal' | 'high' | 'critical';
+  metadata?: Record<string, any>;
 }
 
 class TelegramService {
@@ -22,7 +19,7 @@ class TelegramService {
     taskCompletionNotifications: true,
     systemErrorNotifications: true,
     planningAgentNotifications: true,
-    directMessaging: true,
+    directMessaging: true
   };
 
   configure(config: TelegramConfig) {
@@ -30,19 +27,16 @@ class TelegramService {
     console.log('Telegram service configured:', { isEnabled: config.isEnabled });
   }
 
-  updateNotificationSettings(settings: typeof this.notificationSettings) {
-    this.notificationSettings = { ...settings };
-    console.log('Telegram notification settings updated:', settings);
-  }
-
-  private async sendMessage(text: string): Promise<boolean> {
-    if (!this.config || !this.config.isEnabled) {
-      console.log('Telegram service not configured or disabled');
+  async sendNotification(payload: NotificationPayload): Promise<boolean> {
+    if (!this.config?.isEnabled || !this.config.botToken || !this.config.chatId) {
+      console.warn('Telegram service not properly configured');
       return false;
     }
 
     try {
+      const message = this.formatMessage(payload);
       const url = `https://api.telegram.org/bot${this.config.botToken}/sendMessage`;
+      
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -50,141 +44,89 @@ class TelegramService {
         },
         body: JSON.stringify({
           chat_id: this.config.chatId,
-          text: text,
-          parse_mode: 'Markdown',
-        }),
+          text: message,
+          parse_mode: 'Markdown'
+        })
       });
 
-      if (!response.ok) {
-        throw new Error(`Telegram API error: ${response.status}`);
+      if (response.ok) {
+        console.log('Telegram notification sent successfully');
+        return true;
+      } else {
+        console.error('Failed to send Telegram notification:', response.statusText);
+        return false;
       }
-
-      console.log('Telegram message sent successfully');
-      return true;
     } catch (error) {
-      console.error('Failed to send Telegram message:', error);
+      console.error('Error sending Telegram notification:', error);
       return false;
     }
   }
 
-  private formatMessage(payload: NotificationPayload): string {
-    const timestamp = payload.timestamp || new Date();
-    const timeStr = timestamp.toLocaleTimeString();
-    
-    let emoji = '📢';
-    switch (payload.type) {
-      case 'agent_status':
-        emoji = '🤖';
-        break;
-      case 'task_completion':
-        emoji = '✅';
-        break;
-      case 'system_error':
-        emoji = '🚨';
-        break;
-      case 'planning_agent':
-        emoji = '📋';
-        break;
-      case 'direct_message':
-        emoji = '💬';
-        break;
-    }
-
-    let message = `${emoji} *${payload.title}*\n\n${payload.message}`;
-    
-    if (payload.agentName) {
-      message += `\n👤 Agent: ${payload.agentName}`;
-    }
-    
-    if (payload.taskId) {
-      message += `\n🆔 Task: ${payload.taskId}`;
-    }
-    
-    if (payload.priority && payload.priority !== 'low') {
-      const priorityEmoji = payload.priority === 'critical' ? '🔴' : payload.priority === 'high' ? '🟠' : '🟡';
-      message += `\n${priorityEmoji} Priority: ${payload.priority.toUpperCase()}`;
-    }
-    
-    message += `\n⏰ ${timeStr}`;
-    
-    return message;
-  }
-
-  async sendNotification(payload: NotificationPayload): Promise<boolean> {
-    // Check if this type of notification is enabled
-    switch (payload.type) {
-      case 'agent_status':
-        if (!this.notificationSettings.agentStatusNotifications) return false;
-        break;
-      case 'task_completion':
-        if (!this.notificationSettings.taskCompletionNotifications) return false;
-        break;
-      case 'system_error':
-        if (!this.notificationSettings.systemErrorNotifications) return false;
-        break;
-      case 'planning_agent':
-        if (!this.notificationSettings.planningAgentNotifications) return false;
-        break;
-      case 'direct_message':
-        if (!this.notificationSettings.directMessaging) return false;
-        break;
-    }
-
-    const formattedMessage = this.formatMessage(payload);
-    return await this.sendMessage(formattedMessage);
-  }
-
   async sendTestMessage(message: string): Promise<boolean> {
-    const testPayload: NotificationPayload = {
-      type: 'direct_message',
-      title: 'Test Message',
-      message: message,
-      timestamp: new Date()
-    };
-    
-    return await this.sendNotification(testPayload);
+    return await this.sendNotification({
+      message: `🧪 Test Message: ${message}`,
+      type: 'info'
+    });
   }
 
-  // Helper methods for common notifications
   async notifyAgentStatusChange(agentName: string, oldStatus: string, newStatus: string): Promise<boolean> {
+    if (!this.notificationSettings.agentStatusNotifications) return false;
+    
     return await this.sendNotification({
-      type: 'agent_status',
-      title: 'Agent Status Changed',
-      message: `${agentName} status changed from "${oldStatus}" to "${newStatus}"`,
-      agentName,
-      priority: 'medium'
+      message: `🤖 Agent Status Update\n*${agentName}*: ${oldStatus} → ${newStatus}`,
+      type: 'info',
+      metadata: { agentName, oldStatus, newStatus }
     });
   }
 
   async notifyTaskCompletion(taskId: string, taskTitle: string, agentName?: string): Promise<boolean> {
+    if (!this.notificationSettings.taskCompletionNotifications) return false;
+    
     return await this.sendNotification({
-      type: 'task_completion',
-      title: 'Task Completed',
-      message: `Task "${taskTitle}" has been completed successfully`,
-      agentName,
-      taskId,
-      priority: 'medium'
+      message: `✅ Task Completed\n*${taskTitle}*${agentName ? `\nBy: ${agentName}` : ''}`,
+      type: 'success',
+      metadata: { taskId, taskTitle, agentName }
     });
   }
 
   async notifySystemError(error: string, priority: 'high' | 'critical' = 'high'): Promise<boolean> {
+    if (!this.notificationSettings.systemErrorNotifications) return false;
+    
+    const emoji = priority === 'critical' ? '🚨' : '⚠️';
     return await this.sendNotification({
-      type: 'system_error',
-      title: 'System Error',
-      message: error,
-      priority
+      message: `${emoji} System Alert\n${error}`,
+      type: 'error',
+      priority,
+      metadata: { error, priority }
     });
   }
 
   async notifyPlanningAgentUpdate(message: string): Promise<boolean> {
+    if (!this.notificationSettings.planningAgentNotifications) return false;
+    
     return await this.sendNotification({
-      type: 'planning_agent',
-      title: 'Planning Agent Update',
-      message,
-      priority: 'medium'
+      message: `🧠 Planning Agent\n${message}`,
+      type: 'info',
+      metadata: { source: 'planning-agent' }
     });
+  }
+
+  updateNotificationSettings(settings: Partial<typeof this.notificationSettings>) {
+    this.notificationSettings = { ...this.notificationSettings, ...settings };
+    console.log('Telegram notification settings updated:', this.notificationSettings);
+  }
+
+  private formatMessage(payload: NotificationPayload): string {
+    const timestamp = new Date().toLocaleTimeString();
+    const typeEmoji = {
+      info: 'ℹ️',
+      success: '✅', 
+      warning: '⚠️',
+      error: '❌'
+    };
+
+    return `${typeEmoji[payload.type]} *Vibe DevSquad*\n${payload.message}\n\n_${timestamp}_`;
   }
 }
 
 export const telegramService = new TelegramService();
-export type { NotificationPayload, TelegramConfig };

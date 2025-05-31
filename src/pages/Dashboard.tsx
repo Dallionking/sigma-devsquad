@@ -1,7 +1,6 @@
 
 import { useState } from "react";
 import { StreamlinedHeader } from "@/components/navigation/StreamlinedHeader";
-import { VibeBrandHeader } from "@/components/branding/VibeBrandHeader";
 import { MainLayout } from "@/components/dashboard/MainLayout";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
@@ -47,7 +46,6 @@ const Dashboard = () => {
     setSelectedTeam(team);
     setSelectedAgentProfile(null);
     setShowTeamView(!!team);
-    // Don't auto-expand sidebar when entering team view - let user control it
   };
 
   const handleAgentProfileSelect = (profile: AgentProfile | null) => {
@@ -69,7 +67,6 @@ const Dashboard = () => {
   const handleTeamViewToggle = () => {
     setShowTeamView(!showTeamView);
     if (!showTeamView) {
-      // Clear individual selections when entering team view
       handleDismissSelection();
       setSelectedTeam(null);
     }
@@ -79,8 +76,8 @@ const Dashboard = () => {
   const activeAgents = agents.filter(agent => agent.status === "working").length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10 dark:from-background dark:via-background dark:to-muted/10">
-      {/* Streamlined Header with integrated sync status */}
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0E1A] via-background to-background">
+      {/* Streamlined Header with Vibe DevSquad branding */}
       <StreamlinedHeader
         activeAgents={activeAgents}
         totalAgents={agents.length}
@@ -90,16 +87,8 @@ const Dashboard = () => {
         showTeamView={showTeamView}
       />
       
-      {/* Main content area */}
+      {/* Main Layout - Space Optimized */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Vibe Brand Header - only show on main dashboard */}
-        {!selectedTeam && !showTeamView && (
-          <div className="px-6 py-8 border-b bg-gradient-to-r from-background/80 to-background/60 backdrop-blur-sm dark:from-background/80 dark:to-background/60">
-            <VibeBrandHeader />
-          </div>
-        )}
-        
-        {/* Main Layout */}
         <MainLayout
           showTeamView={showTeamView}
           sidebarCollapsed={sidebarCollapsed}
