@@ -17,6 +17,8 @@ import { useMessages } from "@/contexts/MessageContext";
 import { useTeams } from "@/contexts/TeamContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
+import { SyncStatusPanel } from "@/components/sync/SyncStatusPanel";
+import { SyncStatusHeader } from "@/components/dashboard/SyncStatusHeader";
 
 const Index = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -166,6 +168,9 @@ const Index = () => {
         onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       
+      {/* Sync Status Header */}
+      <SyncStatusHeader />
+      
       {/* Real-time Notifications */}
       <div className="px-4 py-2">
         <RealtimeNotifications />
@@ -233,6 +238,13 @@ const Index = () => {
             </div>
           </div>
         )}
+        
+        {/* Sync Status Panel - Fixed position sidebar */}
+        <div className="w-80 border-l bg-background/95 backdrop-blur-sm">
+          <div className="h-full overflow-y-auto p-4">
+            <SyncStatusPanel />
+          </div>
+        </div>
       </div>
       
       {/* Enhanced footer with smooth animations */}
