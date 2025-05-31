@@ -3,7 +3,6 @@ import React from 'react';
 import { MainWorkflowArea } from "./MainWorkflowArea";
 import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
-import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
 import { UnifiedCommunicationInterface } from "@/components/communication/UnifiedCommunicationInterface";
 import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
@@ -86,7 +85,7 @@ export const MainContentRenderer = ({
       // Individual view mode content
       if (viewMode === "communication") {
         return (
-          <div className="h-full p-6">
+          <div className="h-full">
             <AdvancedCommunicationPanel
               agents={agents}
               messages={messages}
@@ -124,25 +123,13 @@ export const MainContentRenderer = ({
 
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-background">
-      {/* Dashboard overview section - only show in workflow mode and individual view */}
-      {viewMode === "workflow" && !showTeamView && (
-        <div className="animate-in fade-in-50 duration-300 flex-shrink-0 bg-card/20 dark:bg-card/20 border-b border-border/40">
-          <div className="p-6">
-            <DashboardOverview 
-              agents={agents}
-              onAgentSelect={onAgentSelect}
-            />
-          </div>
-        </div>
-      )}
-      
       {/* Main content area */}
       <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 overflow-auto bg-background">
         {renderMainContent()}
         
-        {/* User Presence UI - Always visible for collaboration */}
-        {viewMode !== "communication" && (
-          <div className="p-6">
+        {/* Integrated User Presence - Only show in workflow mode and when meaningful */}
+        {viewMode === "workflow" && !showTeamView && (
+          <div className="fixed bottom-4 right-4 z-30">
             <UserPresenceUI 
               componentId={showTeamView ? 'team-view' : 'individual-view'}
               projectId="main-dashboard"

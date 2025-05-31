@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { PlanningDialogManager } from "@/components/planning-agent/PlanningDialogManager";
 import { PlanningAgentHeader } from "@/components/planning-agent/PlanningAgentHeader";
-import { PlanningCanvasLayout } from "@/components/planning-agent/PlanningCanvasLayout";
+import { UnifiedPlanningInterface } from "@/components/planning-agent/UnifiedPlanningInterface";
 import { Header } from "@/components/dashboard/Header";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
@@ -66,22 +66,13 @@ const PlanningAgent = () => {
       />
 
       <main id="main-content" className="h-[calc(100vh-64px)]">
-        <div className="container-responsive py-responsive h-full flex flex-col">
-          <div className="mb-4">
-            <PlanningAgentHeader 
-              onCreateTask={handleCreateTask}
-              onTrackWorkflow={handleTrackWorkflow}
-            />
-          </div>
-
-          {/* Canvas-based Layout - Takes remaining space */}
-          <div className="flex-1 min-h-0">
-            <PlanningCanvasLayout 
-              selectedProject={currentProject?.id || "ai-workforce"}
-              onCreateTask={handleCreateTask}
-              onTrackWorkflow={handleTrackWorkflow}
-            />
-          </div>
+        <div className="h-full">
+          {/* Unified Planning Interface - Takes full space */}
+          <UnifiedPlanningInterface 
+            selectedProject={currentProject?.id || "ai-workforce"}
+            onCreateTask={handleCreateTask}
+            onTrackWorkflow={handleTrackWorkflow}
+          />
         </div>
 
         {/* Enhanced Dialog Manager */}
