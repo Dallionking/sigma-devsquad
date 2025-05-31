@@ -41,6 +41,8 @@ export const UnifiedPlanningInterface = ({
     setCanvasMode("sidebar");
   };
 
+  const isCanvasOpen = canvasMode !== "hidden";
+
   return (
     <div className="relative h-full overflow-hidden">
       {/* Main Chat Interface */}
@@ -98,6 +100,7 @@ export const UnifiedPlanningInterface = ({
                   onCreateTask={onCreateTask}
                   onTrackWorkflow={onTrackWorkflow}
                   onToggleCanvas={handleToggleCanvas}
+                  canvasOpen={isCanvasOpen}
                 />
               </div>
             </div>

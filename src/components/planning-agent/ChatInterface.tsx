@@ -10,9 +10,15 @@ interface ChatInterfaceProps {
   onCreateTask?: () => void;
   onTrackWorkflow?: () => void;
   onToggleCanvas?: () => void;
+  canvasOpen?: boolean;
 }
 
-export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }: ChatInterfaceProps) => {
+export const ChatInterface = ({ 
+  onCreateTask, 
+  onTrackWorkflow, 
+  onToggleCanvas, 
+  canvasOpen = false 
+}: ChatInterfaceProps) => {
   const { messages, isTyping, handleSendMessage } = useChatMessageManager();
   const {
     attachedFiles,
@@ -38,6 +44,7 @@ export const ChatInterface = ({ onCreateTask, onTrackWorkflow, onToggleCanvas }:
           onToggleFileAttachment={() => setShowFileAttachment(!showFileAttachment)}
           attachedFilesCount={attachedFiles.length}
           showFileAttachment={showFileAttachment}
+          canvasOpen={canvasOpen}
         />
       </CardHeader>
 
