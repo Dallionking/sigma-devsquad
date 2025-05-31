@@ -108,7 +108,7 @@ export const BottleneckAnalyzer = ({ performanceData }: BottleneckAnalyzerProps)
   const getSeverityColor = (severity: Bottleneck['severity']) => {
     switch (severity) {
       case 'low': return 'secondary';
-      case 'medium': return 'warning';
+      case 'medium': return 'outline';
       case 'high': return 'destructive';
       case 'critical': return 'destructive';
       default: return 'secondary';
@@ -139,7 +139,7 @@ export const BottleneckAnalyzer = ({ performanceData }: BottleneckAnalyzerProps)
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Performance Score:</span>
-            <Badge variant={overallScore > 80 ? "success" : overallScore > 60 ? "warning" : "destructive"}>
+            <Badge variant={overallScore > 80 ? "default" : overallScore > 60 ? "outline" : "destructive"}>
               {overallScore.toFixed(0)}/100
             </Badge>
           </div>
@@ -176,7 +176,7 @@ export const BottleneckAnalyzer = ({ performanceData }: BottleneckAnalyzerProps)
                     <h4 className="font-semibold">{bottleneck.description}</h4>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={getSeverityColor(bottleneck.severity) as any}>
+                    <Badge variant={getSeverityColor(bottleneck.severity)}>
                       {bottleneck.severity}
                     </Badge>
                     <Badge variant="outline">

@@ -216,7 +216,7 @@ const VirtualizedList = ({ items }) => (
   const getPriorityColor = (priority: Suggestion['priority']) => {
     switch (priority) {
       case 'low': return 'secondary';
-      case 'medium': return 'warning';
+      case 'medium': return 'outline';
       case 'high': return 'destructive';
       case 'critical': return 'destructive';
       default: return 'secondary';
@@ -225,8 +225,8 @@ const VirtualizedList = ({ items }) => (
 
   const getEffortColor = (effort: Suggestion['effort']) => {
     switch (effort) {
-      case 'low': return 'success';
-      case 'medium': return 'warning';
+      case 'low': return 'default';
+      case 'medium': return 'outline';
       case 'high': return 'destructive';
       default: return 'secondary';
     }
@@ -293,7 +293,7 @@ const VirtualizedList = ({ items }) => (
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Badge variant={getPriorityColor(suggestion.priority) as any} className="text-xs">
+                  <Badge variant={getPriorityColor(suggestion.priority)} className="text-xs">
                     {suggestion.priority}
                   </Badge>
                   <Badge variant="outline" className="text-xs">
@@ -306,13 +306,13 @@ const VirtualizedList = ({ items }) => (
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     Effort: 
-                    <Badge variant={getEffortColor(suggestion.effort) as any} className="text-xs ml-1">
+                    <Badge variant={getEffortColor(suggestion.effort)} className="text-xs ml-1">
                       {suggestion.effort}
                     </Badge>
                   </span>
                   <span className="flex items-center gap-1">
                     Impact: 
-                    <Badge variant={suggestion.impact === 'high' ? 'success' : 'secondary'} className="text-xs ml-1">
+                    <Badge variant={suggestion.impact === 'high' ? 'default' : 'secondary'} className="text-xs ml-1">
                       {suggestion.impact}
                     </Badge>
                   </span>

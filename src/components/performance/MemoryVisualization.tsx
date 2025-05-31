@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -58,8 +57,8 @@ export const MemoryVisualization = ({ isRecording }: MemoryVisualizationProps) =
     
     const usagePercent = (currentMemory.usedJSHeapSize / currentMemory.jsHeapSizeLimit) * 100;
     
-    if (usagePercent < 50) return { status: 'optimal', color: 'success' };
-    if (usagePercent < 75) return { status: 'moderate', color: 'warning' };
+    if (usagePercent < 50) return { status: 'optimal', color: 'default' };
+    if (usagePercent < 75) return { status: 'moderate', color: 'outline' };
     return { status: 'high', color: 'destructive' };
   };
 
@@ -114,7 +113,7 @@ export const MemoryVisualization = ({ isRecording }: MemoryVisualizationProps) =
             <div className="text-2xl font-bold">
               {currentMemory ? formatBytes(currentMemory.usedJSHeapSize) : '0 MB'}
             </div>
-            <Badge variant={memoryStatus.color as any} className="mt-1">
+            <Badge variant={memoryStatus.color} className="mt-1">
               {memoryStatus.status}
             </Badge>
           </CardContent>
@@ -129,7 +128,7 @@ export const MemoryVisualization = ({ isRecording }: MemoryVisualizationProps) =
             <div className="text-2xl font-bold">
               {memoryTrend > 0 ? '+' : ''}{formatBytes(Math.abs(memoryTrend))}
             </div>
-            <Badge variant={memoryTrend > 1024 * 1024 ? "warning" : "secondary"} className="mt-1">
+            <Badge variant={memoryTrend > 1024 * 1024 ? "outline" : "secondary"} className="mt-1">
               {memoryTrend > 0 ? "Increasing" : memoryTrend < 0 ? "Decreasing" : "Stable"}
             </Badge>
           </CardContent>
