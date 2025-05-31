@@ -5,23 +5,23 @@ import { Button } from '@/components/ui/button';
 
 export const FAQCallToAction = () => {
   return (
-    <div className="mt-16 fade-in-up stagger-4">
-      <div className="text-center p-8 rounded-2xl bg-gradient-to-r from-vibe-primary/5 to-vibe-secondary/5 border border-vibe-primary/10">
-        <h3 className="vibe-heading-md text-foreground mb-4">
+    <div className="mt-24">
+      <div className="text-center p-12 rounded-3xl bg-gradient-to-r from-vibe-primary/5 to-vibe-secondary/5 border border-vibe-primary/10 backdrop-blur-sm">
+        <h3 className="subsection-heading text-foreground mb-6">
           Still Have Questions?
         </h3>
-        <p className="vibe-body-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+        <p className="vibe-body-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
           Our support team is here to help you get started with Vibe DevSquad. 
           Get personalized answers and expert guidance.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="vibe-btn-primary group">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <Button className="cta-button-md vibe-btn-primary group">
             <MessageCircle className="mr-2 w-5 h-5" />
             Contact Support
             <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
           </Button>
-          <Button variant="outline" className="border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10">
+          <Button variant="outline" className="cta-button-md border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10">
             Browse Documentation
           </Button>
         </div>

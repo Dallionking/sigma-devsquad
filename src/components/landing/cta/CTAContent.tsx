@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 
 export const CTAContent = () => {
   return (
-    <div className="fade-in-up stagger-3">
+    <div className="space-y-8">
       <Button 
         className="cta-button-lg bg-white text-vibe-primary hover:bg-white/95 hover:text-vibe-primary/90 
                    shadow-2xl hover:shadow-white/20 border-0 group relative overflow-hidden
-                   transform-gpu transition-all duration-300 ease-out"
+                   transform-gpu transition-all duration-300 ease-out hover:-translate-y-1
+                   focus:ring-4 focus:ring-white/20"
       >
         {/* Button background effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-white via-white to-white/95 
@@ -17,9 +18,9 @@ export const CTAContent = () => {
         
         {/* Button content */}
         <div className="relative z-10 flex items-center gap-3">
-          <Sparkles className="w-5 h-5 transition-transform group-hover:rotate-12 group-hover:scale-110" />
-          <span className="font-bold text-lg">Request Your Demo Now</span>
-          <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1 group-hover:scale-110" />
+          <Sparkles className="w-6 h-6 transition-transform group-hover:rotate-12 group-hover:scale-110" />
+          <span className="font-bold text-xl">Request Your Demo Now</span>
+          <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1 group-hover:scale-110" />
         </div>
         
         {/* Shimmer effect */}
@@ -27,7 +28,7 @@ export const CTAContent = () => {
                         w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
       </Button>
       
-      <p className="mt-6 text-white/70 text-sm font-medium fade-in-up stagger-4">
+      <p className="text-white/70 text-base font-medium">
         Join thousands of developers already transforming their workflow
       </p>
     </div>

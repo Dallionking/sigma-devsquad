@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LandingNavigation } from '@/components/landing/LandingNavigation';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { LandingHero } from '@/components/landing/LandingHero';
@@ -11,8 +11,14 @@ import { LandingTestimonialsSection } from '@/components/landing/LandingTestimon
 import { LandingPricingSection } from '@/components/landing/LandingPricingSection';
 import { LandingFAQSection } from '@/components/landing/LandingFAQSection';
 import { LandingCTASection } from '@/components/landing/LandingCTASection';
+import { initializeAnimations } from '@/utils/animationUtils';
 
 export const LandingPage = () => {
+  useEffect(() => {
+    const cleanup = initializeAnimations();
+    return cleanup;
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Skip to content link for accessibility */}

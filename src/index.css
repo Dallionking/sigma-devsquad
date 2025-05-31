@@ -8,6 +8,8 @@
 @import './styles/enhanced-responsive.css';
 @import './styles/vibe-branding.css';
 @import './styles/landing-responsive.css';
+@import './styles/enhanced-utilities.css';
+@import './styles/enhanced-animations.css';
 
 /* Vibe DevSquad enhanced responsive typography and brand colors */
 @layer utilities {
@@ -81,12 +83,18 @@
   .animate-enhanced-slide-up,
   .vibe-flow,
   .vibe-pulse,
-  .vibe-bounce {
+  .vibe-bounce,
+  .fade-in-up,
+  .hover-lift,
+  .hover-scale,
+  .animate-float {
     animation: none !important;
     transition: none !important;
   }
 
-  .hover-enhanced:hover {
+  .hover-enhanced:hover,
+  .hover-lift:hover,
+  .hover-scale:hover {
     transform: none !important;
   }
 }
@@ -94,14 +102,17 @@
 /* High contrast mode enhancements */
 @media (prefers-contrast: high) {
   .vibe-card,
-  .card-enhanced {
+  .card-enhanced,
+  .feature-card {
     @apply border-2 border-vibe-primary/40;
   }
 
   .vibe-btn-primary,
   .vibe-btn-secondary,
   .btn-primary-enhanced,
-  .btn-secondary-enhanced {
+  .btn-secondary-enhanced,
+  .cta-button-lg,
+  .cta-button-md {
     @apply border-2 border-current;
   }
 }
