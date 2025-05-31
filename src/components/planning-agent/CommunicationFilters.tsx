@@ -1,12 +1,12 @@
-import { useEffect } from "react";
+
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Agent, Message } from "@/types";
-import { Search, Filter, X, Calendar } from "lucide-react";
+import { Search, Filter, X } from "lucide-react";
 
 interface CommunicationFiltersProps {
   agents: Agent[];
@@ -35,126 +35,123 @@ export const CommunicationFilters = ({
   setTimeRange,
   onFilteredMessages
 }: CommunicationFiltersProps) => {
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
-  // Apply filters whenever filter criteria change
-  useEffect(() => {
+  const applyFilters = () => {
     let filtered = [...messages];
 
-    // Apply search filter
+    // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(message =>
-        message.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        agents.find(a => a.type === message.from)?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        agents.find(a => a.type === message.to)?.name.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(m => 
+        m.content.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Apply agent filter
+    // Agent filter
     if (selectedAgents.length > 0) {
-      filtered = filtered.filter(message =>
-        selectedAgents.includes(message.from) || selectedAgents.includes(message.to)
+      filtered = filtered.filter(m => 
+        selectedAgents.includes(m.from) || selectedAgents.includes(m.to)
       );
     }
 
-    // Apply message type filter
+    // Message type filter
     if (messageTypeFilter !== "all") {
-      filtered = filtered.filter(message => message.type === messageTypeFilter);
+      filtered = filtered.filter(m => m.type === messageTypeFilter);
     }
 
-    // Apply time range filter
+    // Time range filter
     const now = new Date();
-    const timeRangeHours = {
-      "1h": 1,
-      "6h": 6,
-      "24h": 24,
-      "7d": 168,
-      "30d": 720,
-      "all": Infinity
-    }[timeRange] || 24;
+    const timeRangeMs = {
+      "1h": 60 * 60 * 1000,
+      "24h": 24 * 60 * 60 * 1000,
+      "7d": 7 * 24 * 60 * 60 * 1000,
+      "30d": 30 * 24 * 60 * 60 * 1000
+    }[timeRange];
 
-    if (timeRangeHours !== Infinity) {
-      const cutoffTime = new Date(now.getTime() - timeRangeHours * 60 * 60 * 1000);
-      filtered = filtered.filter(message => new Date(message.timestamp) >= cutoffTime);
+    if (timeRangeMs) {
+      filtered = filtered.filter(m => 
+        new Date(m.timestamp).getTime() > now.getTime() - timeRangeMs
+      );
     }
 
     onFilteredMessages(filtered);
-  }, [searchTerm, selectedAgents, messageTypeFilter, timeRange, messages, agents, onFilteredMessages]);
-
-  const handleAgentToggle = (agentType: string) => {
-    setSelectedAgents(
-      selectedAgents.includes(agentType)
-        ? selectedAgents.filter(a => a !== agentType)
-        : [...selectedAgents, agentType]
-    );
   };
 
-  const clearAllFilters = () => {
+  const clearFilters = () => {
     setSearchTerm("");
     setSelectedAgents([]);
     setMessageTypeFilter("all");
     setTimeRange("24h");
+    onFilteredMessages(messages);
   };
 
-  const hasActiveFilters = searchTerm || selectedAgents.length > 0 || messageTypeFilter !== "all" || timeRange !== "24h";
+  const toggleAgentFilter = (agentId: string) => {
+    if (selectedAgents.includes(agentId)) {
+      setSelectedAgents(selectedAgents.filter(id => id !== agentId));
+    } else {
+      setSelectedAgents([...selectedAgents, agentId]);
+    }
+  };
 
   return (
-    <Card className="p-6">
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium flex items-center">
-            <Filter className="w-5 h-5 mr-2" />
-            Advanced Filters
-          </h3>
-          {hasActiveFilters && (
-            <Button variant="outline" size="sm" onClick={clearAllFilters}>
-              <X className="w-4 h-4 mr-2" />
-              Clear All
-            </Button>
-          )}
+    <Card className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-medium">Communication Filters</h3>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            {showAdvancedFilters ? "Simple" : "Advanced"}
+          </Button>
+          <Button variant="ghost" size="sm" onClick={clearFilters}>
+            <X className="w-4 h-4 mr-2" />
+            Clear
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {/* Search */}
+        <div className="relative">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search messages..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Search Filter */}
-          <div>
-            <label className="text-sm font-medium mb-2 block">Search Messages</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search content, agents..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-
-          {/* Message Type Filter */}
+        {/* Basic Filters */}
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Message Type</label>
             <Select value={messageTypeFilter} onValueChange={setMessageTypeFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All types" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="request">Requests</SelectItem>
-                <SelectItem value="response">Responses</SelectItem>
-                <SelectItem value="notification">Notifications</SelectItem>
+                <SelectItem value="direct">Direct</SelectItem>
+                <SelectItem value="broadcast">Broadcast</SelectItem>
+                <SelectItem value="request">Request</SelectItem>
+                <SelectItem value="response">Response</SelectItem>
+                <SelectItem value="task_assignment">Task Assignment</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Time Range Filter */}
           <div>
             <label className="text-sm font-medium mb-2 block">Time Range</label>
             <Select value={timeRange} onValueChange={setTimeRange}>
               <SelectTrigger>
-                <Calendar className="w-4 h-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="1h">Last Hour</SelectItem>
-                <SelectItem value="6h">Last 6 Hours</SelectItem>
                 <SelectItem value="24h">Last 24 Hours</SelectItem>
                 <SelectItem value="7d">Last 7 Days</SelectItem>
                 <SelectItem value="30d">Last 30 Days</SelectItem>
@@ -162,68 +159,33 @@ export const CommunicationFilters = ({
               </SelectContent>
             </Select>
           </div>
+        </div>
 
-          {/* Filter Summary */}
-          <div>
-            <label className="text-sm font-medium mb-2 block">Active Filters</label>
-            <div className="flex flex-wrap gap-1">
-              {hasActiveFilters ? (
-                <>
-                  {searchTerm && (
-                    <Badge variant="secondary" className="text-xs">
-                      Search: {searchTerm}
-                    </Badge>
-                  )}
-                  {selectedAgents.length > 0 && (
-                    <Badge variant="secondary" className="text-xs">
-                      {selectedAgents.length} agent{selectedAgents.length !== 1 ? "s" : ""}
-                    </Badge>
-                  )}
-                  {messageTypeFilter !== "all" && (
-                    <Badge variant="secondary" className="text-xs">
-                      {messageTypeFilter}
-                    </Badge>
-                  )}
-                  {timeRange !== "24h" && (
-                    <Badge variant="secondary" className="text-xs">
-                      {timeRange}
-                    </Badge>
-                  )}
-                </>
-              ) : (
-                <span className="text-xs text-muted-foreground">No active filters</span>
-              )}
+        {/* Advanced Filters */}
+        {showAdvancedFilters && (
+          <div className="space-y-4 pt-4 border-t">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Filter by Agents</label>
+              <div className="flex flex-wrap gap-2">
+                {agents.map(agent => (
+                  <Badge
+                    key={agent.id}
+                    variant={selectedAgents.includes(agent.type) ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => toggleAgentFilter(agent.type)}
+                  >
+                    {agent.name}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Agent Selection */}
-        <div>
-          <label className="text-sm font-medium mb-3 block">Filter by Agents</label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {agents.map((agent) => (
-              <div key={agent.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={agent.id}
-                  checked={selectedAgents.includes(agent.type)}
-                  onCheckedChange={() => handleAgentToggle(agent.type)}
-                />
-                <label
-                  htmlFor={agent.id}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                >
-                  {agent.name}
-                </label>
-                <div className={`w-2 h-2 rounded-full ${
-                  agent.status === "working" ? "bg-green-500" :
-                  agent.status === "idle" ? "bg-slate-400" :
-                  agent.status === "waiting" ? "bg-yellow-500" :
-                  "bg-red-500"
-                }`} />
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Apply Filters */}
+        <Button onClick={applyFilters} className="w-full">
+          Apply Filters ({messages.length} messages)
+        </Button>
       </div>
     </Card>
   );

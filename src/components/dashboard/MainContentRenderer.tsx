@@ -6,6 +6,7 @@ import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisu
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
 import { UnifiedCommunicationInterface } from "@/components/communication/UnifiedCommunicationInterface";
+import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -83,7 +84,20 @@ export const MainContentRenderer = ({
       );
     } else {
       // Individual view mode content
-      if (viewMode === "communication" || viewMode === "messages") {
+      if (viewMode === "communication") {
+        return (
+          <div className="h-full p-6">
+            <AdvancedCommunicationPanel
+              agents={agents}
+              messages={messages}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
+        );
+      }
+      
+      if (viewMode === "messages") {
         return (
           <div className="h-full">
             <UnifiedCommunicationInterface />
@@ -127,12 +141,14 @@ export const MainContentRenderer = ({
         {renderMainContent()}
         
         {/* User Presence UI - Always visible for collaboration */}
-        <div className="p-6">
-          <UserPresenceUI 
-            componentId={showTeamView ? 'team-view' : 'individual-view'}
-            projectId="main-dashboard"
-          />
-        </div>
+        {viewMode !== "communication" && (
+          <div className="p-6">
+            <UserPresenceUI 
+              componentId={showTeamView ? 'team-view' : 'individual-view'}
+              projectId="main-dashboard"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

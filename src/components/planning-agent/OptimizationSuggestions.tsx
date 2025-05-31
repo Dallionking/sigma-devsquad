@@ -1,333 +1,299 @@
+
+import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Agent, Message } from "@/types";
-import { Lightbulb, AlertTriangle, CheckCircle, TrendingUp, Clock, Users } from "lucide-react";
+import { Lightbulb, TrendingUp, AlertTriangle, CheckCircle, ArrowRight } from "lucide-react";
+
+interface OptimizationSuggestion {
+  id: string;
+  title: string;
+  description: string;
+  impact: "high" | "medium" | "low";
+  category: "performance" | "communication" | "workflow" | "efficiency";
+  actionable: boolean;
+  metrics?: {
+    current: string;
+    potential: string;
+  };
+}
 
 interface OptimizationSuggestionsProps {
   messages: Message[];
   agents: Agent[];
 }
 
-export const OptimizationSuggestions = ({ messages, agents }: OptimizationSuggestionsProps) => {
-  // Analyze communication patterns for optimization opportunities
-  const analyzePatterns = () => {
-    const suggestions = [];
+export const OptimizationSuggestions = ({
+  messages,
+  agents
+}: OptimizationSuggestionsProps) => {
+  
+  const suggestions = useMemo(() => {
+    const suggestions: OptimizationSuggestion[] = [];
     
-    // Check response rate
-    const requests = messages.filter(m => m.type === "request").length;
-    const responses = messages.filter(m => m.type === "response").length;
-    const responseRate = requests > 0 ? (responses / requests) * 100 : 100;
+    // Analyze communication patterns for suggestions
+    const messagesByAgent = agents.map(agent => ({
+      agent,
+      sent: messages.filter(m => m.from === agent.type).length,
+      received: messages.filter(m => m.to === agent.type).length
+    }));
     
-    if (responseRate < 80) {
+    // Find agents with imbalanced communication
+    const imbalancedAgents = messagesByAgent.filter(a => 
+      Math.abs(a.sent - a.received) > 10
+    );
+    
+    if (imbalancedAgents.length > 0) {
       suggestions.push({
-        type: "warning",
-        category: "Response Rate",
-        title: "Low Response Rate Detected",
-        description: `Only ${responseRate.toFixed(1)}% of requests are getting responses. Consider improving agent responsiveness.`,
-        impact: "High",
-        effort: "Medium",
-        actions: ["Review agent workload distribution", "Implement response time monitoring", "Add automated reminders"]
+        id: "comm-balance",
+        title: "Balance Communication Load",
+        description: `${imbalancedAgents.length} agents have significantly imbalanced send/receive ratios`,
+        impact: "medium",
+        category: "communication",
+        actionable: true,
+        metrics: {
+          current: `${imbalancedAgents.length} imbalanced`,
+          potential: "Balanced workflow"
+        }
       });
     }
     
-    // Check for idle agents
-    const idleAgents = agents.filter(a => a.status === "idle").length;
-    if (idleAgents > 0) {
+    // Analyze response times
+    const slowResponders = agents.filter(agent => 
+      agent.status === "waiting" || Math.random() > 0.7 // Mock slow response detection
+    );
+    
+    if (slowResponders.length > 0) {
       suggestions.push({
-        type: "info",
-        category: "Resource Utilization",
-        title: "Underutilized Agents",
-        description: `${idleAgents} agent${idleAgents !== 1 ? "s are" : " is"} currently idle. Consider redistributing workload.`,
-        impact: "Medium",
-        effort: "Low",
-        actions: ["Redistribute pending tasks", "Implement dynamic task assignment", "Review agent capabilities"]
+        id: "response-time",
+        title: "Optimize Response Times",
+        description: "Some agents are showing slower than optimal response times",
+        impact: "high",
+        category: "performance",
+        actionable: true,
+        metrics: {
+          current: "3.2s avg",
+          potential: "1.8s avg"
+        }
       });
     }
     
     // Check for communication bottlenecks
-    const waitingAgents = agents.filter(a => a.status === "waiting").length;
-    if (waitingAgents > 1) {
+    const busyAgents = messagesByAgent
+      .filter(a => a.sent + a.received > messages.length * 0.3)
+      .map(a => a.agent.name);
+    
+    if (busyAgents.length > 0) {
       suggestions.push({
-        type: "warning",
-        category: "Workflow Efficiency",
-        title: "Communication Bottleneck",
-        description: `${waitingAgents} agents are waiting for responses, indicating potential workflow bottlenecks.`,
-        impact: "High",
-        effort: "Medium",
-        actions: ["Identify blocking dependencies", "Implement parallel processing", "Add escalation procedures"]
+        id: "bottleneck",
+        title: "Reduce Communication Bottlenecks",
+        description: `${busyAgents.join(", ")} may be communication bottlenecks`,
+        impact: "high",
+        category: "workflow",
+        actionable: true,
+        metrics: {
+          current: `${busyAgents.length} bottlenecks`,
+          potential: "Distributed load"
+        }
       });
     }
     
-    // Check message distribution
-    const agentMessageCounts = agents.map(agent => ({
-      agent,
-      count: messages.filter(m => m.from === agent.type || m.to === agent.type).length
-    }));
+    // Suggest automation opportunities
+    const repetitiveMessages = messages.filter(m => 
+      messages.some(other => 
+        other.id !== m.id && 
+        other.content.toLowerCase().includes(m.content.toLowerCase().substring(0, 20))
+      )
+    );
     
-    const maxMessages = Math.max(...agentMessageCounts.map(a => a.count));
-    const minMessages = Math.min(...agentMessageCounts.map(a => a.count));
-    
-    if (maxMessages > 0 && (maxMessages - minMessages) / maxMessages > 0.7) {
+    if (repetitiveMessages.length > 5) {
       suggestions.push({
-        type: "info",
-        category: "Load Balancing",
-        title: "Uneven Communication Load",
-        description: "Communication load is unevenly distributed across agents. Consider load balancing.",
-        impact: "Medium",
-        effort: "Medium",
-        actions: ["Implement load balancing algorithms", "Monitor agent capacity", "Adjust task routing"]
+        id: "automation",
+        title: "Automate Repetitive Communications",
+        description: "Detected repetitive message patterns that could be automated",
+        impact: "medium",
+        category: "efficiency",
+        actionable: true,
+        metrics: {
+          current: `${repetitiveMessages.length} repetitive`,
+          potential: "50% reduction"
+        }
       });
     }
     
-    // Check for error states
-    const errorAgents = agents.filter(a => a.status === "error").length;
-    if (errorAgents > 0) {
+    // Message type optimization
+    const messageTypes = messages.reduce((acc, m) => {
+      acc[m.type] = (acc[m.type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    if (messageTypes.direct && messageTypes.direct > messageTypes.broadcast * 3) {
       suggestions.push({
-        type: "error",
-        category: "System Health",
-        title: "Agent Errors Detected",
-        description: `${errorAgents} agent${errorAgents !== 1 ? "s have" : " has"} encountered errors and need attention.`,
-        impact: "High",
-        effort: "High",
-        actions: ["Investigate error causes", "Implement error recovery", "Add health monitoring"]
+        id: "broadcast",
+        title: "Increase Broadcast Usage",
+        description: "Many direct messages could be optimized as broadcasts",
+        impact: "low",
+        category: "efficiency",
+        actionable: true,
+        metrics: {
+          current: `${messageTypes.direct} direct`,
+          potential: "30% as broadcasts"
+        }
       });
     }
     
-    // Positive feedback for good performance
-    if (responseRate >= 90 && waitingAgents === 0 && errorAgents === 0) {
-      suggestions.push({
-        type: "success",
-        category: "Performance",
-        title: "Excellent Communication Flow",
-        description: "Your agent communication is performing optimally with high response rates and no bottlenecks.",
-        impact: "Positive",
-        effort: "None",
-        actions: ["Maintain current practices", "Document successful patterns", "Share best practices"]
-      });
-    }
-    
-    return suggestions;
-  };
-
-  const suggestions = analyzePatterns();
-
-  const getIconForType = (type: string) => {
-    switch (type) {
-      case "error": return <AlertTriangle className="w-5 h-5 text-red-500" />;
-      case "warning": return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
-      case "success": return <CheckCircle className="w-5 h-5 text-green-500" />;
-      default: return <Lightbulb className="w-5 h-5 text-blue-500" />;
-    }
-  };
-
-  const getColorForType = (type: string) => {
-    switch (type) {
-      case "error": return "border-red-200 bg-red-50";
-      case "warning": return "border-yellow-200 bg-yellow-50";
-      case "success": return "border-green-200 bg-green-50";
-      default: return "border-blue-200 bg-blue-50";
-    }
-  };
+    return suggestions.sort((a, b) => {
+      const impactOrder = { high: 3, medium: 2, low: 1 };
+      return impactOrder[b.impact] - impactOrder[a.impact];
+    });
+  }, [messages, agents]);
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
-      case "High": return "bg-red-100 text-red-800";
-      case "Medium": return "bg-yellow-100 text-yellow-800";
-      case "Low": return "bg-green-100 text-green-800";
-      case "Positive": return "bg-green-100 text-green-800";
-      default: return "bg-slate-100 text-slate-800";
+      case "high": return "text-red-600 bg-red-100 dark:bg-red-900/20";
+      case "medium": return "text-orange-600 bg-orange-100 dark:bg-orange-900/20";
+      case "low": return "text-blue-600 bg-blue-100 dark:bg-blue-900/20";
+      default: return "text-gray-600 bg-gray-100 dark:bg-gray-900/20";
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case "performance": return <TrendingUp className="w-4 h-4" />;
+      case "communication": return <AlertTriangle className="w-4 h-4" />;
+      case "workflow": return <CheckCircle className="w-4 h-4" />;
+      case "efficiency": return <Lightbulb className="w-4 h-4" />;
+      default: return <Lightbulb className="w-4 h-4" />;
     }
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium text-foreground mb-2 flex items-center">
-          <Lightbulb className="w-5 h-5 mr-2" />
-          Communication Optimization Suggestions
-        </h3>
-        <p className="text-muted-foreground">
-          AI-powered recommendations to improve your agent communication efficiency
-        </p>
-      </div>
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-medium">Optimization Suggestions</h3>
+            <p className="text-sm text-muted-foreground">
+              AI-powered recommendations to improve communication efficiency
+            </p>
+          </div>
+          <Badge variant="secondary">
+            {suggestions.length} suggestions
+          </Badge>
+        </div>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="w-4 h-4 text-blue-500" />
-            <div>
-              <div className="text-2xl font-bold">{suggestions.length}</div>
-              <div className="text-sm text-muted-foreground">Suggestions</div>
-            </div>
+        {suggestions.length === 0 ? (
+          <div className="text-center py-8">
+            <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-3" />
+            <h4 className="font-medium mb-2">All Systems Optimized!</h4>
+            <p className="text-sm text-muted-foreground">
+              No optimization opportunities detected at this time.
+            </p>
           </div>
-        </Card>
-        
-        <Card className="p-4">
-          <div className="flex items-center space-x-2">
-            <AlertTriangle className="w-4 h-4 text-red-500" />
-            <div>
-              <div className="text-2xl font-bold">
-                {suggestions.filter(s => s.impact === "High").length}
-              </div>
-              <div className="text-sm text-muted-foreground">High Priority</div>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-4">
-          <div className="flex items-center space-x-2">
-            <Clock className="w-4 h-4 text-yellow-500" />
-            <div>
-              <div className="text-2xl font-bold">
-                {suggestions.filter(s => s.effort === "Low").length}
-              </div>
-              <div className="text-sm text-muted-foreground">Quick Fixes</div>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-4">
-          <div className="flex items-center space-x-2">
-            <Users className="w-4 h-4 text-green-500" />
-            <div>
-              <div className="text-2xl font-bold">
-                {Math.round(((messages.filter(m => m.type === "response").length / messages.filter(m => m.type === "request").length) || 0) * 100)}%
-              </div>
-              <div className="text-sm text-muted-foreground">Efficiency Score</div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Optimization Suggestions */}
-      <div className="space-y-4">
-        {suggestions.map((suggestion, index) => (
-          <Card key={index} className={`p-6 border-l-4 ${getColorForType(suggestion.type)}`}>
-            <div className="space-y-4">
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3">
-                  {getIconForType(suggestion.type)}
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h4 className="font-medium text-foreground">{suggestion.title}</h4>
-                      <Badge variant="outline" className="text-xs">
-                        {suggestion.category}
-                      </Badge>
+        ) : (
+          <div className="space-y-4">
+            {suggestions.map((suggestion) => (
+              <Card key={suggestion.id} className="p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className={`p-2 rounded-lg ${getImpactColor(suggestion.impact)}`}>
+                      {getCategoryIcon(suggestion.category)}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {suggestion.description}
-                    </p>
+                    <div>
+                      <h4 className="font-medium">{suggestion.title}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {suggestion.description}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Badge 
+                      variant={suggestion.impact === "high" ? "destructive" : 
+                               suggestion.impact === "medium" ? "default" : "secondary"}
+                    >
+                      {suggestion.impact} impact
+                    </Badge>
+                    <Badge variant="outline">
+                      {suggestion.category}
+                    </Badge>
                   </div>
                 </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Badge className={getImpactColor(suggestion.impact)}>
-                    {suggestion.impact} Impact
-                  </Badge>
-                  <Badge variant="outline">
-                    {suggestion.effort} Effort
-                  </Badge>
-                </div>
-              </div>
 
-              {/* Actions */}
-              <div>
-                <h5 className="font-medium text-sm mb-2">Recommended Actions:</h5>
-                <div className="space-y-2">
-                  {suggestion.actions.map((action, actionIndex) => (
-                    <div key={actionIndex} className="flex items-center space-x-2">
-                      <CheckCircle className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">{action}</span>
+                {suggestion.metrics && (
+                  <div className="flex items-center space-x-4 mb-3 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-muted-foreground">Current:</span>
+                      <span className="font-medium">{suggestion.metrics.current}</span>
                     </div>
-                  ))}
+                    <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                    <div className="flex items-center space-x-2">
+                      <span className="text-muted-foreground">Potential:</span>
+                      <span className="font-medium text-green-600">
+                        {suggestion.metrics.potential}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    {suggestion.actionable ? (
+                      <>
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <span>Actionable recommendation</span>
+                      </>
+                    ) : (
+                      <>
+                        <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                        <span>Requires manual review</span>
+                      </>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Button variant="outline" size="sm">
+                      Learn More
+                    </Button>
+                    {suggestion.actionable && (
+                      <Button size="sm">
+                        Apply Optimization
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </Card>
+            ))}
+          </div>
+        )}
 
-              {/* Action Buttons */}
-              <div className="flex items-center space-x-2 pt-2">
-                <Button size="sm" variant="default">
-                  Implement
-                </Button>
-                <Button size="sm" variant="outline">
-                  Learn More
-                </Button>
-                <Button size="sm" variant="ghost">
-                  Dismiss
-                </Button>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Performance Metrics */}
-      <Card className="p-6">
-        <h3 className="text-lg font-medium mb-4">Communication Performance Metrics</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <h4 className="font-medium mb-3">Response Efficiency</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Response Rate</span>
-                <span className="font-medium">
-                  {Math.round(((messages.filter(m => m.type === "response").length / messages.filter(m => m.type === "request").length) || 0) * 100)}%
+        {/* Summary */}
+        {suggestions.length > 0 && (
+          <div className="mt-6 p-4 bg-muted/10 rounded-lg">
+            <h5 className="font-medium mb-2">Optimization Summary</h5>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">High Impact:</span>
+                <span className="ml-2 font-medium">
+                  {suggestions.filter(s => s.impact === "high").length} suggestions
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Average Response Time</span>
-                <span className="font-medium">1.2s</span>
+              <div>
+                <span className="text-muted-foreground">Actionable:</span>
+                <span className="ml-2 font-medium">
+                  {suggestions.filter(s => s.actionable).length} ready to apply
+                </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Unresolved Requests</span>
-                <span className="font-medium">
-                  {messages.filter(m => m.type === "request").length - messages.filter(m => m.type === "response").length}
+              <div>
+                <span className="text-muted-foreground">Categories:</span>
+                <span className="ml-2 font-medium">
+                  {[...new Set(suggestions.map(s => s.category))].length} areas
                 </span>
               </div>
             </div>
           </div>
-
-          <div>
-            <h4 className="font-medium mb-3">Agent Utilization</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Active Agents</span>
-                <span className="font-medium">
-                  {agents.filter(a => a.status === "working").length}/{agents.length}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Idle Agents</span>
-                <span className="font-medium">{agents.filter(a => a.status === "idle").length}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Error States</span>
-                <span className="font-medium">{agents.filter(a => a.status === "error").length}</span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-medium mb-3">Communication Health</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Total Messages</span>
-                <span className="font-medium">{messages.length}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Peak Hour Volume</span>
-                <span className="font-medium">{Math.round(messages.length / 24)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Communication Score</span>
-                <span className="font-medium text-green-600">85/100</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </Card>
     </div>
   );

@@ -1,9 +1,9 @@
+
+import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Agent, Message } from "@/types";
-import { TrendingUp, Calendar, Clock, BarChart } from "lucide-react";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, AreaChart, Area } from "recharts";
+import { Calendar, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 interface HistoricalAnalysisProps {
   messages: Message[];
@@ -11,212 +11,190 @@ interface HistoricalAnalysisProps {
   timeRange: string;
 }
 
-export const HistoricalAnalysis = ({ messages, agents, timeRange }: HistoricalAnalysisProps) => {
-  // Generate historical data based on time range
-  const generateHistoricalData = () => {
-    const periods = timeRange === "1h" ? 12 : timeRange === "6h" ? 12 : timeRange === "24h" ? 24 : 30;
-    const intervalMinutes = timeRange === "1h" ? 5 : timeRange === "6h" ? 30 : timeRange === "24h" ? 60 : 1440;
+export const HistoricalAnalysis = ({
+  messages,
+  agents,
+  timeRange
+}: HistoricalAnalysisProps) => {
+  
+  const historicalData = useMemo(() => {
+    const now = new Date();
+    const timeRangeMs = {
+      "1h": 60 * 60 * 1000,
+      "24h": 24 * 60 * 60 * 1000,
+      "7d": 7 * 24 * 60 * 60 * 1000,
+      "30d": 30 * 24 * 60 * 60 * 1000
+    }[timeRange] || 24 * 60 * 60 * 1000;
+
+    const filteredMessages = messages.filter(m => 
+      new Date(m.timestamp).getTime() > now.getTime() - timeRangeMs
+    );
+
+    // Group messages by time periods
+    const periods = [];
+    const periodLength = timeRangeMs / 10; // 10 periods
     
-    return Array.from({ length: periods }, (_, i) => {
-      const endTime = new Date();
-      const startTime = new Date(endTime.getTime() - (periods - i) * intervalMinutes * 60 * 1000);
-      const periodEnd = new Date(endTime.getTime() - (periods - i - 1) * intervalMinutes * 60 * 1000);
+    for (let i = 0; i < 10; i++) {
+      const periodStart = now.getTime() - timeRangeMs + (i * periodLength);
+      const periodEnd = periodStart + periodLength;
       
-      const periodMessages = messages.filter(m => {
-        const msgTime = new Date(m.timestamp);
-        return msgTime >= startTime && msgTime < periodEnd;
+      const periodMessages = filteredMessages.filter(m => {
+        const msgTime = new Date(m.timestamp).getTime();
+        return msgTime >= periodStart && msgTime < periodEnd;
       });
       
-      return {
-        period: timeRange === "24h" ? `${startTime.getHours()}:00` : 
-                timeRange === "1h" ? startTime.toLocaleTimeString().slice(0, 5) :
-                timeRange === "6h" ? startTime.toLocaleTimeString().slice(0, 5) :
-                startTime.toLocaleDateString().slice(0, 5),
-        total: periodMessages.length,
-        requests: periodMessages.filter(m => m.type === "request").length,
-        responses: periodMessages.filter(m => m.type === "response").length,
-        notifications: periodMessages.filter(m => m.type === "notification").length,
-        avgResponseTime: Math.random() * 3 + 0.5 // Mock response time
-      };
-    });
+      periods.push({
+        period: i,
+        start: new Date(periodStart),
+        end: new Date(periodEnd),
+        messageCount: periodMessages.length,
+        agents: [...new Set(periodMessages.map(m => m.from))].length
+      });
+    }
+
+    // Calculate trends
+    const recent = periods.slice(-3).reduce((sum, p) => sum + p.messageCount, 0) / 3;
+    const previous = periods.slice(0, 3).reduce((sum, p) => sum + p.messageCount, 0) / 3;
+    const trend = recent > previous ? "up" : recent < previous ? "down" : "stable";
+
+    return {
+      periods,
+      trend,
+      trendPercentage: previous > 0 ? ((recent - previous) / previous * 100) : 0,
+      totalMessages: filteredMessages.length,
+      peakPeriod: periods.reduce((max, p) => p.messageCount > max.messageCount ? p : max, periods[0])
+    };
+  }, [messages, timeRange]);
+
+  const formatPeriodLabel = (start: Date, end: Date) => {
+    if (timeRange === "1h") {
+      return start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (timeRange === "24h") {
+      return start.toLocaleTimeString([], { hour: '2-digit' });
+    } else {
+      return start.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
   };
 
-  const historicalData = generateHistoricalData();
-
-  // Calculate trends
-  const calculateTrend = (data: number[]) => {
-    if (data.length < 2) return 0;
-    const recent = data.slice(-3).reduce((a, b) => a + b, 0) / 3;
-    const previous = data.slice(0, -3).reduce((a, b) => a + b, 0) / (data.length - 3);
-    return ((recent - previous) / previous) * 100;
-  };
-
-  const messageTrend = calculateTrend(historicalData.map(d => d.total));
-  const responseTrend = calculateTrend(historicalData.map(d => d.avgResponseTime));
-
-  const chartConfig = {
-    total: { label: "Total Messages", color: "#3b82f6" },
-    requests: { label: "Requests", color: "#10b981" },
-    responses: { label: "Responses", color: "#f59e0b" },
-    notifications: { label: "Notifications", color: "#8b5cf6" },
-    avgResponseTime: { label: "Response Time", color: "#ef4444" }
+  const getTrendIcon = () => {
+    switch (historicalData.trend) {
+      case "up": return <TrendingUp className="w-4 h-4 text-green-500" />;
+      case "down": return <TrendingDown className="w-4 h-4 text-red-500" />;
+      default: return <Minus className="w-4 h-4 text-gray-500" />;
+    }
   };
 
   return (
     <div className="space-y-6">
-      {/* Historical Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold">{messages.length}</div>
-              <div className="text-sm text-muted-foreground">Total Messages</div>
-            </div>
-            <div className={`flex items-center text-sm ${messageTrend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              <TrendingUp className="w-4 h-4 mr-1" />
-              {Math.abs(messageTrend).toFixed(1)}%
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold">1.2s</div>
-              <div className="text-sm text-muted-foreground">Avg Response Time</div>
-            </div>
-            <div className={`flex items-center text-sm ${responseTrend <= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              <Clock className="w-4 h-4 mr-1" />
-              {Math.abs(responseTrend).toFixed(1)}%
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold">
-                {Math.round((messages.filter(m => m.type === "response").length / messages.filter(m => m.type === "request").length) * 100) || 0}%
-              </div>
-              <div className="text-sm text-muted-foreground">Response Rate</div>
-            </div>
-            <Badge variant="secondary">
-              {timeRange}
-            </Badge>
-          </div>
-        </Card>
-        
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold">
-                {Math.round(messages.length / (timeRange === "1h" ? 1 : timeRange === "6h" ? 6 : timeRange === "24h" ? 24 : 720))}
-              </div>
-              <div className="text-sm text-muted-foreground">Messages/Hour</div>
-            </div>
-            <BarChart className="w-4 h-4 text-blue-500" />
-          </div>
-        </Card>
-      </div>
-
-      {/* Message Volume Trends */}
       <Card className="p-6">
-        <h3 className="text-lg font-medium mb-4 flex items-center">
-          <TrendingUp className="w-5 h-5 mr-2" />
-          Message Volume Trends
-        </h3>
-        
-        <ChartContainer config={chartConfig} className="h-64">
-          <AreaChart data={historicalData}>
-            <XAxis dataKey="period" />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Area type="monotone" dataKey="total" stackId="1" stroke="var(--color-total)" fill="var(--color-total)" fillOpacity={0.6} />
-            <Area type="monotone" dataKey="requests" stackId="2" stroke="var(--color-requests)" fill="var(--color-requests)" fillOpacity={0.6} />
-            <Area type="monotone" dataKey="responses" stackId="2" stroke="var(--color-responses)" fill="var(--color-responses)" fillOpacity={0.6} />
-          </AreaChart>
-        </ChartContainer>
-      </Card>
-
-      {/* Response Time Analysis */}
-      <Card className="p-6">
-        <h3 className="text-lg font-medium mb-4 flex items-center">
-          <Clock className="w-5 h-5 mr-2" />
-          Response Time Analysis
-        </h3>
-        
-        <ChartContainer config={chartConfig} className="h-64">
-          <LineChart data={historicalData}>
-            <XAxis dataKey="period" />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Line type="monotone" dataKey="avgResponseTime" stroke="var(--color-avgResponseTime)" strokeWidth={2} />
-          </LineChart>
-        </ChartContainer>
-      </Card>
-
-      {/* Historical Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-medium mb-4 flex items-center">
-            <Calendar className="w-5 h-5 mr-2" />
-            Time Period Analysis
-          </h3>
-          
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">Peak Activity Period</h4>
-              <p className="text-sm text-blue-800">
-                Highest message volume: {Math.max(...historicalData.map(d => d.total))} messages
-              </p>
-            </div>
-            
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-medium text-green-900 mb-2">Best Response Time</h4>
-              <p className="text-sm text-green-800">
-                Fastest average response: {Math.min(...historicalData.map(d => d.avgResponseTime)).toFixed(2)}s
-              </p>
-            </div>
-            
-            <div className="p-4 bg-yellow-50 rounded-lg">
-              <h4 className="font-medium text-yellow-900 mb-2">Activity Pattern</h4>
-              <p className="text-sm text-yellow-800">
-                {messageTrend >= 0 ? "Increasing" : "Decreasing"} communication trend over selected period
-              </p>
-            </div>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-medium">Historical Communication Analysis</h3>
+          <div className="flex items-center space-x-2">
+            <Calendar className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              {timeRange === "1h" ? "Last Hour" :
+               timeRange === "24h" ? "Last 24 Hours" :
+               timeRange === "7d" ? "Last 7 Days" :
+               "Last 30 Days"}
+            </span>
           </div>
-        </Card>
+        </div>
 
-        <Card className="p-6">
-          <h3 className="text-lg font-medium mb-4">Agent Activity Timeline</h3>
+        {/* Summary Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="text-center p-4 bg-muted/30 rounded-lg">
+            <div className="text-2xl font-bold">{historicalData.totalMessages}</div>
+            <div className="text-sm text-muted-foreground">Total Messages</div>
+          </div>
           
+          <div className="text-center p-4 bg-muted/30 rounded-lg">
+            <div className="flex items-center justify-center space-x-1">
+              {getTrendIcon()}
+              <span className="text-2xl font-bold">
+                {Math.abs(historicalData.trendPercentage).toFixed(0)}%
+              </span>
+            </div>
+            <div className="text-sm text-muted-foreground">Trend</div>
+          </div>
+          
+          <div className="text-center p-4 bg-muted/30 rounded-lg">
+            <div className="text-2xl font-bold">{historicalData.peakPeriod?.messageCount || 0}</div>
+            <div className="text-sm text-muted-foreground">Peak Period</div>
+          </div>
+          
+          <div className="text-center p-4 bg-muted/30 rounded-lg">
+            <div className="text-2xl font-bold">
+              {(historicalData.totalMessages / historicalData.periods.length).toFixed(1)}
+            </div>
+            <div className="text-sm text-muted-foreground">Avg/Period</div>
+          </div>
+        </div>
+
+        {/* Timeline Visualization */}
+        <div>
+          <h4 className="font-medium mb-4">Communication Timeline</h4>
           <div className="space-y-3">
-            {agents.slice(0, 4).map((agent) => {
-              const agentMessages = messages.filter(m => m.from === agent.type || m.to === agent.type);
-              const activityLevel = agentMessages.length;
-              const maxActivity = Math.max(...agents.map(a => 
-                messages.filter(m => m.from === a.type || m.to === a.type).length
-              ));
-              const percentage = maxActivity > 0 ? (activityLevel / maxActivity) * 100 : 0;
+            {historicalData.periods.map((period, index) => {
+              const maxMessages = Math.max(...historicalData.periods.map(p => p.messageCount));
+              const width = maxMessages > 0 ? (period.messageCount / maxMessages) * 100 : 0;
               
               return (
-                <div key={agent.id} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{agent.name}</span>
-                    <Badge variant="secondary">{activityLevel} msgs</Badge>
+                <div key={period.period} className="flex items-center space-x-4">
+                  <div className="w-16 text-sm text-muted-foreground">
+                    {formatPeriodLabel(period.start, period.end)}
                   </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${percentage}%` }}
+                  
+                  <div className="flex-1 bg-muted/20 rounded-full h-6 relative">
+                    <div
+                      className="bg-gradient-to-r from-blue-400 to-blue-600 h-full rounded-full transition-all duration-300"
+                      style={{ width: `${width}%` }}
                     />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xs font-medium text-white">
+                        {period.messageCount}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="w-20 text-right">
+                    <Badge variant="secondary" className="text-xs">
+                      {period.agents} agents
+                    </Badge>
                   </div>
                 </div>
               );
             })}
           </div>
-        </Card>
-      </div>
+        </div>
+
+        {/* Insights */}
+        <div className="mt-6 p-4 bg-muted/10 rounded-lg">
+          <h5 className="font-medium mb-2">Key Insights</h5>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center space-x-2">
+              {getTrendIcon()}
+              <span>
+                Communication volume is trending {historicalData.trend} by{" "}
+                {Math.abs(historicalData.trendPercentage).toFixed(0)}%
+              </span>
+            </div>
+            
+            {historicalData.peakPeriod && (
+              <div>
+                Peak activity occurred at{" "}
+                {formatPeriodLabel(historicalData.peakPeriod.start, historicalData.peakPeriod.end)}{" "}
+                with {historicalData.peakPeriod.messageCount} messages
+              </div>
+            )}
+            
+            <div>
+              Average of{" "}
+              {(historicalData.totalMessages / historicalData.periods.length).toFixed(1)}{" "}
+              messages per time period
+            </div>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 };
