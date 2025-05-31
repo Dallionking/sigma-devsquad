@@ -1,17 +1,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   MessageSquare, 
   ChevronRight, 
-  ChevronLeft,
-  Users,
-  History,
-  Send
+  ChevronLeft
 } from "lucide-react";
-import { UnifiedCommunicationInterface } from "../communication/UnifiedCommunicationInterface";
+import { UnifiedChatInterface } from "../communication/UnifiedChatInterface";
 
 interface CommunicationPanelProps {
   isOpen: boolean;
@@ -51,7 +47,7 @@ export const CommunicationPanel = ({ isOpen, onToggle }: CommunicationPanelProps
         <>
           {/* Desktop Panel */}
           <div className="hidden lg:block fixed top-16 right-0 h-[calc(100vh-4rem)] w-1/2 z-20 bg-background border-l shadow-lg">
-            <UnifiedCommunicationInterface />
+            <UnifiedChatInterface />
           </div>
 
           {/* Mobile Panel */}
@@ -68,7 +64,7 @@ export const CommunicationPanel = ({ isOpen, onToggle }: CommunicationPanelProps
                 </Button>
               </div>
               <div className="flex-1">
-                <UnifiedCommunicationInterface />
+                <UnifiedChatInterface />
               </div>
             </div>
           </div>

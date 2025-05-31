@@ -41,7 +41,10 @@ export const UnifiedCommunicationInterface = () => {
 
   const getTeamLeads = () => {
     return teams.flatMap(team => 
-      team.members?.filter(member => member.role === "lead") || []
+      team.memberIds?.map(id => {
+        const member = agents.find(agent => agent.id === id);
+        return member ? { ...member, role: "lead" } : null;
+      }).filter(Boolean) || []
     );
   };
 
