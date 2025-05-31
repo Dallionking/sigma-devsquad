@@ -20,6 +20,7 @@ import { TeamProvider } from '@/contexts/TeamContext';
 import { CurrentUserProvider } from '@/contexts/CurrentUserContext';
 import { FilterProvider } from '@/contexts/FilterContext';
 import { WebSocketProvider } from '@/contexts/WebSocketContext';
+import { ProjectProvider } from '@/contexts/ProjectContext';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -29,34 +30,36 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <CurrentUserProvider>
-          <AgentProvider>
-            <TaskProvider>
-              <MessageProvider>
-                <TeamProvider>
-                  <FilterProvider>
-                    <WebSocketProvider userId="current-user" userName="Current User">
-                      <div className="min-h-screen bg-background font-vibe-body">
-                        <Routes>
-                          <Route path="/" element={<LandingPage />} />
-                          <Route path="/dashboard" element={<Dashboard />} />
-                          <Route path="/app" element={<Index />} />
-                          <Route path="/settings" element={<Settings />} />
-                          <Route path="/planning" element={<PlanningAgent />} />
-                          <Route path="/agents/create" element={<AgentCreation />} />
-                          <Route path="/agents/config" element={<AgentConfiguration />} />
-                          <Route path="/ide" element={<IDEIntegration />} />
-                          <Route path="/llm" element={<LLMIntegration />} />
-                          <Route path="/mcp" element={<MCPManagement />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                        <Toaster />
-                      </div>
-                    </WebSocketProvider>
-                  </FilterProvider>
-                </TeamProvider>
-              </MessageProvider>
-            </TaskProvider>
-          </AgentProvider>
+          <ProjectProvider>
+            <AgentProvider>
+              <TaskProvider>
+                <MessageProvider>
+                  <TeamProvider>
+                    <FilterProvider>
+                      <WebSocketProvider userId="current-user" userName="Current User">
+                        <div className="min-h-screen bg-background font-vibe-body">
+                          <Routes>
+                            <Route path="/" element={<LandingPage />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/app" element={<Index />} />
+                            <Route path="/settings" element={<Settings />} />
+                            <Route path="/planning" element={<PlanningAgent />} />
+                            <Route path="/agents/create" element={<AgentCreation />} />
+                            <Route path="/agents/config" element={<AgentConfiguration />} />
+                            <Route path="/ide" element={<IDEIntegration />} />
+                            <Route path="/llm" element={<LLMIntegration />} />
+                            <Route path="/mcp" element={<MCPManagement />} />
+                            <Route path="*" element={<NotFound />} />
+                          </Routes>
+                          <Toaster />
+                        </div>
+                      </WebSocketProvider>
+                    </FilterProvider>
+                  </TeamProvider>
+                </MessageProvider>
+              </TaskProvider>
+            </AgentProvider>
+          </ProjectProvider>
         </CurrentUserProvider>
       </BrowserRouter>
     </QueryClientProvider>
