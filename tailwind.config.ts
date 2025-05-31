@@ -73,54 +73,30 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Vibe DevSquad Enhanced Brand Colors
-				'vibe-primary': '#6366F1',
-				'vibe-secondary': '#8B5CF6',
-				'vibe-accent': '#06B6D4',
-				'vibe-energy': '#F59E0B',
-				'vibe-flow': '#10B981',
-				'vibe-muted': '#64748B',
-				'vibe-success': '#22C55E',
-				'vibe-warning': '#F59E0B',
-				'vibe-error': '#EF4444',
-				'vibe-info': '#3B82F6',
+				// Vibe DevSquad Brand Colors
+				'vibe-primary': '#6366F1',     // Vibrant indigo
+				'vibe-secondary': '#8B5CF6',   // Electric purple
+				'vibe-accent': '#06B6D4',      // Cyan energy
+				'vibe-energy': '#F59E0B',      // Amber energy
+				'vibe-flow': '#10B981',        // Emerald flow
+				'vibe-muted': '#64748B',       // Slate muted
+				'vibe-success': '#22C55E',     // Green success
+				'vibe-warning': '#F59E0B',     // Amber warning
+				'vibe-error': '#EF4444',       // Red error
+				'vibe-info': '#3B82F6',        // Blue info
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
-			// 8px Grid System Implementation
 			spacing: {
-				'1': '0.125rem',    // 2px
-				'2': '0.25rem',     // 4px  
-				'3': '0.375rem',    // 6px
-				'4': '0.5rem',      // 8px - base unit
-				'5': '0.625rem',    // 10px
-				'6': '0.75rem',     // 12px
-				'8': '1rem',        // 16px - 2x base
-				'10': '1.25rem',    // 20px
-				'12': '1.5rem',     // 24px - 3x base
-				'16': '2rem',       // 32px - 4x base
-				'20': '2.5rem',     // 40px - 5x base
-				'24': '3rem',       // 48px - 6x base
-				'32': '4rem',       // 64px - 8x base
-				'40': '5rem',       // 80px - 10x base
-				'48': '6rem',       // 96px - 12x base
-				'56': '7rem',       // 112px - 14x base
-				'64': '8rem',       // 128px - 16x base
-				'80': '10rem',      // 160px - 20x base
-				'96': '12rem',      // 192px - 24x base
-				'128': '16rem',     // 256px - 32x base
+				'18': '4.5rem',
+				'88': '22rem',
+				'128': '32rem',
 			},
 			fontSize: {
 				'2xs': ['0.625rem', { lineHeight: '0.75rem' }],
-				'xs': ['0.75rem', { lineHeight: '1rem' }],
-				'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-				'base': ['1rem', { lineHeight: '1.5rem' }],
-				'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-				'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-				'2xl': ['1.5rem', { lineHeight: '2rem' }],
 				'3xl': ['1.875rem', { lineHeight: '2.25rem' }],
 				'4xl': ['2.25rem', { lineHeight: '2.5rem' }],
 				'5xl': ['3rem', { lineHeight: '1' }],

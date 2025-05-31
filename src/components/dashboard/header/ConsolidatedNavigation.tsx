@@ -41,27 +41,27 @@ export const ConsolidatedNavigation = ({
   const location = useLocation();
   
   const isSettingsPage = location.pathname === "/settings";
-  const isLLMPage = location.pathname === "/llm";
-  const isAgentConfigPage = location.pathname === "/agents/config";
-  const isMCPPage = location.pathname === "/mcp";
-  const isIDEPage = location.pathname === "/ide";
-  const isPlanningAgentPage = location.pathname === "/planning";
-  const isDashboardPage = location.pathname === "/dashboard";
+  const isLLMPage = location.pathname === "/llm-integration";
+  const isAgentConfigPage = location.pathname === "/agent-configuration";
+  const isMCPPage = location.pathname === "/mcp-management";
+  const isIDEPage = location.pathname === "/ide-integration";
+  const isPlanningAgentPage = location.pathname === "/planning-agent";
+  const isDashboardPage = location.pathname === "/";
 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
 
   const primaryNavItems = [
-    { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
-    { path: "/planning", label: "Planning", icon: Layers, active: isPlanningAgentPage },
+    { path: "/", label: "Dashboard", icon: Home, active: isDashboardPage },
+    { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
   ];
 
   const configurationItems = [
-    { path: "/agents/config", label: "Agent Config", icon: Bot, active: isAgentConfigPage },
-    { path: "/mcp", label: "MCP Management", icon: Package, active: isMCPPage },
-    { path: "/llm", label: "LLM Integration", icon: Brain, active: isLLMPage },
-    { path: "/ide", label: "IDE Integration", icon: Monitor, active: isIDEPage },
+    { path: "/agent-configuration", label: "Agent Config", icon: Bot, active: isAgentConfigPage },
+    { path: "/mcp-management", label: "MCP Management", icon: Package, active: isMCPPage },
+    { path: "/llm-integration", label: "LLM Integration", icon: Brain, active: isLLMPage },
+    { path: "/ide-integration", label: "IDE Integration", icon: Monitor, active: isIDEPage },
     { path: "/settings", label: "Settings", icon: Cog, active: isSettingsPage },
   ];
 

@@ -1,72 +1,73 @@
 
-import { LandingPage } from '@/pages/LandingPage';
-import Dashboard from '@/pages/Dashboard';
-import Index from '@/pages/Index';
-import { Settings } from '@/pages/Settings';
-import PlanningAgent from '@/pages/PlanningAgent';
-import AgentCreation from '@/pages/AgentCreation';
-import AgentConfiguration from '@/pages/AgentConfiguration';
-import IDEIntegration from '@/pages/IDEIntegration';
-import LLMIntegration from '@/pages/LLMIntegration';
-import MCPManagement from '@/pages/MCPManagement';
-import NotFound from '@/pages/NotFound';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Toaster } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { AgentProvider } from '@/contexts/AgentContext';
-import { TaskProvider } from '@/contexts/TaskContext';
-import { MessageProvider } from '@/contexts/MessageContext';
-import { TeamProvider } from '@/contexts/TeamContext';
-import { CurrentUserProvider } from '@/contexts/CurrentUserContext';
-import { FilterProvider } from '@/contexts/FilterContext';
-import { WebSocketProvider } from '@/contexts/WebSocketContext';
-import { ProjectProvider } from '@/contexts/ProjectContext';
-import './App.css';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AppStateProvider } from "@/contexts/AppStateContext";
+import { AgentProvider } from "@/contexts/AgentContext";
+import { TaskProvider } from "@/contexts/TaskContext";
+import { MessageProvider } from "@/contexts/MessageContext";
+import { TeamProvider } from "@/contexts/TeamContext";
+import { FilterProvider } from "@/contexts/FilterContext";
+import { CurrentUserProvider } from "@/contexts/CurrentUserContext";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
+import { DataPersistenceProvider } from "@/contexts/DataPersistenceContext";
+import Index from "./pages/Index";
+import Settings from "./pages/Settings";
+import LLMIntegration from "./pages/LLMIntegration";
+import AgentConfiguration from "./pages/AgentConfiguration";
+import AgentCreation from "./pages/AgentCreation";
+import MCPManagement from "./pages/MCPManagement";
+import IDEIntegration from "./pages/IDEIntegration";
+import PlanningAgent from "./pages/PlanningAgent";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <TooltipProvider>
-          <CurrentUserProvider>
-            <ProjectProvider>
-              <AgentProvider>
-                <TaskProvider>
-                  <MessageProvider>
-                    <TeamProvider>
-                      <FilterProvider>
-                        <WebSocketProvider userId="current-user" userName="Current User">
-                          <div className="min-h-screen bg-background font-vibe-body">
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider>
+      <AppStateProvider>
+        <AgentProvider>
+          <TaskProvider>
+            <MessageProvider>
+              <TeamProvider>
+                <FilterProvider>
+                  <CurrentUserProvider>
+                    <DataPersistenceProvider>
+                      {/* Wrap with WebSocket for real-time collaboration */}
+                      <WebSocketProvider userId="current-user" userName="Current User">
+                        <TooltipProvider>
+                          <Toaster />
+                          <Sonner />
+                          <BrowserRouter>
                             <Routes>
-                              <Route path="/" element={<LandingPage />} />
-                              <Route path="/dashboard" element={<Dashboard />} />
-                              <Route path="/app" element={<Index />} />
+                              <Route path="/" element={<Index />} />
                               <Route path="/settings" element={<Settings />} />
-                              <Route path="/planning" element={<PlanningAgent />} />
-                              <Route path="/agents/create" element={<AgentCreation />} />
-                              <Route path="/agents/config" element={<AgentConfiguration />} />
-                              <Route path="/ide" element={<IDEIntegration />} />
-                              <Route path="/llm" element={<LLMIntegration />} />
-                              <Route path="/mcp" element={<MCPManagement />} />
+                              <Route path="/llm-integration" element={<LLMIntegration />} />
+                              <Route path="/agent-configuration" element={<AgentConfiguration />} />
+                              <Route path="/agent-creation" element={<AgentCreation />} />
+                              <Route path="/mcp-management" element={<MCPManagement />} />
+                              <Route path="/ide-integration" element={<IDEIntegration />} />
+                              <Route path="/planning-agent" element={<PlanningAgent />} />
+                              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                               <Route path="*" element={<NotFound />} />
                             </Routes>
-                            <Toaster />
-                          </div>
-                        </WebSocketProvider>
-                      </FilterProvider>
-                    </TeamProvider>
-                  </MessageProvider>
-                </TaskProvider>
-              </AgentProvider>
-            </ProjectProvider>
-          </CurrentUserProvider>
-        </TooltipProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
-}
+                          </BrowserRouter>
+                        </TooltipProvider>
+                      </WebSocketProvider>
+                    </DataPersistenceProvider>
+                  </CurrentUserProvider>
+                </FilterProvider>
+              </TeamProvider>
+            </MessageProvider>
+          </TaskProvider>
+        </AgentProvider>
+      </AppStateProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
+);
 
 export default App;
