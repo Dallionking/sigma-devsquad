@@ -5,7 +5,6 @@ import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
-import { ViewModeTabs } from "./ViewModeTabs";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -95,7 +94,7 @@ export const MainContentRenderer = ({
   };
 
   return (
-    <>
+    <div className="flex-1 flex flex-col min-h-0">
       {/* Dashboard overview section - only show in workflow mode and individual view */}
       {viewMode === "workflow" && !showTeamView && (
         <div className="animate-in fade-in-50 duration-300 flex-shrink-0">
@@ -106,22 +105,8 @@ export const MainContentRenderer = ({
         </div>
       )}
       
-      {/* View Mode Tabs - Only show in individual view */}
-      {!showTeamView && (
-        <ViewModeTabs 
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-          notificationCounts={{
-            workflow: 0,
-            communication: 0,
-            tasks: 0,
-            messages: 0
-          }}
-        />
-      )}
-      
       {/* Main content area */}
-      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6 space-y-6">
+      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 p-6 space-y-6 overflow-auto">
         {renderMainContent()}
         
         {/* User Presence UI - Always visible for collaboration */}
@@ -130,6 +115,6 @@ export const MainContentRenderer = ({
           projectId="main-dashboard"
         />
       </div>
-    </>
+    </div>
   );
 };

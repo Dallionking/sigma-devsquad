@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 interface MainLayoutProps {
   showTeamView: boolean;
   sidebarCollapsed: boolean;
-  syncPanelCollapsed: boolean; // Keep for API compatibility but not used
+  syncPanelCollapsed: boolean;
   agents: Agent[];
   tasks: Task[];
   messages: Message[];
@@ -23,7 +23,7 @@ interface MainLayoutProps {
   viewMode: ViewMode;
   hasSelection: boolean;
   onSidebarToggle: () => void;
-  onSyncPanelToggle: () => void; // Keep for API compatibility but not used
+  onSyncPanelToggle: () => void;
   onAgentSelect: (agent: Agent | null) => void;
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
@@ -65,16 +65,18 @@ export const MainLayout = ({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* View Mode Tabs */}
-      <ViewModeTabs
-        viewMode={viewMode}
-        onViewModeChange={onViewModeChange}
-        notificationCounts={notificationCounts}
-      />
+      {/* View Mode Tabs - Only show in individual view */}
+      {!showTeamView && (
+        <ViewModeTabs
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+          notificationCounts={notificationCounts}
+        />
+      )}
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - No sync panel */}
+        {/* Sidebar */}
         <div className={cn(
           "bg-card border-r transition-all duration-300 overflow-hidden",
           sidebarCollapsed ? "w-0" : "w-80"
@@ -122,7 +124,7 @@ export const MainLayout = ({
 
         {/* Detail Panel */}
         {hasSelection && (
-          <div className="w-96 bg-card border-l overflow-hidden">
+          <div className="w-96 bg-card border-l overflow-hidden flex-shrink-0">
             <DetailPanelRenderer
               selectedAgent={selectedAgent}
               selectedTask={selectedTask}
