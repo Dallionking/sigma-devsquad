@@ -1,11 +1,10 @@
-
 /* Import modular CSS files */
 @import './styles/base.css';
 @import './styles/enhanced-components.css';
 @import './styles/animations.css';
 @import './styles/utilities.css';
 @import './styles/responsive.css';
-@import './styles/mobile.css';
+@import './styles/enhanced-responsive.css';
 
 /* Enhanced responsive typography and brand colors */
 @layer utilities {
