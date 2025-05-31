@@ -2,8 +2,19 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const LandingHero = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/dashboard');
+  };
+
+  const handleWatchDemo = () => {
+    navigate('/app');
+  };
+
   return (
     <section className="relative py-20 sm:py-32 lg:py-40 overflow-hidden">
       {/* Background gradient */}
@@ -44,12 +55,21 @@ export const LandingHero = () => {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" className="vibe-btn-primary text-lg px-8 py-6 min-w-[200px]">
+            <Button 
+              size="lg" 
+              className="vibe-btn-primary text-lg px-8 py-6 min-w-[200px]"
+              onClick={handleGetStarted}
+            >
               Start Building
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10 text-lg px-8 py-6 min-w-[200px]">
-              Watch Demo
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10 text-lg px-8 py-6 min-w-[200px]"
+              onClick={handleWatchDemo}
+            >
+              Try Demo
               <Zap className="ml-2 w-5 h-5" />
             </Button>
           </div>

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const navigationItems = [
   { label: 'Features', href: '#features' },
@@ -14,9 +15,18 @@ const navigationItems = [
 
 export const LandingNavigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleSignIn = () => {
+    navigate('/app');
+  };
+
+  const handleGetStarted = () => {
+    navigate('/dashboard');
   };
 
   return (
@@ -50,10 +60,17 @@ export const LandingNavigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" className="border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10">
+            <Button 
+              variant="outline" 
+              className="border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10"
+              onClick={handleSignIn}
+            >
               Sign In
             </Button>
-            <Button className="vibe-btn-primary">
+            <Button 
+              className="vibe-btn-primary"
+              onClick={handleGetStarted}
+            >
               Get Started
             </Button>
           </div>
@@ -93,10 +110,17 @@ export const LandingNavigation = () => {
               </a>
             ))}
             <div className="px-4 pt-4 space-y-3 border-t border-border">
-              <Button variant="outline" className="w-full border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10">
+              <Button 
+                variant="outline" 
+                className="w-full border-vibe-primary/20 text-vibe-primary hover:bg-vibe-primary/10"
+                onClick={handleSignIn}
+              >
                 Sign In
               </Button>
-              <Button className="w-full vibe-btn-primary">
+              <Button 
+                className="w-full vibe-btn-primary"
+                onClick={handleGetStarted}
+              >
                 Get Started
               </Button>
             </div>
