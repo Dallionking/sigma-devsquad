@@ -159,7 +159,7 @@ export const MainLayout = ({
           )}
         </div>
 
-        {/* Integrated User Presence Panel */}
+        {/* Enhanced Integrated User Presence Panel */}
         {!showTeamView && (
           <UserPresencePanel 
             viewMode={viewMode}
