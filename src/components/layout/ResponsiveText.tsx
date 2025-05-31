@@ -40,7 +40,6 @@ export const ResponsiveText = ({
     return (
       <TruncatedText
         lines={lines}
-        variant={variantMap[variant]}
         className={cn(weightClasses[weight], className)}
       >
         {children}
@@ -74,7 +73,7 @@ export const ResponsiveHeading = ({ children, className, level = 1 }: {
   </DynamicHeading>
 );
 
-export const TruncatedText = ({ 
+export const ResponsiveTruncatedText = ({ 
   children, 
   lines = 1, 
   className 
