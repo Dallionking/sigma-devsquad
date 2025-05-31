@@ -1,15 +1,8 @@
 
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from "react";
+import { CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Plus, 
-  Target, 
-  Paperclip, 
-  Brain,
-  MessageSquare,
-  Menu
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ResponsiveActionButtons } from "./ResponsiveActionButtons";
 
 interface ChatInterfaceHeaderProps {
   onCreateTask?: () => void;
@@ -30,88 +23,51 @@ export const ChatInterfaceHeader = ({
   showFileAttachment = false,
   canvasOpen = false
 }: ChatInterfaceHeaderProps) => {
+  const [containerWidth, setContainerWidth] = useState(0);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  // Measure container width for responsive behavior
+  useEffect(() => {
+    const updateWidth = () => {
+      if (headerRef.current) {
+        setContainerWidth(headerRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (headerRef.current) {
+      resizeObserver.observe(headerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
-    <div className="flex items-center justify-between gap-3">
-      {/* Agent Status */}
+    <div ref={headerRef} className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2 bg-green-500/20 text-green-700 dark:text-green-300 px-3 py-1.5 rounded-full border border-green-500/30">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-sm font-medium whitespace-nowrap">Agent Active</span>
-        </div>
+        <CardTitle className="text-lg font-semibold truncate">
+          Planning Assistant
+        </CardTitle>
+        <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
+          Online
+        </Badge>
       </div>
-
-      {/* Action Buttons - Responsive Layout */}
-      <div className={cn(
-        "flex items-center gap-2 transition-all duration-300",
-        canvasOpen ? "flex-wrap justify-end max-w-[60%]" : "flex-nowrap"
-      )}>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onCreateTask}
-          className={cn(
-            "transition-all duration-200 hover:bg-primary/10",
-            canvasOpen ? "h-8 px-2 text-xs" : "h-9 px-3"
-          )}
-        >
-          <Plus className={cn("mr-1", canvasOpen ? "w-3 h-3" : "w-4 h-4")} />
-          <span className={canvasOpen ? "hidden sm:inline" : ""}>Create Task</span>
-          {canvasOpen && <span className="sm:hidden">Task</span>}
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onTrackWorkflow}
-          className={cn(
-            "transition-all duration-200 hover:bg-primary/10",
-            canvasOpen ? "h-8 px-2 text-xs" : "h-9 px-3"
-          )}
-        >
-          <Target className={cn("mr-1", canvasOpen ? "w-3 h-3" : "w-4 h-4")} />
-          <span className={canvasOpen ? "hidden sm:inline" : ""}>Track Workflow</span>
-          {canvasOpen && <span className="sm:hidden">Track</span>}
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onToggleFileAttachment}
-          className={cn(
-            "relative transition-all duration-200 hover:bg-primary/10",
-            showFileAttachment && "bg-primary/20 text-primary",
-            canvasOpen ? "h-8 px-2 text-xs" : "h-9 px-3"
-          )}
-        >
-          <Paperclip className={cn(canvasOpen ? "w-3 h-3" : "w-4 h-4")} />
-          {!canvasOpen && <span className="ml-1">Files</span>}
-          {attachedFilesCount > 0 && (
-            <Badge 
-              variant="secondary" 
-              className={cn(
-                "absolute -top-1 -right-1 h-4 w-4 p-0 text-xs flex items-center justify-center",
-                canvasOpen ? "h-3 w-3 text-[10px]" : ""
-              )}
-            >
-              {attachedFilesCount}
-            </Badge>
-          )}
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onToggleCanvas}
-          className={cn(
-            "transition-all duration-200",
-            canvasOpen 
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-2 text-xs" 
-              : "hover:bg-primary/10 h-9 px-3"
-          )}
-        >
-          <Brain className={cn(canvasOpen ? "w-3 h-3" : "w-4 h-4 mr-1")} />
-          {!canvasOpen && "Canvas"}
-        </Button>
+      
+      <div className="flex-shrink-0">
+        <ResponsiveActionButtons
+          onCreateTask={onCreateTask}
+          onTrackWorkflow={onTrackWorkflow}
+          onToggleCanvas={onToggleCanvas}
+          onToggleFileAttachment={onToggleFileAttachment}
+          attachedFilesCount={attachedFilesCount}
+          showFileAttachment={showFileAttachment}
+          canvasOpen={canvasOpen}
+          containerWidth={containerWidth}
+        />
       </div>
     </div>
   );
