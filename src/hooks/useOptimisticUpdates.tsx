@@ -1,7 +1,6 @@
 
 import { useState, useCallback } from 'react';
 import { useWebSocket } from '@/contexts/WebSocketContext';
-import { useToast } from '@/hooks/use-toast';
 
 interface OptimisticUpdate<T> {
   id: string;
@@ -13,7 +12,6 @@ interface OptimisticUpdate<T> {
 export const useOptimisticUpdates = <T extends any>() => {
   const [pendingUpdates, setPendingUpdates] = useState<Map<string, OptimisticUpdate<T>>>(new Map());
   const { optimisticUpdate } = useWebSocket();
-  const { toast } = useToast();
 
   const applyOptimisticUpdate = useCallback((
     updateId: string,
@@ -50,7 +48,7 @@ export const useOptimisticUpdates = <T extends any>() => {
       }
     );
     
-    // Auto-cleanup successful updates
+    // Auto-cleanup successful updates after 5 seconds
     setTimeout(() => {
       setPendingUpdates(prev => {
         const newMap = new Map(prev);
@@ -69,22 +67,14 @@ export const useOptimisticUpdates = <T extends any>() => {
         newMap.delete(updateId);
         return newMap;
       });
-      
-      toast({
-        title: "Update Rolled Back",
-        description: "Changes have been reverted",
-      });
     }
-  }, [pendingUpdates, toast]);
-
-  const hasPendingUpdates = pendingUpdates.size > 0;
-  const pendingCount = pendingUpdates.size;
+  }, [pendingUpdates]);
 
   return {
     applyOptimisticUpdate,
     rollbackUpdate,
-    hasPendingUpdates,
-    pendingCount,
+    hasPendingUpdates: pendingUpdates.size > 0,
+    pendingCount: pendingUpdates.size,
     pendingUpdates: Array.from(pendingUpdates.values())
   };
 };

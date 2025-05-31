@@ -3,19 +3,12 @@ import { OptimizedSettingsLayout } from "./OptimizedSettingsLayout";
 import { PerformanceOptimizedTabs } from "./PerformanceOptimizedTabs";
 import { SettingsActions } from "./SettingsActions";
 import { MobileSettingsLayout } from "./MobileSettingsLayout";
-import { GeneralSettings } from "./GeneralSettings";
-import { APIKeySettings } from "./APIKeySettings";
-import { AppearanceSettings } from "./AppearanceSettings";
-import { PerformanceSettings } from "./PerformanceSettings";
-import { SecuritySettings } from "./SecuritySettings";
-import { NotificationSettings } from "./NotificationSettings";
-import { BackupSettings } from "./BackupSettings";
+import { SettingsLayoutContainer } from "./layout/SettingsLayoutContainer";
+import { settingsTabDefinitions } from "./tabs/SettingsTabDefinitions";
 import { useSettingsState } from "@/hooks/useSettingsState";
 import { useSettingsActions } from "@/hooks/useSettingsActions";
 import { useEnhancedKeyboardNavigation } from "@/hooks/useEnhancedKeyboardNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Settings as SettingsIcon, Monitor, Shield, Bell, Database, Palette, Key } from "lucide-react";
-import { useRef } from "react";
 
 export const SettingsPage = () => {
   const {
@@ -39,77 +32,12 @@ export const SettingsPage = () => {
     setPerformanceMode,
   });
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
-  // Enhanced keyboard navigation with better focus management
+  // Enhanced keyboard navigation functions
   const { focusNext, focusPrevious, saveFocus, restoreFocus } = useEnhancedKeyboardNavigation({
-    containerRef,
-    onEscape: () => {
-      // Clear search when pressing Escape
-      if (searchQuery) {
-        setSearchQuery("");
-      } else {
-        // If no search query, restore focus to last saved position
-        restoreFocus();
-      }
-    },
-    enableArrowNavigation: !isMobile, // Disable arrow navigation on mobile
-    enableHomeEnd: !isMobile,
-    enableTabNavigation: true,
-    onArrowDown: () => focusNext(),
-    onArrowUp: () => focusPrevious(),
-    onTab: (direction) => {
-      // Save focus when tabbing to help with navigation
-      saveFocus();
-    }
+    containerRef: { current: null },
   });
-
-  // Define tabs with their components for performance optimization
-  const tabs = [
-    { 
-      id: "general", 
-      label: "General", 
-      icon: SettingsIcon, 
-      component: GeneralSettings 
-    },
-    { 
-      id: "api-keys", 
-      label: "API Keys", 
-      icon: Key, 
-      component: APIKeySettings 
-    },
-    { 
-      id: "appearance", 
-      label: "Appearance", 
-      icon: Palette, 
-      component: AppearanceSettings 
-    },
-    { 
-      id: "performance", 
-      label: "Performance", 
-      icon: Monitor, 
-      component: PerformanceSettings 
-    },
-    { 
-      id: "security", 
-      label: "Security", 
-      icon: Shield, 
-      component: SecuritySettings 
-    },
-    { 
-      id: "notifications", 
-      label: "Notifications", 
-      icon: Bell, 
-      component: NotificationSettings 
-    },
-    { 
-      id: "backup", 
-      label: "Backup", 
-      icon: Database, 
-      component: BackupSettings 
-    }
-  ];
 
   const settingsProps = {
     searchQuery,
@@ -129,56 +57,56 @@ export const SettingsPage = () => {
         saveFocus(); // Save focus when switching tabs
       }}
       searchQuery={searchQuery}
-      tabs={tabs}
+      tabs={settingsTabDefinitions}
       settingsProps={settingsProps}
     />
   );
 
-  if (isMobile) {
-    return (
-      <div ref={containerRef} className="focus-within:outline-none">
-        <OptimizedSettingsLayout
-          searchQuery={searchQuery}
-          onSearch={setSearchQuery}
-          onFilterChange={setSearchFilters}
+  const layoutContent = (
+    <OptimizedSettingsLayout
+      searchQuery={searchQuery}
+      onSearch={setSearchQuery}
+      onFilterChange={setSearchFilters}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+    >
+      {isMobile ? (
+        <MobileSettingsLayout
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          tabsContent={tabsContent}
         >
-          <MobileSettingsLayout
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            tabsContent={tabsContent}
-          >
-            <div className="fade-in" style={{ animationDelay: "300ms" }}>
-              <SettingsActions 
-                onSaveAll={handleSaveAll}
-                onResetAll={handleResetAll}
-              />
-            </div>
-          </MobileSettingsLayout>
-        </OptimizedSettingsLayout>
-      </div>
-    );
-  }
+          <div className="fade-in" style={{ animationDelay: "300ms" }}>
+            <SettingsActions 
+              onSaveAll={handleSaveAll}
+              onResetAll={handleResetAll}
+            />
+          </div>
+        </MobileSettingsLayout>
+      ) : (
+        <>
+          {tabsContent}
+          <div className="fade-in" style={{ animationDelay: "300ms" }}>
+            <SettingsActions 
+              onSaveAll={handleSaveAll}
+              onResetAll={handleResetAll}
+            />
+          </div>
+        </>
+      )}
+    </OptimizedSettingsLayout>
+  );
 
   return (
-    <div ref={containerRef} className="focus-within:outline-none">
-      <OptimizedSettingsLayout
-        searchQuery={searchQuery}
-        onSearch={setSearchQuery}
-        onFilterChange={setSearchFilters}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      >
-        {tabsContent}
-
-        <div className="fade-in" style={{ animationDelay: "300ms" }}>
-          <SettingsActions 
-            onSaveAll={handleSaveAll}
-            onResetAll={handleResetAll}
-          />
-        </div>
-      </OptimizedSettingsLayout>
-    </div>
+    <SettingsLayoutContainer
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      onFocusNext={focusNext}
+      onFocusPrevious={focusPrevious}
+      onSaveFocus={saveFocus}
+      onRestoreFocus={restoreFocus}
+    >
+      {layoutContent}
+    </SettingsLayoutContainer>
   );
 };

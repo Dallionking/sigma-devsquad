@@ -1,7 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
-import { PresenceIndicator } from "@/components/collaboration/PresenceIndicator";
+import { SafePresenceIndicator } from "@/components/collaboration/SafePresenceIndicator";
 
 interface StatusBadgeProps {
   activeAgents: number;
@@ -24,7 +24,7 @@ export const StatusBadge = ({ activeAgents, totalAgents }: StatusBadgeProps) => 
       </Badge>
       
       {/* Real-time Presence */}
-      <PresenceIndicator showCount={false} maxVisible={2} />
+      <SafePresenceIndicator showCount={false} maxVisible={2} />
     </div>
   );
 };
