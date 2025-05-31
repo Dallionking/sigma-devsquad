@@ -7,6 +7,8 @@ import { useViewContextManager } from '@/hooks/useViewContextManager';
 import { useEventBus } from '@/hooks/useEventBus';
 import { useStateMiddleware } from '@/hooks/useStateMiddleware';
 import { useStateDebugger } from '@/hooks/useStateDebugger';
+import { usePerformanceMonitoring } from '@/hooks/performance/usePerformanceMonitoring';
+import { useBatchedUpdates } from '@/hooks/performance/useBatchedUpdates';
 
 interface DataPersistenceContextType {
   // Session management
@@ -55,6 +57,24 @@ interface DataPersistenceContextType {
     enableMiddleware: (id: string, enabled: boolean) => void;
     getMiddlewareList: () => any[];
   };
+  
+  // Performance optimization
+  performance: {
+    monitoring: {
+      startRenderMeasurement: (componentName: string) => void;
+      endRenderMeasurement: (componentName: string) => void;
+      measureMemoryUsage: () => void;
+      measureStateUpdate: (updateFn: () => void, stateName: string) => void;
+      getPerformanceSnapshot: () => any;
+      metrics: any;
+    };
+    batching: {
+      batchUpdate: <T>(updateFn: () => void, data?: T, priority?: 'low' | 'normal' | 'high') => string;
+      flushBatch: () => void;
+      getQueueStats: () => any;
+      clearQueues: () => void;
+    };
+  };
 }
 
 const DataPersistenceContext = createContext<DataPersistenceContextType | undefined>(undefined);
@@ -77,13 +97,27 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
   const backupManager = useBackupManager();
   const viewContextManager = useViewContextManager();
   
-  // New communication system hooks
+  // Communication system hooks
   const eventBus = useEventBus();
   const middleware = useStateMiddleware();
   const stateDebugger = useStateDebugger({
     maxEntries: 1000,
     captureStackTrace: false,
     autoCapture: true
+  });
+
+  // Performance optimization hooks
+  const performanceMonitoring = usePerformanceMonitoring({
+    maxRenderTime: 16,
+    maxMemoryUsage: 50 * 1024 * 1024,
+    maxStateUpdateTime: 5
+  });
+
+  const batchedUpdates = useBatchedUpdates({
+    maxBatchSize: 10,
+    batchDelay: 16,
+    priority: 'normal',
+    enableDeduplication: true
   });
 
   const value: DataPersistenceContextType = {
@@ -132,6 +166,24 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
       removeMiddleware: middleware.removeMiddleware,
       enableMiddleware: middleware.enableMiddleware,
       getMiddlewareList: middleware.getMiddlewareList
+    },
+    
+    // Performance optimization
+    performance: {
+      monitoring: {
+        startRenderMeasurement: performanceMonitoring.startRenderMeasurement,
+        endRenderMeasurement: performanceMonitoring.endRenderMeasurement,
+        measureMemoryUsage: performanceMonitoring.measureMemoryUsage,
+        measureStateUpdate: performanceMonitoring.measureStateUpdate,
+        getPerformanceSnapshot: performanceMonitoring.getPerformanceSnapshot,
+        metrics: performanceMonitoring.metrics
+      },
+      batching: {
+        batchUpdate: batchedUpdates.batchUpdate,
+        flushBatch: batchedUpdates.flushBatch,
+        getQueueStats: batchedUpdates.getQueueStats,
+        clearQueues: batchedUpdates.clearQueues
+      }
     }
   };
 
