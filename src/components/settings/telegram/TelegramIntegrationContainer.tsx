@@ -11,13 +11,13 @@ import { WebhookConfiguration } from "../shared/WebhookConfiguration";
 import { EnhancedConnectionStatus } from "../shared/EnhancedConnectionStatus";
 import { ConfigurationStatusBadge } from "../shared/ConfigurationStatusBadge";
 import { useConfigurationStatus } from "@/hooks/useConfigurationStatus";
-import { useTelegramSettings } from "./useTelegramSettings";
+import { TelegramSettingsProvider, useTelegramSettingsContext } from "./TelegramSettingsProvider";
 
 interface TelegramIntegrationContainerProps {
   searchQuery?: string;
 }
 
-export const TelegramIntegrationContainer = ({ searchQuery = "" }: TelegramIntegrationContainerProps) => {
+const TelegramIntegrationContent = ({ searchQuery = "" }: TelegramIntegrationContainerProps) => {
   const {
     connectionInfo,
     webhookConfig,
@@ -31,11 +31,11 @@ export const TelegramIntegrationContainer = ({ searchQuery = "" }: TelegramInteg
     setSelectedChannels,
     setSelectedTemplate,
     setNotificationSettings
-  } = useTelegramSettings();
+  } = useTelegramSettingsContext();
 
   const { toast } = useToast();
 
-  // Calculate configuration status - convert notification settings to Record<string, boolean>
+  // Calculate configuration status
   const notificationSettingsRecord: Record<string, boolean> = {
     agentStatus: notificationSettings.agentStatus,
     taskCompletion: notificationSettings.taskCompletion,
@@ -163,41 +163,47 @@ export const TelegramIntegrationContainer = ({ searchQuery = "" }: TelegramInteg
         />
 
         {connectionInfo.isConnected && (
-          <ChannelSelector
-            channels={availableChannels}
-            selectedChannels={selectedChannels}
-            onChannelChange={handleChannelChange}
-            platform="telegram"
-          />
-        )}
+          <>
+            <ChannelSelector
+              channels={availableChannels}
+              selectedChannels={selectedChannels}
+              onChannelChange={handleChannelChange}
+              platform="telegram"
+            />
 
-        {connectionInfo.isConnected && (
-          <MessageFormatCustomizer
-            templates={messageTemplates}
-            selectedTemplate={selectedTemplate}
-            onTemplateChange={setSelectedTemplate}
-            onTemplateUpdate={handleTemplateUpdate}
-            platform="telegram"
-          />
-        )}
+            <MessageFormatCustomizer
+              templates={messageTemplates}
+              selectedTemplate={selectedTemplate}
+              onTemplateChange={setSelectedTemplate}
+              onTemplateUpdate={handleTemplateUpdate}
+              platform="telegram"
+            />
 
-        {connectionInfo.isConnected && (
-          <TelegramNotificationSettings
-            agentStatusNotifications={notificationSettings.agentStatus}
-            taskCompletionNotifications={notificationSettings.taskCompletion}
-            systemErrorNotifications={notificationSettings.systemError}
-            planningAgentNotifications={notificationSettings.planningAgent}
-            directMessaging={notificationSettings.directMessaging}
-            onAgentStatusChange={(value) => setNotificationSettings(prev => ({ ...prev, agentStatus: value }))}
-            onTaskCompletionChange={(value) => setNotificationSettings(prev => ({ ...prev, taskCompletion: value }))}
-            onSystemErrorChange={(value) => setNotificationSettings(prev => ({ ...prev, systemError: value }))}
-            onPlanningAgentChange={(value) => setNotificationSettings(prev => ({ ...prev, planningAgent: value }))}
-            onDirectMessagingChange={(value) => setNotificationSettings(prev => ({ ...prev, directMessaging: value }))}
-          />
-        )}
+            <TelegramNotificationSettings
+              agentStatusNotifications={notificationSettings.agentStatus}
+              taskCompletionNotifications={notificationSettings.taskCompletion}
+              systemErrorNotifications={notificationSettings.systemError}
+              planningAgentNotifications={notificationSettings.planningAgent}
+              directMessaging={notificationSettings.directMessaging}
+              onAgentStatusChange={(value) => setNotificationSettings(prev => ({ ...prev, agentStatus: value }))}
+              onTaskCompletionChange={(value) => setNotificationSettings(prev => ({ ...prev, taskCompletion: value }))}
+              onSystemErrorChange={(value) => setNotificationSettings(prev => ({ ...prev, systemError: value }))}
+              onPlanningAgentChange={(value) => setNotificationSettings(prev => ({ ...prev, planningAgent: value }))}
+              onDirectMessagingChange={(value) => setNotificationSettings(prev => ({ ...prev, directMessaging: value }))}
+            />
 
-        {connectionInfo.isConnected && <TelegramTestConnection />}
+            <TelegramTestConnection />
+          </>
+        )}
       </OptimizedStack>
     </SettingsSection>
+  );
+};
+
+export const TelegramIntegrationContainer = (props: TelegramIntegrationContainerProps) => {
+  return (
+    <TelegramSettingsProvider>
+      <TelegramIntegrationContent {...props} />
+    </TelegramSettingsProvider>
   );
 };

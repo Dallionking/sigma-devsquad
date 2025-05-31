@@ -13,7 +13,7 @@ import { HistoricalAnalysis } from "./HistoricalAnalysis";
 import { OptimizationSuggestions } from "./OptimizationSuggestions";
 import { CommunicationToolsHeader } from "./communication/CommunicationToolsHeader";
 import { AdvancedOptionsMenu } from "./communication/AdvancedOptionsMenu";
-import { MessageSquare, TrendingUp, Filter, Search, BarChart, Lightbulb, Zap } from "lucide-react";
+import { MessageSquare, TrendingUp, Filter, Search, BarChart, Lightbulb, Zap, Activity, Network } from "lucide-react";
 
 interface AdvancedCommunicationPanelProps {
   agents: Agent[];
@@ -36,7 +36,7 @@ export const AdvancedCommunicationPanel = ({
   const [timeRange, setTimeRange] = useState<string>("24h");
   const [isRealTimeActive, setIsRealTimeActive] = useState(true);
 
-  // Calculate communication statistics
+  // Calculate advanced communication metrics
   const communicationMetrics = {
     activeConnections: messages.filter(m => 
       new Date(m.timestamp).getTime() > Date.now() - 5 * 60 * 1000
@@ -46,58 +46,60 @@ export const AdvancedCommunicationPanel = ({
     interventionsNeeded: agents.filter(a => a.status === "error").length
   };
 
-  const communicationStats = {
-    totalMessages: messages.length,
+  const advancedStats = {
+    totalCommunications: messages.length,
     activeAgents: agents.filter(a => a.status === "working").length,
-    responseTime: "1.2s",
-    throughput: `${Math.round(messages.length / 24)}msg/h`
+    avgResponseTime: "1.2s",
+    throughputRate: `${Math.round(messages.length / 24)}msg/h`,
+    systemEfficiency: "92.3%",
+    networkHealth: "Excellent"
   };
 
   const handleIntervention = (type: string, agentId: string, data: any) => {
-    console.log(`Intervention: ${type} for agent ${agentId}`, data);
+    console.log(`Advanced intervention: ${type} for agent ${agentId}`, data);
   };
 
-  // Advanced options for the consolidated menu
-  const advancedOptions = [
+  // Advanced analysis tools and options
+  const advancedAnalysisTools = [
     {
-      id: "realtime-flow",
-      label: "Real-time Flow Analysis",
-      description: "Monitor live agent communication patterns and message flow with real-time updates",
-      icon: Zap,
+      id: "realtime-monitoring",
+      label: "Real-time Network Monitoring",
+      description: "Monitor live communication flows, network topology, and performance metrics with advanced filtering",
+      icon: Activity,
       action: () => setActiveTab("realtime")
     },
     {
-      id: "communication-graph",
-      label: "Network Graph View",
-      description: "Visualize agent relationships and communication pathways as an interactive network",
-      icon: MessageSquare,
+      id: "network-topology",
+      label: "Dynamic Network Topology",
+      description: "Interactive visualization of agent relationships and communication pathways with clustering analysis",
+      icon: Network,
       action: () => setActiveTab("graph")
     },
     {
-      id: "message-inspection",
-      label: "Deep Message Analysis",
-      description: "Inspect individual messages with detailed metadata and content analysis",
+      id: "message-forensics",
+      label: "Message Forensics & Deep Analysis",
+      description: "Detailed inspection of message content, metadata, routing, and communication patterns",
       icon: Search,
       action: () => setActiveTab("inspection")
     },
     {
-      id: "pattern-analysis",
-      label: "Pattern Recognition",
-      description: "Identify communication patterns, trends, and behavioral insights across agents",
+      id: "pattern-discovery",
+      label: "AI-Powered Pattern Discovery",
+      description: "Machine learning-based pattern recognition, anomaly detection, and behavioral analysis",
       icon: BarChart,
       action: () => setActiveTab("patterns")
     },
     {
-      id: "historical-trends",
-      label: "Historical Timeline",
-      description: "Analyze communication evolution and performance trends over time",
+      id: "historical-analytics",
+      label: "Historical Communication Analytics",
+      description: "Time-series analysis, trend identification, and performance evolution tracking",
       icon: TrendingUp,
       action: () => setActiveTab("historical")
     },
     {
-      id: "optimization-suite",
-      label: "Performance Optimization",
-      description: "Get AI-powered suggestions for improving communication efficiency and workflow",
+      id: "optimization-engine",
+      label: "Performance Optimization Engine",
+      description: "AI-driven recommendations for improving communication efficiency and system performance",
       icon: Lightbulb,
       action: () => setActiveTab("optimization")
     }
@@ -107,72 +109,92 @@ export const AdvancedCommunicationPanel = ({
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-semibold text-foreground mb-2">
-          Advanced Agent Communication Panel
+          Advanced Communication Analysis & Monitoring
         </h2>
         <p className="text-muted-foreground">
-          Comprehensive analysis and visualization of agent interactions with AI-powered insights
+          Professional-grade tools for deep communication analysis, network monitoring, and performance optimization
         </p>
       </div>
 
-      {/* Communication Overview Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Advanced System Metrics Dashboard */}
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         <Card className="p-4">
           <div className="flex items-center space-x-2">
             <MessageSquare className="w-4 h-4 text-blue-500" />
             <div>
-              <div className="text-2xl font-bold">{communicationStats.totalMessages}</div>
-              <div className="text-sm text-muted-foreground">Total Messages</div>
+              <div className="text-xl font-bold">{advancedStats.totalCommunications}</div>
+              <div className="text-xs text-muted-foreground">Total Communications</div>
             </div>
           </div>
         </Card>
         
         <Card className="p-4">
           <div className="flex items-center space-x-2">
-            <TrendingUp className="w-4 h-4 text-green-500" />
+            <Activity className="w-4 h-4 text-green-500" />
             <div>
-              <div className="text-2xl font-bold">{communicationStats.activeAgents}</div>
-              <div className="text-sm text-muted-foreground">Active Agents</div>
+              <div className="text-xl font-bold">{advancedStats.activeAgents}</div>
+              <div className="text-xs text-muted-foreground">Active Agents</div>
             </div>
           </div>
         </Card>
         
         <Card className="p-4">
           <div className="flex items-center space-x-2">
-            <BarChart className="w-4 h-4 text-purple-500" />
+            <Zap className="w-4 h-4 text-purple-500" />
             <div>
-              <div className="text-2xl font-bold">{communicationStats.responseTime}</div>
-              <div className="text-sm text-muted-foreground">Avg Response</div>
+              <div className="text-xl font-bold">{advancedStats.avgResponseTime}</div>
+              <div className="text-xs text-muted-foreground">Response Time</div>
             </div>
           </div>
         </Card>
         
         <Card className="p-4">
           <div className="flex items-center space-x-2">
-            <Lightbulb className="w-4 h-4 text-yellow-500" />
+            <TrendingUp className="w-4 h-4 text-yellow-500" />
             <div>
-              <div className="text-2xl font-bold">{communicationStats.throughput}</div>
-              <div className="text-sm text-muted-foreground">Throughput</div>
+              <div className="text-xl font-bold">{advancedStats.throughputRate}</div>
+              <div className="text-xs text-muted-foreground">Throughput</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center space-x-2">
+            <BarChart className="w-4 h-4 text-orange-500" />
+            <div>
+              <div className="text-xl font-bold">{advancedStats.systemEfficiency}</div>
+              <div className="text-xs text-muted-foreground">Efficiency</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center space-x-2">
+            <Network className="w-4 h-4 text-cyan-500" />
+            <div>
+              <div className="text-xl font-bold text-green-600">{advancedStats.networkHealth}</div>
+              <div className="text-xs text-muted-foreground">Network Health</div>
             </div>
           </div>
         </Card>
       </div>
 
-      {/* Enhanced Communication Tools Header */}
+      {/* Enhanced Communication Monitoring Header */}
       <CommunicationToolsHeader
         isRealTimeActive={isRealTimeActive}
         onToggleRealTime={() => setIsRealTimeActive(!isRealTimeActive)}
         metrics={communicationMetrics}
       />
 
-      {/* Consolidated Advanced Options */}
+      {/* Advanced Analysis Tools Menu */}
       <AdvancedOptionsMenu
-        options={advancedOptions}
+        options={advancedAnalysisTools}
         onOptionSelect={(optionId) => {
-          console.log(`Selected advanced option: ${optionId}`);
+          console.log(`Selected advanced analysis tool: ${optionId}`);
         }}
       />
 
-      {/* Advanced Filters */}
+      {/* Advanced Communication Filters */}
       <CommunicationFilters
         agents={agents}
         messages={messages}
@@ -187,7 +209,7 @@ export const AdvancedCommunicationPanel = ({
         onFilteredMessages={setFilteredMessages}
       />
 
-      {/* Main Analysis Tabs */}
+      {/* Advanced Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="realtime">Real-time</TabsTrigger>
