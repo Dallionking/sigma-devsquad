@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -6,6 +5,9 @@ import { useTeams } from "@/contexts/TeamContext";
 import { Team, AgentProfile } from "@/types/teams";
 import { TrendingUp, TrendingDown, Minus, Users, Target, Clock, CheckCircle } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
+import React from 'react';
+import { useEventBus, EVENT_TYPES } from "@/hooks/useEventBus";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
 interface TeamDashboardProps {
   team: Team;
@@ -13,6 +15,8 @@ interface TeamDashboardProps {
 
 export const TeamDashboard = ({ team }: TeamDashboardProps) => {
   const { getTeamMembers, getTeamTasks, getAgentProfileById } = useTeams();
+  const { emit, subscribe } = useEventBus('TeamDashboard');
+  const { logNetworkRequest } = usePerformanceMonitor('TeamDashboard');
   
   const members = getTeamMembers(team.id);
   const tasks = getTeamTasks(team.id);
@@ -28,6 +32,27 @@ export const TeamDashboard = ({ team }: TeamDashboardProps) => {
   const avgPerformance = members.length > 0 
     ? members.reduce((sum, m) => sum + m.performanceRating, 0) / members.length 
     : 0;
+
+  // Subscribe to team updates
+  React.useEffect(() => {
+    const unsubscribe = subscribe(EVENT_TYPES.TEAM_UPDATED, (event) => {
+      if (event.payload?.teamId === team.id) {
+        console.log('Team updated:', event.payload);
+        // Could trigger re-fetch or optimistic updates here
+      }
+    });
+    
+    return unsubscribe;
+  }, [team.id, subscribe]);
+  
+  // Emit team view event
+  React.useEffect(() => {
+    emit(EVENT_TYPES.UI_NAVIGATE, { 
+      view: 'team-dashboard', 
+      teamId: team.id,
+      teamName: team.name
+    });
+  }, [team.id, team.name, emit]);
 
   // Mock performance data for chart
   const performanceData = [
