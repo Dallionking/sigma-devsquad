@@ -1,203 +1,275 @@
-import { useState } from "react";
+import { Bell, Users, Activity, MessageSquare, CheckSquare, GitBranch, Brain, Cog, Bot, Package, Monitor, Moon, Sun, Layers, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Check, ChevronDown, Code, Command, Cpu, FileCode, Grid, LayoutGrid, List, Moon, Settings, Sun, User } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ViewMode, Agent } from "@/types";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
-import { SyncStatusIndicator } from "@/components/state-management/SyncStatusIndicator";
-import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { Logo } from "@/components/branding/Logo";
+import { MobileNavigation } from "@/components/layout/MobileNavigation";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useTasks } from "@/contexts/TaskContext";
+import { useMessages } from "@/contexts/MessageContext";
 
 interface HeaderProps {
-  viewMode: "workflow" | "grid";
-  onViewModeChange: (mode: "workflow" | "grid") => void;
-  agents: {
-    id: string;
-    name: string;
-    status: string;
-  }[];
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  agents: Agent[];
+  sidebarCollapsed?: boolean;
+  onSidebarToggle?: () => void;
 }
 
-export const Header = ({ viewMode, onViewModeChange, agents }: HeaderProps) => {
-  usePerformanceMonitor('Header');
+export const Header = ({ 
+  viewMode, 
+  onViewModeChange, 
+  agents, 
+  sidebarCollapsed = false,
+  onSidebarToggle
+}: HeaderProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { darkMode, toggleDarkMode } = useTheme();
+  const isMobile = useIsMobile();
+  const { tasks } = useTasks();
+  const { messages } = useMessages();
   
-  const { theme, setTheme } = useTheme();
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+  const activeAgents = agents?.filter(agent => agent.status === "working").length || 0;
+  const totalAgents = agents?.length || 0;
+  
+  // Calculate notification counts for each tab
+  const getNotificationCounts = () => {
+    const pendingTasks = tasks?.filter(task => task.status === "pending").length || 0;
+    const inProgressTasks = tasks?.filter(task => task.status === "in-progress").length || 0;
+    const recentMessages = messages?.filter(message => {
+      const messageTime = new Date(message.timestamp).getTime();
+      const oneHourAgo = Date.now() - (60 * 60 * 1000);
+      return messageTime > oneHourAgo;
+    }).length || 0;
+    
+    return {
+      workflow: inProgressTasks,
+      communication: recentMessages,
+      tasks: pendingTasks,
+      messages: recentMessages
+    };
   };
 
-  const activeAgents = agents.filter(agent => agent.status === "working").length;
-  const totalAgents = agents.length;
+  const notificationCounts = getNotificationCounts();
+  
+  const viewModeConfig = {
+    workflow: { 
+      icon: GitBranch, 
+      label: "Workflow",
+      description: "Monitor agent activities and processes",
+      notifications: notificationCounts.workflow
+    },
+    communication: { 
+      icon: MessageSquare, 
+      label: "Communication",
+      description: "View agent interactions and messages", 
+      notifications: notificationCounts.communication
+    },
+    tasks: { 
+      icon: CheckSquare, 
+      label: "Tasks",
+      description: "Manage and track task progress",
+      notifications: notificationCounts.tasks
+    },
+    messages: { 
+      icon: Activity, 
+      label: "Messages",
+      description: "Inspect detailed message logs",
+      notifications: notificationCounts.messages
+    }
+  };
+
+  // Preserve all existing navigation states
+  const isSettingsPage = location.pathname === "/settings";
+  const isLLMPage = location.pathname === "/llm-integration";
+  const isAgentConfigPage = location.pathname === "/agent-configuration";
+  const isMCPPage = location.pathname === "/mcp-management";
+  const isIDEPage = location.pathname === "/ide-integration";
+  const isPlanningAgentPage = location.pathname === "/planning-agent";
+  const isAgentCreationPage = location.pathname === "/agent-creation";
+  const isDashboardPage = location.pathname === "/";
+
+  const handleLogoClick = () => {
+    navigate("/");
+  };
 
   return (
-    <header className="bg-background border-b border-border">
-      <div className="flex items-center justify-between px-6 py-3">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <Cpu className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg">AI Workforce</span>
-          </div>
-          <Badge variant="outline" className="hidden md:flex">
-            <span className="text-xs">v0.1.0</span>
-          </Badge>
-        </div>
-        
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-4">
-            <ViewModeSelector 
-              viewMode={viewMode} 
-              onViewModeChange={onViewModeChange} 
+    <header className="bg-card border-b border-border px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-40 backdrop-blur-sm bg-card/95">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4 sm:space-x-6">
+          {/* Sidebar Toggle Button */}
+          {!isMobile && isDashboardPage && onSidebarToggle && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={onSidebarToggle}
+              className="p-2"
+            >
+              <Menu className="w-4 h-4" />
+            </Button>
+          )}
+          
+          {/* Mobile Navigation */}
+          <MobileNavigation activeAgents={activeAgents} totalAgents={totalAgents} />
+          
+          {/* Logo Navigation */}
+          <div 
+            onClick={handleLogoClick}
+            className="cursor-pointer hover:opacity-80 transition-opacity"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleLogoClick();
+              }
+            }}
+            aria-label="Go to dashboard"
+          >
+            <Logo 
+              size={isMobile ? "sm" : "md"} 
+              variant={isMobile ? "icon" : "full"} 
             />
-            <SystemHealthIndicators />
-            <SyncStatusIndicator />
-            <NotificationCenter />
           </div>
           
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-full"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
+          {/* Enhanced View Mode Selector */}
+          {!isMobile && isDashboardPage && (
+            <div className="flex items-center space-x-1 bg-muted/50 rounded-xl p-1 border border-border/50">
+              {Object.entries(viewModeConfig).map(([mode, config]) => {
+                const Icon = config.icon;
+                const isActive = viewMode === mode;
+                const hasNotifications = config.notifications > 0;
+                
+                return (
+                  <div key={mode} className="relative">
+                    <Button
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => onViewModeChange(mode as ViewMode)}
+                      className={`
+                        h-9 px-4 relative transition-all duration-200 group
+                        ${isActive 
+                          ? "bg-background shadow-sm border border-border/50 text-foreground" 
+                          : "hover:bg-background/50 text-muted-foreground hover:text-foreground"
+                        }
+                      `}
+                      title={config.description}
+                    >
+                      <Icon className="w-4 h-4 mr-2" />
+                      <span className="font-medium">{config.label}</span>
+                      
+                      {/* Notification Badge */}
+                      {hasNotifications && (
+                        <Badge 
+                          variant="destructive" 
+                          className="ml-2 px-1.5 py-0.5 text-xs min-w-5 h-5 flex items-center justify-center"
+                        >
+                          {config.notifications > 99 ? "99+" : config.notifications}
+                        </Badge>
+                      )}
+                    </Button>
+                    
+                    {/* Active Tab Indicator */}
+                    {isActive && (
+                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src="/avatars/user.png" alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Command className="mr-2 h-4 w-4" />
-                  <span>Command Center</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          {/* Status Badge */}
+          {!isMobile && (
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-muted-foreground hidden sm:inline">System Healthy</span>
+              </div>
+              <Badge variant="secondary" className="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
+                <Users className="w-3 h-3 mr-1" />
+                {activeAgents}/{totalAgents} Active
+              </Badge>
+            </div>
+          )}
+          
+          {/* Navigation Buttons */}
+          {!isMobile && (
+            <div className="hidden lg:flex items-center space-x-2">
+              <Button 
+                variant={isDashboardPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/")}
+              >
+                Dashboard
+              </Button>
+              <Button 
+                variant={isPlanningAgentPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/planning-agent")}
+              >
+                <Layers className="w-4 h-4 mr-2" />
+                Planning
+              </Button>
+              <Button 
+                variant={isAgentConfigPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/agent-configuration")}
+              >
+                <Bot className="w-4 h-4 mr-2" />
+                Agents
+              </Button>
+              <Button 
+                variant={isMCPPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/mcp-management")}
+              >
+                <Package className="w-4 h-4 mr-2" />
+                MCP
+              </Button>
+              <Button 
+                variant={isLLMPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/llm-integration")}
+              >
+                <Brain className="w-4 h-4 mr-2" />
+                LLM
+              </Button>
+              <Button 
+                variant={isIDEPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/ide-integration")}
+              >
+                <Monitor className="w-4 h-4 mr-2" />
+                IDE
+              </Button>
+              <Button 
+                variant={isSettingsPage ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => navigate("/settings")}
+              >
+                <Cog className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </div>
+          )}
+          
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-1 sm:space-x-2">
+            <Button variant="ghost" size="sm" onClick={toggleDarkMode}>
+              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
+            
+            <Button variant="ghost" size="sm">
+              <Bell className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>
     </header>
-  );
-};
-
-const ViewModeSelector = ({ 
-  viewMode, 
-  onViewModeChange 
-}: { 
-  viewMode: "workflow" | "grid";
-  onViewModeChange: (mode: "workflow" | "grid") => void;
-}) => {
-  return (
-    <div className="flex items-center border rounded-md overflow-hidden">
-      <Button
-        variant="ghost"
-        size="sm"
-        className={`px-3 py-1 rounded-none ${
-          viewMode === "workflow" ? "bg-muted" : ""
-        }`}
-        onClick={() => onViewModeChange("workflow")}
-      >
-        <List className="h-4 w-4 mr-2" />
-        <span className="text-xs">Workflow</span>
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        className={`px-3 py-1 rounded-none ${
-          viewMode === "grid" ? "bg-muted" : ""
-        }`}
-        onClick={() => onViewModeChange("grid")}
-      >
-        <Grid className="h-4 w-4 mr-2" />
-        <span className="text-xs">Grid</span>
-      </Button>
-    </div>
-  );
-};
-
-const SystemHealthIndicators = () => {
-  return (
-    <div className="hidden md:flex items-center space-x-2">
-      <Badge variant="secondary" className="flex items-center space-x-1">
-        <Cpu className="h-3 w-3" />
-        <span className="text-xs">3/4 Agents</span>
-      </Badge>
-      <Badge variant="outline" className="flex items-center space-x-1">
-        <FileCode className="h-3 w-3" />
-        <span className="text-xs">5 Tasks</span>
-      </Badge>
-    </div>
-  );
-};
-
-const NotificationCenter = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  
-  return (
-    <Popover open={showNotifications} onOpenChange={setShowNotifications}>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="w-80">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="font-medium">Notifications</h4>
-            <Button variant="ghost" size="sm" className="h-auto p-0 text-muted-foreground">
-              Mark all as read
-            </Button>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-start gap-3 rounded-lg p-2 hover:bg-muted">
-              <div className="mt-1 h-2 w-2 rounded-full bg-blue-500"></div>
-              <div>
-                <p className="text-sm">Frontend Agent completed task</p>
-                <p className="text-xs text-muted-foreground">5 minutes ago</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg p-2 hover:bg-muted">
-              <div className="mt-1 h-2 w-2 rounded-full bg-green-500"></div>
-              <div>
-                <p className="text-sm">New task assigned to Backend Agent</p>
-                <p className="text-xs text-muted-foreground">10 minutes ago</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg p-2 hover:bg-muted">
-              <div className="mt-1 h-2 w-2 rounded-full bg-yellow-500"></div>
-              <div>
-                <p className="text-sm">Planning Agent needs your input</p>
-                <p className="text-xs text-muted-foreground">25 minutes ago</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
   );
 };
