@@ -5,9 +5,10 @@ import { UserActivityTimeline } from './UserActivityTimeline';
 import { PresenceAwareness } from './PresenceAwareness';
 import { NotificationCenter } from './NotificationCenter';
 import { CollaborationInviteSystem } from './CollaborationInviteSystem';
+import { PerformanceDashboard } from '@/components/performance/PerformanceDashboard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, Activity, Bell, UserPlus } from 'lucide-react';
+import { Users, Activity, Bell, UserPlus, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface UserPresenceUIProps {
@@ -47,7 +48,7 @@ export const UserPresenceUI = ({
         
         <CardContent>
           <Tabs defaultValue="activity" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="activity" className="flex items-center gap-2">
                 <Activity className="w-4 h-4" />
                 Activity
@@ -55,6 +56,10 @@ export const UserPresenceUI = ({
               <TabsTrigger value="presence" className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
                 Presence
+              </TabsTrigger>
+              <TabsTrigger value="performance" className="flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Performance
               </TabsTrigger>
               <TabsTrigger value="invite" className="flex items-center gap-2">
                 <UserPlus className="w-4 h-4" />
@@ -91,6 +96,10 @@ export const UserPresenceUI = ({
                   </div>
                 </div>
               </div>
+            </TabsContent>
+            
+            <TabsContent value="performance" className="mt-4">
+              <PerformanceDashboard autoRefresh={true} refreshInterval={3000} />
             </TabsContent>
             
             <TabsContent value="invite" className="mt-4">
