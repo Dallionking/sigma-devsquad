@@ -2,6 +2,7 @@
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { Agent } from "@/types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SpaceOptimizedContainer } from "@/components/layout/SpaceOptimizedContainer";
 import { cn } from "@/lib/utils";
 
 interface DashboardOverviewProps {
@@ -18,16 +19,14 @@ export const DashboardOverview = ({ agents, onAgentSelect }: DashboardOverviewPr
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.05]" />
       <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
       
-      <div className={cn(
-        "relative w-full mx-auto",
-        isMobile 
-          ? "px-4 py-4 space-y-4" 
-          : "px-6 lg:px-8 py-6 lg:py-8 space-y-6"
-      )}>
+      <SpaceOptimizedContainer 
+        variant={isMobile ? "compact" : "default"}
+        className="relative w-full"
+      >
         <div className="animate-in fade-in-0 duration-500">
           <AnalyticsDashboard agents={agents} onAgentSelect={onAgentSelect} />
         </div>
-      </div>
+      </SpaceOptimizedContainer>
     </div>
   );
 };
