@@ -18,6 +18,8 @@ interface SidebarRendererProps {
   selectedTeam: Team | null;
   selectedAgentProfile: AgentProfile | null;
   showTeamView: boolean;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
   onAgentSelect: (agent: Agent | null) => void;
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
@@ -36,6 +38,8 @@ export const SidebarRenderer = ({
   selectedTeam,
   selectedAgentProfile,
   showTeamView,
+  collapsed = false,
+  onToggleCollapse,
   onAgentSelect,
   onTaskSelect,
   onMessageSelect,
@@ -63,18 +67,18 @@ export const SidebarRenderer = ({
   switch (viewMode) {
     case 'workflow':
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50">
-          <AgentSidebar
-            agents={agents}
-            selectedAgent={selectedAgent}
-            onAgentSelect={onAgentSelect}
-          />
-        </div>
+        <AgentSidebar
+          agents={agents}
+          selectedAgent={selectedAgent}
+          onAgentSelect={onAgentSelect}
+          collapsed={collapsed}
+          onToggleCollapse={onToggleCollapse}
+        />
       );
     case 'communication':
       return (
         <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className="p-4">
+          <div className={collapsed ? "p-2" : "p-4"}>
             <CommunicationHistory
               messages={messages}
               selectedMessage={selectedMessage}
@@ -86,7 +90,7 @@ export const SidebarRenderer = ({
     case 'tasks':
       return (
         <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className="p-4">
+          <div className={collapsed ? "p-2" : "p-4"}>
             <TaskManagement
               tasks={tasks}
               agents={agents}
@@ -99,7 +103,7 @@ export const SidebarRenderer = ({
     case 'messages':
       return (
         <div className="h-full bg-card/50 dark:bg-card/50">
-          <div className="p-4">
+          <div className={collapsed ? "p-2" : "p-4"}>
             <CommunicationHistory
               messages={messages}
               selectedMessage={selectedMessage}
@@ -110,13 +114,13 @@ export const SidebarRenderer = ({
       );
     default:
       return (
-        <div className="h-full bg-card/50 dark:bg-card/50">
-          <AgentSidebar
-            agents={agents}
-            selectedAgent={selectedAgent}
-            onAgentSelect={onAgentSelect}
-          />
-        </div>
+        <AgentSidebar
+          agents={agents}
+          selectedAgent={selectedAgent}
+          onAgentSelect={onAgentSelect}
+          collapsed={collapsed}
+          onToggleCollapse={onToggleCollapse}
+        />
       );
   }
 };

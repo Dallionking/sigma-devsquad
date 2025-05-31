@@ -5,6 +5,8 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Bot, Layers, Code, Server, TestTube, FileText, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Agent, AgentType } from "@/types";
+import { NavigationItem } from "./NavigationItem";
+import { useCollapsibleSidebar } from "@/hooks/useCollapsibleSidebar";
 import { cn } from "@/lib/utils";
 
 interface AgentSidebarProps {
@@ -42,39 +44,82 @@ export const AgentSidebar = ({
   agents, 
   selectedAgent, 
   onAgentSelect, 
-  collapsed = false,
+  collapsed,
   onToggleCollapse 
 }: AgentSidebarProps) => {
+  const sidebarState = useCollapsibleSidebar({
+    defaultCollapsed: collapsed || false,
+    keyboardShortcut: 'b',
+    storageKey: 'agent-sidebar-collapsed'
+  });
+
+  // Use external collapse control if provided, otherwise use internal state
+  const isCollapsed = collapsed !== undefined ? collapsed : sidebarState.isCollapsed;
+  const toggleCollapse = onToggleCollapse || sidebarState.toggleSidebar;
+
   return (
     <div className={cn(
       "bg-sidebar-background border-r border-sidebar-border overflow-hidden transition-all duration-300 ease-in-out h-full flex flex-col",
-      collapsed ? "w-16" : "w-72"
+      isCollapsed ? "w-16" : "w-72"
     )}>
       {/* Fixed header with collapse toggle */}
       <div className="flex-shrink-0 p-3 border-b border-sidebar-border">
         <div className="flex items-center justify-between">
-          {!collapsed && (
+          {!isCollapsed && (
             <h2 className="text-lg font-semibold text-sidebar-foreground animate-in fade-in-50 duration-200">
               Agents
             </h2>
           )}
-          {onToggleCollapse && (
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={onToggleCollapse}
-              className="p-1.5 h-8 w-8 flex-shrink-0 hover:bg-sidebar-accent rounded-md transition-colors"
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? (
-                <ChevronRight className="w-4 h-4" />
-              ) : (
-                <ChevronLeft className="w-4 h-4" />
-              )}
-            </Button>
-          )}
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={toggleCollapse}
+            className="p-1.5 h-8 w-8 flex-shrink-0 hover:bg-sidebar-accent rounded-md transition-colors"
+            title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <ChevronLeft className="w-4 h-4" />
+            )}
+          </Button>
         </div>
       </div>
+
+      {/* Navigation items for agent types */}
+      {!isCollapsed && (
+        <div className="flex-shrink-0 p-3 border-b border-sidebar-border animate-in fade-in-50 duration-200">
+          <div className="space-y-1">
+            <NavigationItem
+              icon={Bot}
+              label="All Agents"
+              isActive={!selectedAgent}
+              isCollapsed={false}
+              badge={agents.length}
+              onClick={() => onAgentSelect(null)}
+            />
+            {Object.entries(agentIcons).map(([type, Icon]) => {
+              const typeAgents = agents.filter(agent => agent.type === type);
+              const workingCount = typeAgents.filter(agent => agent.status === 'working').length;
+              
+              return (
+                <NavigationItem
+                  key={type}
+                  icon={Icon}
+                  label={type.charAt(0).toUpperCase() + type.slice(1)}
+                  isActive={false}
+                  isCollapsed={false}
+                  badge={workingCount > 0 ? workingCount : undefined}
+                  onClick={() => {
+                    // Filter logic can be implemented here
+                    console.log(`Filter by ${type}`);
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
@@ -88,12 +133,12 @@ export const AgentSidebar = ({
               className={cn(
                 "cursor-pointer transition-all duration-200 hover:shadow-md bg-card border-border group",
                 isSelected ? "ring-2 ring-primary bg-sidebar-accent" : "hover:bg-sidebar-accent",
-                collapsed ? "p-2 aspect-square" : "p-3"
+                isCollapsed ? "p-2 aspect-square" : "p-3"
               )}
               onClick={() => onAgentSelect(isSelected ? null : agent)}
-              title={collapsed ? `${agent.name} - ${statusLabels[agent.status]}` : undefined}
+              title={isCollapsed ? `${agent.name} - ${statusLabels[agent.status]}` : undefined}
             >
-              {collapsed ? (
+              {isCollapsed ? (
                 // Collapsed view - icon and status only
                 <div className="flex flex-col items-center justify-center h-full relative">
                   <div className="relative mb-1">
@@ -178,7 +223,7 @@ export const AgentSidebar = ({
       </div>
       
       {/* Fixed footer - only show when expanded */}
-      {!collapsed && (
+      {!isCollapsed && (
         <div className="flex-shrink-0 border-t border-sidebar-border p-3 animate-in fade-in-50 duration-200">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">System Status</span>
@@ -186,6 +231,10 @@ export const AgentSidebar = ({
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse" />
               Healthy
             </Badge>
+          </div>
+          
+          <div className="mt-2 text-xs text-muted-foreground text-center">
+            <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs">Ctrl+B</kbd> to toggle
           </div>
         </div>
       )}

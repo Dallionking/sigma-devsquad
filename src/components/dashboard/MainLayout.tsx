@@ -9,6 +9,7 @@ import { ViewModeTabs } from "./ViewModeTabs";
 import { UserPresencePanel } from "./UserPresencePanel";
 import { Button } from "@/components/ui/button";
 import { PanelLeft, PanelLeftClose } from "lucide-react";
+import { useCollapsibleSidebar } from "@/hooks/useCollapsibleSidebar";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -59,6 +60,13 @@ export const MainLayout = ({
   onViewModeChange,
 }: MainLayoutProps) => {
   
+  // Use internal sidebar state management
+  const { isCollapsed, toggleSidebar } = useCollapsibleSidebar({
+    defaultCollapsed: sidebarCollapsed,
+    keyboardShortcut: 'b',
+    storageKey: 'main-sidebar-collapsed'
+  });
+  
   const notificationCounts = {
     workflow: 3,
     communication: 2,
@@ -85,11 +93,11 @@ export const MainLayout = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={onSidebarToggle}
-              className="m-2 h-8 w-8 p-0 hover:bg-primary/10"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              onClick={toggleSidebar}
+              className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-colors"
+              title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
             >
-              {sidebarCollapsed ? (
+              {isCollapsed ? (
                 <PanelLeft className="w-4 h-4" />
               ) : (
                 <PanelLeftClose className="w-4 h-4" />
@@ -97,31 +105,32 @@ export const MainLayout = ({
             </Button>
           </div>
 
-          {/* Sidebar - Properly sized and responsive */}
-          {!sidebarCollapsed && (
-            <div className={cn(
-              "bg-background border-r border-border/60 transition-all duration-300 overflow-hidden flex-shrink-0",
-              showTeamView ? "w-64" : "w-80"
-            )}>
-              <SidebarRenderer
-                viewMode={viewMode}
-                agents={agents}
-                tasks={tasks}
-                messages={messages}
-                selectedAgent={selectedAgent}
-                selectedTask={selectedTask}
-                selectedMessage={selectedMessage}
-                selectedTeam={selectedTeam}
-                selectedAgentProfile={selectedAgentProfile}
-                showTeamView={showTeamView}
-                onAgentSelect={onAgentSelect}
-                onTaskSelect={onTaskSelect}
-                onMessageSelect={onMessageSelect}
-                onTeamSelect={onTeamSelect}
-                onAgentProfileSelect={onAgentProfileSelect}
-              />
-            </div>
-          )}
+          {/* Sidebar - Enhanced with collapsible functionality */}
+          <div className={cn(
+            "bg-background border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0",
+            isCollapsed ? "w-16" : (showTeamView ? "w-64" : "w-80"),
+            "animate-in slide-in-from-left duration-300"
+          )}>
+            <SidebarRenderer
+              viewMode={viewMode}
+              agents={agents}
+              tasks={tasks}
+              messages={messages}
+              selectedAgent={selectedAgent}
+              selectedTask={selectedTask}
+              selectedMessage={selectedMessage}
+              selectedTeam={selectedTeam}
+              selectedAgentProfile={selectedAgentProfile}
+              showTeamView={showTeamView}
+              collapsed={isCollapsed}
+              onToggleCollapse={toggleSidebar}
+              onAgentSelect={onAgentSelect}
+              onTaskSelect={onTaskSelect}
+              onMessageSelect={onMessageSelect}
+              onTeamSelect={onTeamSelect}
+              onAgentProfileSelect={onAgentProfileSelect}
+            />
+          </div>
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col overflow-hidden bg-background">
@@ -147,7 +156,7 @@ export const MainLayout = ({
 
           {/* Detail Panel - Only show when not in team view and has selection */}
           {!showTeamView && hasSelection && (
-            <div className="w-96 bg-card/30 dark:bg-card/30 border-l border-border/60 overflow-hidden flex-shrink-0">
+            <div className="w-96 bg-card/30 dark:bg-card/30 border-l border-border/60 overflow-hidden flex-shrink-0 animate-in slide-in-from-right duration-300">
               <DetailPanelRenderer
                 selectedAgent={selectedAgent}
                 selectedTask={selectedTask}
