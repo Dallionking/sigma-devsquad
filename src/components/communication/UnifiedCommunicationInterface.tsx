@@ -23,6 +23,13 @@ export const UnifiedCommunicationInterface = () => {
   const [activeView, setActiveView] = useState("history");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [selectedAgentId, setSelectedAgentId] = useState("agent-1"); // Default agent ID
+  const [taskData, setTaskData] = useState({
+    title: "",
+    description: "",
+    priority: "medium" as "low" | "medium" | "high" | "critical",
+    dueDate: ""
+  });
   
   const { messages } = useMessages();
 
@@ -31,6 +38,17 @@ export const UnifiedCommunicationInterface = () => {
     { id: "direct", label: "Direct Messages", icon: FileText },
     { id: "tasks", label: "Task Creation", icon: Calendar },
   ];
+
+  const handleSubmitTask = () => {
+    console.log("Submitting task:", taskData);
+    // Add task submission logic here
+    setTaskData({
+      title: "",
+      description: "",
+      priority: "medium",
+      dueDate: ""
+    });
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -81,11 +99,15 @@ export const UnifiedCommunicationInterface = () => {
           </TabsContent>
 
           <TabsContent value="direct" className="h-full mt-4">
-            <DirectMessagePanel searchQuery={searchQuery} />
+            <DirectMessagePanel agentId={selectedAgentId} />
           </TabsContent>
 
           <TabsContent value="tasks" className="h-full mt-4">
-            <TaskCreationView />
+            <TaskCreationView 
+              taskData={taskData}
+              setTaskData={setTaskData}
+              onSubmitTask={handleSubmitTask}
+            />
           </TabsContent>
         </div>
       </Tabs>
