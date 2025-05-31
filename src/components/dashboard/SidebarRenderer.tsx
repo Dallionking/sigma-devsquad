@@ -52,11 +52,11 @@ export const SidebarRenderer = ({
   if (showTeamView) {
     return (
       <div className={cn(
-        "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden",
+        "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden relative z-10",
         collapsed ? "w-16" : "w-64 sm:w-72 lg:w-80"
       )}>
         <div className={cn(
-          "h-full transition-all duration-300",
+          "h-full transition-all duration-300 relative z-20",
           collapsed ? "p-2" : "p-3 sm:p-4"
         )}>
           <CompactTeamHierarchy
@@ -85,11 +85,11 @@ export const SidebarRenderer = ({
     case 'communication':
       return (
         <div className={cn(
-          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col",
+          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col relative z-10",
           collapsed ? "w-16" : "w-72 sm:w-80 lg:w-96"
         )}>
           <div className={cn(
-            "h-full transition-all duration-300 flex flex-col min-h-0",
+            "h-full transition-all duration-300 flex flex-col min-h-0 relative z-20",
             collapsed ? "p-2" : "p-0"
           )}>
             <CommunicationHistory
@@ -103,11 +103,11 @@ export const SidebarRenderer = ({
     case 'tasks':
       return (
         <div className={cn(
-          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col",
+          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col relative z-10",
           collapsed ? "w-16" : "w-72 sm:w-80 lg:w-96"
         )}>
           <div className={cn(
-            "h-full transition-all duration-300 flex flex-col min-h-0",
+            "h-full transition-all duration-300 flex flex-col min-h-0 relative z-20",
             collapsed ? "p-2" : "p-3 sm:p-4"
           )}>
             <TaskManagement
@@ -122,11 +122,11 @@ export const SidebarRenderer = ({
     case 'messages':
       return (
         <div className={cn(
-          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col",
+          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col relative z-10",
           collapsed ? "w-16" : "w-72 sm:w-80 lg:w-96"
         )}>
           <div className={cn(
-            "h-full transition-all duration-300 flex flex-col min-h-0",
+            "h-full transition-all duration-300 flex flex-col min-h-0 relative z-20",
             collapsed ? "p-2" : "p-3 sm:p-4"
           )}>
             <CommunicationHistory

@@ -60,8 +60,8 @@ export const CompactTeamHierarchy = ({
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
+    <Card className="h-full relative z-30 bg-card border border-border shadow-sm">
+      <CardHeader className="pb-3 relative z-40">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm flex items-center gap-2">
             <Users className="w-4 h-4" />
@@ -75,7 +75,7 @@ export const CompactTeamHierarchy = ({
         </div>
       </CardHeader>
       
-      <CardContent className="p-0">
+      <CardContent className="p-0 relative z-40">
         <div className="space-y-1">
           {teams.map((team) => {
             const isExpanded = expandedTeams.has(team.id);
@@ -87,7 +87,7 @@ export const CompactTeamHierarchy = ({
                 {/* Team Header */}
                 <div 
                   className={cn(
-                    "flex items-center justify-between p-2 hover:bg-muted/50 cursor-pointer transition-colors text-sm",
+                    "flex items-center justify-between p-2 hover:bg-muted/50 cursor-pointer transition-colors text-sm relative z-50",
                     isSelected && "bg-primary/10 border-l-primary"
                   )}
                   onClick={() => onTeamSelect(team)}
@@ -130,7 +130,7 @@ export const CompactTeamHierarchy = ({
 
                 {/* Team Members */}
                 {isExpanded && (
-                  <div className="ml-4 border-l border-border/30">
+                  <div className="ml-4 border-l border-border/30 relative z-50">
                     {members.slice(0, 3).map((member) => {
                       const isLeader = member.id === team.leaderId;
                       const isAgentSelected = selectedAgentId === member.id;
@@ -139,7 +139,7 @@ export const CompactTeamHierarchy = ({
                         <div
                           key={member.id}
                           className={cn(
-                            "flex items-center gap-2 p-1 mx-1 rounded hover:bg-muted/50 cursor-pointer transition-colors",
+                            "flex items-center gap-2 p-1 mx-1 rounded hover:bg-muted/50 cursor-pointer transition-colors relative z-50",
                             isAgentSelected && "bg-primary/10"
                           )}
                           onClick={() => onAgentSelect(member)}
