@@ -8,6 +8,7 @@ import { LandingSolutionSection } from '@/components/landing/LandingSolutionSect
 import { LandingHowItWorksSection } from '@/components/landing/LandingHowItWorksSection';
 import { LandingFeaturesSection } from '@/components/landing/LandingFeaturesSection';
 import { LandingTestimonialsSection } from '@/components/landing/LandingTestimonialsSection';
+import { LandingPricingSection } from '@/components/landing/LandingPricingSection';
 
 export const LandingPage = () => {
   return (
@@ -42,6 +43,9 @@ export const LandingPage = () => {
         
         {/* Testimonials Section */}
         <LandingTestimonialsSection />
+        
+        {/* Pricing Section */}
+        <LandingPricingSection />
         
         {/* Additional sections will be added here */}
         <section className="py-20 px-4">
