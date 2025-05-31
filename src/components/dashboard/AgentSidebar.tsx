@@ -47,12 +47,12 @@ export const AgentSidebar = ({
 }: AgentSidebarProps) => {
   return (
     <div className={cn(
-      "bg-sidebar-background border-r border-sidebar-border p-4 overflow-y-auto transition-all duration-300 h-full",
+      "bg-sidebar-background border-r border-sidebar-border overflow-y-auto transition-all duration-300 h-full flex flex-col",
       collapsed ? "w-16" : "w-72"
     )}>
-      <div className="mb-6">
-        {/* Header with collapse toggle */}
-        <div className="flex items-center justify-between mb-4">
+      {/* Fixed header with collapse toggle */}
+      <div className="flex-shrink-0 p-4 border-b border-sidebar-border">
+        <div className="flex items-center justify-between">
           {!collapsed && (
             <h2 className="text-lg font-semibold text-sidebar-foreground">Agents</h2>
           )}
@@ -61,7 +61,7 @@ export const AgentSidebar = ({
               variant="ghost" 
               size="sm"
               onClick={onToggleCollapse}
-              className="p-1 h-8 w-8"
+              className="p-1 h-8 w-8 flex-shrink-0"
             >
               {collapsed ? (
                 <ChevronRight className="w-4 h-4" />
@@ -71,93 +71,95 @@ export const AgentSidebar = ({
             </Button>
           )}
         </div>
-        
-        <div className="space-y-3">
-          {agents.map((agent) => {
-            const Icon = agentIcons[agent.type];
-            const isSelected = selectedAgent?.id === agent.id;
-            
-            return (
-              <Card
-                key={agent.id}
-                className={cn(
-                  "p-4 cursor-pointer transition-all duration-200 hover:shadow-md bg-card border-border",
-                  isSelected ? "ring-2 ring-primary bg-sidebar-accent" : "hover:bg-sidebar-accent",
-                  collapsed && "p-2"
-                )}
-                onClick={() => onAgentSelect(isSelected ? null : agent)}
-              >
-                {collapsed ? (
-                  // Collapsed view - just icon and status
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="relative">
-                      <Icon className="w-6 h-6 text-card-foreground" />
-                      <div className={cn(
-                        "absolute -top-1 -right-1 w-3 h-3 rounded-full",
-                        statusColors[agent.status]
-                      )} />
-                    </div>
-                    {agent.status === "working" && (
-                      <div className="w-1 h-8 bg-green-500 rounded-full opacity-50"></div>
-                    )}
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {agents.map((agent) => {
+          const Icon = agentIcons[agent.type];
+          const isSelected = selectedAgent?.id === agent.id;
+          
+          return (
+            <Card
+              key={agent.id}
+              className={cn(
+                "cursor-pointer transition-all duration-200 hover:shadow-md bg-card border-border",
+                isSelected ? "ring-2 ring-primary bg-sidebar-accent" : "hover:bg-sidebar-accent",
+                collapsed ? "p-2" : "p-4"
+              )}
+              onClick={() => onAgentSelect(isSelected ? null : agent)}
+            >
+              {collapsed ? (
+                // Collapsed view - just icon and status
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="relative">
+                    <Icon className="w-6 h-6 text-card-foreground" />
+                    <div className={cn(
+                      "absolute -top-1 -right-1 w-3 h-3 rounded-full",
+                      statusColors[agent.status]
+                    )} />
                   </div>
-                ) : (
-                  // Expanded view - full details
-                  <>
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="relative">
-                          <Icon className="w-5 h-5 text-card-foreground" />
-                          <div className={cn(
-                            "absolute -top-1 -right-1 w-3 h-3 rounded-full",
-                            statusColors[agent.status]
-                          )} />
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-card-foreground text-sm">{agent.name}</h3>
-                          <Badge 
-                            variant="secondary" 
-                            className={cn(
-                              "text-xs mt-1",
-                              agent.status === "working" && "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
-                              agent.status === "idle" && "bg-muted text-muted-foreground",
-                              agent.status === "waiting" && "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300",
-                              agent.status === "error" && "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300"
-                            )}
-                          >
-                            {statusLabels[agent.status]}
-                          </Badge>
-                        </div>
+                  {agent.status === "working" && (
+                    <div className="w-1 h-8 bg-green-500 rounded-full opacity-50"></div>
+                  )}
+                </div>
+              ) : (
+                // Expanded view - full details
+                <>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="relative">
+                        <Icon className="w-5 h-5 text-card-foreground" />
+                        <div className={cn(
+                          "absolute -top-1 -right-1 w-3 h-3 rounded-full",
+                          statusColors[agent.status]
+                        )} />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-card-foreground text-sm">{agent.name}</h3>
+                        <Badge 
+                          variant="secondary" 
+                          className={cn(
+                            "text-xs mt-1",
+                            agent.status === "working" && "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
+                            agent.status === "idle" && "bg-muted text-muted-foreground",
+                            agent.status === "waiting" && "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300",
+                            agent.status === "error" && "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300"
+                          )}
+                        >
+                          {statusLabels[agent.status]}
+                        </Badge>
                       </div>
                     </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground line-clamp-2">{agent.currentTask}</p>
                     
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground line-clamp-2">{agent.currentTask}</p>
-                      
-                      {agent.status === "working" && (
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs">
-                            <span className="text-muted-foreground">Progress</span>
-                            <span className="text-card-foreground font-medium">{agent.progress}%</span>
-                          </div>
-                          <Progress value={agent.progress} className="h-1.5" />
+                    {agent.status === "working" && (
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Progress</span>
+                          <span className="text-card-foreground font-medium">{agent.progress}%</span>
                         </div>
-                      )}
-                      
-                      <p className="text-xs text-muted-foreground">
-                        Last active: {new Date(agent.lastActive).toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </>
-                )}
-              </Card>
-            );
-          })}
-        </div>
+                        <Progress value={agent.progress} className="h-1.5" />
+                      </div>
+                    )}
+                    
+                    <p className="text-xs text-muted-foreground">
+                      Last active: {new Date(agent.lastActive).toLocaleTimeString()}
+                    </p>
+                  </div>
+                </>
+              )}
+            </Card>
+          );
+        })}
       </div>
       
+      {/* Fixed footer */}
       {!collapsed && (
-        <div className="border-t border-sidebar-border pt-4">
+        <div className="flex-shrink-0 border-t border-sidebar-border p-4">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">System Status</span>
             <Badge variant="secondary" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">

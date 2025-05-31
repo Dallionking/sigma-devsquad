@@ -5,6 +5,8 @@ import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
 import { DashboardOverview } from "./DashboardOverview";
 import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 
@@ -44,7 +46,24 @@ export const MainContentRenderer = ({
   const renderMainContent = () => {
     if (showTeamView) {
       if (selectedTeam) {
-        return <TeamDashboard team={selectedTeam} />;
+        return (
+          <div className="space-y-4">
+            {/* Back navigation button */}
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onTeamSelect(null)}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Teams
+              </Button>
+              <h1 className="text-2xl font-bold">{selectedTeam.name}</h1>
+            </div>
+            <TeamDashboard team={selectedTeam} />
+          </div>
+        );
       }
       return (
         <TeamsWorkflowVisualization

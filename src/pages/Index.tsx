@@ -54,6 +54,17 @@ const Index = () => {
     setSelectedAgentProfile(null);
   };
 
+  const handleToggleView = (newShowTeamView: boolean) => {
+    setShowTeamView(newShowTeamView);
+    // Clear team-specific selections when switching views
+    if (!newShowTeamView) {
+      setSelectedTeam(null);
+      setSelectedAgentProfile(null);
+    } else {
+      setSelectedAgent(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
@@ -78,7 +89,7 @@ const Index = () => {
       {/* View Toggle */}
       <ViewToggle 
         showTeamView={showTeamView}
-        onToggleView={setShowTeamView}
+        onToggleView={handleToggleView}
       />
       
       {/* Main layout with responsive behavior */}

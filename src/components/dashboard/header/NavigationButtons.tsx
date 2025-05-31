@@ -15,19 +15,24 @@ export const NavigationButtons = () => {
   const isPlanningAgentPage = location.pathname === "/planning-agent";
   const isDashboardPage = location.pathname === "/";
 
+  const handleNavigation = (path: string) => {
+    // Always navigate to the specified path, regardless of current view mode
+    navigate(path);
+  };
+
   return (
     <div className="hidden lg:flex items-center space-x-2">
       <Button 
         variant={isDashboardPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/")}
+        onClick={() => handleNavigation("/")}
       >
         Dashboard
       </Button>
       <Button 
         variant={isPlanningAgentPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/planning-agent")}
+        onClick={() => handleNavigation("/planning-agent")}
       >
         <Layers className="w-4 h-4 mr-2" />
         Planning
@@ -35,7 +40,7 @@ export const NavigationButtons = () => {
       <Button 
         variant={isAgentConfigPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/agent-configuration")}
+        onClick={() => handleNavigation("/agent-configuration")}
       >
         <Bot className="w-4 h-4 mr-2" />
         Agents
@@ -43,7 +48,7 @@ export const NavigationButtons = () => {
       <Button 
         variant={isMCPPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/mcp-management")}
+        onClick={() => handleNavigation("/mcp-management")}
       >
         <Package className="w-4 h-4 mr-2" />
         MCP
@@ -51,7 +56,7 @@ export const NavigationButtons = () => {
       <Button 
         variant={isLLMPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/llm-integration")}
+        onClick={() => handleNavigation("/llm-integration")}
       >
         <Brain className="w-4 h-4 mr-2" />
         LLM
@@ -59,7 +64,7 @@ export const NavigationButtons = () => {
       <Button 
         variant={isIDEPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/ide-integration")}
+        onClick={() => handleNavigation("/ide-integration")}
       >
         <Monitor className="w-4 h-4 mr-2" />
         IDE
@@ -67,7 +72,7 @@ export const NavigationButtons = () => {
       <Button 
         variant={isSettingsPage ? "default" : "ghost"} 
         size="sm"
-        onClick={() => navigate("/settings")}
+        onClick={() => handleNavigation("/settings")}
       >
         <Cog className="w-4 h-4 mr-2" />
         Settings
