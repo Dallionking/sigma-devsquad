@@ -1,6 +1,5 @@
 
-import { DashboardHeader } from "./DashboardHeader";
-import { DashboardGrids } from "./DashboardGrids";
+import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { Agent } from "@/types";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -26,10 +25,7 @@ export const DashboardOverview = ({ agents, onAgentSelect }: DashboardOverviewPr
           : "px-6 lg:px-8 py-6 lg:py-8 space-y-6"
       )}>
         <div className="animate-in fade-in-0 duration-500">
-          <DashboardHeader />
-        </div>
-        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-150">
-          <DashboardGrids agents={agents} onAgentSelect={onAgentSelect} />
+          <AnalyticsDashboard agents={agents} onAgentSelect={onAgentSelect} />
         </div>
       </div>
     </div>
