@@ -36,12 +36,12 @@ export const UnifiedCommunicationInterface = () => {
   };
 
   const getAvailableAgents = () => {
-    return agents.filter(agent => agent.status === "active");
+    return agents.filter(agent => agent.status === "active" || agent.status === "idle");
   };
 
   const getTeamLeads = () => {
     return teams.flatMap(team => 
-      team.members.filter(member => member.role === "lead")
+      team.members?.filter(member => member.role === "lead") || []
     );
   };
 

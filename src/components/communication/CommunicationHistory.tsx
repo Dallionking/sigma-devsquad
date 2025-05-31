@@ -76,7 +76,7 @@ export const CommunicationHistory = ({ searchQuery }: CommunicationHistoryProps)
   };
 
   const getAgentAvatar = (agentId: string) => {
-    if (agentId === "current-user") return null;
+    if (agentId === "current-user") return undefined;
     const agent = agents.find(a => a.id === agentId);
     return agent?.avatar;
   };

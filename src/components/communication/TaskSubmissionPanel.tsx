@@ -55,6 +55,7 @@ export const TaskSubmissionPanel = () => {
       priority: formData.priority,
       status: "pending",
       dueDate: formData.dueDate,
+      deadline: formData.dueDate,
       category: formData.category || "general",
       requirements: formData.requirements.split('\n').filter(req => req.trim())
     });
@@ -82,7 +83,7 @@ export const TaskSubmissionPanel = () => {
   };
 
   const getAvailableAgents = () => {
-    return agents.filter(agent => agent.status === "active");
+    return agents.filter(agent => agent.status === "active" || agent.status === "idle");
   };
 
   const getPriorityColor = (priority: string) => {
