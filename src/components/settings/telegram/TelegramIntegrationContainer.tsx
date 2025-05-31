@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { SettingsSection } from "../SettingsSection";
@@ -82,13 +83,14 @@ const TelegramIntegrationContent = ({ searchQuery = "" }: TelegramIntegrationCon
   };
 
   const handleReset = () => {
-    setNotificationSettings({
+    const resetNotificationSettings = {
       agentStatus: true,
       taskCompletion: true,
       systemError: true,
       planningAgent: true,
       directMessaging: true
-    });
+    };
+    setNotificationSettings(resetNotificationSettings);
     setSelectedChannels({});
     
     toast({
@@ -185,11 +187,26 @@ const TelegramIntegrationContent = ({ searchQuery = "" }: TelegramIntegrationCon
               systemErrorNotifications={notificationSettings.systemError}
               planningAgentNotifications={notificationSettings.planningAgent}
               directMessaging={notificationSettings.directMessaging}
-              onAgentStatusChange={(value) => setNotificationSettings(prev => ({ ...prev, agentStatus: value }))}
-              onTaskCompletionChange={(value) => setNotificationSettings(prev => ({ ...prev, taskCompletion: value }))}
-              onSystemErrorChange={(value) => setNotificationSettings(prev => ({ ...prev, systemError: value }))}
-              onPlanningAgentChange={(value) => setNotificationSettings(prev => ({ ...prev, planningAgent: value }))}
-              onDirectMessagingChange={(value) => setNotificationSettings(prev => ({ ...prev, directMessaging: value }))}
+              onAgentStatusChange={(value) => {
+                const updatedSettings = { ...notificationSettings, agentStatus: value };
+                setNotificationSettings(updatedSettings);
+              }}
+              onTaskCompletionChange={(value) => {
+                const updatedSettings = { ...notificationSettings, taskCompletion: value };
+                setNotificationSettings(updatedSettings);
+              }}
+              onSystemErrorChange={(value) => {
+                const updatedSettings = { ...notificationSettings, systemError: value };
+                setNotificationSettings(updatedSettings);
+              }}
+              onPlanningAgentChange={(value) => {
+                const updatedSettings = { ...notificationSettings, planningAgent: value };
+                setNotificationSettings(updatedSettings);
+              }}
+              onDirectMessagingChange={(value) => {
+                const updatedSettings = { ...notificationSettings, directMessaging: value };
+                setNotificationSettings(updatedSettings);
+              }}
             />
 
             <TelegramTestConnection />
