@@ -14,6 +14,7 @@ import { Team, AgentProfile } from "@/types/teams";
 interface MainContentRendererProps {
   showTeamView: boolean;
   selectedTeam: Team | null;
+  selectedAgentProfile: AgentProfile | null;
   viewMode: ViewMode;
   agents: Agent[];
   tasks: Task[];
@@ -32,6 +33,7 @@ interface MainContentRendererProps {
 export const MainContentRenderer = ({
   showTeamView,
   selectedTeam,
+  selectedAgentProfile,
   viewMode,
   agents,
   tasks,

@@ -10,9 +10,7 @@ interface DetailPanelRendererProps {
   selectedTask: Task | null;
   selectedMessage: Message | null;
   selectedAgentProfile: AgentProfile | null;
-  viewMode: ViewMode;
-  agents: Agent[];
-  onDismiss: () => void;
+  onDismissSelection: () => void;
 }
 
 export const DetailPanelRenderer = ({
@@ -20,15 +18,13 @@ export const DetailPanelRenderer = ({
   selectedTask,
   selectedMessage,
   selectedAgentProfile,
-  viewMode,
-  agents,
-  onDismiss,
+  onDismissSelection,
 }: DetailPanelRendererProps) => {
   if (selectedAgentProfile) {
     return (
       <AgentCommunicationInterface
         agent={selectedAgentProfile}
-        onClose={onDismiss}
+        onClose={onDismissSelection}
       />
     );
   }
@@ -40,9 +36,9 @@ export const DetailPanelRenderer = ({
         selectedAgent={selectedAgent}
         selectedTask={selectedTask}
         selectedMessage={selectedMessage}
-        viewMode={viewMode}
-        agents={agents}
-        onDismiss={onDismiss}
+        viewMode="workflow"
+        agents={[]}
+        onDismiss={onDismissSelection}
       />
     );
   }

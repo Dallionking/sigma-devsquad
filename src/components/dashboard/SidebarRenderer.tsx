@@ -47,7 +47,7 @@ export const SidebarRenderer = ({
   if (showTeamView) {
     return (
       <TeamDashboard
-        selectedTeam={selectedTeam}
+        team={selectedTeam}
         selectedAgentProfile={selectedAgentProfile}
         onTeamSelect={onTeamSelect}
         onAgentProfileSelect={onAgentProfileSelect}
@@ -77,6 +77,7 @@ export const SidebarRenderer = ({
       return (
         <TaskManagement
           tasks={tasks}
+          agents={agents}
           selectedTask={selectedTask}
           onTaskSelect={onTaskSelect}
         />

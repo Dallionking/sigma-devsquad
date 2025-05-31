@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,19 +13,26 @@ import {
   Download,
   Eye
 } from "lucide-react";
-import { useMessages } from "@/contexts/MessageContext";
 import { useAgents } from "@/contexts/AgentContext";
+import { Message } from "@/types";
 
 interface CommunicationHistoryProps {
-  searchQuery: string;
+  messages: Message[];
+  selectedMessage: Message | null;
+  onMessageSelect: (message: Message | null) => void;
+  searchQuery?: string;
 }
 
-export const CommunicationHistory = ({ searchQuery }: CommunicationHistoryProps) => {
+export const CommunicationHistory = ({ 
+  messages, 
+  selectedMessage, 
+  onMessageSelect, 
+  searchQuery = "" 
+}: CommunicationHistoryProps) => {
   const [dateFilter, setDateFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [agentFilter, setAgentFilter] = useState("all");
   
-  const { messages } = useMessages();
   const { agents } = useAgents();
 
   const filteredMessages = useMemo(() => {
@@ -194,7 +200,13 @@ export const CommunicationHistory = ({ searchQuery }: CommunicationHistoryProps)
             </div>
           ) : (
             filteredMessages.map((msg) => (
-              <Card key={msg.id} className="hover:shadow-md transition-shadow">
+              <Card 
+                key={msg.id} 
+                className={`hover:shadow-md transition-shadow cursor-pointer ${
+                  selectedMessage?.id === msg.id ? 'ring-2 ring-primary' : ''
+                }`}
+                onClick={() => onMessageSelect(msg)}
+              >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
                     <Avatar className="w-10 h-10 flex-shrink-0">
