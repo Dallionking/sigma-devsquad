@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { SettingsSection } from "../SettingsSection";
@@ -53,10 +52,11 @@ const TelegramIntegrationContent = ({ searchQuery = "" }: TelegramIntegrationCon
   });
 
   const handleChannelChange = (notificationType: string, channelId: string) => {
-    setSelectedChannels(prev => ({
-      ...prev,
+    const updatedChannels = {
+      ...selectedChannels,
       [notificationType]: channelId
-    }));
+    };
+    setSelectedChannels(updatedChannels);
   };
 
   const handleTemplateUpdate = (templateId: string, content: string) => {
