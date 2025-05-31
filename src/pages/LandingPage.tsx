@@ -3,6 +3,7 @@ import React from 'react';
 import { LandingNavigation } from '@/components/landing/LandingNavigation';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { LandingHero } from '@/components/landing/LandingHero';
+import { LandingProblemSection } from '@/components/landing/LandingProblemSection';
 
 export const LandingPage = () => {
   return (
@@ -22,6 +23,9 @@ export const LandingPage = () => {
       {/* Main content */}
       <main id="main-content" className="relative">
         <LandingHero />
+        
+        {/* Problem Section */}
+        <LandingProblemSection />
         
         {/* Additional sections will be added here */}
         <section className="py-20 px-4">

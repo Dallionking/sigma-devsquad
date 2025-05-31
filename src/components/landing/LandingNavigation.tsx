@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const navigationItems = [
   { label: 'Features', href: '#features' },
+  { label: 'Problem', href: '#problem' },
   { label: 'Solutions', href: '#solutions' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'About', href: '#about' },
@@ -29,6 +30,16 @@ export const LandingNavigation = () => {
     navigate('/dashboard');
   };
 
+  const handleNavClick = (href: string) => {
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border" aria-label="Main navigation">
       <div className="container-responsive">
@@ -48,13 +59,13 @@ export const LandingNavigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigationItems.map((item) => (
-              <a
+              <button
                 key={item.label}
-                href={item.href}
-                className="text-muted-foreground hover:text-vibe-primary transition-colors duration-200 font-medium"
+                onClick={() => handleNavClick(item.href)}
+                className="text-muted-foreground hover:text-vibe-primary transition-colors duration-200 font-medium cursor-pointer"
               >
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
 
@@ -100,14 +111,13 @@ export const LandingNavigation = () => {
         >
           <div className="py-4 space-y-4 border-t border-border bg-background">
             {navigationItems.map((item) => (
-              <a
+              <button
                 key={item.label}
-                href={item.href}
-                className="block px-4 py-2 text-muted-foreground hover:text-vibe-primary hover:bg-vibe-primary/5 transition-all duration-200 rounded-md"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => handleNavClick(item.href)}
+                className="block w-full text-left px-4 py-2 text-muted-foreground hover:text-vibe-primary hover:bg-vibe-primary/5 transition-all duration-200 rounded-md"
               >
                 {item.label}
-              </a>
+              </button>
             ))}
             <div className="px-4 pt-4 space-y-3 border-t border-border">
               <Button 
