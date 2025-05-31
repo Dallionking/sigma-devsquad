@@ -1,0 +1,10 @@
+
+@layer utilities {
+  /* Performance optimizations for mobile */
+  .gpu-accelerated-mobile {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
+  }
+}

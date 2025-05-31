@@ -1,0 +1,130 @@
+
+@layer utilities {
+  /* Enhanced responsive breakpoints - Layout specific utilities */
+  
+  /* Ultra small devices (320px) - Layout */
+  .xs\:p-1 { @media (min-width: 320px) { padding: 0.25rem; } }
+  .xs\:p-2 { @media (min-width: 320px) { padding: 0.5rem; } }
+  .xs\:p-3 { @media (min-width: 320px) { padding: 0.75rem; } }
+  .xs\:gap-1 { @media (min-width: 320px) { gap: 0.25rem; } }
+  .xs\:gap-2 { @media (min-width: 320px) { gap: 0.5rem; } }
+  .xs\:space-y-1 > :not([hidden]) ~ :not([hidden]) { @media (min-width: 320px) { margin-top: 0.25rem; } }
+  .xs\:space-y-2 > :not([hidden]) ~ :not([hidden]) { @media (min-width: 320px) { margin-top: 0.5rem; } }
+  .xs\:w-6 { @media (min-width: 320px) { width: 1.5rem; } }
+  .xs\:h-6 { @media (min-width: 320px) { height: 1.5rem; } }
+  .xs\:w-8 { @media (min-width: 320px) { width: 2rem; } }
+  .xs\:h-8 { @media (min-width: 320px) { height: 2rem; } }
+  .xs\:px-1 { @media (min-width: 320px) { padding-left: 0.25rem; padding-right: 0.25rem; } }
+  .xs\:px-2 { @media (min-width: 320px) { padding-left: 0.5rem; padding-right: 0.5rem; } }
+  .xs\:py-0 { @media (min-width: 320px) { padding-top: 0px; padding-bottom: 0px; } }
+  .xs\:py-1 { @media (min-width: 320px) { padding-top: 0.25rem; padding-bottom: 0.25rem; } }
+  .xs\:flex-col { @media (min-width: 320px) { flex-direction: column; } }
+  .xs\:grid-cols-1 { @media (min-width: 320px) { grid-template-columns: repeat(1, minmax(0, 1fr)); } }
+  .xs\:max-w-\[80\%\] { @media (min-width: 320px) { max-width: 80%; } }
+  .xs\:min-h-\[50px\] { @media (min-width: 320px) { min-height: 50px; } }
+  .xs\:h-\[calc\(100vh-180px\)\] { @media (min-width: 320px) { height: calc(100vh - 180px); } }
+  .xs\:h-\[calc\(100\%-100px\)\] { @media (min-width: 320px) { height: calc(100% - 100px); } }
+  .xs\:-translate-x-full { @media (min-width: 320px) { transform: translateX(-100%); } }
+  .xs\:inline { @media (min-width: 320px) { display: inline; } }
+  .xs\:hidden { @media (min-width: 320px) { display: none; } }
+
+  /* Small mobile devices (375px) - Layout */
+  .sm-mobile\:p-3 { @media (min-width: 375px) { padding: 0.75rem; } }
+  .sm-mobile\:p-4 { @media (min-width: 375px) { padding: 1rem; } }
+  .sm-mobile\:gap-2 { @media (min-width: 375px) { gap: 0.5rem; } }
+  .sm-mobile\:gap-3 { @media (min-width: 375px) { gap: 0.75rem; } }
+  .sm-mobile\:space-y-2 > :not([hidden]) ~ :not([hidden]) { @media (min-width: 375px) { margin-top: 0.5rem; } }
+  .sm-mobile\:space-y-3 > :not([hidden]) ~ :not([hidden]) { @media (min-width: 375px) { margin-top: 0.75rem; } }
+  .sm-mobile\:w-4 { @media (min-width: 375px) { width: 1rem; } }
+  .sm-mobile\:h-4 { @media (min-width: 375px) { height: 1rem; } }
+  .sm-mobile\:w-8 { @media (min-width: 375px) { width: 2rem; } }
+  .sm-mobile\:h-8 { @media (min-width: 375px) { height: 2rem; } }
+  .sm-mobile\:w-10 { @media (min-width: 375px) { width: 2.5rem; } }
+  .sm-mobile\:h-10 { @media (min-width: 375px) { height: 2.5rem; } }
+  .sm-mobile\:px-3 { @media (min-width: 375px) { padding-left: 0.75rem; padding-right: 0.75rem; } }
+  .sm-mobile\:py-2 { @media (min-width: 375px) { padding-top: 0.5rem; padding-bottom: 0.5rem; } }
+  .sm-mobile\:flex-row { @media (min-width: 375px) { flex-direction: row; } }
+  .sm-mobile\:grid-cols-2 { @media (min-width: 375px) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .sm-mobile\:max-w-\[75\%\] { @media (min-width: 375px) { max-width: 75%; } }
+  .sm-mobile\:min-h-\[60px\] { @media (min-width: 375px) { min-height: 60px; } }
+  .sm-mobile\:h-9 { @media (min-width: 375px) { height: 2.25rem; } }
+  .sm-mobile\:-translate-x-full { @media (min-width: 375px) { transform: translateX(-100%); } }
+
+  /* Large mobile devices (428px) - Layout */
+  .lg-mobile\:p-4 { @media (min-width: 428px) { padding: 1rem; } }
+  .lg-mobile\:gap-4 { @media (min-width: 428px) { gap: 1rem; } }
+  .lg-mobile\:space-y-4 > :not([hidden]) ~ :not([hidden]) { @media (min-width: 428px) { margin-top: 1rem; } }
+  .lg-mobile\:flex-col { @media (min-width: 428px) { flex-direction: column; } }
+  .lg-mobile\:grid-cols-3 { @media (min-width: 428px) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .lg-mobile\:-translate-x-full { @media (min-width: 428px) { transform: translateX(-100%); } }
+
+  /* Large tablet (834px) - Layout */
+  .lg-tablet\:p-5 { @media (min-width: 834px) { padding: 1.25rem; } }
+  .lg-tablet\:gap-5 { @media (min-width: 834px) { gap: 1.25rem; } }
+
+  /* Tablet portrait (768px) - Standard md breakpoint enhanced */
+  .md\:w-80 { @media (min-width: 768px) { width: 20rem; } }
+  .md\:h-auto { @media (min-width: 768px) { height: auto; } }
+  .md\:transform-none { @media (min-width: 768px) { transform: none; } }
+  .md\:z-auto { @media (min-width: 768px) { z-index: auto; } }
+  .md\:relative { @media (min-width: 768px) { position: relative; } }
+  .md\:border-r { @media (min-width: 768px) { border-right-width: 1px; } }
+  .md\:bg-muted\/20 { @media (min-width: 768px) { background-color: hsl(var(--muted) / 0.2); } }
+  .md\:flex { @media (min-width: 768px) { display: flex; } }
+  .md\:flex-row { @media (min-width: 768px) { flex-direction: row; } }
+  .md\:h-10 { @media (min-width: 768px) { height: 2.5rem; } }
+  .md\:h-\[calc\(100vh-220px\)\] { @media (min-width: 768px) { height: calc(100vh - 220px); } }
+  .md\:h-\[calc\(100\%-140px\)\] { @media (min-width: 768px) { height: calc(100% - 140px); } }
+
+  /* Desktop small (1024px) - Standard lg breakpoint enhanced */
+  .lg\:w-80 { @media (min-width: 1024px) { width: 20rem; } }
+
+  /* Desktop medium (1280px) - Standard xl breakpoint enhanced */
+  .xl\:w-96 { @media (min-width: 1280px) { width: 24rem; } }
+  .xl\:p-6 { @media (min-width: 1280px) { padding: 1.5rem; } }
+  .xl\:gap-6 { @media (min-width: 1280px) { gap: 1.5rem; } }
+  .xl\:space-y-6 > :not([hidden]) ~ :not([hidden]) { @media (min-width: 1280px) { margin-top: 1.5rem; } }
+  .xl\:h-\[calc\(100vh-240px\)\] { @media (min-width: 1280px) { height: calc(100vh - 240px); } }
+
+  /* Desktop large (1440px) - Layout */
+  .xl-desktop\:w-\[420px\] { @media (min-width: 1440px) { width: 420px; } }
+  .xl-desktop\:p-7 { @media (min-width: 1440px) { padding: 1.75rem; } }
+
+  /* Desktop ultra-wide (1920px) - Standard 2xl breakpoint enhanced */
+  .\32xl\:w-\[400px\] { @media (min-width: 1536px) { width: 400px; } }
+  .\32xl\:w-\[480px\] { @media (min-width: 1920px) { width: 480px; } }
+  .\32xl\:p-8 { @media (min-width: 1920px) { padding: 2rem; } }
+
+  /* Flexbox utilities for better mobile layouts */
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+
+  .min-w-0 {
+    min-width: 0;
+  }
+
+  /* Better container responsive with mobile-first approach */
+  .container-mobile {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-mobile {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-mobile {
+      max-width: 1024px;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+}
