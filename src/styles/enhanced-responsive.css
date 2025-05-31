@@ -9,26 +9,27 @@
 @import './performance-utilities.css';
 @import './layout-consistency.css';
 @import './mobile/index.css';
+@import './responsive-text-handling.css';
 
 @layer utilities {
-  /* Sidebar specific responsive utilities */
+  /* Enhanced sidebar specific responsive utilities with improved text handling */
   .sidebar-responsive {
     @apply transition-all duration-300 ease-in-out overflow-hidden;
-    min-width: 0; /* Prevent sidebar from breaking layout */
-    contain: layout style; /* Improve performance */
+    min-width: 0;
+    contain: layout style;
   }
 
   .sidebar-collapsed {
     @apply w-16 flex-shrink-0;
-    min-width: 4rem; /* Prevent squishing below this point */
+    min-width: 4rem;
   }
 
   .sidebar-expanded {
     @apply w-80 lg:w-96 xl:w-[400px] flex-shrink-0;
-    min-width: 20rem; /* Minimum width when expanded */
+    min-width: 20rem;
   }
 
-  /* Navigation item responsive utilities - Fixed layout issues */
+  /* Enhanced navigation item responsive utilities with better text handling */
   .nav-item-collapsed {
     @apply h-12 w-12 p-0 flex items-center justify-center flex-shrink-0;
     min-width: 3rem;
@@ -40,32 +41,40 @@
     min-height: 2.75rem;
   }
 
-  /* Text container to prevent overflow */
+  /* Enhanced text container with responsive text wrapping */
   .nav-text-container {
     @apply flex-1 min-w-0 overflow-hidden;
-    max-width: calc(100% - 2rem); /* Account for icon and padding */
+    max-width: calc(100% - 2rem);
   }
 
-  /* Smooth transitions for all interactive elements */
-  .interactive-element {
-    @apply transition-all duration-200 ease-in-out;
-    @apply hover:scale-[1.02] active:scale-[0.98];
+  /* Apply responsive text classes to navigation items */
+  .nav-text-responsive {
+    @apply text-responsive-sm text-wrap-responsive line-spacing-normal;
   }
 
-  /* Better badge responsive behavior */
+  /* Enhanced card text handling */
+  .card-text-responsive {
+    @apply text-responsive-base text-wrap-balanced line-spacing-normal;
+  }
+
+  /* Improved badge with responsive text */
   .badge-responsive {
     @apply px-2 py-1 min-w-[1.5rem] h-6 flex items-center justify-center flex-shrink-0;
-    @apply transition-all duration-200;
+    @apply transition-all duration-200 text-responsive-xs;
   }
 
-  /* Improved card hover effects */
+  /* Enhanced card hover effects with text optimization */
   .card-interactive {
     @apply transition-all duration-200 hover:shadow-md;
     @apply hover:scale-[1.02] active:scale-[0.98];
     @apply border border-border hover:border-primary/20;
   }
 
-  /* Avatar with status indicator */
+  .card-interactive .card-text {
+    @apply text-wrap-responsive line-spacing-normal;
+  }
+
+  /* Avatar with status and responsive text labels */
   .avatar-with-status {
     @apply relative ring-2 ring-background;
   }
@@ -75,24 +84,23 @@
     @apply transition-all duration-200;
   }
 
-  /* Responsive text truncation with better tooltips */
+  /* Enhanced responsive text truncation */
   .text-truncate-responsive {
-    @apply truncate min-w-0 overflow-hidden;
+    @apply truncate-responsive-1 text-contrast-enhanced;
     max-width: 100%;
   }
 
-  /* Better focus states for accessibility */
+  /* Better focus states with enhanced text visibility */
   .focus-enhanced {
     @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
     @apply focus-visible:outline-none;
   }
 
-  /* Smooth backdrop blur for overlays */
-  .backdrop-blur-responsive {
-    @apply backdrop-blur-sm bg-background/95;
+  .focus-enhanced:focus-visible .text-content {
+    @apply text-contrast-high;
   }
 
-  /* Enhanced scroll areas */
+  /* Enhanced scroll areas with optimized text rendering */
   .scroll-area-enhanced {
     @apply overflow-hidden;
     scrollbar-width: thin;
@@ -116,13 +124,17 @@
     background: hsl(var(--border)) / 0.8;
   }
 
-  /* Prevent layout shifts and overflow issues */
+  /* Text-optimized layout stability */
   .layout-stable {
     contain: layout style;
     will-change: auto;
   }
 
-  /* Flexbox utilities for proper sidebar layout */
+  .layout-stable .text-content {
+    @apply text-gpu-accelerated;
+  }
+
+  /* Flexbox utilities with enhanced text support */
   .flex-sidebar-container {
     @apply flex flex-col h-full min-h-0 overflow-hidden;
   }
@@ -131,24 +143,75 @@
     @apply flex-1 min-h-0 overflow-hidden;
   }
 
-  /* Ensure proper spacing in collapsed mode */
+  /* Enhanced spacing with responsive text considerations */
   .collapsed-spacing {
     @apply p-2 space-y-2;
+  }
+
+  .collapsed-spacing .text-content {
+    @apply text-responsive-xs;
   }
 
   .expanded-spacing {
     @apply p-3 sm:p-4 space-y-3;
   }
+
+  .expanded-spacing .text-content {
+    @apply text-responsive-base;
+  }
+
+  /* Responsive heading utilities for different contexts */
+  .context-heading-primary {
+    @apply heading-h1-responsive text-contrast-enhanced;
+  }
+
+  .context-heading-secondary {
+    @apply heading-h2-responsive text-contrast-enhanced;
+  }
+
+  .context-heading-tertiary {
+    @apply heading-h3-responsive;
+  }
+
+  /* Mobile-specific text optimizations */
+  @media (max-width: 640px) {
+    .mobile-text-optimized {
+      @apply text-mobile-optimized text-wrap-responsive;
+    }
+
+    .mobile-heading-optimized {
+      @apply heading-h3-responsive;
+      margin-bottom: clamp(0.5rem, 2vw, 1rem);
+    }
+  }
+
+  /* Tablet-specific text optimizations */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .tablet-text-optimized {
+      @apply text-tablet-optimized text-wrap-balanced;
+    }
+  }
+
+  /* Desktop-specific text optimizations */
+  @media (min-width: 1025px) {
+    .desktop-text-optimized {
+      @apply text-desktop-optimized text-wrap-pretty;
+    }
+  }
 }
 
-/* Dark mode adjustments for better contrast */
+/* Enhanced dark mode adjustments with better text contrast */
 @media (prefers-color-scheme: dark) {
   .sidebar-responsive {
     border-color: hsl(var(--border) / 0.5);
   }
+
+  .text-content {
+    @apply text-contrast-enhanced;
+  }
 }
 
-/* Reduced motion support */
+/* Enhanced reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .sidebar-responsive,
   .interactive-element,
@@ -158,9 +221,13 @@
     transition: none !important;
     animation: none !important;
   }
+
+  .text-content {
+    @apply text-responsive-animated;
+  }
 }
 
-/* High contrast mode support */
+/* Enhanced high contrast mode support with text improvements */
 @media (prefers-contrast: high) {
   .sidebar-responsive {
     border-width: 2px;
@@ -169,9 +236,24 @@
   .card-interactive {
     border-width: 2px;
   }
+
+  .text-content {
+    @apply text-auto-contrast;
+  }
 }
 
-/* Force layout recalculation to ensure styles apply */
+/* Print-friendly text optimization */
+@media print {
+  .text-content {
+    @apply text-print-optimized;
+  }
+}
+
+/* Force layout recalculation with text optimization */
 .force-repaint {
   transform: translateZ(0);
+}
+
+.force-repaint .text-content {
+  @apply text-gpu-accelerated;
 }
