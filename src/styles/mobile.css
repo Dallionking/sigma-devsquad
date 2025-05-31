@@ -5,14 +5,22 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* Touch targets */
+  /* Enhanced touch targets */
   .touch-target {
     min-height: 44px;
     min-width: 44px;
     touch-action: manipulation;
+    position: relative;
   }
 
-  /* Improved tap highlights */
+  /* Touch target with larger tap area */
+  .touch-target-large {
+    min-height: 60px;
+    min-width: 60px;
+    touch-action: manipulation;
+  }
+
+  /* Enhanced tap highlights and feedback */
   .touch-optimized {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -20,12 +28,37 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
+  }
+
+  /* Touch feedback animations */
+  .touch-feedback {
+    transition: transform 0.1s ease-out, background-color 0.1s ease-out;
+  }
+
+  .touch-feedback:active {
+    transform: scale(0.95);
+    background-color: hsl(var(--muted) / 0.8);
+  }
+
+  /* Improved tap highlights for different elements */
+  .tap-highlight-primary:active {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+
+  .tap-highlight-secondary:active {
+    background-color: hsl(var(--secondary) / 0.1);
+  }
+
+  .tap-highlight-destructive:active {
+    background-color: hsl(var(--destructive) / 0.1);
   }
 
   /* Mobile scrolling improvements */
   .mobile-scroll {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    overscroll-behavior: contain;
   }
 
   /* Prevent zoom on input focus */
@@ -34,9 +67,14 @@
     input[type="email"],
     input[type="password"],
     input[type="number"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="datetime-local"],
     textarea,
     select {
       font-size: 16px !important;
+      transform: none !important;
     }
   }
 
@@ -50,18 +88,62 @@
     @apply p-4 m-2;
   }
 
-  /* Mobile-optimized button groups */
+  /* Enhanced mobile button groups */
   .mobile-button-group {
     @apply flex flex-col gap-3;
   }
 
   .mobile-button-group .btn {
-    @apply w-full justify-center;
+    @apply w-full justify-center min-h-[48px];
   }
 
   /* Swipe gesture areas */
   .swipe-area {
     touch-action: pan-x pan-y;
+    position: relative;
+  }
+
+  /* Swipe indicators */
+  .swipe-indicator {
+    position: relative;
+  }
+
+  .swipe-indicator::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 4px;
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+
+  /* Pull-to-refresh indicator */
+  .pull-to-refresh {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pull-to-refresh::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid hsl(var(--primary));
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .pull-to-refresh.refreshing::before {
+    opacity: 1;
   }
 
   /* Better mobile focus styles */
@@ -69,10 +151,25 @@
     @apply focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none;
   }
 
+  /* Enhanced focus-visible for touch devices */
+  .touch-focus:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Remove focus on touch but keep for keyboard */
+  @media (pointer: coarse) {
+    .touch-focus:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
+
   /* Improved mobile dropdown positioning */
   .mobile-dropdown {
     @apply bottom-0 left-0 right-0 top-auto;
     transform: none;
+    max-height: 70vh;
+    overflow-y: auto;
   }
 
   /* Mobile-first grid layouts */
@@ -98,23 +195,8 @@
   .mobile-optimized {
     contain: layout style paint;
     content-visibility: auto;
-  }
-
-  /* Touch gesture indicators */
-  .swipe-indicator {
-    position: relative;
-  }
-
-  .swipe-indicator::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 32px;
-    height: 4px;
-    background: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 2px;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   /* Mobile-specific animations */
@@ -132,6 +214,156 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes spin {
+    to {
+      transform: translateX(-50%) rotate(360deg);
+    }
+  }
+
+  /* Ripple effect for touch feedback */
+  .ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .ripple:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Long press feedback */
+  .long-press-feedback {
+    position: relative;
+  }
+
+  .long-press-feedback::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: hsl(var(--primary) / 0.1);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .long-press-feedback.long-pressing::after {
+    opacity: 1;
+    animation: pulse 0.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  /* Improved gesture zones */
+  .gesture-zone {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+  }
+
+  /* Better mobile modal handling */
+  .mobile-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: hsl(var(--background));
+    touch-action: none;
+  }
+
+  /* Enhanced mobile sheet/drawer */
+  .mobile-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: hsl(var(--background));
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    max-height: 90vh;
+    touch-action: none;
+  }
+
+  /* Mobile-specific loading states */
+  .mobile-skeleton {
+    @apply animate-pulse bg-muted/60 rounded;
+  }
+
+  /* Touch-friendly form elements */
+  @media (max-width: 768px) {
+    .mobile-form-element {
+      min-height: 48px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      touch-action: manipulation;
+    }
+
+    .mobile-button {
+      min-height: 48px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 8px;
+      touch-action: manipulation;
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
+  /* Accessibility enhancements for touch */
+  .touch-accessible {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+
+  /* Better touch scrolling */
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+
+  .touch-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .touch-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .touch-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
 }
 
 /* High contrast mode support */
@@ -139,6 +371,10 @@
   .high-contrast {
     border-width: 2px;
     font-weight: 600;
+  }
+
+  .touch-target {
+    border: 2px solid hsl(var(--border));
   }
 }
 
@@ -148,6 +384,12 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .ripple::before,
+  .touch-feedback {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -164,61 +406,38 @@
   }
 }
 
-/* Mobile-specific focus management */
-@media (max-width: 768px) {
-  /* Remove focus outlines on touch */
-  .touch-device *:focus:not(:focus-visible) {
-    outline: none;
+/* Improved mobile pointer events */
+@media (pointer: coarse) {
+  /* Larger touch targets on coarse pointer devices */
+  .adaptive-touch-target {
+    min-height: 48px;
+    min-width: 48px;
   }
 
-  /* Enhanced focus-visible for keyboard navigation */
-  .touch-device *:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
+  /* Remove hover states on touch devices */
+  .hover-only:hover {
+    background-color: transparent;
   }
 }
 
-/* Improved mobile scrolling */
-.mobile-scroll-container {
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+@media (pointer: fine) {
+  /* Smaller targets on precise pointer devices */
+  .adaptive-touch-target {
+    min-height: 32px;
+    min-width: 32px;
+  }
 }
 
-.mobile-scroll-container::-webkit-scrollbar {
-  width: 4px;
-}
-
-.mobile-scroll-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.mobile-scroll-container::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 2px;
-}
-
-/* Mobile-optimized loading states */
-.mobile-skeleton {
-  @apply animate-pulse bg-muted/60 rounded;
-}
-
-/* Touch-friendly form elements */
-@media (max-width: 768px) {
-  .mobile-form-element {
-    min-height: 44px;
-    padding: 12px 16px;
-    font-size: 16px;
-    border-radius: 8px;
+/* Better iOS safari handling */
+@supports (-webkit-touch-callout: none) {
+  .ios-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
-  .mobile-button {
-    min-height: 44px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 8px;
+  .ios-fix {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
   }
 }
