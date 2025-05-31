@@ -3,8 +3,8 @@ import React from 'react';
 import { MainWorkflowArea } from "./MainWorkflowArea";
 import { TeamDashboard } from "@/components/teams/TeamDashboard";
 import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
-import { UserPresenceUI } from "@/components/collaboration/UserPresenceUI";
-import { UnifiedCommunicationInterface } from "@/components/communication/UnifiedCommunicationInterface";
+import { UnifiedCommunicationHub } from "@/components/communication/UnifiedCommunicationHub";
+import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ViewMode, Agent, Task, Message } from "@/types";
@@ -81,11 +81,25 @@ export const MainContentRenderer = ({
         </div>
       );
     } else {
-      // Individual view mode content - unified communication for both communication and messages
-      if (viewMode === "communication" || viewMode === "messages") {
+      // Individual view mode content
+      if (viewMode === "communication") {
         return (
-          <div className="h-full">
-            <UnifiedCommunicationInterface />
+          <div className="h-full p-6">
+            <UnifiedCommunicationHub 
+              defaultTab="chat"
+              showPresence={true}
+            />
+          </div>
+        );
+      }
+      
+      if (viewMode === "messages") {
+        return (
+          <div className="h-full p-6">
+            <UnifiedCommunicationHub 
+              defaultTab="activity"
+              showPresence={true}
+            />
           </div>
         );
       }
@@ -112,16 +126,6 @@ export const MainContentRenderer = ({
       {/* Main content area */}
       <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 overflow-auto bg-background">
         {renderMainContent()}
-        
-        {/* Integrated User Presence - Only show in workflow mode and when meaningful */}
-        {viewMode === "workflow" && !showTeamView && (
-          <div className="fixed bottom-4 right-4 z-30">
-            <UserPresenceUI 
-              componentId={showTeamView ? 'team-view' : 'individual-view'}
-              projectId="main-dashboard"
-            />
-          </div>
-        )}
       </div>
     </div>
   );
