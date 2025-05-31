@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useMemo, useState, useRef } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo, useState, useRef, useCallback } from 'react';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { useDataSync } from '@/hooks/useDataSync';
 import { useBackupManager } from '@/hooks/useBackupManager';
@@ -82,8 +82,18 @@ interface DataPersistenceContextType {
     sendPresence: (presence: any) => void;
     onConflictDetected: (callback: (conflict: any) => void) => () => void;
     resolveConflict: (conflictId: string, resolution: string, content?: string) => void;
-    isTyping: (componentId: string, isTyping: boolean) => void;
+    isTyping: (componentId: string, isTyping: boolean) => isTyping;
     getTypingUsers: (componentId: string) => any[];
+  };
+
+  // Enhanced persistent state management
+  persistentState: {
+    registerState: (stateKey: string, initialState: any, config?: any) => void;
+    updateState: (stateKey: string, updates: any, source?: string) => void;
+    getState: (stateKey: string) => any;
+    clearError: (stateKey: string) => void;
+    states: Map<string, any>;
+    errors: Map<string, string>;
   };
 }
 
@@ -126,12 +136,68 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     enableDeduplication: true
   });
 
+  // Add persistent state management
+  const [persistentStates, setPersistentStates] = useState<Map<string, any>>(new Map());
+  const [stateErrors, setStateErrors] = useState<Map<string, string>>(new Map());
+
   // Add collaboration state
   const [conflicts, setConflicts] = useState<Map<string, any>>(new Map());
   const [typingUsers, setTypingUsers] = useState<Map<string, any[]>>(new Map());
   const conflictCallbacksRef = useRef<Set<(conflict: any) => void>>(new Set());
 
-  // Collaboration functions
+  // Enhanced state management functions
+  const registerPersistentState = useCallback((stateKey: string, initialState: any, config?: any) => {
+    setPersistentStates(prev => new Map(prev.set(stateKey, { 
+      data: initialState, 
+      config, 
+      lastUpdate: Date.now() 
+    })));
+    
+    eventBus.emit('state-registered', {
+      stateKey,
+      timestamp: Date.now()
+    });
+  }, [eventBus]);
+
+  const updatePersistentState = useCallback((stateKey: string, updates: any, source = 'user') => {
+    setPersistentStates(prev => {
+      const current = prev.get(stateKey);
+      if (!current) return prev;
+
+      const updated = {
+        ...current,
+        data: { ...current.data, ...updates },
+        lastUpdate: Date.now()
+      };
+
+      const newMap = new Map(prev);
+      newMap.set(stateKey, updated);
+
+      // Emit state update event
+      eventBus.emit('persistent-state-update', {
+        stateKey,
+        data: updated.data,
+        source,
+        timestamp: Date.now()
+      });
+
+      return newMap;
+    });
+  }, [eventBus]);
+
+  const getPersistentState = useCallback((stateKey: string) => {
+    return persistentStates.get(stateKey)?.data;
+  }, [persistentStates]);
+
+  const clearStateError = useCallback((stateKey: string) => {
+    setStateErrors(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(stateKey);
+      return newMap;
+    });
+  }, []);
+
+  // Existing collaboration functions
   const onConflictDetected = (callback: (conflict: any) => void) => {
     conflictCallbacksRef.current.add(callback);
     return () => {
@@ -247,6 +313,16 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
       resolveConflict,
       isTyping,
       getTypingUsers
+    },
+
+    // Enhanced persistent state management
+    persistentState: {
+      registerState: registerPersistentState,
+      updateState: updatePersistentState,
+      getState: getPersistentState,
+      clearError: clearStateError,
+      states: persistentStates,
+      errors: stateErrors
     }
   }), [
     sessionManager,
@@ -259,7 +335,13 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     performanceMonitoring,
     batchedUpdates,
     conflicts,
-    typingUsers
+    typingUsers,
+    registerPersistentState,
+    updatePersistentState,
+    getPersistentState,
+    clearStateError,
+    persistentStates,
+    stateErrors
   ]);
 
   return (
