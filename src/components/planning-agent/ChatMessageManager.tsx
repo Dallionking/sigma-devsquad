@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useTelegramIntegration } from "@/hooks/useTelegramIntegration";
 
 type ChatMessage = {
   id: string;
@@ -36,6 +37,7 @@ export const useChatMessageManager = () => {
   ]);
 
   const [isTyping, setIsTyping] = useState(false);
+  const { notifyPlanningAgentUpdate } = useTelegramIntegration();
 
   const handleSendMessage = (content: string, attachedFiles: AttachedFile[]) => {
     const newMessage: ChatMessage = {
@@ -56,7 +58,7 @@ export const useChatMessageManager = () => {
     setIsTyping(true);
 
     // Enhanced agent response based on context
-    setTimeout(() => {
+    setTimeout(async () => {
       let responseContent = "I understand. Let me analyze that and provide you with a structured breakdown...";
       
       // Context-aware responses
@@ -75,8 +77,16 @@ export const useChatMessageManager = () => {
         timestamp: new Date(),
         agent: "Planning Agent"
       };
+      
       setMessages(prev => [...prev, agentResponse]);
       setIsTyping(false);
+
+      // Send Telegram notification for Planning Agent responses
+      try {
+        await notifyPlanningAgentUpdate(`New response: ${responseContent.substring(0, 100)}${responseContent.length > 100 ? '...' : ''}`);
+      } catch (error) {
+        console.error('Failed to send Telegram notification:', error);
+      }
     }, 1000);
   };
 
