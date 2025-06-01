@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { EnhancedCard } from "@/components/ui/enhanced-card";
+import { PricingComparisonSection } from "./PricingComparisonSection";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -310,6 +310,9 @@ export const PricingSection = () => {
           ))}
         </div>
 
+        {/* Add Pricing Comparison Section */}
+        <PricingComparisonSection />
+
         {/* Feature Comparison Table */}
         <AnimatedSection animation="fade-up" delay={600}>
           <div className="text-center mb-8">
@@ -363,7 +366,6 @@ export const PricingSection = () => {
           )}
         </AnimatedSection>
 
-        {/* ROI Calculator Section */}
         <AnimatedSection animation="fade-up" delay={700}>
           <div className="mt-16 text-center">
             <EnhancedCard className="p-8 max-w-4xl mx-auto bg-gradient-to-br from-vibe-primary/5 to-vibe-secondary/5">
@@ -398,7 +400,6 @@ export const PricingSection = () => {
           </div>
         </AnimatedSection>
 
-        {/* Trust Indicators */}
         <AnimatedSection animation="fade-up" delay={800}>
           <div className="mt-12 text-center">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -434,7 +435,6 @@ export const PricingSection = () => {
           </div>
         </AnimatedSection>
 
-        {/* FAQ or Additional Info */}
         <AnimatedSection animation="fade-up" delay={900}>
           <div className="mt-16 text-center">
             <div className="max-w-2xl mx-auto space-y-4">
