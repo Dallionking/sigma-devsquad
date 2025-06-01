@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { HelpCircle, Book, Video, ExternalLink, Search, Lightbulb } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { HelpCircle, Book, Video, ExternalLink, Search, Lightbulb, Play } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { VideoTutorialsSection } from './VideoTutorialsSection';
 
 interface HelpArticle {
   id: string;
@@ -68,6 +70,7 @@ interface ContextualHelpProps {
 export const ContextualHelp = ({ context, className }: ContextualHelpProps) => {
   const [showHelp, setShowHelp] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('articles');
 
   const filteredArticles = helpArticles.filter(article => 
     article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -115,20 +118,73 @@ export const ContextualHelp = ({ context, className }: ContextualHelpProps) => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-6">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search help articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="articles">Articles</TabsTrigger>
+              <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
+              <TabsTrigger value="quick-start">Quick Start</TabsTrigger>
+            </TabsList>
 
-            {/* Quick Links */}
-            {!searchQuery && (
+            <TabsContent value="articles" className="space-y-6">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search help articles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+
+              {/* Articles */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">
+                  {searchQuery ? `Search Results (${filteredArticles.length})` : 'Popular Articles'}
+                </h3>
+                
+                <div className="grid gap-4">
+                  {filteredArticles.map((article) => {
+                    const TypeIcon = getTypeIcon(article.type);
+                    return (
+                      <Card key={article.id} className="cursor-pointer hover:bg-accent/50 transition-colors">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center mt-1">
+                                <TypeIcon className="w-4 h-4 text-primary" />
+                              </div>
+                              <div className="flex-1">
+                                <CardTitle className="text-base">{article.title}</CardTitle>
+                                <CardDescription className="mt-1">{article.description}</CardDescription>
+                              </div>
+                            </div>
+                            <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="secondary" className={getCategoryColor(article.category)}>
+                              {article.category.replace('-', ' ')}
+                            </Badge>
+                            {article.readTime && (
+                              <span className="text-sm text-muted-foreground">{article.readTime} read</span>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="videos" className="space-y-6">
+              <VideoTutorialsSection />
+            </TabsContent>
+
+            <TabsContent value="quick-start" className="space-y-6">
+              {/* Quick Links */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
                   <CardContent className="p-4 text-center">
@@ -155,67 +211,26 @@ export const ContextualHelp = ({ context, className }: ContextualHelpProps) => {
                   </CardContent>
                 </Card>
               </div>
-            )}
+            </TabsContent>
+          </Tabs>
 
-            {/* Articles */}
-            <div className="space-y-4">
-              <h3 className="font-semibold">
-                {searchQuery ? `Search Results (${filteredArticles.length})` : 'Popular Articles'}
-              </h3>
-              
-              <div className="grid gap-4">
-                {filteredArticles.map((article) => {
-                  const TypeIcon = getTypeIcon(article.type);
-                  return (
-                    <Card key={article.id} className="cursor-pointer hover:bg-accent/50 transition-colors">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center mt-1">
-                              <TypeIcon className="w-4 h-4 text-primary" />
-                            </div>
-                            <div className="flex-1">
-                              <CardTitle className="text-base">{article.title}</CardTitle>
-                              <CardDescription className="mt-1">{article.description}</CardDescription>
-                            </div>
-                          </div>
-                          <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="secondary" className={getCategoryColor(article.category)}>
-                            {article.category.replace('-', ' ')}
-                          </Badge>
-                          {article.readTime && (
-                            <span className="text-sm text-muted-foreground">{article.readTime} read</span>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+          {/* Contact Support */}
+          <Card className="bg-accent/30">
+            <CardContent className="p-6">
+              <h3 className="font-semibold mb-2">Need more help?</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Can't find what you're looking for? Our support team is here to help.
+              </p>
+              <div className="flex space-x-2">
+                <Button variant="outline" size="sm">
+                  Contact Support
+                </Button>
+                <Button variant="outline" size="sm">
+                  Join Community
+                </Button>
               </div>
-            </div>
-
-            {/* Contact Support */}
-            <Card className="bg-accent/30">
-              <CardContent className="p-6">
-                <h3 className="font-semibold mb-2">Need more help?</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Can't find what you're looking for? Our support team is here to help.
-                </p>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm">
-                    Contact Support
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Join Community
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            </CardContent>
+          </Card>
         </DialogContent>
       </Dialog>
     </>

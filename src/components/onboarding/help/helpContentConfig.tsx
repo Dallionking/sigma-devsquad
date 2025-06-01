@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
-import { User, Users, Bot, MapPin, Trophy, Home } from 'lucide-react';
+import { User, Users, Bot, MapPin, Trophy, Home, Play } from 'lucide-react';
 
 export interface HelpContent {
   title: string;
@@ -22,12 +22,22 @@ export interface HelpContent {
     description: string;
     action: string;
   }[];
+  videoTutorial?: {
+    title: string;
+    duration: string;
+    available: boolean;
+  };
 }
 
 export const helpContentMap: Record<OnboardingStep, HelpContent> = {
   welcome: {
     title: "Welcome to Vibe DevSquad",
     description: "Let's get you started with building your AI development team. This quick setup will help you configure your profile, create your first team, and deploy your first AI agent.",
+    videoTutorial: {
+      title: "Welcome to Vibe DevSquad",
+      duration: "45s",
+      available: true
+    },
     tips: [
       "The entire process takes about 5-10 minutes",
       "You can skip any step and return to it later",
@@ -50,6 +60,11 @@ export const helpContentMap: Record<OnboardingStep, HelpContent> = {
   'profile-setup': {
     title: "Set Up Your Developer Profile",
     description: "Create your professional profile to help AI agents understand your background and preferences. This information helps personalize your experience.",
+    videoTutorial: {
+      title: "Setting Up Your Developer Profile",
+      duration: "50s",
+      available: true
+    },
     tips: [
       "Upload a profile photo to make interactions more personal",
       "Select multiple programming languages you're comfortable with",
@@ -80,6 +95,11 @@ export const helpContentMap: Record<OnboardingStep, HelpContent> = {
   'team-creation': {
     title: "Create Your First Team",
     description: "Teams help organize your AI agents around specific projects or goals. You can create multiple teams for different purposes.",
+    videoTutorial: {
+      title: "Creating Your First Team",
+      duration: "55s",
+      available: true
+    },
     tips: [
       "Choose a descriptive team name that reflects your project",
       "Add a clear description of your team's purpose",
@@ -110,6 +130,11 @@ export const helpContentMap: Record<OnboardingStep, HelpContent> = {
   'first-agent': {
     title: "Configure Your First AI Agent",
     description: "AI agents are specialized assistants that help with specific development tasks. Choose an agent type that matches your immediate needs.",
+    videoTutorial: {
+      title: "Configuring Your First AI Agent",
+      duration: "60s",
+      available: true
+    },
     tips: [
       "Start with a Frontend Developer for UI work",
       "Backend Developers help with APIs and databases",
@@ -140,6 +165,11 @@ export const helpContentMap: Record<OnboardingStep, HelpContent> = {
   'planning-tour': {
     title: "Explore Planning Tools",
     description: "Learn how to use the planning agent to break down projects, assign tasks, and coordinate your development team effectively.",
+    videoTutorial: {
+      title: "Discovering the Planning Agent",
+      duration: "50s",
+      available: true
+    },
     tips: [
       "Use natural language to describe your project goals",
       "The planning agent can break down complex features",
@@ -168,6 +198,11 @@ export const helpContentMap: Record<OnboardingStep, HelpContent> = {
   completion: {
     title: "Setup Complete! 🎉",
     description: "Congratulations! Your Vibe DevSquad is ready. You now have a configured team with AI agents ready to help with your development projects.",
+    videoTutorial: {
+      title: "Setup Complete - You're Ready!",
+      duration: "40s",
+      available: true
+    },
     tips: [
       "Start by creating your first project in the dashboard",
       "Use the planning agent to break down your project",

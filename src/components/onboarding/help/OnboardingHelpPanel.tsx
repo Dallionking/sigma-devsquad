@@ -12,11 +12,14 @@ import {
   ExternalLink, 
   CheckCircle,
   BookOpen,
-  Zap
+  Zap,
+  Play
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
 import { getHelpContent } from './helpContentConfig';
+import { VideoPlayer } from '../video-tutorials/VideoPlayer';
+import { getVideoTutorial } from '../video-tutorials/videoTutorialConfig';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface OnboardingHelpPanelProps {
@@ -36,10 +39,12 @@ export const OnboardingHelpPanel = ({
     tips: true,
     examples: false,
     quickActions: false,
-    learnMore: false
+    learnMore: false,
+    videoTutorial: false
   });
 
   const helpContent = getHelpContent(currentStep);
+  const videoTutorial = getVideoTutorial(currentStep);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -96,6 +101,46 @@ export const OnboardingHelpPanel = ({
             </p>
           </CardHeader>
         </Card>
+
+        {/* Video Tutorial Section */}
+        {helpContent.videoTutorial && (
+          <Collapsible 
+            open={expandedSections.videoTutorial} 
+            onOpenChange={() => toggleSection('videoTutorial')}
+          >
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" className="w-full justify-between p-0">
+                <div className="flex items-center space-x-2">
+                  <Play className="h-4 w-4 text-blue-500" />
+                  <span className="font-medium">Video Tutorial</span>
+                  <Badge variant="secondary" className="text-xs">
+                    {helpContent.videoTutorial.duration}
+                  </Badge>
+                </div>
+                <ChevronRight className={cn(
+                  "h-4 w-4 transition-transform",
+                  expandedSections.videoTutorial && "rotate-90"
+                )} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-3">
+              <Card>
+                <CardContent className="pt-4">
+                  <VideoPlayer
+                    videoUrl={videoTutorial.videoUrl}
+                    title={videoTutorial.title}
+                    duration={videoTutorial.duration}
+                    captions={videoTutorial.captions}
+                    className="mb-4"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    This tutorial provides a visual walkthrough of the {currentStep.replace('-', ' ')} process.
+                  </p>
+                </CardContent>
+              </Card>
+            </CollapsibleContent>
+          </Collapsible>
+        )}
 
         {/* Tips Section */}
         <Collapsible 
