@@ -1,0 +1,19 @@
+
+/* Component-Specific Animations */
+
+/* Text Gradient Animation */
+.text-gradient-animated {
+  background: linear-gradient(
+    45deg,
+    #6366F1,
+    #8B5CF6,
+    #06B6D4,
+    #10B981,
+    #F59E0B
+  );
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 4s ease infinite;
+}

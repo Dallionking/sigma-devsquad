@@ -1,119 +1,22 @@
 
-/* Import modular CSS files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import './styles/base.css';
-@import './styles/enhanced-components.css';
-@import './styles/animations.css';
-@import './styles/utilities.css';
+@import './styles/animations/index.css';
 @import './styles/responsive.css';
+@import './styles/utilities.css';
+@import './styles/components.css';
+@import './styles/enhanced-components.css';
 @import './styles/enhanced-responsive.css';
+@import './styles/layout-utilities.css';
+@import './styles/layout-consistency.css';
+@import './styles/grid-system.css';
+@import './styles/text-utilities.css';
+@import './styles/responsive-text-handling.css';
+@import './styles/dynamic-typography.css';
+@import './styles/accessibility-utilities.css';
+@import './styles/performance-utilities.css';
 @import './styles/vibe-branding.css';
-
-/* Vibe DevSquad enhanced responsive typography and brand colors */
-@layer utilities {
-  .text-responsive {
-    @apply text-sm sm:text-base lg:text-lg;
-  }
-  
-  .heading-responsive {
-    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl;
-  }
-  
-  .gradient-brand {
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);
-  }
-  
-  .text-gradient-brand {
-    @apply bg-gradient-to-r from-vibe-primary via-vibe-secondary to-vibe-accent bg-clip-text text-transparent;
-  }
-  
-  /* Performance optimizations */
-  .will-change-transform {
-    will-change: transform;
-  }
-  
-  .will-change-scroll {
-    will-change: scroll-position;
-  }
-  
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-
-  /* Enhanced focus management for accessibility */
-  .focus-visible-enhanced:focus-visible {
-    @apply outline-none ring-2 ring-vibe-primary/60 ring-offset-2 ring-offset-background;
-  }
-
-  /* Enhanced text utilities with better contrast */
-  .text-high-contrast {
-    @apply text-foreground contrast-more:text-black contrast-more:dark:text-white;
-  }
-
-  .text-medium-contrast {
-    @apply text-vibe-muted contrast-more:text-foreground/80;
-  }
-}
-
-/* Touch-friendly sizing for mobile with enhanced accessibility */
-@media (max-width: 768px) {
-  .touch-target {
-    min-height: clamp(44px, 12vw, 56px);
-    min-width: clamp(44px, 12vw, 56px);
-  }
-  
-  /* Improve mobile performance with enhanced font rendering */
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeSpeed;
-  }
-}
-
-/* Enhanced accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-  .fade-in,
-  .animate-in,
-  .transition-all,
-  .animate-enhanced-fade-in,
-  .animate-enhanced-slide-up,
-  .vibe-flow,
-  .vibe-pulse,
-  .vibe-bounce {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  .hover-enhanced:hover {
-    transform: none !important;
-  }
-}
-
-/* High contrast mode enhancements */
-@media (prefers-contrast: high) {
-  .vibe-card,
-  .card-enhanced {
-    @apply border-2 border-vibe-primary/40;
-  }
-
-  .vibe-btn-primary,
-  .vibe-btn-secondary,
-  .btn-primary-enhanced,
-  .btn-secondary-enhanced {
-    @apply border-2 border-current;
-  }
-}
-
-/* Enhanced dark mode support */
-@media (prefers-color-scheme: dark) {
-  .bg-grid-pattern {
-    background-image: 
-      linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
-  }
-
-  .bg-dot-pattern {
-    background-image: radial-gradient(circle, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
-  }
-}
+@import './styles/mobile/index.css';

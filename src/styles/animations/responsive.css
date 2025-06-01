@@ -1,0 +1,24 @@
+
+/* Responsive Motion Preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gradient,
+  .animate-shimmer,
+  .animate-bounce-gentle,
+  .animate-slide-up,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-scale-in,
+  .animate-fade-up,
+  .animate-pulse-glow,
+  .btn-enhanced,
+  .card-enhanced-hover,
+  .text-gradient-animated {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .hover-lift:hover {
+    transform: none !important;
+  }
+}
