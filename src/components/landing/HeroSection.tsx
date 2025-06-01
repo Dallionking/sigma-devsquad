@@ -1,13 +1,16 @@
 
 import React from 'react';
 import { AnimatedSection } from "@/components/ui/animated-section";
-import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { FloatingElement, PulsingDot } from "@/components/ui/floating-elements";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { EnhancedCard } from "@/components/ui/enhanced-card";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useResponsiveDesign } from "@/hooks/useResponsiveDesign";
+import { LimitlessBadge } from "./hero/LimitlessBadge";
+import { LimitlessTagline } from "./hero/LimitlessTagline";
+import { ProblemStats } from "./hero/ProblemStats";
+import { TrustIndicators } from "./hero/TrustIndicators";
 import { 
   Bot, 
   BarChart,
@@ -16,10 +19,6 @@ import {
   MessageSquare, 
   Zap, 
   Sparkles,
-  Users,
-  Trophy,
-  Rocket,
-  TrendingUp,
   Clock
 } from "lucide-react";
 
@@ -35,19 +34,6 @@ export const HeroSection = () => {
       navigate("/auth?tab=signup");
     }
   };
-
-  const stats = [
-    { value: "2,500+", label: "Active Teams", icon: Users },
-    { value: "50,000+", label: "AI Agents Deployed", icon: Bot },
-    { value: "99.9%", label: "Uptime SLA", icon: Trophy },
-    { value: "300%", label: "Faster Delivery", icon: Rocket }
-  ];
-
-  const problemStats = [
-    { metric: "47%", label: "Time Lost to Coordination", color: "text-red-500" },
-    { metric: "68%", label: "Context Switching Overhead", color: "text-orange-500" },
-    { metric: "85%", label: "Communication Inefficiency", color: "text-yellow-500" }
-  ];
 
   return (
     <section className="py-12 md:py-24 lg:py-32 relative overflow-hidden">
@@ -85,12 +71,7 @@ export const HeroSection = () => {
             <AnimatedSection animation="fade-up" delay={100}>
               <div className="space-y-6">
                 {/* Limitless Badge */}
-                <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#6C5CE7]/10 to-[#00B8D9]/10 rounded-full border border-[#6C5CE7]/20 mb-6 backdrop-blur-sm limitless-badge animate-pulse-glow">
-                  <div className="w-4 h-4 mr-2 bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] rounded-full pill-icon animate-pulse"></div>
-                  <span className="text-sm font-medium bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] bg-clip-text text-transparent">
-                    Unlock Your Development Potential
-                  </span>
-                </div>
+                <LimitlessBadge />
                 
                 {/* Preserved headline with Limitless glow effect */}
                 <div className="relative">
@@ -109,32 +90,10 @@ export const HeroSection = () => {
                 </p>
 
                 {/* New Limitless tagline */}
-                <div className="limitless-tagline opacity-0 animate-fade-in-delayed">
-                  <p className="text-2xl lg:text-3xl font-semibold">
-                    <span className="bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] bg-clip-text text-transparent relative limitless-tagline-text">
-                      Develop Beyond Limits
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] animate-line-grow"></span>
-                    </span>
-                  </p>
-                </div>
+                <LimitlessTagline />
 
                 {/* Problem visualization */}
-                <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 rounded-xl p-6 border border-red-200/50 dark:border-red-800/50">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <TrendingUp className="w-5 h-5 text-red-500" />
-                    <span className="text-sm font-semibold text-red-700 dark:text-red-300">Development Fragmentation Crisis</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    {problemStats.map((stat, index) => (
-                      <div key={index} className="text-center">
-                        <div className={`text-2xl font-bold ${stat.color}`}>
-                          <AnimatedCounter value={stat.metric} />
-                        </div>
-                        <div className="text-xs text-muted-foreground">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <ProblemStats />
               </div>
             </AnimatedSection>
 
@@ -158,26 +117,7 @@ export const HeroSection = () => {
 
             {/* Enhanced trust indicators */}
             <AnimatedSection animation="fade-up" delay={300}>
-              <div className="pt-8">
-                <p className="text-sm text-muted-foreground mb-6 text-center sm:text-left">
-                  Trusted by teams at leading companies worldwide
-                </p>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                  {stats.map((stat, index) => (
-                    <div key={index} className="text-center group hover-lift">
-                      <div className="flex items-center justify-center space-x-2 mb-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-vibe-primary/20 to-vibe-secondary/20 rounded-lg flex items-center justify-center">
-                          <stat.icon className="w-4 h-4 text-vibe-primary" />
-                        </div>
-                        <div className="text-2xl font-bold text-vibe-primary">
-                          <AnimatedCounter value={stat.value} />
-                        </div>
-                      </div>
-                      <div className="text-sm text-muted-foreground">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <TrustIndicators />
             </AnimatedSection>
           </div>
 
