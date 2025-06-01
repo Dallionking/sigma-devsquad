@@ -4,18 +4,44 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Play, Clock } from 'lucide-react';
-import { VideoPlayer } from '../onboarding/video-tutorials/VideoPlayer';
-import { getAllVideoTutorials } from '../onboarding/video-tutorials/videoTutorialConfig';
+import { SimpleVideoTutorial } from '../onboarding/video-tutorials/SimpleVideoTutorial';
+import { getAllVideoTutorials } from '@/hooks/useVideoTutorial';
+import { OnboardingStep } from '@/contexts/OnboardingContext';
 
 export const VideoTutorialsSection = () => {
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<OnboardingStep | null>(null);
   const videoTutorials = getAllVideoTutorials();
 
-  const handleVideoSelect = (videoId: string) => {
-    setSelectedVideo(videoId);
+  const handleVideoSelect = (step: OnboardingStep) => {
+    setSelectedVideo(step);
   };
 
-  const selectedTutorial = videoTutorials.find(v => v.id === selectedVideo);
+  const stepOrder: OnboardingStep[] = [
+    'welcome', 
+    'profile-setup', 
+    'team-creation', 
+    'first-agent', 
+    'planning-tour',
+    'completion'
+  ];
+
+  if (selectedVideo) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h4 className="text-md font-medium">Video Tutorial</h4>
+          <Button
+            variant="outline"
+            onClick={() => setSelectedVideo(null)}
+          >
+            Back to Tutorials
+          </Button>
+        </div>
+        
+        <SimpleVideoTutorial currentStep={selectedVideo} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -26,37 +52,13 @@ export const VideoTutorialsSection = () => {
         </p>
       </div>
 
-      {selectedTutorial ? (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="text-md font-medium">{selectedTutorial.title}</h4>
-            <Button
-              variant="outline"
-              onClick={() => setSelectedVideo(null)}
-            >
-              Back to Tutorials
-            </Button>
-          </div>
-          
-          <VideoPlayer
-            videoUrl={selectedTutorial.videoUrl}
-            title={selectedTutorial.title}
-            duration={selectedTutorial.duration}
-            captions={selectedTutorial.captions}
-          />
-          
-          <Card>
-            <CardContent className="pt-4">
-              <p className="text-sm text-muted-foreground">
-                {selectedTutorial.description}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {videoTutorials.map((tutorial) => (
-            <Card key={tutorial.id} className="cursor-pointer hover:bg-accent/50 transition-colors">
+      <div className="grid gap-4">
+        {stepOrder.map((step) => {
+          const tutorial = videoTutorials.find(v => v.id.includes(step.replace('-', '')));
+          if (!tutorial) return null;
+
+          return (
+            <Card key={step} className="cursor-pointer hover:bg-accent/50 transition-colors">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">
@@ -73,7 +75,7 @@ export const VideoTutorialsSection = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleVideoSelect(tutorial.id)}
+                    onClick={() => handleVideoSelect(step)}
                   >
                     <Play className="w-4 h-4 mr-1" />
                     Watch
@@ -87,14 +89,14 @@ export const VideoTutorialsSection = () => {
                     {tutorial.duration}
                   </Badge>
                   <Badge variant="outline">
-                    {tutorial.step.replace('-', ' ')}
+                    {step.replace('-', ' ')}
                   </Badge>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 };

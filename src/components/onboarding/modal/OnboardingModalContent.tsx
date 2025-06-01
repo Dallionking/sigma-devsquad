@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
 import { ProfileSetupForm } from '../ProfileSetupForm';
 import { TeamCreationForm } from '../TeamCreationForm';
 import { FirstAgentForm } from '../first-agent/FirstAgentForm';
 import { PlanningTourForm } from '../PlanningTourForm';
-import { OnboardingVideoTutorial } from '../video-tutorials/OnboardingVideoTutorial';
+import { SimpleVideoTutorial } from '../video-tutorials/SimpleVideoTutorial';
 import { DetailedStepProgress } from '../progress/DetailedStepProgress';
 
 interface OnboardingModalContentProps {
@@ -35,14 +35,10 @@ export const OnboardingModalContent = ({
   onPlanningTourSkip,
   getStepData
 }: OnboardingModalContentProps) => {
-  const [showVideo, setShowVideo] = useState(false);
-  const [hasWatchedVideo, setHasWatchedVideo] = useState(false);
-
   const showProfileSetup = currentStep === 'profile-setup';
   const showTeamCreation = currentStep === 'team-creation';
   const showFirstAgent = currentStep === 'first-agent';
   const showPlanningTour = currentStep === 'planning-tour';
-  const showCompletion = currentStep === 'completion';
 
   // Steps that should show video tutorials
   const videoEnabledSteps = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
@@ -52,76 +48,45 @@ export const OnboardingModalContent = ({
   const progressEnabledSteps = ['profile-setup', 'team-creation', 'first-agent', 'planning-tour'];
   const shouldShowProgress = progressEnabledSteps.includes(currentStep);
 
-  const handleContinueAfterVideo = () => {
-    setShowVideo(false);
-    // For steps with forms, don't auto-proceed
-    if (showProfileSetup || showTeamCreation || showFirstAgent || showPlanningTour) {
-      return;
-    }
-  };
-
-  const handleVideoComplete = () => {
-    setHasWatchedVideo(true);
-  };
-
-  const handleSkipVideo = () => {
-    setShowVideo(false);
-  };
-
-  const toggleVideo = () => {
-    setShowVideo(!showVideo);
-  };
-
   return (
     <div className="py-6 space-y-6">
       {/* Video Tutorial Section */}
       {shouldShowVideoOption && (
-        <OnboardingVideoTutorial
-          currentStep={currentStep}
-          onVideoComplete={handleVideoComplete}
-          onSkipVideo={handleSkipVideo}
-          onContinue={handleContinueAfterVideo}
-          showVideo={showVideo}
-          onToggleVideo={toggleVideo}
-        />
+        <SimpleVideoTutorial currentStep={currentStep} />
       )}
 
-      {/* Detailed Progress Indicator - only show if not watching video */}
-      {!showVideo && shouldShowProgress && (
+      {/* Detailed Progress Indicator */}
+      {shouldShowProgress && (
         <DetailedStepProgress
           currentStep={currentStep}
           stepData={getStepData(currentStep)}
         />
       )}
 
-      {/* Main Content - only show if not watching video */}
-      {!showVideo && (
-        <>
-          {showProfileSetup ? (
-            <ProfileSetupForm 
-              onComplete={onProfileSetupComplete}
-              onSkip={onProfileSetupSkip}
-              initialData={getStepData('profile-setup')}
-            />
-          ) : showTeamCreation ? (
-            <TeamCreationForm 
-              onComplete={onTeamCreationComplete}
-              onSkip={onTeamCreationSkip}
-            />
-          ) : showFirstAgent ? (
-            <FirstAgentForm
-              onComplete={onFirstAgentComplete}
-              onSkip={onFirstAgentSkip}
-            />
-          ) : showPlanningTour ? (
-            <PlanningTourForm
-              onComplete={onPlanningTourComplete}
-              onSkip={onPlanningTourSkip}
-            />
-          ) : (
-            stepContent
-          )}
-        </>
+      {/* Main Content */}
+      {showProfileSetup ? (
+        <ProfileSetupForm 
+          onComplete={onProfileSetupComplete}
+          onSkip={onProfileSetupSkip}
+          initialData={getStepData('profile-setup')}
+        />
+      ) : showTeamCreation ? (
+        <TeamCreationForm 
+          onComplete={onTeamCreationComplete}
+          onSkip={onTeamCreationSkip}
+        />
+      ) : showFirstAgent ? (
+        <FirstAgentForm
+          onComplete={onFirstAgentComplete}
+          onSkip={onFirstAgentSkip}
+        />
+      ) : showPlanningTour ? (
+        <PlanningTourForm
+          onComplete={onPlanningTourComplete}
+          onSkip={onPlanningTourSkip}
+        />
+      ) : (
+        stepContent
       )}
     </div>
   );

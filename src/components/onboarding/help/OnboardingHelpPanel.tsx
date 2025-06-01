@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { 
   HelpCircle, 
   ChevronRight, 
@@ -18,8 +16,7 @@ import {
 import { cn } from '@/lib/utils';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
 import { getHelpContent } from './helpContentConfig';
-import { VideoPlayer } from '../video-tutorials/VideoPlayer';
-import { getVideoTutorial } from '../video-tutorials/videoTutorialConfig';
+import { SimpleVideoTutorial } from '../video-tutorials/SimpleVideoTutorial';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface OnboardingHelpPanelProps {
@@ -44,7 +41,6 @@ export const OnboardingHelpPanel = ({
   });
 
   const helpContent = getHelpContent(currentStep);
-  const videoTutorial = getVideoTutorial(currentStep);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -124,20 +120,7 @@ export const OnboardingHelpPanel = ({
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-3">
-              <Card>
-                <CardContent className="pt-4">
-                  <VideoPlayer
-                    videoUrl={videoTutorial.videoUrl}
-                    title={videoTutorial.title}
-                    duration={videoTutorial.duration}
-                    captions={videoTutorial.captions}
-                    className="mb-4"
-                  />
-                  <p className="text-sm text-muted-foreground">
-                    This tutorial provides a visual walkthrough of the {currentStep.replace('-', ' ')} process.
-                  </p>
-                </CardContent>
-              </Card>
+              <SimpleVideoTutorial currentStep={currentStep} />
             </CollapsibleContent>
           </Collapsible>
         )}
