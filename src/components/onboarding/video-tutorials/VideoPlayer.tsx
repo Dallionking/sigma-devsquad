@@ -1,8 +1,7 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Play, Pause, RotateCcw, Volume2, VolumeX, Settings, Maximize } from 'lucide-react';
+import { Play, Pause, RotateCcw, Volume2, VolumeX, SkipForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VideoPlayerProps {
@@ -15,45 +14,54 @@ interface VideoPlayerProps {
   className?: string;
 }
 
-export const VideoPlayer = ({ 
-  src, 
-  title, 
-  captions, 
-  onComplete, 
+export const VideoPlayer = ({
+  src,
+  title,
+  captions,
+  onComplete,
   onSkip,
   autoPlay = false,
-  className 
+  className
 }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
-  const [showCaptions, setShowCaptions] = useState(true);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleTimeUpdate = () => setCurrentTime(video.currentTime);
-    const handleDurationChange = () => setDuration(video.duration);
+    const handleLoadedMetadata = () => {
+      setDuration(video.duration);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(video.currentTime);
+    };
+
     const handleEnded = () => {
       setIsPlaying(false);
-      setIsComplete(true);
+      setIsCompleted(true);
       onComplete?.();
     };
 
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('ended', handleEnded);
 
+    if (autoPlay) {
+      video.play().catch(console.error);
+    }
+
     return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('ended', handleEnded);
     };
-  }, [onComplete]);
+  }, [autoPlay, onComplete]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -62,19 +70,20 @@ export const VideoPlayer = ({
     if (isPlaying) {
       video.pause();
     } else {
-      video.play();
+      video.play().catch(console.error);
     }
     setIsPlaying(!isPlaying);
   };
 
-  const handleReplay = () => {
+  const handleRestart = () => {
     const video = videoRef.current;
     if (!video) return;
 
     video.currentTime = 0;
-    video.play();
+    setCurrentTime(0);
+    setIsCompleted(false);
+    video.play().catch(console.error);
     setIsPlaying(true);
-    setIsComplete(false);
   };
 
   const toggleMute = () => {
@@ -82,17 +91,17 @@ export const VideoPlayer = ({
     if (!video) return;
 
     video.muted = !video.muted;
-    setIsMuted(!isMuted);
+    setIsMuted(video.muted);
   };
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const video = videoRef.current;
-    if (!video) return;
+    const progressBar = e.currentTarget;
+    if (!video || !progressBar) return;
 
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = progressBar.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
-    const width = rect.width;
-    const newTime = (clickX / width) * duration;
+    const newTime = (clickX / rect.width) * duration;
     
     video.currentTime = newTime;
     setCurrentTime(newTime);
@@ -104,118 +113,106 @@ export const VideoPlayer = ({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const progress = duration ? (currentTime / duration) * 100 : 0;
+  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className={cn("relative bg-black rounded-lg overflow-hidden", className)}>
-      {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={src}
-        className="w-full h-auto"
-        autoPlay={autoPlay}
-        muted={isMuted}
-        playsInline
-        aria-label={title}
-      >
-        {captions && (
-          <track
-            kind="captions"
-            src={captions}
-            srcLang="en"
-            label="English"
-            default={showCaptions}
-          />
-        )}
-        Your browser does not support the video tag.
-      </video>
-
-      {/* Video Controls Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-        {/* Progress Bar */}
-        <div
-          className="w-full h-2 bg-white/20 rounded-full cursor-pointer mb-3"
-          onClick={handleProgressClick}
+    <div className={cn("w-full space-y-4", className)}>
+      <div className="relative bg-black rounded-lg overflow-hidden">
+        <video
+          ref={videoRef}
+          className="w-full aspect-video"
+          src={src}
+          poster={src.replace('.mp4', '-poster.jpg')}
+          preload="metadata"
+          aria-label={title}
         >
-          <div
-            className="h-full bg-primary rounded-full transition-all duration-150"
-            style={{ width: `${progress}%` }}
-          />
+          {captions && (
+            <track
+              kind="captions"
+              src={captions}
+              srcLang="en"
+              label="English"
+              default
+            />
+          )}
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      {/* Video Controls */}
+      <div className="space-y-3">
+        {/* Progress Bar */}
+        <div className="space-y-2">
+          <div 
+            className="w-full h-2 bg-muted rounded-full cursor-pointer"
+            onClick={handleProgressClick}
+          >
+            <div 
+              className="h-full bg-primary rounded-full transition-all duration-150"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
         </div>
 
-        {/* Controls */}
+        {/* Control Buttons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button
+              variant="outline"
               size="sm"
-              variant="ghost"
               onClick={togglePlay}
-              className="text-white hover:bg-white/10"
-              aria-label={isPlaying ? 'Pause video' : 'Play video'}
+              disabled={isCompleted}
             >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isPlaying ? (
+                <Pause className="w-4 h-4" />
+              ) : (
+                <Play className="w-4 h-4" />
+              )}
             </Button>
 
             <Button
+              variant="outline"
               size="sm"
-              variant="ghost"
-              onClick={handleReplay}
-              className="text-white hover:bg-white/10"
-              aria-label="Replay video"
+              onClick={handleRestart}
             >
               <RotateCcw className="w-4 h-4" />
             </Button>
 
             <Button
+              variant="outline"
               size="sm"
-              variant="ghost"
               onClick={toggleMute}
-              className="text-white hover:bg-white/10"
-              aria-label={isMuted ? 'Unmute video' : 'Mute video'}
             >
-              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              {isMuted ? (
+                <VolumeX className="w-4 h-4" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
             </Button>
-
-            <span className="text-white text-sm">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </span>
           </div>
 
-          <div className="flex items-center space-x-2">
-            {captions && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setShowCaptions(!showCaptions)}
-                className="text-white hover:bg-white/10"
-                aria-label="Toggle captions"
-              >
-                <Badge variant={showCaptions ? "default" : "secondary"} className="text-xs">
-                  CC
-                </Badge>
-              </Button>
-            )}
-
-            {onSkip && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={onSkip}
-                className="text-white border-white/30 hover:bg-white/10"
-              >
-                Skip
-              </Button>
-            )}
-          </div>
+          {onSkip && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onSkip}
+            >
+              <SkipForward className="w-4 h-4 mr-2" />
+              Skip
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Completion Badge */}
-      {isComplete && (
-        <div className="absolute top-4 right-4">
-          <Badge className="bg-green-500 text-white">
-            Video Complete!
-          </Badge>
+      {isCompleted && (
+        <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <p className="text-sm text-green-700 dark:text-green-300">
+            Video completed! You can replay it anytime.
+          </p>
         </div>
       )}
     </div>
