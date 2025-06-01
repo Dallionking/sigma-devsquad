@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Circle, Lock, Users, Bot, MapPin, Sparkles, Play } from 'lucide-react';
 import { useOnboarding, type OnboardingStep } from '@/contexts/OnboardingContext';
+import { MiniStepProgress } from './progress/MiniStepProgress';
 import { cn } from '@/lib/utils';
 
 const stepConfig = {
@@ -40,7 +41,7 @@ const stepConfig = {
 };
 
 export const OnboardingProgressSidebar = () => {
-  const { progress, goToStep, canNavigateToStep, getStepProgress } = useOnboarding();
+  const { progress, goToStep, canNavigateToStep, getStepProgress, getStepData } = useOnboarding();
   const { percentage } = getStepProgress();
 
   const handleStepClick = (step: OnboardingStep) => {
@@ -61,6 +62,9 @@ export const OnboardingProgressSidebar = () => {
     }
     return 'locked';
   };
+
+  // Steps that have detailed progress tracking
+  const progressSteps = ['profile-setup', 'team-creation', 'first-agent', 'planning-tour'];
 
   return (
     <div className="w-80 bg-gradient-to-b from-muted/30 to-background border-r border-border/50 flex flex-col">
@@ -94,6 +98,7 @@ export const OnboardingProgressSidebar = () => {
           const status = getStepStatus(stepKey);
           const Icon = config.icon;
           const isClickable = status !== 'locked';
+          const hasDetailedProgress = progressSteps.includes(stepKey);
 
           return (
             <Button
@@ -108,10 +113,10 @@ export const OnboardingProgressSidebar = () => {
               onClick={() => handleStepClick(stepKey)}
               disabled={!isClickable}
             >
-              <div className="flex items-center space-x-3 w-full">
+              <div className="flex items-start space-x-3 w-full">
                 {/* Status icon */}
                 <div className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center",
+                  "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
                   status === 'completed' && "bg-green-100 dark:bg-green-900/30",
                   status === 'current' && "bg-primary/10",
                   status === 'available' && "bg-muted",
@@ -129,8 +134,8 @@ export const OnboardingProgressSidebar = () => {
                 </div>
 
                 {/* Step info */}
-                <div className="flex-1 text-left">
-                  <div className="flex items-center space-x-2">
+                <div className="flex-1 text-left min-w-0">
+                  <div className="flex items-center space-x-2 mb-1">
                     <Icon className={cn("w-4 h-4", config.color)} />
                     <span className={cn(
                       "font-medium text-sm",
@@ -146,9 +151,20 @@ export const OnboardingProgressSidebar = () => {
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  
+                  <p className="text-xs text-muted-foreground mb-2">
                     {config.description}
                   </p>
+
+                  {/* Mini progress indicator for detailed steps */}
+                  {hasDetailedProgress && (status === 'current' || status === 'completed') && (
+                    <MiniStepProgress
+                      currentStep={stepKey}
+                      stepData={getStepData(stepKey)}
+                      showLabel={false}
+                      className="mt-1"
+                    />
+                  )}
                 </div>
 
                 {/* Completion indicator */}
@@ -166,6 +182,7 @@ export const OnboardingProgressSidebar = () => {
         <div className="text-xs text-muted-foreground space-y-1">
           <p>💡 Click completed steps to revisit them</p>
           <p>🔒 Future steps unlock as you progress</p>
+          <p>📊 Sub-step progress shown for current step</p>
           <p>💾 Your progress is automatically saved</p>
         </div>
       </div>

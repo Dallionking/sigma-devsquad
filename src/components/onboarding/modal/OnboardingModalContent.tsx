@@ -6,6 +6,7 @@ import { TeamCreationForm } from '../TeamCreationForm';
 import { FirstAgentForm } from '../first-agent/FirstAgentForm';
 import { PlanningTourForm } from '../PlanningTourForm';
 import { OnboardingVideoTutorial } from '../video-tutorials/OnboardingVideoTutorial';
+import { DetailedStepProgress } from '../progress/DetailedStepProgress';
 
 interface OnboardingModalContentProps {
   currentStep: OnboardingStep;
@@ -47,6 +48,10 @@ export const OnboardingModalContent = ({
   const videoEnabledSteps = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
   const shouldShowVideoOption = videoEnabledSteps.includes(currentStep);
 
+  // Steps that should show detailed progress
+  const progressEnabledSteps = ['profile-setup', 'team-creation', 'first-agent', 'planning-tour'];
+  const shouldShowProgress = progressEnabledSteps.includes(currentStep);
+
   const handleContinueAfterVideo = () => {
     setShowVideo(false);
     // For steps with forms, don't auto-proceed
@@ -78,6 +83,14 @@ export const OnboardingModalContent = ({
           onContinue={handleContinueAfterVideo}
           showVideo={showVideo}
           onToggleVideo={toggleVideo}
+        />
+      )}
+
+      {/* Detailed Progress Indicator - only show if not watching video */}
+      {!showVideo && shouldShowProgress && (
+        <DetailedStepProgress
+          currentStep={currentStep}
+          stepData={getStepData(currentStep)}
         />
       )}
 
