@@ -1,0 +1,49 @@
+
+/* Neural network and pulse animations */
+@keyframes neural-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+    filter: hue-rotate(0deg);
+  }
+  33% {
+    opacity: 0.6;
+    transform: scale(1.1);
+    filter: hue-rotate(90deg);
+  }
+  66% {
+    opacity: 0.8;
+    transform: scale(1.05);
+    filter: hue-rotate(180deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.3));
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+    filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.6));
+  }
+}
+
+@layer utilities {
+  .animate-neural-pulse {
+    animation: neural-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Enhanced feature icon transitions */
+  .feature-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .group:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
