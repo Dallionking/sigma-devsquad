@@ -53,6 +53,7 @@ export const ConsolidatedNavigation = ({
   };
 
   const primaryNavItems = [
+    { path: "/", label: "Home", icon: Home, active: location.pathname === "/" },
     { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
   ];

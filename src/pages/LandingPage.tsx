@@ -37,11 +37,11 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Redirect authenticated users to dashboard
-  useEffect(() => {
-    if (!loading && user) {
-      navigate("/dashboard");
-    }
-  }, [user, loading, navigate]);
+  // useEffect(() => {
+  //   if (!loading && user) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [user, loading, navigate]);
 
   const handleGetStarted = () => {
     if (user) {
