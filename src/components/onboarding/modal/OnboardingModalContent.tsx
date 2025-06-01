@@ -6,7 +6,6 @@ import { TeamCreationForm } from '../TeamCreationForm';
 import { FirstAgentForm } from '../first-agent/FirstAgentForm';
 import { PlanningTourForm } from '../PlanningTourForm';
 import { SimpleVideoTutorial } from '../video-tutorials/SimpleVideoTutorial';
-import { DetailedStepProgress } from '../progress/DetailedStepProgress';
 
 interface OnboardingModalContentProps {
   currentStep: OnboardingStep;
@@ -44,23 +43,11 @@ export const OnboardingModalContent = ({
   const videoEnabledSteps = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
   const shouldShowVideoOption = videoEnabledSteps.includes(currentStep);
 
-  // Steps that should show detailed progress
-  const progressEnabledSteps = ['profile-setup', 'team-creation', 'first-agent', 'planning-tour'];
-  const shouldShowProgress = progressEnabledSteps.includes(currentStep);
-
   return (
     <div className="py-6 space-y-6">
       {/* Video Tutorial Section */}
       {shouldShowVideoOption && (
         <SimpleVideoTutorial currentStep={currentStep} />
-      )}
-
-      {/* Detailed Progress Indicator */}
-      {shouldShowProgress && (
-        <DetailedStepProgress
-          currentStep={currentStep}
-          stepData={getStepData(currentStep)}
-        />
       )}
 
       {/* Main Content */}
