@@ -1,12 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Users, Bot, MapPin, Sparkles, ArrowRight, X } from 'lucide-react';
+import { CheckCircle, Users, Bot, MapPin, Sparkles, ArrowRight, X, Star, Code2, Globe, Database } from 'lucide-react';
 import { useOnboarding, type OnboardingStep } from '@/contexts/OnboardingContext';
+import { useProjectTemplates } from '@/contexts/ProjectTemplateContext';
 import { cn } from '@/lib/utils';
 
 const stepContent = {
@@ -146,7 +147,7 @@ const stepContent = {
             <h4 className="font-semibold mb-2">What's Next?</h4>
             <ul className="space-y-1 text-sm text-left">
               <li>• Explore the dashboard and different views</li>
-              <li>• Try creating your first project</li>
+              <li>• Try creating your first project from a template</li>
               <li>• Connect with your AI agents</li>
               <li>• Check out sample projects for inspiration</li>
             </ul>
@@ -155,6 +156,62 @@ const stepContent = {
       </div>
     )
   }
+};
+
+// Template selection content for the 'first-agent' step
+const TemplateSelectionContent = () => {
+  const { getPopularTemplates, createProjectFromTemplate } = useProjectTemplates();
+  const popularTemplates = getPopularTemplates();
+
+  const iconMap = {
+    'todo-app': Code2,
+    'ecommerce': Database,
+    'portfolio': Globe
+  };
+
+  const handleSelectTemplate = async (templateId: string) => {
+    await createProjectFromTemplate(templateId);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="text-center">
+        <h4 className="font-semibold mb-2">Start with a Template</h4>
+        <p className="text-sm text-muted-foreground">
+          Choose a project template to get started quickly with pre-configured agents and tasks.
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 gap-3">
+        {popularTemplates.slice(0, 3).map((template) => {
+          const Icon = iconMap[template.id as keyof typeof iconMap] || Code2;
+          return (
+            <Card 
+              key={template.id} 
+              className="p-3 hover:bg-accent/50 cursor-pointer transition-colors"
+              onClick={() => handleSelectTemplate(template.id)}
+            >
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <Icon className="w-4 h-4 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2">
+                    <h5 className="font-medium text-sm">{template.title}</h5>
+                    <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                  </div>
+                  <p className="text-xs text-muted-foreground">{template.description}</p>
+                </div>
+                <Badge variant="outline" className="text-xs">
+                  {template.difficulty}
+                </Badge>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 const stepOrder: OnboardingStep[] = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
@@ -178,6 +235,9 @@ export const OnboardingModal = () => {
   const handleSkip = () => {
     skipOnboarding();
   };
+
+  // Show template selection for first-agent step
+  const showTemplateSelection = progress.currentStep === 'first-agent';
 
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
@@ -224,7 +284,7 @@ export const OnboardingModal = () => {
 
           {/* Content */}
           <div className="py-6">
-            {currentContent.content}
+            {showTemplateSelection ? <TemplateSelectionContent /> : currentContent.content}
           </div>
 
           {/* Actions */}

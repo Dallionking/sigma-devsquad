@@ -1,7 +1,8 @@
 
-import React from 'react';
-import { FolderOpen, Plus, Rocket, BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import { FolderOpen, Plus, Rocket, BookOpen, Star } from 'lucide-react';
 import { EmptyStateCard } from './EmptyStateCard';
+import { SampleProjectsModal } from '@/components/sample-projects/SampleProjectsModal';
 import { useNavigate } from 'react-router-dom';
 
 interface ProjectsEmptyStateProps {
@@ -10,6 +11,7 @@ interface ProjectsEmptyStateProps {
 
 export const ProjectsEmptyState = ({ onCreateProject }: ProjectsEmptyStateProps) => {
   const navigate = useNavigate();
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const handleImportProject = () => {
     // Handle project import
@@ -17,35 +19,42 @@ export const ProjectsEmptyState = ({ onCreateProject }: ProjectsEmptyStateProps)
   };
 
   const handleViewSamples = () => {
-    navigate('/dashboard?tab=samples');
+    setShowTemplates(true);
   };
 
   const tips = [
+    "Start with pre-built templates for common scenarios",
     "Projects help organize related tasks and agents",
     "Import existing codebases to get started quickly",
-    "Use project templates for common scenarios",
-    "Set up project-specific configurations"
+    "Set up project-specific configurations and goals"
   ];
 
   return (
-    <EmptyStateCard
-      icon={FolderOpen}
-      title="Create Your First Project"
-      description="Projects provide structure for your AI development workflow. Organize tasks, agents, and resources around specific goals or applications."
-      illustration="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop&crop=center"
-      tips={tips}
-      action={onCreateProject ? {
-        label: "Create Project",
-        onClick: onCreateProject
-      } : undefined}
-      secondaryAction={{
-        label: "Import Project",
-        onClick: handleImportProject
-      }}
-      tertiaryAction={{
-        label: "Browse Samples",
-        onClick: handleViewSamples
-      }}
-    />
+    <>
+      <EmptyStateCard
+        icon={FolderOpen}
+        title="Create Your First Project"
+        description="Projects provide structure for your AI development workflow. Start with a template or create from scratch to organize tasks, agents, and resources around specific goals."
+        illustration="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop&crop=center"
+        tips={tips}
+        action={{
+          label: "Browse Templates",
+          onClick: handleViewSamples
+        }}
+        secondaryAction={onCreateProject ? {
+          label: "Create from Scratch",
+          onClick: onCreateProject
+        } : undefined}
+        tertiaryAction={{
+          label: "Import Project",
+          onClick: handleImportProject
+        }}
+      />
+      
+      <SampleProjectsModal
+        open={showTemplates}
+        onOpenChange={setShowTemplates}
+      />
+    </>
   );
 };
