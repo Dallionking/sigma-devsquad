@@ -35,9 +35,7 @@ export const ResponsiveNavigationWrapper = ({
   
   const { 
     isCollapsed, 
-    toggleSidebar, 
-    collapseSidebar, 
-    expandSidebar 
+    toggleSidebar
   } = useCollapsibleSidebar({
     defaultCollapsed,
     keyboardShortcut: 'b',
@@ -47,9 +45,9 @@ export const ResponsiveNavigationWrapper = ({
   // Auto-collapse on mobile
   useEffect(() => {
     if (isMobile && !isCollapsed) {
-      collapseSidebar();
+      toggleSidebar();
     }
-  }, [isMobile, isCollapsed, collapseSidebar]);
+  }, [isMobile, isCollapsed, toggleSidebar]);
 
   // Close mobile nav when route changes
   useEffect(() => {
