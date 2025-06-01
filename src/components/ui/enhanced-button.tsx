@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-interface EnhancedButtonProps extends React.ComponentProps<typeof Button> {
+interface EnhancedButtonProps extends Omit<React.ComponentProps<typeof Button>, 'variant'> {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'enhanced-primary' | 'enhanced-secondary';
   children: React.ReactNode;
   rippleEffect?: boolean;
@@ -49,9 +49,17 @@ export const EnhancedButton = ({
     'enhanced-secondary': 'bg-gradient-to-r from-vibe-accent to-vibe-flow hover:from-vibe-accent/90 hover:to-vibe-flow/90 text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300'
   };
 
+  // Map enhanced variants to base variants for the underlying Button component
+  const getBaseVariant = (variant: string) => {
+    if (variant.startsWith('enhanced-')) {
+      return 'default' as const;
+    }
+    return variant as 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  };
+
   return (
     <Button
-      variant={variant.startsWith('enhanced-') ? 'default' : variant}
+      variant={getBaseVariant(variant)}
       className={cn(
         'relative overflow-hidden transition-all duration-300 ease-out',
         variant.startsWith('enhanced-') && enhancedVariants[variant as keyof typeof enhancedVariants],

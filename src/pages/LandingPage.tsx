@@ -240,7 +240,7 @@ const LandingPage = () => {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <AnimatedSection animation="slide-up" className="md:hidden border-t bg-background py-4">
+            <AnimatedSection animation="fade-up" className="md:hidden border-t bg-background py-4">
               <nav className="flex flex-col space-y-4">
                 <a href="#features" className="text-foreground/80 hover:text-vibe-primary transition-colors">
                   Features
@@ -344,7 +344,7 @@ const LandingPage = () => {
             </div>
 
             {/* Hero Visual */}
-            <AnimatedSection animation="scale-in" delay={400}>
+            <AnimatedSection animation="scale" delay={400}>
               <div className="relative">
                 <div className="bg-gradient-to-br from-vibe-primary via-vibe-secondary to-vibe-accent rounded-2xl p-1 animate-gradient">
                   <div className="bg-background rounded-xl p-8">
@@ -477,7 +477,7 @@ const LandingPage = () => {
       <section id="benefits" className="py-12 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`grid gap-12 items-center ${getGridCols(1, 1, 2)}`}>
-            <AnimatedSection animation="slide-in-left" delay={100}>
+            <AnimatedSection animation="slide-left" delay={100}>
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
                   Why Choose Vibe DevSquad?
@@ -505,7 +505,7 @@ const LandingPage = () => {
               </div>
             </AnimatedSection>
 
-            <AnimatedSection animation="slide-in-right" delay={200}>
+            <AnimatedSection animation="slide-right" delay={200}>
               <div className="space-y-6">
                 {testimonials.map((testimonial, index) => (
                   <EnhancedCard key={index} hoverEffect="glow" className="p-6">
@@ -541,7 +541,7 @@ const LandingPage = () => {
       {/* CTA Section */}
       <section className="py-12 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <AnimatedSection animation="scale-in" delay={100}>
+          <AnimatedSection animation="scale" delay={100}>
             <div className="max-w-3xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Ready to Transform Your Development Process?
