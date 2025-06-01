@@ -46,10 +46,10 @@ export const FeaturesSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animation="fade-up" delay={100}>
           <div className="text-center mb-16">
-            <h2 className="text-fluid-3xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Powerful Features for Modern Development
             </h2>
-            <p className="text-fluid-subtitle text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Everything you need to build, manage, and scale intelligent agent teams
             </p>
           </div>
@@ -67,8 +67,8 @@ export const FeaturesSection = () => {
                   <div className={`w-12 h-12 bg-vibe-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <feature.icon className={`w-6 h-6 ${feature.color} feature-icon transition-transform`} />
                   </div>
-                  <h3 className="text-fluid-lg font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-fluid-body text-muted-foreground leading-relaxed">{feature.description}</p>
+                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
                 </CardContent>
               </EnhancedCard>
             </AnimatedSection>
