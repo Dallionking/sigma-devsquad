@@ -2,6 +2,7 @@
 import React from 'react';
 import { HeaderLogo } from './HeaderLogo';
 import { ViewModeSelector } from './ViewModeSelector';
+import { NavigationButtons } from './NavigationButtons';
 import { OptimizedActionButtons } from './OptimizedActionButtons';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { ViewMode, Agent } from '@/types';
@@ -53,12 +54,10 @@ export const OptimizedHeader = ({
             />
           </div>
 
-          {/* Center Section - View Mode Selector (Desktop) */}
+          {/* Center Section - Navigation Buttons (Desktop) */}
           <div className="hidden lg:flex flex-1 justify-center">
-            <ViewModeSelector
-              viewMode={viewMode}
-              onViewModeChange={onViewModeChange}
-              notificationCounts={notificationCounts}
+            <NavigationButtons 
+              showTeamView={showTeamView}
             />
           </div>
 
@@ -72,8 +71,15 @@ export const OptimizedHeader = ({
           </div>
         </div>
 
-        {/* Mobile View Mode Selector */}
+        {/* Mobile Navigation Buttons */}
         <div className="lg:hidden pb-3">
+          <NavigationButtons 
+            showTeamView={showTeamView}
+          />
+        </div>
+
+        {/* View Mode Selector (for workflow tabs) */}
+        <div className="pb-3 border-t border-border/50 mt-2">
           <ViewModeSelector
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}
