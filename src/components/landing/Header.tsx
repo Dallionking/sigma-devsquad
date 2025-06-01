@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Logo } from "@/components/branding/Logo";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { UserProfileDropdown } from "./UserProfileDropdown";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Menu, X, ChevronDown, Zap, Users, Target, TrendingUp, Shield, Star } from "lucide-react";
@@ -233,15 +234,19 @@ export const Header = () => {
                 </EnhancedButton>
               </>
             ) : (
-              <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted} className="transition-all duration-200 hover:scale-105">
-                Dashboard
-              </EnhancedButton>
+              <div className="flex items-center space-x-3">
+                <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted} className="transition-all duration-200 hover:scale-105">
+                  Dashboard
+                </EnhancedButton>
+                <UserProfileDropdown />
+              </div>
             )}
           </div>
 
-          {/* Mobile Theme Toggle */}
+          {/* Mobile Theme Toggle and User Profile */}
           <div className="flex lg:hidden items-center space-x-2">
             <ThemeToggle />
+            {user && <UserProfileDropdown />}
           </div>
         </div>
       </div>
