@@ -33,20 +33,38 @@ export const ActionButtons = () => {
         />
       )}
 
-      {/* Action Buttons */}
+      {/* Action Buttons with enhanced styling */}
       <div className="flex items-center space-x-2">
         {/* Search Button */}
-        <Button variant="ghost" size="sm" className="h-9 w-9">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-9 w-9 hover:bg-accent/80 hover:scale-105 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          title="Search"
+        >
           <Search className="h-4 w-4" />
         </Button>
         
         {/* Notifications Button */}
-        <Button variant="ghost" size="sm" className="h-9 w-9">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-9 w-9 hover:bg-accent/80 hover:scale-105 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 relative"
+          title="Notifications"
+        >
           <Bell className="h-4 w-4" />
+          {/* Notification indicator */}
+          <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
         </Button>
         
         {/* Settings Button */}
-        <Button variant="ghost" size="sm" className="h-9 w-9" onClick={handleSettingsClick}>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={handleSettingsClick}
+          className="h-9 w-9 hover:bg-accent/80 hover:scale-105 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          title="Settings"
+        >
           <Settings className="h-4 w-4" />
         </Button>
 
