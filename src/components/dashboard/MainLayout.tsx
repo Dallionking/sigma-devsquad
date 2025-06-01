@@ -81,7 +81,7 @@ export const MainLayout = ({
     return null;
   }, [selectedAgent?.id, selectedTask?.id, selectedMessage?.id, selectedAgentProfile?.id]);
 
-  // Update panel when selections change - fixed to prevent infinite loops
+  // Update panel when selections change
   React.useEffect(() => {
     if (currentSelection) {
       showPanel(currentSelection.type, currentSelection.data);
@@ -110,8 +110,8 @@ export const MainLayout = ({
   }), []);
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-background">
-      {/* View Mode Tabs - Restored for Individual Agents view */}
+    <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+      {/* View Mode Tabs - Always show for Individual Agents view */}
       {!showTeamView && (
         <div className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
           <ViewModeTabs
@@ -126,12 +126,12 @@ export const MainLayout = ({
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 flex overflow-hidden relative">
           {/* Sidebar Toggle */}
-          <div className="flex-shrink-0 border-r border-border/60 bg-card/30">
+          <div className="flex-shrink-0 border-r border-border/60 bg-card/50 backdrop-blur-sm">
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleSidebar}
-              className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-colors"
+              className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-all duration-200 hover:scale-105"
               title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
             >
               {isCollapsed ? (
@@ -142,10 +142,10 @@ export const MainLayout = ({
             </Button>
           </div>
 
-          {/* Sidebar */}
+          {/* Enhanced Sidebar */}
           <div className={cn(
-            "bg-background border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0",
-            isCollapsed ? "w-16" : (showTeamView ? "w-64" : "w-80")
+            "bg-background/95 backdrop-blur-sm border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 shadow-sm",
+            isCollapsed ? "w-16" : (showTeamView ? "w-80" : "w-96")
           )}>
             <SidebarRenderer
               viewMode={viewMode}
@@ -168,9 +168,9 @@ export const MainLayout = ({
             />
           </div>
 
-          {/* Main Content */}
+          {/* Main Content with Enhanced Styling */}
           <div className={cn(
-            "flex-1 flex flex-col overflow-hidden bg-background transition-all duration-300 ease-in-out",
+            "flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background to-muted/10 transition-all duration-300 ease-in-out",
             panelContext.isVisible && "mr-96"
           )}>
             <MainContentRenderer
@@ -203,15 +203,17 @@ export const MainLayout = ({
           />
         </div>
 
-        {/* User Presence Panel - only for Individual Agents view */}
+        {/* User Presence Panel - Enhanced for Individual Agents view */}
         {!showTeamView && (
-          <UserPresencePanel 
-            viewMode={viewMode}
-            componentId={`${viewMode}-view`}
-            projectId="current-project"
-            showPerformance={true}
-            className="animate-in slide-in-from-bottom duration-300"
-          />
+          <div className="border-t border-border/30 bg-background/80 backdrop-blur-sm">
+            <UserPresencePanel 
+              viewMode={viewMode}
+              componentId={`${viewMode}-view`}
+              projectId="current-project"
+              showPerformance={true}
+              className="animate-in slide-in-from-bottom duration-300"
+            />
+          </div>
         )}
       </div>
     </div>

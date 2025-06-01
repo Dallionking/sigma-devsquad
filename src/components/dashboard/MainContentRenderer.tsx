@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
@@ -6,7 +7,7 @@ import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
 import { WorkflowCanvas } from "../workflow/WorkflowCanvas";
 import { TeamDashboard } from "../teams/TeamDashboard";
-import { TeamHierarchy } from "../teams/TeamHierarchy";
+import { UnifiedCommunicationHub } from "../communication/UnifiedCommunicationHub";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Users, MessageSquare, Workflow } from "lucide-react";
 
@@ -64,7 +65,7 @@ export const MainContentRenderer = ({
       );
     }
 
-    // If no specific team is selected, show team overview only (no second hierarchy)
+    // If no specific team is selected, show team overview
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 p-6">
@@ -104,7 +105,7 @@ export const MainContentRenderer = ({
     case 'workflow':
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-6">
             <WorkflowCanvas 
               agents={agents}
               onAgentSelect={onAgentSelect}
@@ -117,22 +118,12 @@ export const MainContentRenderer = ({
     case 'communication':
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 p-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5" />
-                  Communication Hub
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CommunicationHistory
-                  messages={messages}
-                  selectedMessage={selectedMessage}
-                  onMessageSelect={onMessageSelect}
-                />
-              </CardContent>
-            </Card>
+          <div className="flex-1 p-6">
+            <UnifiedCommunicationHub 
+              defaultTab="chat"
+              projectId="current-project"
+              className="h-full"
+            />
           </div>
         </div>
       );
@@ -140,7 +131,7 @@ export const MainContentRenderer = ({
     case 'tasks':
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-6">
             <TaskManagement
               tasks={tasks}
               agents={agents}
@@ -154,7 +145,7 @@ export const MainContentRenderer = ({
     case 'messages':
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -178,7 +169,7 @@ export const MainContentRenderer = ({
       // Default to agent grid view
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-6">
             <AgentGrid 
               agents={agents} 
               onAgentSelect={onAgentSelect}
