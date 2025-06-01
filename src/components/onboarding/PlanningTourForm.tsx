@@ -1,194 +1,203 @@
 
-import React, { useState, useEffect } from 'react';
-import { PlanningTourOverlay } from './planning-tour/PlanningTourOverlay';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { MapPin, MessageSquare, Target, BarChart3, Users, Zap, Brain, CheckCircle } from 'lucide-react';
+import { CheckCircle, Play, SkipForward, ArrowRight } from 'lucide-react';
+import { TooltipWrapper } from './tooltips/TooltipWrapper';
 
 interface PlanningTourFormProps {
   onComplete: () => void;
   onSkip: () => void;
 }
 
+interface TourStep {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  completed: boolean;
+}
+
+const tourSteps: TourStep[] = [
+  {
+    id: "dashboard-overview",
+    title: "Dashboard Overview",
+    description: "Learn about the main dashboard, navigation, and key features",
+    duration: "2 min",
+    completed: false
+  },
+  {
+    id: "agent-interaction",
+    title: "Agent Interaction",
+    description: "How to communicate with your AI agents and assign tasks",
+    duration: "3 min",
+    completed: false
+  },
+  {
+    id: "project-planning",
+    title: "Project Planning",
+    description: "Create projects, set goals, and organize your workflow",
+    duration: "4 min",
+    completed: false
+  },
+  {
+    id: "collaboration-tools",
+    title: "Collaboration Tools",
+    description: "Team features, sharing, and real-time collaboration",
+    duration: "3 min",
+    completed: false
+  }
+];
+
 export const PlanningTourForm = ({ onComplete, onSkip }: PlanningTourFormProps) => {
-  const [showTour, setShowTour] = useState(false);
+  const [steps, setSteps] = useState<TourStep[]>(tourSteps);
+  const [currentStep, setCurrentStep] = useState<string | null>(null);
 
-  // Mock planning interface elements for the tour
-  useEffect(() => {
-    // Add tour target classes to mock elements
-    const mockElements = [
-      { class: 'planning-overview', element: document.querySelector('.planning-preview') },
-      { class: 'chat-interface', element: document.querySelector('.chat-preview') },
-      { class: 'task-breakdown', element: document.querySelector('.task-preview') },
-      { class: 'progress-tracking', element: document.querySelector('.progress-preview') },
-      { class: 'completion-area', element: document.querySelector('.completion-preview') }
-    ];
-
-    mockElements.forEach(({ class: className, element }) => {
-      if (element) {
-        element.classList.add(className);
-      }
-    });
-  }, []);
-
-  const handleStartTour = () => {
-    setShowTour(true);
+  const handleStepComplete = (stepId: string) => {
+    setSteps(prev => prev.map(step => 
+      step.id === stepId ? { ...step, completed: true } : step
+    ));
+    setCurrentStep(null);
   };
 
-  const handleTourComplete = () => {
-    setShowTour(false);
-    onComplete();
+  const handleStartStep = (stepId: string) => {
+    setCurrentStep(stepId);
+    // Simulate step completion after a short delay
+    setTimeout(() => {
+      handleStepComplete(stepId);
+    }, 2000);
   };
 
-  const handleTourSkip = () => {
-    setShowTour(false);
-    onSkip();
-  };
+  const completedSteps = steps.filter(step => step.completed).length;
+  const allCompleted = completedSteps === steps.length;
 
   return (
-    <div className="space-y-6">
-      {/* Planning Overview */}
-      <Card className="planning-preview">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <MapPin className="w-5 h-5 text-primary" />
-            <span>AI-Powered Project Planning</span>
-            <Badge variant="secondary">Interactive Tour</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">
-            Discover how AI can transform your project planning workflow with intelligent task breakdown, 
-            dependency mapping, and automated coordination between your AI agents.
+    <TooltipWrapper
+      id="planning-tour-section"
+      title="Interactive Platform Tour"
+      content="Take a guided tour of the platform to learn about key features, agent interaction, project planning, and collaboration tools. This will help you get the most out of your AI-powered development environment."
+      position="top"
+    >
+      <div className="space-y-6">
+        <div className="text-center space-y-2">
+          <h3 className="text-2xl font-bold">Platform Tour</h3>
+          <p className="text-muted-foreground">
+            Learn the key features to get the most out of your AI development environment
           </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Chat Interface Preview */}
-            <Card className="chat-preview">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  <MessageSquare className="w-4 h-4 text-primary" />
-                  <h4 className="font-medium">Planning Chat</h4>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="bg-muted p-2 rounded text-xs">
-                    "I need to build a React dashboard with user authentication..."
-                  </div>
-                  <div className="bg-primary/10 p-2 rounded text-xs">
-                    I'll break this down into: 1) Auth system, 2) Dashboard layout, 3) Data components...
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Task Breakdown Preview */}
-            <Card className="task-preview">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Target className="w-4 h-4 text-primary" />
-                  <h4 className="font-medium">Task Breakdown</h4>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2 text-xs">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Setup Authentication (2 days)</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-xs">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span>Build Dashboard Layout (1 day)</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-xs">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Create Data Components (3 days)</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="flex items-center justify-center gap-2">
+            <Badge variant="outline">
+              {completedSteps}/{steps.length} steps completed
+            </Badge>
+            <span className="text-sm text-muted-foreground">
+              (~12 minutes total)
+            </span>
           </div>
+        </div>
 
-          {/* Progress Tracking Preview */}
-          <Card className="progress-preview mb-4">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <BarChart3 className="w-4 h-4 text-primary" />
-                <h4 className="font-medium">Real-time Progress</h4>
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-green-600">73%</div>
-                  <div className="text-xs text-muted-foreground">Complete</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-blue-600">5</div>
-                  <div className="text-xs text-muted-foreground">Active Tasks</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-purple-600">3</div>
-                  <div className="text-xs text-muted-foreground">Agents Working</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Feature Highlights */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-            <div className="flex items-center space-x-2 p-2 bg-accent/50 rounded">
-              <Brain className="w-4 h-4 text-primary" />
-              <span className="text-xs">Smart Planning</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 bg-accent/50 rounded">
-              <Users className="w-4 h-4 text-primary" />
-              <span className="text-xs">Team Coordination</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 bg-accent/50 rounded">
-              <Zap className="w-4 h-4 text-primary" />
-              <span className="text-xs">Auto-Assignment</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 bg-accent/50 rounded">
-              <CheckCircle className="w-4 h-4 text-primary" />
-              <span className="text-xs">Progress Tracking</span>
-            </div>
-          </div>
-
-          {/* Completion Area */}
-          <div className="completion-preview text-center">
-            <Button 
-              onClick={handleStartTour} 
-              size="lg"
-              className="flex items-center space-x-2"
+        <div className="space-y-4">
+          {steps.map((step, index) => (
+            <TooltipWrapper
+              key={step.id}
+              id={`tour-step-${step.id}`}
+              title={`Tour Step: ${step.title}`}
+              content={`${step.description} This step takes approximately ${step.duration} to complete and covers essential functionality you'll use regularly.`}
+              position="right"
+              trigger="hover"
+              showIcon={false}
             >
-              <MapPin className="w-5 h-5" />
-              <span>Start Interactive Tour</span>
+              <Card className={`transition-all duration-200 ${
+                step.completed ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800' :
+                currentStep === step.id ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800' :
+                'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+              }`}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                        step.completed ? 'bg-green-500 text-white' :
+                        currentStep === step.id ? 'bg-blue-500 text-white' :
+                        'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                      }`}>
+                        {step.completed ? <CheckCircle className="w-4 h-4" /> : index + 1}
+                      </div>
+                      <div>
+                        <CardTitle className="text-base">{step.title}</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {step.duration}
+                      </Badge>
+                      {!step.completed && currentStep !== step.id && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleStartStep(step.id)}
+                        >
+                          <Play className="w-3 h-3 mr-1" />
+                          Start
+                        </Button>
+                      )}
+                      {currentStep === step.id && (
+                        <Badge className="bg-blue-500 text-white">
+                          In Progress...
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
+            </TooltipWrapper>
+          ))}
+        </div>
+
+        <div className="flex justify-between pt-6">
+          <TooltipWrapper
+            id="skip-tour-button"
+            title="Skip Tour"
+            content="You can skip the tour and explore the platform on your own. The tour will remain available in the help section if you want to take it later."
+            position="top"
+          >
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onSkip}
+            >
+              <SkipForward className="w-4 h-4 mr-2" />
+              Skip Tour
             </Button>
-            <p className="text-xs text-muted-foreground mt-2">
-              Take a guided tour to see planning features in action
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+          </TooltipWrapper>
 
-      {/* Alternative actions */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onSkip}>
-          Skip Planning Tour
-        </Button>
-        <Button 
-          variant="outline" 
-          onClick={handleStartTour}
-          className="flex items-center space-x-2"
-        >
-          <span>Experience Planning</span>
-        </Button>
+          <TooltipWrapper
+            id="complete-tour-button"
+            title={allCompleted ? "Complete Setup" : "Complete Remaining Steps"}
+            content={allCompleted ? "Finish the onboarding process and start using the platform." : "Complete all tour steps to finish the onboarding process."}
+            position="top"
+          >
+            <Button 
+              onClick={onComplete}
+              disabled={!allCompleted}
+              className="flex items-center gap-2"
+            >
+              {allCompleted ? (
+                <>
+                  Complete Setup
+                  <CheckCircle className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  Continue ({completedSteps}/{steps.length})
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </Button>
+          </TooltipWrapper>
+        </div>
       </div>
-
-      {/* Tour Overlay */}
-      {showTour && (
-        <PlanningTourOverlay
-          onComplete={handleTourComplete}
-          onSkip={handleTourSkip}
-        />
-      )}
-    </div>
+    </TooltipWrapper>
   );
 };

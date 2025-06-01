@@ -1,170 +1,185 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { TooltipWrapper } from '../tooltips/TooltipWrapper';
 import { AgentTemplateCard } from './AgentTemplateCard';
 import { CustomAgentBuilder } from './CustomAgentBuilder';
 import { AgentPreview } from './AgentPreview';
-import { FirstAgentData, FirstAgentFormProps, AgentTemplate } from './types';
-import { agentTemplates } from './constants';
+import { firstAgentSchema, type FirstAgentFormData } from './types';
+import { AGENT_TEMPLATES } from './constants';
 
-export const FirstAgentForm = ({ onComplete, onSkip }: FirstAgentFormProps) => {
+interface FirstAgentFormProps {
+  onComplete: (data: FirstAgentFormData) => void;
+  onSkip: () => void;
+  initialData?: FirstAgentFormData | null;
+}
+
+export const FirstAgentForm = ({ onComplete, onSkip, initialData }: FirstAgentFormProps) => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<'template' | 'custom'>('template');
-  const [selectedTemplate, setSelectedTemplate] = useState<AgentTemplate | null>(null);
-  const [agentName, setAgentName] = useState('');
-  const [agentDescription, setAgentDescription] = useState('');
-  const [customSkills, setCustomSkills] = useState<string[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [showCustomBuilder, setShowCustomBuilder] = useState(false);
 
-  // Filter templates by popularity for initial display
-  const popularTemplates = agentTemplates.filter(t => t.popular);
-  const otherTemplates = agentTemplates.filter(t => !t.popular);
+  const form = useForm<FirstAgentFormData>({
+    resolver: zodResolver(firstAgentSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      role: "general",
+      specialization: "",
+      capabilities: [],
+      templateId: "",
+    },
+  });
 
-  const handleTemplateSelect = (template: AgentTemplate) => {
-    setSelectedTemplate(template);
-    if (!agentName) {
-      setAgentName(template.name);
-    }
-    if (!agentDescription) {
-      setAgentDescription(template.description);
-    }
-  };
-
-  const isFormValid = () => {
-    const hasName = agentName.trim().length > 0;
-    const hasDescription = agentDescription.trim().length > 0;
-    
-    if (activeTab === 'template') {
-      return hasName && hasDescription && selectedTemplate !== null;
+  // Load initial data if available
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+      setSelectedTemplate(initialData.templateId || null);
     } else {
-      return hasName && hasDescription && customSkills.length > 0;
+      const savedAgent = localStorage.getItem('first-agent-draft');
+      if (savedAgent) {
+        try {
+          const parsedAgent = JSON.parse(savedAgent);
+          form.reset(parsedAgent);
+          setSelectedTemplate(parsedAgent.templateId || null);
+        } catch (error) {
+          console.error('Failed to parse agent data:', error);
+        }
+      }
+    }
+  }, [initialData, form]);
+
+  // Auto-save form data
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      localStorage.setItem('first-agent-draft', JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  const onSubmit = (data: FirstAgentFormData) => {
+    localStorage.removeItem('first-agent-draft');
+    onComplete(data);
+  };
+
+  const handleTemplateSelect = (templateId: string) => {
+    const template = AGENT_TEMPLATES.find(t => t.id === templateId);
+    if (template) {
+      setSelectedTemplate(templateId);
+      setShowCustomBuilder(false);
+      form.setValue("templateId", templateId);
+      form.setValue("name", template.name);
+      form.setValue("description", template.description);
+      form.setValue("role", template.role);
+      form.setValue("specialization", template.specialization);
+      form.setValue("capabilities", template.capabilities);
     }
   };
 
-  const getCurrentAgentData = (): FirstAgentData => {
-    if (activeTab === 'template' && selectedTemplate) {
-      return {
-        type: 'template',
-        templateId: selectedTemplate.id,
-        name: agentName,
-        description: agentDescription,
-        skills: selectedTemplate.skills,
-        capabilities: selectedTemplate.capabilities
-      };
-    } else {
-      return {
-        type: 'custom',
-        name: agentName,
-        description: agentDescription,
-        skills: customSkills,
-        capabilities: customSkills.length > 0 ? ['Custom Development', 'Problem Solving'] : []
-      };
-    }
+  const handleCustomAgent = () => {
+    setSelectedTemplate(null);
+    setShowCustomBuilder(true);
+    form.setValue("templateId", "");
   };
 
-  const handleSubmit = () => {
-    if (!isFormValid()) {
-      toast({
-        title: 'Please complete all fields',
-        description: 'Make sure to fill in all required information for your agent.',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    const agentData = getCurrentAgentData();
-    onComplete(agentData);
-  };
+  const canSubmit = form.formState.isValid && (selectedTemplate || showCustomBuilder);
 
   return (
-    <div className="space-y-6">
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'template' | 'custom')}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="template">Use Template</TabsTrigger>
-          <TabsTrigger value="custom">Build Custom</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="template" className="space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Popular Templates</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              {popularTemplates.map((template) => (
-                <AgentTemplateCard
-                  key={template.id}
-                  template={template}
-                  isSelected={selectedTemplate?.id === template.id}
-                  onSelect={handleTemplateSelect}
-                />
-              ))}
+    <TooltipWrapper
+      id="first-agent-section"
+      title="Create Your First AI Agent"
+      content="Choose from pre-built agent templates or create a custom agent tailored to your needs. Your first agent will be your primary assistant for project planning, code generation, and task management."
+      position="top"
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Choose an Agent Template</h3>
+              <TooltipWrapper
+                id="agent-templates-grid"
+                title="Agent Templates"
+                content="These are pre-configured agents with specific roles and capabilities. Each template is optimized for different types of development work and comes with specialized tools and knowledge."
+                position="top"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {AGENT_TEMPLATES.map((template) => (
+                    <TooltipWrapper
+                      key={template.id}
+                      id={`template-${template.id}`}
+                      title={`${template.name} Agent`}
+                      content={`${template.description} This agent specializes in ${template.specialization} and comes with capabilities like ${template.capabilities.slice(0, 2).join(', ')}.`}
+                      position="top"
+                      trigger="hover"
+                      showIcon={false}
+                    >
+                      <AgentTemplateCard
+                        template={template}
+                        isSelected={selectedTemplate === template.id}
+                        onSelect={handleTemplateSelect}
+                      />
+                    </TooltipWrapper>
+                  ))}
+                </div>
+              </TooltipWrapper>
             </div>
-            
-            <h3 className="text-lg font-semibold mb-2">All Templates</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {otherTemplates.map((template) => (
-                <AgentTemplateCard
-                  key={template.id}
-                  template={template}
-                  isSelected={selectedTemplate?.id === template.id}
-                  onSelect={handleTemplateSelect}
-                />
-              ))}
+
+            <div className="text-center">
+              <TooltipWrapper
+                id="custom-agent-option"
+                title="Custom Agent Builder"
+                content="Create a completely custom agent with your own specifications. You can define the agent's role, capabilities, and specialization to match your specific project needs."
+                position="top"
+              >
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCustomAgent}
+                  className={showCustomBuilder ? "bg-primary text-primary-foreground" : ""}
+                >
+                  Create Custom Agent
+                </Button>
+              </TooltipWrapper>
             </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="custom" className="space-y-6">
-          <CustomAgentBuilder
-            selectedSkills={customSkills}
-            onSkillsChange={setCustomSkills}
-          />
-        </TabsContent>
-      </Tabs>
 
-      {/* Agent Configuration */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="agentName">Agent Name *</Label>
-            <Input
-              id="agentName"
-              value={agentName}
-              onChange={(e) => setAgentName(e.target.value)}
-              placeholder="Enter agent name"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="agentDescription">Description *</Label>
-            <Textarea
-              id="agentDescription"
-              value={agentDescription}
-              onChange={(e) => setAgentDescription(e.target.value)}
-              placeholder="Describe what this agent will do and its purpose"
-              rows={4}
-            />
-          </div>
-        </div>
-        
-        <AgentPreview agentData={getCurrentAgentData()} />
-      </div>
+            {showCustomBuilder && (
+              <CustomAgentBuilder control={form.control} />
+            )}
 
-      {/* Actions */}
-      <div className="flex justify-between pt-4">
-        <Button variant="outline" onClick={onSkip}>
-          Skip for Now
-        </Button>
-        <Button 
-          onClick={handleSubmit}
-          disabled={!isFormValid()}
-          className="flex items-center space-x-2"
-        >
-          <span>Create Agent</span>
-        </Button>
-      </div>
-    </div>
+            {(selectedTemplate || showCustomBuilder) && (
+              <AgentPreview
+                name={form.watch("name")}
+                description={form.watch("description")}
+                role={form.watch("role")}
+                specialization={form.watch("specialization")}
+                capabilities={form.watch("capabilities")}
+              />
+            )}
+          </div>
+
+          <div className="flex justify-between pt-6">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onSkip}
+            >
+              Skip for now
+            </Button>
+
+            <Button 
+              type="submit" 
+              disabled={!canSubmit}
+            >
+              Create Agent
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </TooltipWrapper>
   );
 };

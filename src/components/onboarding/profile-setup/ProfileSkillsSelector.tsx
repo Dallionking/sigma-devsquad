@@ -70,128 +70,135 @@ export const ProfileSkillsSelector = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Guidance trigger button */}
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleStartGuidance}
-          className="text-sm"
-        >
-          Show Skills Guide
-        </Button>
+    <TooltipWrapper
+      id="skills-section"
+      title="Skills & Interests Selection"
+      content="Choose your programming languages and areas of interest. This personalization helps our AI agents provide more relevant suggestions and code examples tailored to your expertise and goals."
+      position="top"
+    >
+      <div className="space-y-6">
+        {/* Guidance trigger button */}
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleStartGuidance}
+            className="text-sm"
+          >
+            Show Skills Guide
+          </Button>
+        </div>
+
+        {/* Sequential tooltip overlay */}
+        {isActive && currentTooltip && (
+          <InteractiveTooltip
+            id={currentTooltip.id}
+            title={currentTooltip.title}
+            content={currentTooltip.content}
+            position="bottom"
+            showOnMount={true}
+            isSequential={true}
+            sequenceIndex={currentIndex}
+            totalSequence={totalSequence}
+            onNext={nextTooltip}
+            onPrevious={previousTooltip}
+            onDismiss={endSequence}
+          >
+            <div className="absolute inset-0 bg-black/20 rounded-lg pointer-events-none" />
+          </InteractiveTooltip>
+        )}
+
+        <FormField
+          control={control}
+          name="preferredLanguages"
+          render={() => (
+            <FormItem>
+              <TooltipWrapper
+                id="preferred-languages-section"
+                title="Programming Languages"
+                content="Select the programming languages you're familiar with or interested in learning. This helps agents provide relevant code examples and suggestions in your preferred languages."
+                position="top"
+              >
+                <FormLabel>Preferred Programming Languages</FormLabel>
+              </TooltipWrapper>
+              <FormControl>
+                <div className="flex flex-wrap gap-2">
+                  {languageOptions.map((language) => (
+                    <TooltipWrapper
+                      key={language}
+                      id={`language-${language.toLowerCase()}`}
+                      title={`${language} Programming Language`}
+                      content={`Click to ${selectedLanguages.includes(language) ? 'remove' : 'add'} ${language} ${selectedLanguages.includes(language) ? 'from' : 'to'} your preferred languages. This helps agents provide ${language}-specific examples and suggestions.`}
+                      position="top"
+                      trigger="hover"
+                      showIcon={false}
+                    >
+                      <Button
+                        type="button"
+                        variant={selectedLanguages.includes(language) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => onLanguageToggle(language)}
+                        className={selectedLanguages.includes(language) ? "bg-primary text-primary-foreground" : ""}
+                      >
+                        {language}
+                      </Button>
+                    </TooltipWrapper>
+                  ))}
+                </div>
+              </FormControl>
+              {selectedLanguages.length === 0 && (
+                <FormMessage>Please select at least one language</FormMessage>
+              )}
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="interests"
+          render={() => (
+            <FormItem>
+              <TooltipWrapper
+                id="interests-section"
+                title="Areas of Interest"
+                content="Choose the development areas you're most passionate about or want to focus on. This helps us suggest relevant projects, templates, and connect you with appropriate specialized agents."
+                position="top"
+              >
+                <FormLabel>Areas of Interest</FormLabel>
+              </TooltipWrapper>
+              <FormControl>
+                <div className="flex flex-wrap gap-2">
+                  {interestOptions.map((interest) => (
+                    <TooltipWrapper
+                      key={interest}
+                      id={`interest-${interest.toLowerCase().replace(/\s+/g, '-')}`}
+                      title={`${interest} Focus Area`}
+                      content={`Click to ${selectedInterests.includes(interest) ? 'remove' : 'add'} ${interest} ${selectedInterests.includes(interest) ? 'from' : 'to'} your interests. This helps agents understand your focus and provide relevant ${interest} resources.`}
+                      position="top"
+                      trigger="hover"
+                      showIcon={false}
+                    >
+                      <Button
+                        type="button"
+                        variant={selectedInterests.includes(interest) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => onInterestToggle(interest)}
+                        className={selectedInterests.includes(interest) ? "bg-primary text-primary-foreground" : ""}
+                      >
+                        {interest}
+                      </Button>
+                    </TooltipWrapper>
+                  ))}
+                </div>
+              </FormControl>
+              {selectedInterests.length === 0 && (
+                <FormMessage>Please select at least one interest</FormMessage>
+              )}
+            </FormItem>
+          )}
+        />
       </div>
-
-      {/* Sequential tooltip overlay */}
-      {isActive && currentTooltip && (
-        <InteractiveTooltip
-          id={currentTooltip.id}
-          title={currentTooltip.title}
-          content={currentTooltip.content}
-          position="bottom"
-          showOnMount={true}
-          isSequential={true}
-          sequenceIndex={currentIndex}
-          totalSequence={totalSequence}
-          onNext={nextTooltip}
-          onPrevious={previousTooltip}
-          onDismiss={endSequence}
-        >
-          <div className="absolute inset-0 bg-black/20 rounded-lg pointer-events-none" />
-        </InteractiveTooltip>
-      )}
-
-      <FormField
-        control={control}
-        name="preferredLanguages"
-        render={() => (
-          <FormItem>
-            <TooltipWrapper
-              id="preferred-languages"
-              title="Programming Languages"
-              content="Select the programming languages you're familiar with or interested in learning. This helps agents provide relevant code examples and suggestions."
-              position="top"
-            >
-              <FormLabel>Preferred Programming Languages</FormLabel>
-            </TooltipWrapper>
-            <FormControl>
-              <div className="flex flex-wrap gap-2">
-                {languageOptions.map((language) => (
-                  <TooltipWrapper
-                    key={language}
-                    id={`language-${language.toLowerCase()}`}
-                    title={language}
-                    content={`Click to ${selectedLanguages.includes(language) ? 'remove' : 'add'} ${language} ${selectedLanguages.includes(language) ? 'from' : 'to'} your preferred languages.`}
-                    position="top"
-                    trigger="hover"
-                    showIcon={false}
-                  >
-                    <Button
-                      type="button"
-                      variant={selectedLanguages.includes(language) ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => onLanguageToggle(language)}
-                      className={selectedLanguages.includes(language) ? "bg-primary text-primary-foreground" : ""}
-                    >
-                      {language}
-                    </Button>
-                  </TooltipWrapper>
-                ))}
-              </div>
-            </FormControl>
-            {selectedLanguages.length === 0 && (
-              <FormMessage>Please select at least one language</FormMessage>
-            )}
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={control}
-        name="interests"
-        render={() => (
-          <FormItem>
-            <TooltipWrapper
-              id="interests"
-              title="Areas of Interest"
-              content="Choose the areas you're most passionate about or want to focus on. This helps us suggest relevant projects and connect you with appropriate agents."
-              position="top"
-            >
-              <FormLabel>Areas of Interest</FormLabel>
-            </TooltipWrapper>
-            <FormControl>
-              <div className="flex flex-wrap gap-2">
-                {interestOptions.map((interest) => (
-                  <TooltipWrapper
-                    key={interest}
-                    id={`interest-${interest.toLowerCase().replace(/\s+/g, '-')}`}
-                    title={interest}
-                    content={`Click to ${selectedInterests.includes(interest) ? 'remove' : 'add'} ${interest} ${selectedInterests.includes(interest) ? 'from' : 'to'} your interests.`}
-                    position="top"
-                    trigger="hover"
-                    showIcon={false}
-                  >
-                    <Button
-                      type="button"
-                      variant={selectedInterests.includes(interest) ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => onInterestToggle(interest)}
-                      className={selectedInterests.includes(interest) ? "bg-primary text-primary-foreground" : ""}
-                    >
-                      {interest}
-                    </Button>
-                  </TooltipWrapper>
-                ))}
-              </div>
-            </FormControl>
-            {selectedInterests.length === 0 && (
-              <FormMessage>Please select at least one interest</FormMessage>
-            )}
-          </FormItem>
-        )}
-      />
-    </div>
+    </TooltipWrapper>
   );
 };
