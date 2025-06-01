@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,9 +16,11 @@ import {
   Bot,
   Sparkles,
   PanelLeftClose,
-  PanelLeft
+  PanelLeft,
+  Settings
 } from 'lucide-react';
 import { useOnboarding, OnboardingStep } from '@/contexts/OnboardingContext';
+import { useOnboardingRoadmap } from '@/hooks/useOnboardingRoadmap';
 import { MiniStepProgress } from '../progress/MiniStepProgress';
 import { cn } from '@/lib/utils';
 
@@ -79,9 +81,7 @@ interface OnboardingRoadmapProps {
 }
 
 export const OnboardingRoadmap = ({ className }: OnboardingRoadmapProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['setup', 'configuration', 'exploration']);
-  
+  const { preferences, toggleCollapsed, toggleCategory, updatePreferences } = useOnboardingRoadmap();
   const { progress, goToStep, canNavigateToStep, getStepProgress, getStepData } = useOnboarding();
   const { percentage } = getStepProgress();
 
@@ -96,14 +96,6 @@ export const OnboardingRoadmap = ({ className }: OnboardingRoadmapProps) => {
     if (canNavigateToStep(step)) {
       goToStep(step);
     }
-  };
-
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
   };
 
   const getRemainingTime = () => {
@@ -131,23 +123,14 @@ export const OnboardingRoadmap = ({ className }: OnboardingRoadmapProps) => {
     }
   };
 
-  const getCategoryDescription = (category: string) => {
-    switch (category) {
-      case 'setup': return 'Get your account ready';
-      case 'configuration': return 'Set up your tools';
-      case 'exploration': return 'Discover features';
-      default: return '';
-    }
-  };
-
-  if (isCollapsed) {
+  if (preferences.isCollapsed) {
     return (
       <Card className={cn("w-16 flex-shrink-0 border-r", className)}>
         <CardContent className="p-2 flex flex-col items-center space-y-4">
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setIsCollapsed(false)}
+            onClick={toggleCollapsed}
             className="w-10 h-10 p-0"
             title="Expand roadmap"
           >
@@ -189,15 +172,28 @@ export const OnboardingRoadmap = ({ className }: OnboardingRoadmapProps) => {
             </div>
           </div>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsCollapsed(true)}
-            className="w-8 h-8 p-0"
-            title="Collapse roadmap"
-          >
-            <PanelLeftClose className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => updatePreferences({ 
+                showEstimatedTimes: !preferences.showEstimatedTimes 
+              })}
+              className="w-8 h-8 p-0"
+              title="Toggle settings"
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleCollapsed}
+              className="w-8 h-8 p-0"
+              title="Collapse roadmap"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
         
         <div className="space-y-2">
@@ -207,20 +203,24 @@ export const OnboardingRoadmap = ({ className }: OnboardingRoadmapProps) => {
           </div>
           <Progress value={percentage} className="h-2" />
           
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span className="flex items-center space-x-1">
-              <Clock className="w-3 h-3" />
-              <span>{getRemainingTime()} min remaining</span>
-            </span>
-            <span>{progress.completedSteps.length} completed</span>
-          </div>
+          {preferences.showEstimatedTimes && (
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="flex items-center space-x-1">
+                <Clock className="w-3 h-3" />
+                <span>{getRemainingTime()} min remaining</span>
+              </span>
+              {preferences.showCompletionPercentage && (
+                <span>{progress.completedSteps.length} completed</span>
+              )}
+            </div>
+          )}
         </div>
       </CardHeader>
 
       <CardContent className="p-0">
         <div className="max-h-96 overflow-y-auto">
           {Object.entries(groupedSteps).map(([category, steps]) => {
-            const isExpanded = expandedCategories.includes(category);
+            const isExpanded = preferences.expandedCategories.includes(category);
             const completedInCategory = steps.filter(step => progress.completedSteps.includes(step.id)).length;
             
             return (
@@ -306,10 +306,12 @@ export const OnboardingRoadmap = ({ className }: OnboardingRoadmapProps) => {
                               </p>
                               
                               <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                                  <Clock className="w-3 h-3" />
-                                  <span>{step.estimatedTime} min</span>
-                                </div>
+                                {preferences.showEstimatedTimes && (
+                                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                                    <Clock className="w-3 h-3" />
+                                    <span>{step.estimatedTime} min</span>
+                                  </div>
+                                )}
                                 
                                 {status === 'current' && (
                                   <MiniStepProgress

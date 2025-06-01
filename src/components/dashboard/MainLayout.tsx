@@ -7,6 +7,8 @@ import { MainLayoutHeader } from "./layout/MainLayoutHeader";
 import { MainLayoutSidebar } from "./layout/MainLayoutSidebar";
 import { MainLayoutContent } from "./layout/MainLayoutContent";
 import { MainLayoutFooter } from "./layout/MainLayoutFooter";
+import { OnboardingRoadmap, RoadmapToggle } from "../onboarding/roadmap";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useCollapsibleSidebar } from "@/hooks/useCollapsibleSidebar";
 import { useContextAwarePanel } from "@/hooks/useContextAwarePanel";
 import { usePanelKeyboardShortcuts } from "@/hooks/usePanelKeyboardShortcuts";
@@ -59,6 +61,10 @@ export const MainLayout = ({
   onViewModeChange,
 }: MainLayoutProps) => {
   
+  // Onboarding state
+  const { progress, showOnboarding, setShowOnboarding } = useOnboarding();
+  const [isRoadmapVisible, setIsRoadmapVisible] = React.useState(false);
+  
   // Use standardized sidebar state management
   const { isCollapsed, toggleSidebar } = useCollapsibleSidebar({
     defaultCollapsed: sidebarCollapsed,
@@ -106,6 +112,11 @@ export const MainLayout = ({
     messages: 1,
   }), []);
 
+  // Handle roadmap toggle
+  const handleRoadmapToggle = () => {
+    setIsRoadmapVisible(!isRoadmapVisible);
+  };
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
       {/* View Mode Tabs Header */}
@@ -119,6 +130,11 @@ export const MainLayout = ({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 flex overflow-hidden relative">
+          {/* Onboarding Roadmap */}
+          {isRoadmapVisible && !progress.isOnboardingComplete && (
+            <OnboardingRoadmap />
+          )}
+
           {/* Sidebar */}
           <MainLayoutSidebar
             isCollapsed={isCollapsed}
@@ -177,6 +193,14 @@ export const MainLayout = ({
           viewMode={viewMode}
         />
       </div>
+
+      {/* Roadmap Toggle Button */}
+      {!progress.isOnboardingComplete && (
+        <RoadmapToggle
+          isRoadmapVisible={isRoadmapVisible}
+          onToggle={handleRoadmapToggle}
+        />
+      )}
     </div>
   );
 };
