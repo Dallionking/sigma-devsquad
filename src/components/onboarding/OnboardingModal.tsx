@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { CheckCircle, Users, Bot, MapPin, Sparkles, ArrowRight, X, Star, Code2, 
 import { useOnboarding, type OnboardingStep } from '@/contexts/OnboardingContext';
 import { useProjectTemplates } from '@/contexts/ProjectTemplateContext';
 import { ProfileSetupForm } from './ProfileSetupForm';
+import { TeamCreationForm } from './TeamCreationForm';
 import { cn } from '@/lib/utils';
 
 const stepContent = {
@@ -54,22 +56,7 @@ const stepContent = {
     title: 'Create Your First Team',
     description: 'Teams help organize your agents and projects effectively.',
     icon: Users,
-    content: (
-      <div className="space-y-4">
-        <p className="text-muted-foreground">
-          Teams are collections of AI agents that work together on specific projects or domains.
-        </p>
-        <div className="bg-accent/50 p-4 rounded-lg">
-          <h4 className="font-semibold mb-2">Team Ideas:</h4>
-          <ul className="space-y-1 text-sm">
-            <li>• Frontend Development Team</li>
-            <li>• Backend & API Team</li>
-            <li>• Design & UX Team</li>
-            <li>• DevOps & Infrastructure Team</li>
-          </ul>
-        </div>
-      </div>
-    )
+    content: null // Will be replaced with TeamCreationForm
   },
   'first-agent': {
     title: 'Configure Your First Agent',
@@ -232,9 +219,20 @@ export const OnboardingModal = () => {
     completeStep('profile-setup');
   };
 
-  // Show template selection for first-agent step
+  const handleTeamCreationComplete = (teamData: any) => {
+    // Save team data to localStorage or context
+    localStorage.setItem('onboarding-team', JSON.stringify(teamData));
+    completeStep('team-creation');
+  };
+
+  const handleTeamCreationSkip = () => {
+    completeStep('team-creation');
+  };
+
+  // Show specific forms for different steps
   const showTemplateSelection = progress.currentStep === 'first-agent';
   const showProfileSetup = progress.currentStep === 'profile-setup';
+  const showTeamCreation = progress.currentStep === 'team-creation';
 
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
@@ -286,6 +284,11 @@ export const OnboardingModal = () => {
                 onComplete={handleProfileSetupComplete}
                 onSkip={handleProfileSetupSkip}
               />
+            ) : showTeamCreation ? (
+              <TeamCreationForm 
+                onComplete={handleTeamCreationComplete}
+                onSkip={handleTeamCreationSkip}
+              />
             ) : showTemplateSelection ? (
               <TemplateSelectionContent />
             ) : (
@@ -293,8 +296,8 @@ export const OnboardingModal = () => {
             )}
           </div>
 
-          {/* Actions - Only show for non-profile steps */}
-          {!showProfileSetup && (
+          {/* Actions - Only show for non-form steps */}
+          {!showProfileSetup && !showTeamCreation && (
             <div className="flex justify-between">
               {progress.currentStep !== 'completion' ? (
                 <>
