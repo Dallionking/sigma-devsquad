@@ -28,17 +28,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener
+    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
       }
     );
 
-    // Check for existing session
+    // Then check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -48,17 +50,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    console.log('Attempting to sign in with:', email);
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    
+    if (error) {
+      console.error('Sign in error:', error);
+    } else {
+      console.log('Sign in successful:', data);
+    }
+    
     return { error };
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    console.log('Attempting to sign up with:', email);
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -68,11 +79,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }
     });
+    
+    if (error) {
+      console.error('Sign up error:', error);
+    } else {
+      console.log('Sign up response:', data);
+    }
+    
     return { error };
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Sign out error:', error);
+    }
     return { error };
   };
 

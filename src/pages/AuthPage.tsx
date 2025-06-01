@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Logo } from '@/components/branding/Logo';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, CheckCircle, Mail } from 'lucide-react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ const AuthPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'login');
 
@@ -36,6 +37,7 @@ const AuthPage = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     if (!email || !password) {
       setError('Please fill in all fields');
@@ -46,13 +48,17 @@ const AuthPage = () => {
     const { error } = await signIn(email, password);
     
     if (error) {
-      if (error.message.includes('Invalid login credentials')) {
-        setError('Invalid email or password');
+      console.log('Sign in error details:', error);
+      if (error.message.includes('Email not confirmed')) {
+        setError('Please check your email and click the confirmation link before signing in.');
+      } else if (error.message.includes('Invalid login credentials')) {
+        setError('Invalid email or password. Please check your credentials.');
       } else {
         setError(error.message);
       }
     } else {
-      navigate('/dashboard');
+      setSuccess('Successfully signed in!');
+      // Navigation will happen automatically via useEffect
     }
     
     setIsLoading(false);
@@ -62,6 +68,7 @@ const AuthPage = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     if (!email || !password || !fullName || !confirmPassword) {
       setError('Please fill in all fields');
@@ -84,15 +91,25 @@ const AuthPage = () => {
     const { error } = await signUp(email, password, fullName);
     
     if (error) {
+      console.log('Sign up error details:', error);
       if (error.message.includes('User already registered')) {
-        setError('An account with this email already exists');
+        setError('An account with this email already exists. Please sign in instead.');
       } else {
         setError(error.message);
       }
     } else {
       setError('');
-      // Show success message or redirect
-      navigate('/dashboard');
+      setSuccess('Account created successfully! Please check your email for a confirmation link.');
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setFullName('');
+      setConfirmPassword('');
+      // Switch to login tab after successful signup
+      setTimeout(() => {
+        setActiveTab('login');
+        setSuccess('');
+      }, 3000);
     }
     
     setIsLoading(false);
@@ -185,6 +202,13 @@ const AuthPage = () => {
                   </Alert>
                 )}
 
+                {success && (
+                  <Alert>
+                    <CheckCircle className="w-4 h-4" />
+                    <AlertDescription>{success}</AlertDescription>
+                  </Alert>
+                )}
+
                 <Button
                   type="submit"
                   className="w-full bg-vibe-primary hover:bg-vibe-primary/90"
@@ -259,6 +283,13 @@ const AuthPage = () => {
                 {error && (
                   <Alert variant="destructive">
                     <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                {success && (
+                  <Alert>
+                    <Mail className="w-4 h-4" />
+                    <AlertDescription>{success}</AlertDescription>
                   </Alert>
                 )}
 
