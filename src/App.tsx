@@ -19,6 +19,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import LLMIntegration from "./pages/LLMIntegration";
 import AgentConfiguration from "./pages/AgentConfiguration";
@@ -54,6 +55,11 @@ const App = () => (
                                 <Route path="/dashboard" element={
                                   <ProtectedRoute>
                                     <Dashboard />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/profile" element={
+                                  <ProtectedRoute>
+                                    <Profile />
                                   </ProtectedRoute>
                                 } />
                                 <Route path="/settings" element={
