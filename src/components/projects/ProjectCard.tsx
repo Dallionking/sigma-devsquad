@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Calendar, Users, Target, Settings, Archive, Play, Pause, Star } from 'lucide-react';
+import { MoreHorizontal, Calendar, Users, Target, Settings, Archive, Play, Pause, Star, Tag, TrendingUp } from 'lucide-react';
 import { useProjects } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
 
@@ -20,6 +21,9 @@ interface Project {
   team: string[];
   objectives: string[];
   isFavorite?: boolean;
+  category?: string;
+  tags: string[];
+  priority: 'low' | 'medium' | 'high';
 }
 
 interface ProjectCardProps {
@@ -30,7 +34,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: ProjectCardProps) => {
-  const { updateProject, toggleFavorite } = useProjects();
+  const { updateProject, toggleFavorite, categories } = useProjects();
 
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
@@ -38,6 +42,15 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
       case 'paused': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
       case 'completed': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
       case 'archived': return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    }
+  };
+
+  const getPriorityColor = (priority: Project['priority']) => {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
     }
   };
@@ -70,6 +83,7 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
   };
 
   const daysRemaining = calculateDaysRemaining();
+  const category = categories.find(c => c.id === project.category);
 
   return (
     <Card 
@@ -82,12 +96,29 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
+            {/* Category indicator */}
+            {category && (
+              <div className="flex items-center gap-2 mb-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: category.color }}
+                />
+                <span className="text-xs text-muted-foreground">{category.name}</span>
+              </div>
+            )}
+
             <CardTitle className="text-lg flex items-center space-x-2">
               <span>{project.name}</span>
-              <Badge variant="secondary" className={getStatusColor(project.status)}>
-                {getStatusIcon(project.status)}
-                <span className="ml-1 capitalize">{project.status}</span>
-              </Badge>
+              <div className="flex items-center gap-1">
+                <Badge variant="secondary" className={getStatusColor(project.status)}>
+                  {getStatusIcon(project.status)}
+                  <span className="ml-1 capitalize">{project.status}</span>
+                </Badge>
+                <Badge variant="secondary" className={getPriorityColor(project.priority)}>
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  {project.priority}
+                </Badge>
+              </div>
             </CardTitle>
             <CardDescription className="mt-1 line-clamp-2">
               {project.description}
@@ -165,6 +196,23 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
           </div>
           <Progress value={project.progress} className="h-2" />
         </div>
+
+        {/* Tags */}
+        {project.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {project.tags.slice(0, 4).map((tag) => (
+              <Badge key={tag} variant="outline" className="text-xs">
+                <Tag className="w-3 h-3 mr-1" />
+                {tag}
+              </Badge>
+            ))}
+            {project.tags.length > 4 && (
+              <Badge variant="outline" className="text-xs">
+                +{project.tags.length - 4} more
+              </Badge>
+            )}
+          </div>
+        )}
 
         {/* Timeline */}
         <div className="flex items-center justify-between text-sm">

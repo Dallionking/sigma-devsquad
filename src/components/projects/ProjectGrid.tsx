@@ -1,15 +1,16 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useMemo } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Search, Filter, Grid, List, FolderPlus } from 'lucide-react';
+import { Plus, Grid, List, Kanban, FolderPlus, Settings } from 'lucide-react';
 import { ProjectCard } from './ProjectCard';
 import { ProjectCreationWizard } from './ProjectCreationWizard';
 import { SampleProjectsModal } from '@/components/sample-projects/SampleProjectsModal';
+import { ProjectFilters, SortOption, SortDirection } from './ProjectFilters';
+import { ProjectKanbanView } from './ProjectKanbanView';
+import { CategoryManager } from './CategoryManager';
 import { useProjects } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
 
@@ -19,26 +20,93 @@ interface ProjectGridProps {
 }
 
 export const ProjectGrid = ({ onProjectSelect, onProjectEdit }: ProjectGridProps) => {
-  const { projects, currentProject, setCurrentProject } = useProjects();
+  const { projects, currentProject, setCurrentProject, categories } = useProjects();
   const [showCreationWizard, setShowCreationWizard] = useState(false);
   const [showSampleProjects, setShowSampleProjects] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'kanban'>('grid');
+
+  // Filter states
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused' | 'completed' | 'archived'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<SortOption>('updated');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
-  const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Filter and sort projects
+  const filteredAndSortedProjects = useMemo(() => {
+    let filtered = projects.filter(project => {
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = 
+          project.name.toLowerCase().includes(query) ||
+          project.description.toLowerCase().includes(query) ||
+          project.objectives.some(obj => obj.toLowerCase().includes(query)) ||
+          project.tags.some(tag => tag.toLowerCase().includes(query));
+        if (!matchesSearch) return false;
+      }
 
-  const projectsByStatus = {
-    active: filteredProjects.filter(p => p.status === 'active'),
-    paused: filteredProjects.filter(p => p.status === 'paused'),
-    completed: filteredProjects.filter(p => p.status === 'completed'),
-    archived: filteredProjects.filter(p => p.status === 'archived')
-  };
+      // Category filter
+      if (selectedCategory !== null) {
+        if (project.category !== selectedCategory) return false;
+      }
+
+      // Tags filter
+      if (selectedTags.length > 0) {
+        if (!selectedTags.some(tag => project.tags.includes(tag))) return false;
+      }
+
+      // Status filter
+      if (selectedStatuses.length > 0) {
+        if (!selectedStatuses.includes(project.status)) return false;
+      }
+
+      // Priority filter
+      if (selectedPriorities.length > 0) {
+        if (!selectedPriorities.includes(project.priority)) return false;
+      }
+
+      // Favorites filter
+      if (showFavoritesOnly && !project.isFavorite) return false;
+
+      return true;
+    });
+
+    // Sort projects
+    filtered.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'created':
+          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          break;
+        case 'updated':
+          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+          break;
+        case 'progress':
+          comparison = a.progress - b.progress;
+          break;
+        case 'priority':
+          const priorityOrder = { high: 3, medium: 2, low: 1 };
+          comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
+          break;
+        case 'deadline':
+          comparison = new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime();
+          break;
+      }
+
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    return filtered;
+  }, [projects, searchQuery, selectedCategory, selectedTags, selectedStatuses, selectedPriorities, sortBy, sortDirection, showFavoritesOnly]);
 
   const handleProjectSelect = (project: any) => {
     setCurrentProject(project.id);
@@ -49,8 +117,9 @@ export const ProjectGrid = ({ onProjectSelect, onProjectEdit }: ProjectGridProps
     onProjectEdit?.(project);
   };
 
-  const getStatusCount = (status: string) => {
-    return projects.filter(p => p.status === status).length;
+  const handleSortChange = (newSortBy: SortOption, newDirection: SortDirection) => {
+    setSortBy(newSortBy);
+    setSortDirection(newDirection);
   };
 
   return (
@@ -67,11 +136,19 @@ export const ProjectGrid = ({ onProjectSelect, onProjectEdit }: ProjectGridProps
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
+            onClick={() => setShowCategoryManager(true)}
+            className="flex items-center space-x-2"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="hidden sm:inline">Categories</span>
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => setShowSampleProjects(true)}
             className="flex items-center space-x-2"
           >
             <FolderPlus className="w-4 h-4" />
-            <span className="hidden sm:inline">Browse Templates</span>
+            <span className="hidden sm:inline">Templates</span>
           </Button>
           <Button
             onClick={() => setShowCreationWizard(true)}
@@ -83,132 +160,87 @@ export const ProjectGrid = ({ onProjectSelect, onProjectEdit }: ProjectGridProps
         </div>
       </div>
 
-      {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search projects..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-                {statusFilter !== 'all' && (
-                  <Badge variant="secondary" className="ml-2">
-                    {statusFilter}
-                  </Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setStatusFilter('all')}>
-                All Projects ({projects.length})
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setStatusFilter('active')}>
-                Active ({getStatusCount('active')})
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter('paused')}>
-                Paused ({getStatusCount('paused')})
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter('completed')}>
-                Completed ({getStatusCount('completed')})
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter('archived')}>
-                Archived ({getStatusCount('archived')})
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      {/* Filters */}
+      <ProjectFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        selectedTags={selectedTags}
+        onTagsChange={setSelectedTags}
+        selectedStatuses={selectedStatuses}
+        onStatusesChange={setSelectedStatuses}
+        selectedPriorities={selectedPriorities}
+        onPrioritiesChange={setSelectedPriorities}
+        sortBy={sortBy}
+        sortDirection={sortDirection}
+        onSortChange={handleSortChange}
+        showFavoritesOnly={showFavoritesOnly}
+        onFavoritesToggle={setShowFavoritesOnly}
+      />
 
-          <div className="flex border rounded-lg p-1">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              className="h-8 w-8 p-0"
-            >
-              <Grid className="w-4 h-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className="h-8 w-8 p-0"
-            >
-              <List className="w-4 h-4" />
-            </Button>
-          </div>
+      {/* View Mode Controls */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-muted-foreground">
+            {filteredAndSortedProjects.length} project{filteredAndSortedProjects.length !== 1 ? 's' : ''}
+          </span>
+          {selectedCategory && (
+            <Badge variant="secondary" className="flex items-center gap-1">
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: categories.find(c => c.id === selectedCategory)?.color }}
+              />
+              {categories.find(c => c.id === selectedCategory)?.name}
+            </Badge>
+          )}
+        </div>
+
+        <div className="flex border rounded-lg p-1">
+          <Button
+            variant={viewMode === 'grid' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('grid')}
+            className="h-8 w-8 p-0"
+          >
+            <Grid className="w-4 h-4" />
+          </Button>
+          <Button
+            variant={viewMode === 'list' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('list')}
+            className="h-8 w-8 p-0"
+          >
+            <List className="w-4 h-4" />
+          </Button>
+          <Button
+            variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('kanban')}
+            className="h-8 w-8 p-0"
+          >
+            <Kanban className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
-      {/* Project Status Tabs */}
-      <Tabs value={statusFilter} onValueChange={(value) => setStatusFilter(value as any)}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="all">All ({projects.length})</TabsTrigger>
-          <TabsTrigger value="active">Active ({getStatusCount('active')})</TabsTrigger>
-          <TabsTrigger value="paused">Paused ({getStatusCount('paused')})</TabsTrigger>
-          <TabsTrigger value="completed">Completed ({getStatusCount('completed')})</TabsTrigger>
-          <TabsTrigger value="archived">Archived ({getStatusCount('archived')})</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all" className="mt-6">
-          <ProjectGridContent 
-            projects={filteredProjects}
-            viewMode={viewMode}
-            onProjectSelect={handleProjectSelect}
-            onProjectEdit={handleProjectEdit}
-            currentProjectId={currentProject?.id}
-          />
-        </TabsContent>
-
-        <TabsContent value="active" className="mt-6">
-          <ProjectGridContent 
-            projects={projectsByStatus.active}
-            viewMode={viewMode}
-            onProjectSelect={handleProjectSelect}
-            onProjectEdit={handleProjectEdit}
-            currentProjectId={currentProject?.id}
-          />
-        </TabsContent>
-
-        <TabsContent value="paused" className="mt-6">
-          <ProjectGridContent 
-            projects={projectsByStatus.paused}
-            viewMode={viewMode}
-            onProjectSelect={handleProjectSelect}
-            onProjectEdit={handleProjectEdit}
-            currentProjectId={currentProject?.id}
-          />
-        </TabsContent>
-
-        <TabsContent value="completed" className="mt-6">
-          <ProjectGridContent 
-            projects={projectsByStatus.completed}
-            viewMode={viewMode}
-            onProjectSelect={handleProjectSelect}
-            onProjectEdit={handleProjectEdit}
-            currentProjectId={currentProject?.id}
-          />
-        </TabsContent>
-
-        <TabsContent value="archived" className="mt-6">
-          <ProjectGridContent 
-            projects={projectsByStatus.archived}
-            viewMode={viewMode}
-            onProjectSelect={handleProjectSelect}
-            onProjectEdit={handleProjectEdit}
-            currentProjectId={currentProject?.id}
-          />
-        </TabsContent>
-      </Tabs>
+      {/* Projects Display */}
+      {viewMode === 'kanban' ? (
+        <ProjectKanbanView
+          projects={filteredAndSortedProjects}
+          onProjectSelect={handleProjectSelect}
+          onProjectEdit={handleProjectEdit}
+          currentProjectId={currentProject?.id}
+        />
+      ) : (
+        <ProjectGridContent 
+          projects={filteredAndSortedProjects}
+          viewMode={viewMode as 'grid' | 'list'}
+          onProjectSelect={handleProjectSelect}
+          onProjectEdit={handleProjectEdit}
+          currentProjectId={currentProject?.id}
+        />
+      )}
 
       {/* Modals */}
       <ProjectCreationWizard
@@ -220,6 +252,21 @@ export const ProjectGrid = ({ onProjectSelect, onProjectEdit }: ProjectGridProps
         open={showSampleProjects}
         onOpenChange={setShowSampleProjects}
       />
+
+      {/* Category Manager Dialog */}
+      {showCategoryManager && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg w-full max-w-4xl max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Manage Categories</h2>
+              <Button variant="ghost" onClick={() => setShowCategoryManager(false)}>
+                ✕
+              </Button>
+            </div>
+            <CategoryManager />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
