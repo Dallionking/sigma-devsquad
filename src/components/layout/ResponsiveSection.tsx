@@ -9,6 +9,7 @@ interface ResponsiveSectionProps {
   variant?: 'default' | 'hero' | 'feature' | 'content' | 'footer';
   background?: 'default' | 'muted' | 'gradient' | 'accent';
   spacing?: 'sm' | 'md' | 'lg' | 'xl';
+  id?: string;
 }
 
 export const ResponsiveSection = ({
@@ -16,7 +17,8 @@ export const ResponsiveSection = ({
   className,
   variant = 'default',
   background = 'default',
-  spacing = 'lg'
+  spacing = 'lg',
+  id
 }: ResponsiveSectionProps) => {
   const { screenSize } = useResponsiveDesign();
 
@@ -44,6 +46,7 @@ export const ResponsiveSection = ({
 
   return (
     <section 
+      id={id}
       className={cn(
         'relative w-full',
         sectionVariants[variant],
