@@ -3,7 +3,7 @@ import React from 'react';
 
 export const LimitlessTagline = () => {
   return (
-    <div className="limitless-tagline opacity-0 animate-fade-in-delayed text-center sm:text-left">
+    <div className="limitless-tagline opacity-0 animate-fade-in-delayed text-center">
       <p className="text-3xl lg:text-4xl font-bold tracking-tight">
         <span className="bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] bg-clip-text text-transparent relative limitless-tagline-text inline-block">
           🚀 Develop Beyond Limits
