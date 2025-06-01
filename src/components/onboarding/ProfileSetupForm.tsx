@@ -1,387 +1,358 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useInputValidation } from '@/hooks/useInputValidation';
-import { useAutoSave } from '@/hooks/useAutoSave';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
-import { Camera, CheckCircle, Upload, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
-interface ProfileSetupData {
-  fullName: string;
-  jobTitle: string;
-  company: string;
-  teamSize: string;
-  developmentFocus: string;
-  profilePhoto?: string;
-}
+const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  jobTitle: z.string().min(2, { message: "Job title is required." }),
+  company: z.string().optional(),
+  bio: z.string().max(500).optional(),
+  profileImage: z.string().optional(),
+  experience: z.enum(["beginner", "intermediate", "advanced"]),
+  preferredLanguages: z.array(z.string()).min(1),
+  interests: z.array(z.string()).min(1),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 interface ProfileSetupFormProps {
-  onComplete: (data: ProfileSetupData) => void;
+  onComplete: (data: FormData) => void;
   onSkip: () => void;
+  initialData?: FormData | null;
 }
 
-const developmentFocusOptions = [
-  { value: 'frontend', label: 'Frontend Development' },
-  { value: 'backend', label: 'Backend Development' },
-  { value: 'fullstack', label: 'Full Stack Development' },
-  { value: 'mobile', label: 'Mobile Development' },
-  { value: 'devops', label: 'DevOps / Infrastructure' },
-  { value: 'ai-ml', label: 'AI / Machine Learning' },
-  { value: 'design', label: 'UI/UX Design' },
-  { value: 'qa', label: 'Quality Assurance' },
-  { value: 'data', label: 'Data Engineering' },
-  { value: 'other', label: 'Other' }
+const languageOptions = [
+  "JavaScript", "TypeScript", "Python", "Go", "Rust", 
+  "Java", "C#", "C++", "PHP", "Ruby", "Swift", "Kotlin"
 ];
 
-const teamSizeOptions = [
-  { value: 'solo', label: 'Solo Developer' },
-  { value: '2-5', label: '2-5 developers' },
-  { value: '6-10', label: '6-10 developers' },
-  { value: '11-25', label: '11-25 developers' },
-  { value: '26-50', label: '26-50 developers' },
-  { value: '50+', label: '50+ developers' }
+const interestOptions = [
+  "Web Development", "Mobile Apps", "DevOps", "Game Dev",
+  "AI/ML", "Data Science", "Cloud", "Blockchain",
+  "Security", "Design", "Backend", "Frontend"
 ];
 
-export const ProfileSetupForm = ({ onComplete, onSkip }: ProfileSetupFormProps) => {
+export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSetupFormProps) => {
   const { toast } = useToast();
-  const [profilePhoto, setProfilePhoto] = useState<string>('');
-  const [isDragging, setIsDragging] = useState(false);
-  const [teamSize, setTeamSize] = useState('');
-  const [developmentFocus, setDevelopmentFocus] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-  // Form validation for each field
-  const fullName = useInputValidation('', {
-    rules: { required: true, minLength: 2, maxLength: 50 },
-    validateOnChange: true,
-    debounceMs: 300
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      jobTitle: "",
+      company: "",
+      bio: "",
+      profileImage: "",
+      experience: "beginner",
+      preferredLanguages: [],
+      interests: [],
+    },
   });
 
-  const jobTitle = useInputValidation('', {
-    rules: { required: true, minLength: 2, maxLength: 100 },
-    validateOnChange: true,
-    debounceMs: 300
-  });
-
-  const company = useInputValidation('', {
-    rules: { required: true, minLength: 2, maxLength: 100 },
-    validateOnChange: true,
-    debounceMs: 300
-  });
-
-  // Combine all form data
-  const formData: ProfileSetupData = {
-    fullName: fullName.value,
-    jobTitle: jobTitle.value,
-    company: company.value,
-    teamSize,
-    developmentFocus,
-    profilePhoto
-  };
-
-  // Auto-save functionality
-  const { forceSave } = useAutoSave(formData, {
-    delay: 3000,
-    enabled: true,
-    showToast: true,
-    onSave: async () => {
-      // Save to localStorage for persistence during onboarding
-      localStorage.setItem('profile-setup-draft', JSON.stringify(formData));
-    }
-  });
-
-  // Load saved data on component mount
-  React.useEffect(() => {
-    const savedData = localStorage.getItem('profile-setup-draft');
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        fullName.handleChange(parsed.fullName || '');
-        jobTitle.handleChange(parsed.jobTitle || '');
-        company.handleChange(parsed.company || '');
-        setTeamSize(parsed.teamSize || '');
-        setDevelopmentFocus(parsed.developmentFocus || '');
-        setProfilePhoto(parsed.profilePhoto || '');
-      } catch (error) {
-        console.error('Failed to load saved profile data:', error);
+  // Load initial data if available (for revisiting completed steps)
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+      if (initialData.profileImage) {
+        setAvatarPreview(initialData.profileImage);
+      }
+      if (initialData.preferredLanguages) {
+        setSelectedLanguages(initialData.preferredLanguages);
+      }
+      if (initialData.interests) {
+        setSelectedInterests(initialData.interests);
+      }
+    } else {
+      // Try to load data from localStorage as fallback
+      const savedProfile = localStorage.getItem('profile-setup-draft');
+      if (savedProfile) {
+        try {
+          const parsedProfile = JSON.parse(savedProfile);
+          form.reset(parsedProfile);
+          if (parsedProfile.profileImage) {
+            setAvatarPreview(parsedProfile.profileImage);
+          }
+          if (parsedProfile.preferredLanguages) {
+            setSelectedLanguages(parsedProfile.preferredLanguages);
+          }
+          if (parsedProfile.interests) {
+            setSelectedInterests(parsedProfile.interests);
+          }
+        } catch (error) {
+          console.error('Failed to parse profile data:', error);
+        }
       }
     }
-  }, []);
+  }, [initialData, form]);
 
-  const handlePhotoUpload = useCallback((file: File) => {
-    if (file.size > 2 * 1024 * 1024) {
-      toast({
-        title: 'File too large',
-        description: 'Please choose an image smaller than 2MB.',
-        variant: 'destructive'
-      });
-      return;
-    }
+  // Auto-save form data as draft
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      localStorage.setItem('profile-setup-draft', JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: 'Invalid file type',
-        description: 'Please choose an image file (JPG, PNG, GIF).',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setProfilePhoto(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  }, [toast]);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handlePhotoUpload(files[0]);
-    }
-  }, [handlePhotoUpload]);
-
-  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handlePhotoUpload(files[0]);
-    }
-  }, [handlePhotoUpload]);
-
-  const isFormValid = () => {
-    return (
-      !fullName.error && fullName.value.trim() &&
-      !jobTitle.error && jobTitle.value.trim() &&
-      !company.error && company.value.trim() &&
-      teamSize &&
-      developmentFocus
-    );
-  };
-
-  const handleSubmit = async () => {
-    if (!isFormValid()) {
-      toast({
-        title: 'Please complete all fields',
-        description: 'Make sure all required fields are filled out correctly.',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    // Clear the draft from localStorage
+  const onSubmit = (data: FormData) => {
+    // Remove the draft when successfully submitting
     localStorage.removeItem('profile-setup-draft');
     
-    await forceSave();
-    onComplete(formData);
+    // Include selected languages and interests
+    data.preferredLanguages = selectedLanguages;
+    data.interests = selectedInterests;
+    
+    onComplete(data);
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setAvatarPreview(result);
+        form.setValue("profileImage", result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const toggleLanguage = (language: string) => {
+    setSelectedLanguages(prev => {
+      if (prev.includes(language)) {
+        const updated = prev.filter(l => l !== language);
+        form.setValue("preferredLanguages", updated);
+        return updated;
+      } else {
+        const updated = [...prev, language];
+        form.setValue("preferredLanguages", updated);
+        return updated;
+      }
+    });
+  };
+
+  const toggleInterest = (interest: string) => {
+    setSelectedInterests(prev => {
+      if (prev.includes(interest)) {
+        const updated = prev.filter(i => i !== interest);
+        form.setValue("interests", updated);
+        return updated;
+      } else {
+        const updated = [...prev, interest];
+        form.setValue("interests", updated);
+        return updated;
+      }
+    });
+  };
+
+  const userInitials = form.watch("name")
+    .split(" ")
+    .map(part => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
-    <div className="space-y-6">
-      {/* Profile Photo Upload */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="text-center space-y-4">
-            <Label className="text-base font-medium">Profile Photo</Label>
-            
-            <div className="flex flex-col items-center space-y-4">
-              <Avatar className="h-24 w-24 border-2 border-dashed border-border">
-                <AvatarImage src={profilePhoto} alt="Profile" />
-                <AvatarFallback className="bg-muted">
-                  <Camera className="w-8 h-8 text-muted-foreground" />
-                </AvatarFallback>
-              </Avatar>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {/* Avatar upload */}
+        <div className="flex flex-col items-center justify-center">
+          <Avatar className="w-24 h-24 border-2 border-primary/30">
+            {avatarPreview ? (
+              <AvatarImage src={avatarPreview} alt="Profile" />
+            ) : (
+              <AvatarFallback className="bg-primary/10 text-primary text-xl font-semibold">
+                {userInitials || "AI"}
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <label htmlFor="avatar-upload" className="mt-4 inline-block">
+            <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
+              <span>Upload photo</span>
+            </Button>
+            <Input 
+              id="avatar-upload"
+              type="file" 
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
+          </label>
+        </div>
 
-              <div
-                className={cn(
-                  "border-2 border-dashed rounded-lg p-6 w-full max-w-sm transition-colors cursor-pointer",
-                  isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="jobTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your job title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="company"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company/Organization</FormLabel>
+                <FormControl>
+                  <Input placeholder="Where do you work?" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="experience"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Experience Level</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your experience level" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="advanced">Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="bio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bio</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Tell us a bit about yourself..." 
+                  {...field}
+                  className="min-h-[100px]"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="preferredLanguages"
+            render={() => (
+              <FormItem>
+                <FormLabel>Preferred Programming Languages</FormLabel>
+                <FormControl>
+                  <div className="flex flex-wrap gap-2">
+                    {languageOptions.map((language) => (
+                      <Button
+                        key={language}
+                        type="button"
+                        variant={selectedLanguages.includes(language) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => toggleLanguage(language)}
+                        className={selectedLanguages.includes(language) ? "bg-primary text-primary-foreground" : ""}
+                      >
+                        {language}
+                      </Button>
+                    ))}
+                  </div>
+                </FormControl>
+                {selectedLanguages.length === 0 && (
+                  <FormMessage>Please select at least one language</FormMessage>
                 )}
-                onDrop={handleDrop}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onClick={() => document.getElementById('photo-upload')?.click()}
-              >
-                <div className="text-center space-y-2">
-                  <Upload className="w-6 h-6 mx-auto text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    Drop your photo here or click to browse
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    JPG, PNG or GIF. Max 2MB.
-                  </p>
-                </div>
-              </div>
-
-              <input
-                id="photo-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleFileInput}
-                className="hidden"
-              />
-
-              {profilePhoto && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setProfilePhoto('')}
-                  className="flex items-center space-x-2"
-                >
-                  <X className="w-4 h-4" />
-                  <span>Remove Photo</span>
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Form Fields */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name *</Label>
-          <div className="relative">
-            <Input
-              id="fullName"
-              value={fullName.value}
-              onChange={(e) => fullName.handleChange(e.target.value)}
-              onBlur={fullName.handleBlur}
-              placeholder="Enter your full name"
-              className={cn(
-                fullName.error && "border-red-500",
-                !fullName.error && fullName.value && "border-green-500"
-              )}
-            />
-            {!fullName.error && fullName.value && (
-              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
+              </FormItem>
             )}
-          </div>
-          {fullName.error && (
-            <p className="text-sm text-red-500">{fullName.error}</p>
-          )}
+          />
+
+          <FormField
+            control={form.control}
+            name="interests"
+            render={() => (
+              <FormItem>
+                <FormLabel>Areas of Interest</FormLabel>
+                <FormControl>
+                  <div className="flex flex-wrap gap-2">
+                    {interestOptions.map((interest) => (
+                      <Button
+                        key={interest}
+                        type="button"
+                        variant={selectedInterests.includes(interest) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => toggleInterest(interest)}
+                        className={selectedInterests.includes(interest) ? "bg-primary text-primary-foreground" : ""}
+                      >
+                        {interest}
+                      </Button>
+                    ))}
+                  </div>
+                </FormControl>
+                {selectedInterests.length === 0 && (
+                  <FormMessage>Please select at least one interest</FormMessage>
+                )}
+              </FormItem>
+            )}
+          />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="jobTitle">Job Title *</Label>
-          <div className="relative">
-            <Input
-              id="jobTitle"
-              value={jobTitle.value}
-              onChange={(e) => jobTitle.handleChange(e.target.value)}
-              onBlur={jobTitle.handleBlur}
-              placeholder="e.g. Senior Developer, Product Manager"
-              className={cn(
-                jobTitle.error && "border-red-500",
-                !jobTitle.error && jobTitle.value && "border-green-500"
-              )}
-            />
-            {!jobTitle.error && jobTitle.value && (
-              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
-            )}
-          </div>
-          {jobTitle.error && (
-            <p className="text-sm text-red-500">{jobTitle.error}</p>
-          )}
+        <div className="flex justify-between pt-6">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onSkip}
+          >
+            Skip for now
+          </Button>
+          <Button 
+            type="submit" 
+            disabled={!form.formState.isValid || selectedLanguages.length === 0 || selectedInterests.length === 0}
+          >
+            Save Profile
+          </Button>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="company">Company *</Label>
-          <div className="relative">
-            <Input
-              id="company"
-              value={company.value}
-              onChange={(e) => company.handleChange(e.target.value)}
-              onBlur={company.handleBlur}
-              placeholder="Enter your company name"
-              className={cn(
-                company.error && "border-red-500",
-                !company.error && company.value && "border-green-500"
-              )}
-            />
-            {!company.error && company.value && (
-              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
-            )}
-          </div>
-          {company.error && (
-            <p className="text-sm text-red-500">{company.error}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label>Team Size *</Label>
-          <div className="relative">
-            <Select value={teamSize} onValueChange={setTeamSize}>
-              <SelectTrigger className={cn(teamSize && "border-green-500")}>
-                <SelectValue placeholder="Select your team size" />
-              </SelectTrigger>
-              <SelectContent>
-                {teamSizeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {teamSize && (
-              <CheckCircle className="absolute right-8 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-2 md:col-span-2">
-          <Label>Development Focus *</Label>
-          <div className="relative">
-            <Select value={developmentFocus} onValueChange={setDevelopmentFocus}>
-              <SelectTrigger className={cn(developmentFocus && "border-green-500")}>
-                <SelectValue placeholder="Select your primary development focus" />
-              </SelectTrigger>
-              <SelectContent>
-                {developmentFocusOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {developmentFocus && (
-              <CheckCircle className="absolute right-8 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Form Actions */}
-      <div className="flex justify-between pt-4">
-        <Button variant="outline" onClick={onSkip}>
-          Skip for Now
-        </Button>
-        <Button 
-          onClick={handleSubmit}
-          disabled={!isFormValid()}
-          className="flex items-center space-x-2"
-        >
-          <CheckCircle className="w-4 h-4" />
-          <span>Complete Profile Setup</span>
-        </Button>
-      </div>
-
-      {/* Auto-save indicator */}
-      <div className="text-center">
-        <p className="text-xs text-muted-foreground">
-          Your progress is automatically saved every 3 seconds
-        </p>
-      </div>
-    </div>
+      </form>
+    </Form>
   );
 };

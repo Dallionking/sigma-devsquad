@@ -18,6 +18,7 @@ export interface OnboardingProgress {
   hasCreatedAgent: boolean;
   hasCreatedTeam: boolean;
   hasUsedPlanning: boolean;
+  stepData: Record<OnboardingStep, any>;
 }
 
 interface OnboardingContextType {
@@ -28,11 +29,18 @@ interface OnboardingContextType {
   skipOnboarding: () => void;
   resetOnboarding: () => void;
   setShowOnboarding: (show: boolean) => void;
+  goToStep: (step: OnboardingStep) => void;
+  canNavigateToStep: (step: OnboardingStep) => boolean;
+  getStepProgress: () => { current: number; total: number; percentage: number };
+  saveStepData: (step: OnboardingStep, data: any) => void;
+  getStepData: (step: OnboardingStep) => any;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'vibe-onboarding-progress';
+
+const stepOrder: OnboardingStep[] = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
 
 const initialProgress: OnboardingProgress = {
   currentStep: 'welcome',
@@ -41,7 +49,8 @@ const initialProgress: OnboardingProgress = {
   isFirstVisit: true,
   hasCreatedAgent: false,
   hasCreatedTeam: false,
-  hasUsedPlanning: false
+  hasUsedPlanning: false,
+  stepData: {}
 };
 
 export const OnboardingProvider = ({ children }: { children: React.ReactNode }) => {
@@ -56,7 +65,11 @@ export const OnboardingProvider = ({ children }: { children: React.ReactNode }) 
       if (stored) {
         try {
           const parsedProgress = JSON.parse(stored);
-          setProgress(parsedProgress);
+          setProgress({
+            ...initialProgress,
+            ...parsedProgress,
+            stepData: parsedProgress.stepData || {}
+          });
           
           // Show onboarding if not complete and it's a first visit
           if (!parsedProgress.isOnboardingComplete && parsedProgress.isFirstVisit) {
@@ -96,41 +109,74 @@ export const OnboardingProvider = ({ children }: { children: React.ReactNode }) 
       }
 
       // Determine next step
-      let nextStep: OnboardingStep;
-      switch (step) {
-        case 'welcome':
-          nextStep = 'profile-setup';
-          break;
-        case 'profile-setup':
-          nextStep = 'team-creation';
-          break;
-        case 'team-creation':
-          nextStep = 'first-agent';
-          break;
-        case 'first-agent':
-          nextStep = 'planning-tour';
-          break;
-        case 'planning-tour':
-          nextStep = 'completion';
-          break;
-        default:
-          nextStep = 'completion';
-      }
+      const currentIndex = stepOrder.indexOf(step);
+      const nextStep = currentIndex < stepOrder.length - 1 ? stepOrder[currentIndex + 1] : 'completion';
 
-      const isComplete = step === 'completion' || completedSteps.length >= 5;
+      const isComplete = step === 'completion' || completedSteps.length >= stepOrder.length - 1;
 
       return {
         ...prev,
         currentStep: isComplete ? 'completion' : nextStep,
         completedSteps,
         isOnboardingComplete: isComplete,
-        isFirstVisit: false
+        isFirstVisit: false,
+        hasCreatedAgent: prev.hasCreatedAgent || step === 'first-agent',
+        hasCreatedTeam: prev.hasCreatedTeam || step === 'team-creation',
+        hasUsedPlanning: prev.hasUsedPlanning || step === 'planning-tour'
       };
     });
 
     if (step === 'completion') {
       setShowOnboarding(false);
     }
+  };
+
+  const goToStep = (step: OnboardingStep) => {
+    if (canNavigateToStep(step)) {
+      setProgress(prev => ({
+        ...prev,
+        currentStep: step
+      }));
+    }
+  };
+
+  const canNavigateToStep = (step: OnboardingStep): boolean => {
+    const stepIndex = stepOrder.indexOf(step);
+    const currentIndex = stepOrder.indexOf(progress.currentStep);
+    
+    // Can always go to completed steps
+    if (progress.completedSteps.includes(step)) {
+      return true;
+    }
+    
+    // Can go to current step or one step ahead
+    return stepIndex <= currentIndex + 1;
+  };
+
+  const getStepProgress = () => {
+    const currentIndex = stepOrder.indexOf(progress.currentStep);
+    const totalSteps = stepOrder.length - 1; // Exclude completion
+    const completedCount = progress.completedSteps.length;
+    
+    return {
+      current: Math.max(currentIndex, completedCount),
+      total: totalSteps,
+      percentage: Math.min((completedCount / totalSteps) * 100, 100)
+    };
+  };
+
+  const saveStepData = (step: OnboardingStep, data: any) => {
+    setProgress(prev => ({
+      ...prev,
+      stepData: {
+        ...prev.stepData,
+        [step]: data
+      }
+    }));
+  };
+
+  const getStepData = (step: OnboardingStep) => {
+    return progress.stepData[step] || null;
   };
 
   const skipOnboarding = () => {
@@ -155,7 +201,12 @@ export const OnboardingProvider = ({ children }: { children: React.ReactNode }) 
       completeStep,
       skipOnboarding,
       resetOnboarding,
-      setShowOnboarding
+      setShowOnboarding,
+      goToStep,
+      canNavigateToStep,
+      getStepProgress,
+      saveStepData,
+      getStepData
     }}>
       {children}
     </OnboardingContext.Provider>
@@ -165,7 +216,7 @@ export const OnboardingProvider = ({ children }: { children: React.ReactNode }) 
 export const useOnboarding = () => {
   const context = useContext(OnboardingContext);
   if (context === undefined) {
-    throw new Error('useOnboarding must be used within an OnboardingProvider');
+    throw new error('useOnboarding must be used within an OnboardingProvider');
   }
   return context;
 };

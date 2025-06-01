@@ -41,7 +41,7 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
   const { forceSave } = useAutoSave(formData, {
     delay: 3000,
     enabled: true,
-    showToast: true,
+    showToast: false,
     onSave: async () => {
       localStorage.setItem('team-creation-draft', JSON.stringify(formData));
     }

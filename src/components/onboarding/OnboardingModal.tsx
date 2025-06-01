@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { ProfileSetupForm } from './ProfileSetupForm';
 import { TeamCreationForm } from './TeamCreationForm';
 import { FirstAgentForm } from './first-agent/FirstAgentForm';
 import { PlanningTourForm } from './PlanningTourForm';
+import { OnboardingProgressSidebar } from './OnboardingProgressSidebar';
 import { cn } from '@/lib/utils';
 
 const stepContent = {
@@ -160,14 +162,22 @@ const TemplateSelectionContent = () => {
 const stepOrder: OnboardingStep[] = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
 
 export const OnboardingModal = () => {
-  const { progress, showOnboarding, completeStep, skipOnboarding, setShowOnboarding } = useOnboarding();
+  const { 
+    progress, 
+    showOnboarding, 
+    completeStep, 
+    skipOnboarding, 
+    setShowOnboarding,
+    getStepProgress,
+    saveStepData,
+    getStepData
+  } = useOnboarding();
 
+  const [showProgressSidebar, setShowProgressSidebar] = useState(true);
+  
   if (!showOnboarding) return null;
 
-  const currentStepIndex = stepOrder.indexOf(progress.currentStep);
-  const totalSteps = stepOrder.length - 1; // Exclude completion step from count
-  const progressPercentage = (currentStepIndex / totalSteps) * 100;
-
+  const { percentage } = getStepProgress();
   const currentContent = stepContent[progress.currentStep];
   const Icon = currentContent.icon;
 
@@ -180,7 +190,7 @@ export const OnboardingModal = () => {
   };
 
   const handleProfileSetupComplete = (profileData: any) => {
-    localStorage.setItem('onboarding-profile', JSON.stringify(profileData));
+    saveStepData('profile-setup', profileData);
     completeStep('profile-setup');
   };
 
@@ -189,7 +199,7 @@ export const OnboardingModal = () => {
   };
 
   const handleTeamCreationComplete = (teamData: any) => {
-    localStorage.setItem('onboarding-team', JSON.stringify(teamData));
+    saveStepData('team-creation', teamData);
     completeStep('team-creation');
   };
 
@@ -198,7 +208,7 @@ export const OnboardingModal = () => {
   };
 
   const handleFirstAgentComplete = (agentData: any) => {
-    localStorage.setItem('onboarding-agent', JSON.stringify(agentData));
+    saveStepData('first-agent', agentData);
     completeStep('first-agent');
   };
 
@@ -214,6 +224,10 @@ export const OnboardingModal = () => {
     completeStep('planning-tour');
   };
 
+  const toggleProgressSidebar = () => {
+    setShowProgressSidebar(prev => !prev);
+  };
+
   const showProfileSetup = progress.currentStep === 'profile-setup';
   const showTeamCreation = progress.currentStep === 'team-creation';
   const showFirstAgent = progress.currentStep === 'first-agent';
@@ -221,115 +235,132 @@ export const OnboardingModal = () => {
 
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                <Icon className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">{currentContent.title}</h2>
-                <p className="text-muted-foreground text-sm">{currentContent.description}</p>
-              </div>
-            </div>
-            
-            {progress.currentStep !== 'completion' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSkip}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            )}
+      <DialogContent className="max-w-6xl max-h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row">
+        {/* Progress Sidebar (collapsible on mobile) */}
+        {showProgressSidebar && (
+          <div className="hidden sm:block">
+            <OnboardingProgressSidebar />
           </div>
-
-          {/* Progress */}
-          {progress.currentStep !== 'completion' && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Step {currentStepIndex + 1} of {totalSteps}
-                </span>
-                <span className="text-muted-foreground">
-                  {Math.round(progressPercentage)}% complete
-                </span>
-              </div>
-              <Progress value={progressPercentage} className="h-2" />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="py-6">
-            {showProfileSetup ? (
-              <ProfileSetupForm 
-                onComplete={handleProfileSetupComplete}
-                onSkip={handleProfileSetupSkip}
-              />
-            ) : showTeamCreation ? (
-              <TeamCreationForm 
-                onComplete={handleTeamCreationComplete}
-                onSkip={handleTeamCreationSkip}
-              />
-            ) : showFirstAgent ? (
-              <FirstAgentForm
-                onComplete={handleFirstAgentComplete}
-                onSkip={handleFirstAgentSkip}
-              />
-            ) : showPlanningTour ? (
-              <PlanningTourForm
-                onComplete={handlePlanningTourComplete}
-                onSkip={handlePlanningTourSkip}
-              />
-            ) : (
-              currentContent.content
-            )}
-          </div>
-
-          {/* Actions - Only show for non-form steps */}
-          {!showProfileSetup && !showTeamCreation && !showFirstAgent && !showPlanningTour && (
-            <div className="flex justify-between">
-              {progress.currentStep !== 'completion' ? (
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={handleSkip}
-                  >
-                    Skip Tour
-                  </Button>
-                  <Button onClick={handleNext} className="flex items-center space-x-2">
-                    <span>{progress.currentStep === 'planning-tour' ? 'Finish' : 'Continue'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </>
-              ) : (
-                <div className="w-full flex justify-center">
-                  <Button onClick={() => setShowOnboarding(false)} size="lg">
-                    Start Building! 🚀
-                  </Button>
+        )}
+        
+        {/* Main content */}
+        <div className="flex-1 h-[90vh] overflow-y-auto">
+          <div className="p-6 space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="block sm:hidden"
+                  onClick={toggleProgressSidebar}
+                >
+                  <Users className="h-4 w-4" />
+                </Button>
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-primary" />
                 </div>
+                <div>
+                  <h2 className="text-xl font-bold">{currentContent.title}</h2>
+                  <p className="text-muted-foreground text-sm">{currentContent.description}</p>
+                </div>
+              </div>
+              
+              {progress.currentStep !== 'completion' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSkip}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               )}
             </div>
-          )}
 
-          {/* Step indicators */}
-          {progress.currentStep !== 'completion' && (
-            <div className="flex justify-center space-x-2">
+            {/* Progress - show in main content on mobile */}
+            {progress.currentStep !== 'completion' && (
+              <div className="sm:hidden space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    Step {stepOrder.indexOf(progress.currentStep) + 1} of {stepOrder.length - 1}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {Math.round(percentage)}% complete
+                  </span>
+                </div>
+                <Progress value={percentage} className="h-2" />
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="py-6">
+              {showProfileSetup ? (
+                <ProfileSetupForm 
+                  onComplete={handleProfileSetupComplete}
+                  onSkip={handleProfileSetupSkip}
+                  initialData={getStepData('profile-setup')}
+                />
+              ) : showTeamCreation ? (
+                <TeamCreationForm 
+                  onComplete={handleTeamCreationComplete}
+                  onSkip={handleTeamCreationSkip}
+                />
+              ) : showFirstAgent ? (
+                <FirstAgentForm
+                  onComplete={handleFirstAgentComplete}
+                  onSkip={handleFirstAgentSkip}
+                />
+              ) : showPlanningTour ? (
+                <PlanningTourForm
+                  onComplete={handlePlanningTourComplete}
+                  onSkip={handlePlanningTourSkip}
+                />
+              ) : (
+                currentContent.content
+              )}
+            </div>
+
+            {/* Actions - Only show for non-form steps */}
+            {!showProfileSetup && !showTeamCreation && !showFirstAgent && !showPlanningTour && (
+              <div className="flex justify-between">
+                {progress.currentStep !== 'completion' ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={handleSkip}
+                    >
+                      Skip Tour
+                    </Button>
+                    <Button onClick={handleNext} className="flex items-center space-x-2">
+                      <span>{progress.currentStep === 'planning-tour' ? 'Finish' : 'Continue'}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </>
+                ) : (
+                  <div className="w-full flex justify-center">
+                    <Button onClick={() => setShowOnboarding(false)} size="lg">
+                      Start Building! 🚀
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step indicators - Show on mobile or when sidebar is collapsed */}
+            <div className="sm:hidden flex justify-center space-x-2">
               {stepOrder.slice(0, -1).map((step, index) => (
                 <div
                   key={step}
                   className={cn(
                     "w-2 h-2 rounded-full transition-colors",
-                    index <= currentStepIndex ? "bg-primary" : "bg-muted",
-                    index === currentStepIndex && "ring-2 ring-primary ring-offset-2"
+                    index <= stepOrder.indexOf(progress.currentStep) ? "bg-primary" : "bg-muted",
+                    index === stepOrder.indexOf(progress.currentStep) && "ring-2 ring-primary ring-offset-2"
                   )}
                 />
               ))}
             </div>
-          )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -227,11 +227,11 @@ export const PlanningTourOverlay = ({ onComplete, onSkip }: PlanningTourOverlayP
         </Card>
       </div>
 
-      {/* Hotspot indicators */}
+      {/* Hotspot indicators with CSS */}
       {highlightedElement && (
         <div className="fixed inset-0 z-45 pointer-events-none">
-          <div className="absolute inset-0">
-            <style jsx>{`
+          <style>
+            {`
               .tour-highlight {
                 position: relative;
                 z-index: 60;
@@ -249,8 +249,8 @@ export const PlanningTourOverlay = ({ onComplete, onSkip }: PlanningTourOverlayP
                   box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.3), 0 0 30px rgba(59, 130, 246, 0.5);
                 }
               }
-            `}</style>
-          </div>
+            `}
+          </style>
         </div>
       )}
     </>
