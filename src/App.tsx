@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +27,7 @@ import MCPManagement from "./pages/MCPManagement";
 import IDEIntegration from "./pages/IDEIntegration";
 import PlanningAgent from "./pages/PlanningAgent";
 import NotFound from "./pages/NotFound";
+import TeamSettings from "./pages/TeamSettings";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +65,11 @@ const App = () => (
                                 <Route path="/settings" element={
                                   <ProtectedRoute>
                                     <Settings />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/team-settings/:teamId" element={
+                                  <ProtectedRoute>
+                                    <TeamSettings />
                                   </ProtectedRoute>
                                 } />
                                 <Route path="/llm-integration" element={

@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { TeamRole, AgentSpecialization } from "@/types/teams";
+import { useState } from 'react';
+import { AgentSpecialization, TeamRole } from "@/types/teams";
 import { useTeams } from "@/contexts/TeamContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -8,23 +8,23 @@ interface AgentFormData {
   name: string;
   role: TeamRole | "";
   specialization: AgentSpecialization | "";
+  experience: number;
   bio: string;
   frameworks: string[];
-  experience: number;
 }
 
 export const useAgentForm = (teamId: string, onSuccess: () => void) => {
+  const { createAgentProfile } = useTeams();
+  const { toast } = useToast();
+
   const [formData, setFormData] = useState<AgentFormData>({
     name: "",
     role: "",
     specialization: "",
+    experience: 0,
     bio: "",
     frameworks: [],
-    experience: 1
   });
-
-  const { createAgentProfile } = useTeams();
-  const { toast } = useToast();
 
   const updateField = (field: keyof AgentFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -35,47 +35,67 @@ export const useAgentForm = (teamId: string, onSuccess: () => void) => {
       name: "",
       role: "",
       specialization: "",
+      experience: 0,
       bio: "",
       frameworks: [],
-      experience: 1
     });
   };
 
   const validateForm = () => {
-    return formData.name.trim() && formData.role && formData.specialization && formData.bio.trim();
+    if (!formData.name.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Agent name is required.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (!formData.role) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a role.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (!formData.specialization) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a specialization.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
-      });
-      return;
-    }
+
+    if (!validateForm()) return;
 
     try {
       createAgentProfile({
         name: formData.name.trim(),
-        teamId,
+        teamId: teamId,
         role: formData.role as TeamRole,
         specialization: formData.specialization as AgentSpecialization,
         skills: [],
         frameworks: formData.frameworks,
         experience: formData.experience,
         availability: "available",
-        performanceRating: 4.0,
+        performanceRating: 5,
         communicationPreference: "direct",
-        avatar: `/avatars/${formData.name.toLowerCase().replace(/\s+/g, '')}.jpg`,
-        bio: formData.bio.trim()
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.name}`,
+        bio: formData.bio.trim(),
       });
 
       toast({
-        title: "Success",
-        description: "Agent added to team successfully",
+        title: "Member Added",
+        description: `${formData.name} has been added to the team.`,
       });
 
       resetForm();
@@ -83,8 +103,8 @@ export const useAgentForm = (teamId: string, onSuccess: () => void) => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add agent to team",
-        variant: "destructive"
+        description: "Failed to add team member. Please try again.",
+        variant: "destructive",
       });
     }
   };
@@ -93,6 +113,6 @@ export const useAgentForm = (teamId: string, onSuccess: () => void) => {
     formData,
     updateField,
     handleSubmit,
-    resetForm
+    resetForm,
   };
 };
