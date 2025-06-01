@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Users, X } from 'lucide-react';
+import { Users, X, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
 
@@ -17,6 +17,8 @@ interface OnboardingModalHeaderProps {
   onToggleProgressSidebar: () => void;
   onSkip: () => void;
   showSkipButton?: boolean;
+  onToggleHelp?: () => void;
+  isHelpCollapsed?: boolean;
 }
 
 export const OnboardingModalHeader = ({
@@ -29,7 +31,9 @@ export const OnboardingModalHeader = ({
   stepOrder,
   onToggleProgressSidebar,
   onSkip,
-  showSkipButton = true
+  showSkipButton = true,
+  onToggleHelp,
+  isHelpCollapsed = false
 }: OnboardingModalHeaderProps) => {
   return (
     <>
@@ -53,16 +57,34 @@ export const OnboardingModalHeader = ({
           </div>
         </div>
         
-        {showSkipButton && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onSkip}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        )}
+        <div className="flex items-center space-x-2">
+          {/* Help Toggle Button */}
+          {onToggleHelp && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onToggleHelp}
+              className={cn(
+                "text-muted-foreground hover:text-foreground",
+                !isHelpCollapsed && "bg-primary/10 text-primary border-primary/20"
+              )}
+              title={isHelpCollapsed ? "Show help panel" : "Hide help panel"}
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
+          )}
+
+          {showSkipButton && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSkip}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Progress - show in main content on mobile */}

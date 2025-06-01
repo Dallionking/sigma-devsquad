@@ -7,6 +7,8 @@ import { OnboardingModalHeader } from './modal/OnboardingModalHeader';
 import { OnboardingModalContent } from './modal/OnboardingModalContent';
 import { OnboardingModalActions } from './modal/OnboardingModalActions';
 import { OnboardingStepIndicators } from './modal/OnboardingStepIndicators';
+import { OnboardingHelpPanel } from './help/OnboardingHelpPanel';
+import { useOnboardingHelp } from './help/useOnboardingHelp';
 import { stepContent, stepOrder } from './modal/stepContentConfig';
 
 export const OnboardingModal = () => {
@@ -22,6 +24,7 @@ export const OnboardingModal = () => {
   } = useOnboarding();
 
   const [showProgressSidebar, setShowProgressSidebar] = useState(true);
+  const { isHelpCollapsed, toggleHelpPanel } = useOnboardingHelp(progress.currentStep);
   
   if (!showOnboarding) return null;
 
@@ -85,60 +88,73 @@ export const OnboardingModal = () => {
   const showActions = !showProfileSetup && !showTeamCreation && !showFirstAgent && !showPlanningTour;
 
   return (
-    <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-      <DialogContent className="max-w-6xl max-h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row">
-        {/* Progress Sidebar (collapsible on mobile) */}
-        {showProgressSidebar && (
-          <div className="hidden sm:block">
-            <OnboardingProgressSidebar />
+    <>
+      <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
+        <DialogContent className={`max-w-6xl max-h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row ${isHelpCollapsed ? '' : 'mr-96'}`}>
+          {/* Progress Sidebar (collapsible on mobile) */}
+          {showProgressSidebar && (
+            <div className="hidden sm:block">
+              <OnboardingProgressSidebar />
+            </div>
+          )}
+          
+          {/* Main content */}
+          <div className="flex-1 h-[90vh] overflow-y-auto">
+            <div className="p-6 space-y-6">
+              <OnboardingModalHeader
+                currentStep={progress.currentStep}
+                title={currentContent.title}
+                description={currentContent.description}
+                icon={Icon}
+                showProgressSidebar={showProgressSidebar}
+                percentage={percentage}
+                stepOrder={stepOrder}
+                onToggleProgressSidebar={toggleProgressSidebar}
+                onSkip={handleSkip}
+                showSkipButton={progress.currentStep !== 'completion'}
+                onToggleHelp={toggleHelpPanel}
+                isHelpCollapsed={isHelpCollapsed}
+              />
+
+              <OnboardingModalContent
+                currentStep={progress.currentStep}
+                stepContent={currentContent.content}
+                onProfileSetupComplete={handleProfileSetupComplete}
+                onProfileSetupSkip={handleProfileSetupSkip}
+                onTeamCreationComplete={handleTeamCreationComplete}
+                onTeamCreationSkip={handleTeamCreationSkip}
+                onFirstAgentComplete={handleFirstAgentComplete}
+                onFirstAgentSkip={handleFirstAgentSkip}
+                onPlanningTourComplete={handlePlanningTourComplete}
+                onPlanningTourSkip={handlePlanningTourSkip}
+                getStepData={getStepData}
+              />
+
+              <OnboardingModalActions
+                currentStep={progress.currentStep}
+                showActions={showActions}
+                onNext={handleNext}
+                onSkip={handleSkip}
+                onFinish={() => setShowOnboarding(false)}
+              />
+
+              <OnboardingStepIndicators
+                stepOrder={stepOrder}
+                currentStep={progress.currentStep}
+              />
+            </div>
           </div>
-        )}
-        
-        {/* Main content */}
-        <div className="flex-1 h-[90vh] overflow-y-auto">
-          <div className="p-6 space-y-6">
-            <OnboardingModalHeader
-              currentStep={progress.currentStep}
-              title={currentContent.title}
-              description={currentContent.description}
-              icon={Icon}
-              showProgressSidebar={showProgressSidebar}
-              percentage={percentage}
-              stepOrder={stepOrder}
-              onToggleProgressSidebar={toggleProgressSidebar}
-              onSkip={handleSkip}
-              showSkipButton={progress.currentStep !== 'completion'}
-            />
+        </DialogContent>
+      </Dialog>
 
-            <OnboardingModalContent
-              currentStep={progress.currentStep}
-              stepContent={currentContent.content}
-              onProfileSetupComplete={handleProfileSetupComplete}
-              onProfileSetupSkip={handleProfileSetupSkip}
-              onTeamCreationComplete={handleTeamCreationComplete}
-              onTeamCreationSkip={handleTeamCreationSkip}
-              onFirstAgentComplete={handleFirstAgentComplete}
-              onFirstAgentSkip={handleFirstAgentSkip}
-              onPlanningTourComplete={handlePlanningTourComplete}
-              onPlanningTourSkip={handlePlanningTourSkip}
-              getStepData={getStepData}
-            />
-
-            <OnboardingModalActions
-              currentStep={progress.currentStep}
-              showActions={showActions}
-              onNext={handleNext}
-              onSkip={handleSkip}
-              onFinish={() => setShowOnboarding(false)}
-            />
-
-            <OnboardingStepIndicators
-              stepOrder={stepOrder}
-              currentStep={progress.currentStep}
-            />
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+      {/* Help Panel - Outside dialog to avoid z-index issues */}
+      {showOnboarding && (
+        <OnboardingHelpPanel
+          currentStep={progress.currentStep}
+          isCollapsed={isHelpCollapsed}
+          onToggleCollapse={toggleHelpPanel}
+        />
+      )}
+    </>
   );
 };
