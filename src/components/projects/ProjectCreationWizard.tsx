@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -115,7 +114,9 @@ export const ProjectCreationWizard = ({ open, onOpenChange }: ProjectCreationWiz
         startDate: new Date().toISOString().split('T')[0],
         targetDate: formData.targetDate!.toISOString().split('T')[0],
         team: formData.team,
-        objectives: formData.objectives
+        objectives: formData.objectives,
+        tags: [],
+        priority: 'medium'
       });
 
       toast({

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useProjects } from './ProjectContext';
 import { useToast } from '@/hooks/use-toast';
@@ -150,7 +149,9 @@ export const ProjectTemplateProvider = ({ children }: { children: ReactNode }) =
         startDate: new Date().toISOString().split('T')[0],
         targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
         team: template.agents.map(agent => agent.role),
-        objectives: template.features
+        objectives: template.features,
+        tags: template.tags,
+        priority: 'medium'
       });
 
       toast({
