@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CheckCircle, Users, Bot, MapPin, Sparkles, ArrowRight, X, Star, Code2, Globe, Database } from 'lucide-react';
 import { useOnboarding, type OnboardingStep } from '@/contexts/OnboardingContext';
 import { useProjectTemplates } from '@/contexts/ProjectTemplateContext';
+import { ProfileSetupForm } from './ProfileSetupForm';
 import { cn } from '@/lib/utils';
 
 const stepContent = {
@@ -48,21 +48,7 @@ const stepContent = {
     title: 'Complete Your Profile',
     description: 'Tell us a bit about yourself to personalize your experience.',
     icon: Users,
-    content: (
-      <div className="space-y-4">
-        <p className="text-muted-foreground">
-          A complete profile helps your AI agents understand your preferences and working style.
-        </p>
-        <div className="bg-accent/50 p-4 rounded-lg">
-          <h4 className="font-semibold mb-2">Profile Benefits:</h4>
-          <ul className="space-y-1 text-sm">
-            <li>• Personalized agent recommendations</li>
-            <li>• Better project suggestions</li>
-            <li>• Improved team collaboration</li>
-          </ul>
-        </div>
-      </div>
-    )
+    content: null // Will be replaced with ProfileSetupForm
   },
   'team-creation': {
     title: 'Create Your First Team',
@@ -236,8 +222,19 @@ export const OnboardingModal = () => {
     skipOnboarding();
   };
 
+  const handleProfileSetupComplete = (profileData: any) => {
+    // Save profile data to localStorage or context
+    localStorage.setItem('onboarding-profile', JSON.stringify(profileData));
+    completeStep('profile-setup');
+  };
+
+  const handleProfileSetupSkip = () => {
+    completeStep('profile-setup');
+  };
+
   // Show template selection for first-agent step
   const showTemplateSelection = progress.currentStep === 'first-agent';
+  const showProfileSetup = progress.currentStep === 'profile-setup';
 
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
@@ -284,32 +281,43 @@ export const OnboardingModal = () => {
 
           {/* Content */}
           <div className="py-6">
-            {showTemplateSelection ? <TemplateSelectionContent /> : currentContent.content}
-          </div>
-
-          {/* Actions */}
-          <div className="flex justify-between">
-            {progress.currentStep !== 'completion' ? (
-              <>
-                <Button
-                  variant="outline"
-                  onClick={handleSkip}
-                >
-                  Skip Tour
-                </Button>
-                <Button onClick={handleNext} className="flex items-center space-x-2">
-                  <span>{progress.currentStep === 'planning-tour' ? 'Finish' : 'Continue'}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </>
+            {showProfileSetup ? (
+              <ProfileSetupForm 
+                onComplete={handleProfileSetupComplete}
+                onSkip={handleProfileSetupSkip}
+              />
+            ) : showTemplateSelection ? (
+              <TemplateSelectionContent />
             ) : (
-              <div className="w-full flex justify-center">
-                <Button onClick={() => setShowOnboarding(false)} size="lg">
-                  Start Building! 🚀
-                </Button>
-              </div>
+              currentContent.content
             )}
           </div>
+
+          {/* Actions - Only show for non-profile steps */}
+          {!showProfileSetup && (
+            <div className="flex justify-between">
+              {progress.currentStep !== 'completion' ? (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={handleSkip}
+                  >
+                    Skip Tour
+                  </Button>
+                  <Button onClick={handleNext} className="flex items-center space-x-2">
+                    <span>{progress.currentStep === 'planning-tour' ? 'Finish' : 'Continue'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </>
+              ) : (
+                <div className="w-full flex justify-center">
+                  <Button onClick={() => setShowOnboarding(false)} size="lg">
+                    Start Building! 🚀
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Step indicators */}
           {progress.currentStep !== 'completion' && (
