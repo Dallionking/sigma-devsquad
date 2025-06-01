@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { EnhancedCard } from "@/components/ui/enhanced-card";
@@ -74,14 +73,6 @@ export const PricingComparisonSection = () => {
       function: "Code completion",
       target: "Individual developers",
       advantage: "No planning, testing, or workflow",
-      isVibe: false
-    },
-    {
-      tool: "Codeium",
-      price: "$12",
-      function: "Code completion",
-      target: "Individual developers",
-      advantage: "Code-only, no team coordination",
       isVibe: false
     },
     {
