@@ -34,7 +34,7 @@ export const useSessionManager = (config: SessionConfig = { timeout: 30 * 60 * 1
 
   const {
     data: sessionData,
-    setData: setSessionData,
+    updateData: setSessionData,
     isLoading,
     forceSave
   } = usePersistenceManager<SessionData>(defaultSessionData, {
