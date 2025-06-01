@@ -1,11 +1,11 @@
 
-import { OptimizedConsolidatedNavigation } from "./OptimizedConsolidatedNavigation";
-import { HeaderLogo } from "./HeaderLogo";
-import { OptimizedActionButtons } from "./OptimizedActionButtons";
-import { StatusSubHeader } from "./StatusSubHeader";
-import { MobileProjectSwitcher } from "@/components/projects/MobileProjectSwitcher";
-import { ViewMode, Agent } from "@/types";
-import { useLocation } from "react-router-dom";
+import React from 'react';
+import { HeaderLogo } from './HeaderLogo';
+import { ViewModeSelector } from './ViewModeSelector';
+import { OptimizedActionButtons } from './OptimizedActionButtons';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ViewMode, Agent } from '@/types';
+import { MobileNavigation } from '@/components/layout/MobileNavigation';
 
 interface OptimizedHeaderProps {
   viewMode: ViewMode;
@@ -16,69 +16,60 @@ interface OptimizedHeaderProps {
   showTeamView?: boolean;
 }
 
-export const OptimizedHeader = ({ 
-  viewMode, 
-  onViewModeChange, 
+export const OptimizedHeader = ({
+  viewMode,
+  onViewModeChange,
   agents,
-  sidebarCollapsed,
+  sidebarCollapsed = false,
   onSidebarToggle,
   showTeamView = false
 }: OptimizedHeaderProps) => {
-  const location = useLocation();
-  const isDashboardPage = location.pathname === "/dashboard";
-  
-  // Calculate agent status counts
-  const activeAgents = agents.filter(agent => agent.status === "working").length;
-  const totalAgents = agents.length;
-  
-  // Mock notification counts
-  const notificationCounts = {
-    workflow: 0,
-    communication: 0,
-    tasks: 0,
-    messages: 0
-  };
+  const activeAgents = agents.filter(agent => agent.status === 'active').length;
 
   return (
-    <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      {/* Main Header */}
-      <div className="flex h-14 items-center justify-between px-4 lg:px-6">
-        {/* Left Section: Logo and Sidebar Toggle */}
-        <div className="flex items-center space-x-4">
-          <HeaderLogo 
-            isDashboardPage={isDashboardPage}
-            sidebarCollapsed={sidebarCollapsed}
-            onSidebarToggle={onSidebarToggle}
-            activeAgents={activeAgents}
-            totalAgents={totalAgents}
-          />
-          
-          {/* Mobile Project Switcher */}
-          <div className="lg:hidden w-48">
-            <MobileProjectSwitcher />
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Left Section - Logo and Mobile Navigation */}
+          <div className="flex items-center space-x-4">
+            <MobileNavigation 
+              activeAgents={activeAgents}
+              totalAgents={agents.length}
+            />
+            <HeaderLogo 
+              sidebarCollapsed={sidebarCollapsed}
+              onSidebarToggle={onSidebarToggle}
+            />
+          </div>
+
+          {/* Center Section - View Mode Selector (Desktop) */}
+          <div className="hidden lg:flex flex-1 justify-center">
+            <ViewModeSelector
+              viewMode={viewMode}
+              onViewModeChange={onViewModeChange}
+              showTeamView={showTeamView}
+            />
+          </div>
+
+          {/* Right Section - Actions and Theme Toggle */}
+          <div className="flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
+            {/* Action Buttons */}
+            <OptimizedActionButtons />
           </div>
         </div>
-        
-        {/* Center Section: Optimized Navigation */}
-        <div className="flex-1 flex justify-center">
-          <OptimizedConsolidatedNavigation 
+
+        {/* Mobile View Mode Selector */}
+        <div className="lg:hidden pb-3">
+          <ViewModeSelector
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}
-            notificationCounts={notificationCounts}
+            showTeamView={showTeamView}
           />
         </div>
-        
-        {/* Right Section: Optimized Actions */}
-        <div className="flex items-center space-x-2">
-          <OptimizedActionButtons />
-        </div>
       </div>
-      
-      {/* Status Sub-Header */}
-      <StatusSubHeader 
-        agents={agents}
-        showTeamView={showTeamView}
-      />
-    </div>
+    </header>
   );
 };

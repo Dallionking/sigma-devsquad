@@ -1,253 +1,151 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { 
-  HelpCircle, 
-  ChevronRight, 
-  ChevronLeft, 
-  Lightbulb, 
-  ExternalLink, 
-  CheckCircle,
-  BookOpen,
-  Zap
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
+import { HelpTooltip } from './HelpTooltip';
+import { VideoTutorialManager } from '../video-tutorials/VideoTutorialManager';
 import { getHelpContent } from './helpContentConfig';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronLeft, ChevronRight, HelpCircle, Video, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface OnboardingHelpPanelProps {
   currentStep: OnboardingStep;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
-  className?: string;
+  completedSteps?: OnboardingStep[];
 }
 
-export const OnboardingHelpPanel = ({
-  currentStep,
-  isCollapsed,
+export const OnboardingHelpPanel = ({ 
+  currentStep, 
+  isCollapsed, 
   onToggleCollapse,
-  className
+  completedSteps = []
 }: OnboardingHelpPanelProps) => {
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    tips: true,
-    examples: false,
-    quickActions: false,
-    learnMore: false
-  });
-
+  const [activeTab, setActiveTab] = useState('help');
   const helpContent = getHelpContent(currentStep);
-
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  if (isCollapsed) {
-    return (
-      <div className={cn("fixed right-4 top-1/2 transform -translate-y-1/2 z-50", className)}>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onToggleCollapse}
-          className="h-12 w-12 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90"
-          title="Show help panel"
-        >
-          <HelpCircle className="h-5 w-5" />
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className={cn(
-      "fixed right-0 top-0 h-full w-96 bg-background border-l shadow-lg z-40 overflow-y-auto",
-      className
+      "fixed right-0 top-0 h-screen bg-background border-l shadow-lg transition-all duration-300 z-40",
+      isCollapsed ? "w-12" : "w-96"
     )}>
-      <div className="p-6 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <HelpCircle className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold">Help & Guidance</h3>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggleCollapse}
-            className="h-8 w-8"
-            title="Hide help panel"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Main Content */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg">{helpContent.title}</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {helpContent.description}
-            </p>
-          </CardHeader>
-        </Card>
-
-        {/* Tips Section */}
-        <Collapsible 
-          open={expandedSections.tips} 
-          onOpenChange={() => toggleSection('tips')}
+      {/* Toggle Button */}
+      <div className="absolute -left-12 top-1/2 transform -translate-y-1/2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onToggleCollapse}
+          className="rounded-l-md rounded-r-none h-16 w-12 bg-background border-r-0"
         >
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-between p-0">
-              <div className="flex items-center space-x-2">
-                <Lightbulb className="h-4 w-4 text-yellow-500" />
-                <span className="font-medium">Tips & Best Practices</span>
-              </div>
-              <ChevronRight className={cn(
-                "h-4 w-4 transition-transform",
-                expandedSections.tips && "rotate-90"
-              )} />
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="mt-3">
-            <Card>
-              <CardContent className="pt-4">
-                <ul className="space-y-2">
-                  {helpContent.tips.map((tip, index) => (
-                    <li key={index} className="flex items-start space-x-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span>{tip}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </CollapsibleContent>
-        </Collapsible>
-
-        {/* Examples Section */}
-        {helpContent.examples && helpContent.examples.length > 0 && (
-          <Collapsible 
-            open={expandedSections.examples} 
-            onOpenChange={() => toggleSection('examples')}
-          >
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between p-0">
-                <div className="flex items-center space-x-2">
-                  <BookOpen className="h-4 w-4 text-blue-500" />
-                  <span className="font-medium">Examples</span>
-                </div>
-                <ChevronRight className={cn(
-                  "h-4 w-4 transition-transform",
-                  expandedSections.examples && "rotate-90"
-                )} />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3">
-              <div className="space-y-3">
-                {helpContent.examples.map((example, index) => (
-                  <Card key={index}>
-                    <CardContent className="pt-4">
-                      <h4 className="font-medium text-sm mb-2">{example.title}</h4>
-                      <p className="text-sm text-muted-foreground">{example.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-
-        {/* Quick Actions Section */}
-        {helpContent.quickActions && helpContent.quickActions.length > 0 && (
-          <Collapsible 
-            open={expandedSections.quickActions} 
-            onOpenChange={() => toggleSection('quickActions')}
-          >
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between p-0">
-                <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4 text-purple-500" />
-                  <span className="font-medium">Quick Actions</span>
-                </div>
-                <ChevronRight className={cn(
-                  "h-4 w-4 transition-transform",
-                  expandedSections.quickActions && "rotate-90"
-                )} />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3">
-              <div className="space-y-2">
-                {helpContent.quickActions.map((action, index) => (
-                  <Card key={index} className="cursor-pointer hover:bg-accent/50 transition-colors">
-                    <CardContent className="pt-4">
-                      <h4 className="font-medium text-sm mb-1">{action.title}</h4>
-                      <p className="text-xs text-muted-foreground">{action.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-
-        {/* Learn More Section */}
-        {helpContent.learnMoreLinks && helpContent.learnMoreLinks.length > 0 && (
-          <Collapsible 
-            open={expandedSections.learnMore} 
-            onOpenChange={() => toggleSection('learnMore')}
-          >
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between p-0">
-                <div className="flex items-center space-x-2">
-                  <ExternalLink className="h-4 w-4 text-indigo-500" />
-                  <span className="font-medium">Learn More</span>
-                </div>
-                <ChevronRight className={cn(
-                  "h-4 w-4 transition-transform",
-                  expandedSections.learnMore && "rotate-90"
-                )} />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3">
-              <div className="space-y-2">
-                {helpContent.learnMoreLinks.map((link, index) => (
-                  <Card key={index} className="cursor-pointer hover:bg-accent/50 transition-colors">
-                    <CardContent className="pt-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm mb-1">{link.title}</h4>
-                          <p className="text-xs text-muted-foreground">{link.description}</p>
-                        </div>
-                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-
-        {/* Step Progress Indicator */}
-        <Card className="bg-accent/30">
-          <CardContent className="pt-4">
-            <div className="flex items-center space-x-2 text-sm">
-              <Badge variant="outline">
-                Step {currentStep === 'completion' ? 5 : ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour'].indexOf(currentStep) + 1} of 5
-              </Badge>
-              <span className="text-muted-foreground">
-                {currentStep === 'completion' ? 'Complete!' : 'In Progress'}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+          {isCollapsed ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </Button>
       </div>
+
+      {/* Content */}
+      {!isCollapsed && (
+        <div className="h-full flex flex-col">
+          <div className="p-4 border-b">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">Help & Tutorials</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggleCollapse}
+                className="p-1"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+            <TabsList className="grid w-full grid-cols-2 m-4 mb-0">
+              <TabsTrigger value="help" className="flex items-center gap-2">
+                <HelpCircle className="w-4 h-4" />
+                Help
+              </TabsTrigger>
+              <TabsTrigger value="videos" className="flex items-center gap-2">
+                <Video className="w-4 h-4" />
+                Videos
+                <Badge variant="secondary" className="text-xs ml-1">
+                  {completedSteps.length}
+                </Badge>
+              </TabsTrigger>
+            </TabsList>
+
+            <div className="flex-1 overflow-y-auto">
+              <TabsContent value="help" className="p-4 mt-0">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <HelpCircle className="w-4 h-4" />
+                      {helpContent.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="prose prose-sm max-w-none dark:prose-invert">
+                      <p className="text-muted-foreground">{helpContent.overview}</p>
+                    </div>
+
+                    {/* Key Points */}
+                    {helpContent.keyPoints && helpContent.keyPoints.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2">Key Points:</h4>
+                        <ul className="space-y-1 text-sm">
+                          {helpContent.keyPoints.map((point, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                              {point}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Tips */}
+                    {helpContent.tips && helpContent.tips.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2">Tips:</h4>
+                        <div className="space-y-2">
+                          {helpContent.tips.map((tip, index) => (
+                            <div key={index} className="bg-muted/50 p-3 rounded-lg">
+                              <p className="text-sm">{tip}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Common Issues */}
+                    {helpContent.commonIssues && helpContent.commonIssues.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2">Common Issues:</h4>
+                        <div className="space-y-2">
+                          {helpContent.commonIssues.map((issue, index) => (
+                            <div key={index} className="border-l-2 border-orange-400 pl-3">
+                              <p className="text-sm font-medium">{issue.problem}</p>
+                              <p className="text-sm text-muted-foreground">{issue.solution}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="videos" className="p-4 mt-0">
+                <VideoTutorialManager 
+                  completedSteps={completedSteps}
+                />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
+      )}
     </div>
   );
 };
