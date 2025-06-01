@@ -157,7 +157,8 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
     });
   };
 
-  const userInitials = form.watch("name")
+  const userName = form.watch("name") || "";
+  const userInitials = userName
     .split(" ")
     .map(part => part[0])
     .join("")
