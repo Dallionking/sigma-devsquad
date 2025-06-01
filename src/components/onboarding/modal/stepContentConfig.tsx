@@ -1,39 +1,86 @@
-
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { CheckCircle, Users, Bot, MapPin, Sparkles } from 'lucide-react';
+import { Users, Bot, MapPin, Sparkles, CheckCircle } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
 
-export const stepContent = {
+export const stepOrder: OnboardingStep[] = [
+  'welcome',
+  'profile-setup', 
+  'team-creation',
+  'first-agent',
+  'planning-tour',
+  'completion'
+];
+
+export const stepContent: Record<OnboardingStep, {
+  title: string;
+  description: string;
+  icon: React.ComponentType<any>;
+  content: React.ReactNode;
+}> = {
   welcome: {
     title: 'Welcome to Vibe DevSquad! 🚀',
     description: 'Your AI-powered development team is ready to help you build amazing projects.',
     icon: Sparkles,
     content: (
-      <div className="space-y-6">
-        <div className="text-center">
-          <h3 className="text-2xl font-bold text-primary mb-2">Let's get you started!</h3>
-          <p className="text-muted-foreground">
-            We'll guide you through setting up your first AI development team in just a few steps.
-          </p>
+      <div className="text-center space-y-8">
+        {/* Video Tutorial Section */}
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <h3 className="font-semibold text-blue-900 dark:text-blue-100">Welcome to Vibe DevSquad</h3>
+                <p className="text-sm text-blue-700 dark:text-blue-300">Get introduced to your AI-powered development team</p>
+              </div>
+            </div>
+            <button className="px-4 py-2 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors text-sm font-medium">
+              Watch Tutorial
+            </button>
+          </div>
+          <p className="text-xs text-blue-600 dark:text-blue-400">45s tutorial</p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="text-center p-4">
-            <Users className="w-8 h-8 text-primary mx-auto mb-2" />
-            <h4 className="font-semibold">Create Teams</h4>
-            <p className="text-sm text-muted-foreground">Organize your AI agents</p>
-          </Card>
-          <Card className="text-center p-4">
-            <Bot className="w-8 h-8 text-primary mx-auto mb-2" />
-            <h4 className="font-semibold">Configure Agents</h4>
-            <p className="text-sm text-muted-foreground">Specialized AI assistants</p>
-          </Card>
-          <Card className="text-center p-4">
-            <MapPin className="w-8 h-8 text-primary mx-auto mb-2" />
-            <h4 className="font-semibold">Plan Projects</h4>
-            <p className="text-sm text-muted-foreground">AI-powered planning</p>
-          </Card>
+
+        {/* Main Content */}
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              Let's get you started!
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              We'll guide you through setting up your first AI development team in just a few steps.
+            </p>
+          </div>
+
+          {/* Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 hover:shadow-md">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Create Teams</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Organize your AI agents</p>
+            </div>
+
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-all duration-200 hover:shadow-md">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
+                <Bot className="w-6 h-6 text-green-600 dark:text-green-400" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Configure Agents</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Specialized AI assistants</p>
+            </div>
+
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 hover:shadow-md">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
+                <MapPin className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Plan Projects</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">AI-powered planning</p>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -42,55 +89,52 @@ export const stepContent = {
     title: 'Complete Your Profile',
     description: 'Tell us a bit about yourself to personalize your experience.',
     icon: Users,
-    content: null // Will be replaced with ProfileSetupForm
+    content: null // This will be replaced by ProfileSetupForm component
   },
   'team-creation': {
-    title: 'Create Your First Team',
-    description: 'Teams help organize your agents and projects effectively.',
+    title: 'Create Your Team',
+    description: 'Set up your first development team with AI agents.',
     icon: Users,
-    content: null // Will be replaced with TeamCreationForm
+    content: null // This will be replaced by TeamCreationForm component
   },
   'first-agent': {
     title: 'Configure Your First Agent',
-    description: 'Create an AI agent specialized for your development needs.',
+    description: 'Create your first AI agent to help with development tasks.',
     icon: Bot,
-    content: null // Will be replaced with FirstAgentForm
+    content: null // This will be replaced by FirstAgentForm component
   },
   'planning-tour': {
-    title: 'Discover Planning Agent',
-    description: 'Learn how AI can help you plan and manage your projects.',
+    title: 'Planning Tour',
+    description: 'Explore the planning and project management features.',
     icon: MapPin,
-    content: null // Will be replaced with PlanningTourForm
+    content: null // This will be replaced by PlanningTourForm component
   },
   completion: {
-    title: 'You\'re All Set! 🎉',
-    description: 'Your AI development team is ready to help you build amazing projects.',
+    title: 'Setup Complete! 🎉',
+    description: 'You\'re all set to start building with your AI development team.',
     icon: CheckCircle,
     content: (
-      <div className="space-y-6 text-center">
-        <div className="text-green-600 dark:text-green-400">
-          <CheckCircle className="w-16 h-16 mx-auto mb-4" />
-          <h3 className="text-xl font-bold">Onboarding Complete!</h3>
+      <div className="text-center space-y-6">
+        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
         </div>
-        
-        <div className="space-y-4">
-          <p className="text-muted-foreground">
-            You now have access to all the powerful features of Vibe DevSquad.
+        <div>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            Welcome to Vibe DevSquad!
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Your AI development team is ready. Start creating amazing projects with your new AI assistants.
           </p>
-          
-          <div className="bg-accent/50 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">What's Next?</h4>
-            <ul className="space-y-1 text-sm text-left">
-              <li>• Explore the dashboard and different views</li>
-              <li>• Try creating your first project from a template</li>
-              <li>• Connect with your AI agents</li>
-              <li>• Check out sample projects for inspiration</li>
-            </ul>
-          </div>
+        </div>
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg p-6">
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Next Steps:</h4>
+          <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <li>• Explore your dashboard and agent overview</li>
+            <li>• Create your first project or task</li>
+            <li>• Start collaborating with your AI team</li>
+          </ul>
         </div>
       </div>
     )
   }
 };
-
-export const stepOrder: OnboardingStep[] = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];

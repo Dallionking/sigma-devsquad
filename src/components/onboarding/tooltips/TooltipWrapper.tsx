@@ -27,18 +27,19 @@ export const TooltipWrapper = ({
 }: TooltipWrapperProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [isPermanentlyDismissed, setIsPermanentlyDismissed] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   // Check if tooltip was permanently dismissed
   useEffect(() => {
     const dismissed = localStorage.getItem(`tooltip-dismissed-${id}`);
     if (dismissed === 'true') {
-      setIsDismissed(true);
+      setIsPermanentlyDismissed(true);
     }
   }, [id]);
 
   const handleTrigger = () => {
-    if (isDismissed) return;
+    if (isPermanentlyDismissed || isDismissed) return;
     
     if (trigger === 'click') {
       setShowTooltip(!showTooltip);
@@ -46,7 +47,7 @@ export const TooltipWrapper = ({
   };
 
   const handleMouseEnter = () => {
-    if (isDismissed) return;
+    if (isPermanentlyDismissed || isDismissed) return;
     
     if (trigger === 'hover') {
       // Clear any existing timeout
@@ -58,7 +59,7 @@ export const TooltipWrapper = ({
   };
 
   const handleMouseLeave = () => {
-    if (isDismissed) return;
+    if (isPermanentlyDismissed || isDismissed) return;
     
     if (trigger === 'hover') {
       // Add a small delay before hiding to prevent flickering
@@ -69,7 +70,7 @@ export const TooltipWrapper = ({
   };
 
   const handleFocus = () => {
-    if (isDismissed) return;
+    if (isPermanentlyDismissed || isDismissed) return;
     
     if (trigger === 'focus') {
       setShowTooltip(true);
@@ -85,8 +86,11 @@ export const TooltipWrapper = ({
   const handleDismiss = (permanent: boolean = false) => {
     setShowTooltip(false);
     if (permanent) {
-      setIsDismissed(true);
+      setIsPermanentlyDismissed(true);
       localStorage.setItem(`tooltip-dismissed-${id}`, 'true');
+    } else {
+      // Temporary dismiss for this session
+      setIsDismissed(true);
     }
   };
 
@@ -100,7 +104,7 @@ export const TooltipWrapper = ({
   }, []);
 
   // Don't render anything if permanently dismissed
-  if (isDismissed) {
+  if (isPermanentlyDismissed) {
     return <>{children}</>;
   }
 
@@ -117,7 +121,7 @@ export const TooltipWrapper = ({
           {children}
         </div>
         
-        {showIcon && (
+        {showIcon && !isDismissed && (
           <Button
             variant="ghost"
             size="sm"
@@ -133,7 +137,7 @@ export const TooltipWrapper = ({
         )}
       </div>
 
-      {showTooltip && !isDismissed && (
+      {showTooltip && !isDismissed && !isPermanentlyDismissed && (
         <InteractiveTooltip
           id={id}
           title={title}

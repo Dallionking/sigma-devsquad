@@ -11,6 +11,7 @@
     border: none;
     box-shadow: 0 10px 40px -8px rgba(108, 92, 231, 0.4);
     transform: translateZ(0);
+    transition: all 0.2s ease;
   }
 
   .limitless-cta-primary::before {
@@ -34,8 +35,12 @@
   }
 
   .limitless-cta-primary:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 20px 50px -5px rgba(108, 92, 231, 0.5);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 35px -5px rgba(108, 92, 231, 0.5);
+  }
+
+  .limitless-cta-primary:active {
+    transform: translateY(0) scale(1);
   }
 
   .limitless-cta-secondary {
@@ -45,6 +50,7 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 6px 25px -4px rgba(0, 184, 217, 0.3);
+    transition: all 0.2s ease;
   }
 
   .limitless-cta-secondary::before {
@@ -84,16 +90,21 @@
   }
 
   .limitless-cta-secondary:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 20px 50px -5px rgba(0, 184, 217, 0.4);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 35px -5px rgba(0, 184, 217, 0.4);
+  }
+
+  .limitless-cta-secondary:active {
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Enhanced button animations */
+/* Enhanced button animations - remove grey background issues */
 .btn-enhanced {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
 }
 
 .btn-enhanced::before {
@@ -106,7 +117,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
   transition: left 0.5s;
@@ -117,12 +128,22 @@
 }
 
 .btn-enhanced:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
 }
 
 .btn-enhanced:active {
   transform: translateY(0);
+}
+
+/* Remove grey hover backgrounds on cards and buttons */
+.hover-no-grey:hover {
+  background-color: transparent !important;
+}
+
+/* Ensure proper button hover states */
+button:hover {
+  background-color: var(--hover-bg, transparent);
 }
 
 /* Dark mode adjustments for buttons */
@@ -130,5 +151,14 @@
   .limitless-cta-secondary {
     background: linear-gradient(var(--background), var(--background)) padding-box,
                 linear-gradient(135deg, #6C5CE7, #00B8D9) border-box;
+  }
+  
+  .btn-enhanced::before {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent
+    );
   }
 }

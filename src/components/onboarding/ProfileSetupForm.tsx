@@ -1,13 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { EnhancedProfileAvatarUpload } from './profile-setup/EnhancedProfileAvatarUpload';
-import { ProfileBasicInfoForm } from './profile-setup/ProfileBasicInfoForm';
 import { ProfileSkillsSelector } from './profile-setup/ProfileSkillsSelector';
 import { ProfileFormActions } from './profile-setup/ProfileFormActions';
-import { ValidationMessage } from './completion/ValidationMessage';
+import { ValidatedFormField } from './form/ValidatedFormField';
 import { MicroProgressIndicators } from './micro-progress/MicroProgressIndicators';
 import { useMicroProgress } from '@/hooks/useMicroProgress';
 import { profileSetupSchema, type ProfileSetupFormData } from './profile-setup/types';
@@ -142,22 +142,9 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
 
   const userName = form.watch("name") || "";
   const hasRequiredSelections = selectedLanguages.length >= 2 && selectedInterests.length >= 3;
-  
-  // Get current form data for validation
-  const currentFormData = {
-    ...form.getValues(),
-    preferredLanguages: selectedLanguages,
-    interests: selectedInterests
-  };
 
   return (
     <div className="space-y-6">
-      {/* Validation status message */}
-      <ValidationMessage 
-        step="profile-setup"
-        stepData={currentFormData}
-      />
-      
       {/* Micro progress indicator */}
       {progressState.isVisible && (
         <MicroProgressIndicators
@@ -169,14 +156,69 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
       )}
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <EnhancedProfileAvatarUpload
             avatarPreview={avatarPreview}
             userName={userName}
             onAvatarChange={handleAvatarChange}
           />
 
-          <ProfileBasicInfoForm control={form.control} />
+          {/* Basic Information with inline validation */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Basic Information</h3>
+            
+            <ValidatedFormField
+              control={form.control}
+              name="name"
+              label="Full Name"
+              placeholder="Enter your full name"
+              isRequired={true}
+              helpText="We use this to personalize your experience"
+            />
+
+            <ValidatedFormField
+              control={form.control}
+              name="jobTitle"
+              label="Job Title/Role"
+              placeholder="e.g. Senior Developer, Product Manager"
+              isRequired={true}
+              helpText="Helps us tailor agent recommendations"
+            />
+
+            <ValidatedFormField
+              control={form.control}
+              name="company"
+              label="Company"
+              placeholder="Your current company (optional)"
+              isRequired={false}
+            />
+
+            <ValidatedFormField
+              control={form.control}
+              name="experience"
+              label="Experience Level"
+              type="select"
+              placeholder="Select your experience level"
+              isRequired={true}
+              helpText="Determines the complexity of suggestions"
+              options={[
+                { value: "beginner", label: "Beginner (0-2 years)" },
+                { value: "intermediate", label: "Intermediate (2-5 years)" },
+                { value: "advanced", label: "Advanced (5+ years)" },
+                { value: "expert", label: "Expert (10+ years)" }
+              ]}
+            />
+
+            <ValidatedFormField
+              control={form.control}
+              name="bio"
+              label="Bio/Description"
+              type="textarea"
+              placeholder="Tell us about yourself, your interests, and what you're working on..."
+              isRequired={false}
+              helpText="Optional - helps team members get to know you"
+            />
+          </div>
 
           <ProfileSkillsSelector
             control={form.control}
