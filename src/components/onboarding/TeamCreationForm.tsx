@@ -33,7 +33,7 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
     teamName: teamName.value,
     teamDescription: teamDescription.value,
     teamType,
-    teamAvatar,
+    teamAvatar: teamAvatar || undefined,
     members
   };
 
@@ -95,7 +95,17 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
     localStorage.removeItem('team-creation-draft');
     
     await forceSave();
-    onComplete(formData);
+    
+    // Create the final form data to pass to onComplete
+    const finalFormData: TeamCreationData = {
+      teamName: teamName.value,
+      teamDescription: teamDescription.value,
+      teamType,
+      teamAvatar: teamAvatar || undefined,
+      members
+    };
+    
+    onComplete(finalFormData);
   };
 
   const handleSkipForNow = async () => {
