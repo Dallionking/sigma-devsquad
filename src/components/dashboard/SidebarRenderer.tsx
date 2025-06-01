@@ -2,11 +2,11 @@
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
-import { AgentSidebar } from "./AgentSidebar";
-import { TaskManagement } from "./TaskManagement";
-import { CommunicationHistory } from "../communication/CommunicationHistory";
+import { TeamHierarchy } from "../teams/TeamHierarchy";
 import { CompactTeamHierarchy } from "../teams/CompactTeamHierarchy";
-import { cn } from "@/lib/utils";
+import { AgentSidebar } from "./AgentSidebar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users, Bot } from "lucide-react";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -19,8 +19,8 @@ interface SidebarRendererProps {
   selectedTeam: Team | null;
   selectedAgentProfile: AgentProfile | null;
   showTeamView: boolean;
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
   onAgentSelect: (agent: Agent | null) => void;
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
@@ -39,7 +39,7 @@ export const SidebarRenderer = ({
   selectedTeam,
   selectedAgentProfile,
   showTeamView,
-  collapsed = false,
+  collapsed,
   onToggleCollapse,
   onAgentSelect,
   onTaskSelect,
@@ -47,18 +47,37 @@ export const SidebarRenderer = ({
   onTeamSelect,
   onAgentProfileSelect,
 }: SidebarRendererProps) => {
-  
-  // In team view, show Compact Team Hierarchy
+
+  if (collapsed) {
+    return (
+      <div className="w-full h-full flex flex-col items-center py-4 space-y-4">
+        {showTeamView ? (
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Users className="w-6 h-6 text-primary" />
+          </div>
+        ) : (
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Bot className="w-6 h-6 text-primary" />
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (showTeamView) {
     return (
-      <div className={cn(
-        "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden relative z-10",
-        collapsed ? "w-16" : "w-64 sm:w-72 lg:w-80"
-      )}>
-        <div className={cn(
-          "h-full transition-all duration-300 relative z-20",
-          collapsed ? "p-2" : "p-3 sm:p-4"
-        )}>
+      <div className="h-full flex flex-col">
+        <div className="p-4 border-b border-border/50">
+          <h2 className="font-semibold text-lg flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            Teams
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage and monitor your teams
+          </p>
+        </div>
+        
+        <div className="flex-1 overflow-auto">
           <CompactTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
@@ -70,82 +89,30 @@ export const SidebarRenderer = ({
     );
   }
 
-  // Render content based on view mode for individual view
-  switch (viewMode) {
-    case 'workflow':
-      return (
+  // Individual agents view
+  return (
+    <div className="h-full flex flex-col">
+      <div className="p-4 border-b border-border/50">
+        <h2 className="font-semibold text-lg flex items-center gap-2">
+          <Bot className="w-5 h-5" />
+          Agents
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {viewMode === 'workflow' && 'Workflow management'}
+          {viewMode === 'communication' && 'Communication hub'}
+          {viewMode === 'tasks' && 'Task coordination'}
+          {viewMode === 'messages' && 'Message center'}
+        </p>
+      </div>
+      
+      <div className="flex-1 overflow-auto">
         <AgentSidebar
           agents={agents}
           selectedAgent={selectedAgent}
           onAgentSelect={onAgentSelect}
-          collapsed={collapsed}
-          onToggleCollapse={onToggleCollapse}
+          viewMode={viewMode}
         />
-      );
-    case 'communication':
-      return (
-        <div className={cn(
-          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col relative z-10",
-          collapsed ? "w-16" : "w-72 sm:w-80 lg:w-96"
-        )}>
-          <div className={cn(
-            "h-full transition-all duration-300 flex flex-col min-h-0 relative z-20",
-            collapsed ? "p-2" : "p-0"
-          )}>
-            <CommunicationHistory
-              messages={messages}
-              selectedMessage={selectedMessage}
-              onMessageSelect={onMessageSelect}
-            />
-          </div>
-        </div>
-      );
-    case 'tasks':
-      return (
-        <div className={cn(
-          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col relative z-10",
-          collapsed ? "w-16" : "w-72 sm:w-80 lg:w-96"
-        )}>
-          <div className={cn(
-            "h-full transition-all duration-300 flex flex-col min-h-0 relative z-20",
-            collapsed ? "p-2" : "p-3 sm:p-4"
-          )}>
-            <TaskManagement
-              tasks={tasks}
-              agents={agents}
-              selectedTask={selectedTask}
-              onTaskSelect={onTaskSelect}
-            />
-          </div>
-        </div>
-      );
-    case 'messages':
-      return (
-        <div className={cn(
-          "h-full bg-sidebar-background border-r border-sidebar-border transition-all duration-300 overflow-hidden flex flex-col relative z-10",
-          collapsed ? "w-16" : "w-72 sm:w-80 lg:w-96"
-        )}>
-          <div className={cn(
-            "h-full transition-all duration-300 flex flex-col min-h-0 relative z-20",
-            collapsed ? "p-2" : "p-3 sm:p-4"
-          )}>
-            <CommunicationHistory
-              messages={messages}
-              selectedMessage={selectedMessage}
-              onMessageSelect={onMessageSelect}
-            />
-          </div>
-        </div>
-      );
-    default:
-      return (
-        <AgentSidebar
-          agents={agents}
-          selectedAgent={selectedAgent}
-          onAgentSelect={onAgentSelect}
-          collapsed={collapsed}
-          onToggleCollapse={onToggleCollapse}
-        />
-      );
-  }
+      </div>
+    </div>
+  );
 };

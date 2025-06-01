@@ -6,6 +6,8 @@ import { AgentGrid } from "./agent-grid/AgentGrid";
 import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
 import { WorkflowCanvas } from "../workflow/WorkflowCanvas";
+import { TeamDashboard } from "../teams/TeamDashboard";
+import { TeamHierarchy } from "../teams/TeamHierarchy";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Users, MessageSquare, Workflow } from "lucide-react";
 
@@ -36,30 +38,75 @@ export const MainContentRenderer = ({
   selectedAgent,
   selectedTask,
   selectedMessage,
+  selectedTeam,
+  selectedAgentProfile,
   showTeamView,
   onAgentSelect,
   onTaskSelect,
   onMessageSelect,
+  onTeamSelect,
+  onAgentProfileSelect,
   onViewModeChange,
 }: MainContentRendererProps) => {
 
   // For team view, show team-specific content
   if (showTeamView) {
+    // If a specific team is selected, show the team dashboard
+    if (selectedTeam) {
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-6">
+            <TeamDashboard 
+              team={selectedTeam}
+              onAgentSelect={onAgentProfileSelect}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // If no specific team is selected, show team overview/hierarchy
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5" />
-              Team Collaboration
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              Team view is active. Use the sidebar to explore teams and team members.
-            </p>
-          </CardContent>
-        </Card>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+            {/* Team Hierarchy */}
+            <TeamHierarchy
+              onTeamSelect={onTeamSelect}
+              onAgentSelect={onAgentProfileSelect}
+              selectedTeamId={selectedTeam?.id}
+              selectedAgentId={selectedAgentProfile?.id}
+            />
+            
+            {/* Team Overview Card */}
+            <Card className="h-fit">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Teams Overview
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-4 bg-muted/50 rounded-lg">
+                      <div className="text-2xl font-bold text-primary">4</div>
+                      <div className="text-sm text-muted-foreground">Active Teams</div>
+                    </div>
+                    <div className="text-center p-4 bg-muted/50 rounded-lg">
+                      <div className="text-2xl font-bold text-primary">12</div>
+                      <div className="text-sm text-muted-foreground">Team Members</div>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    Select a team from the hierarchy to view detailed information, 
+                    team performance metrics, and manage team members.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     );
   }
