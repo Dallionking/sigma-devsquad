@@ -62,14 +62,14 @@ export const MainLayout = ({
   onViewModeChange,
 }: MainLayoutProps) => {
   
-  // Use standardized sidebar state management with unified patterns
+  // Use standardized sidebar state management
   const { isCollapsed, toggleSidebar } = useCollapsibleSidebar({
     defaultCollapsed: sidebarCollapsed,
     keyboardShortcut: 'b',
     storageKey: 'main-sidebar-collapsed'
   });
 
-  // Context-aware panel management with standardized patterns
+  // Context-aware panel management
   const { panelContext, showPanel, hidePanel } = useContextAwarePanel();
 
   // Memoize the current selection to prevent unnecessary updates
@@ -81,16 +81,16 @@ export const MainLayout = ({
     return null;
   }, [selectedAgent, selectedTask, selectedMessage, selectedAgentProfile]);
 
-  // Update panel when selections change - using stable dependencies
+  // Update panel when selections change - fixed dependency array
   React.useEffect(() => {
     if (currentSelection) {
       showPanel(currentSelection.type as any, currentSelection.data);
     } else {
       hidePanel();
     }
-  }, [currentSelection, showPanel, hidePanel]);
+  }, [currentSelection?.type, currentSelection?.data, showPanel, hidePanel]);
 
-  // Handle panel dismissal with standardized keyboard support
+  // Handle panel dismissal
   const handlePanelDismiss = React.useCallback(() => {
     hidePanel();
     onDismissSelection();
@@ -111,7 +111,7 @@ export const MainLayout = ({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background">
-      {/* View Mode Tabs with standardized navigation patterns */}
+      {/* View Mode Tabs - only show for Individual Agents view */}
       {!showTeamView && (
         <ViewModeTabs
           viewMode={viewMode}
@@ -120,16 +120,16 @@ export const MainLayout = ({
         />
       )}
 
-      {/* Main Content Area with unified responsive patterns */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 flex overflow-hidden relative">
-          {/* Standardized Sidebar Toggle with unified interaction patterns */}
-          <div className="flex-shrink-0 border-r border-border/60 bg-card/30 dark:bg-card/30">
+          {/* Sidebar Toggle */}
+          <div className="flex-shrink-0 border-r border-border/60 bg-card/30">
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleSidebar}
-              className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-colors"
               title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
             >
               {isCollapsed ? (
@@ -140,11 +140,10 @@ export const MainLayout = ({
             </Button>
           </div>
 
-          {/* Sidebar with standardized responsive behavior */}
+          {/* Sidebar */}
           <div className={cn(
             "bg-background border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0",
-            isCollapsed ? "w-16" : (showTeamView ? "w-64" : "w-80"),
-            "animate-in slide-in-from-left duration-300"
+            isCollapsed ? "w-16" : (showTeamView ? "w-64" : "w-80")
           )}>
             <SidebarRenderer
               viewMode={viewMode}
@@ -167,7 +166,7 @@ export const MainLayout = ({
             />
           </div>
 
-          {/* Main Content with standardized responsive adjustments */}
+          {/* Main Content */}
           <div className={cn(
             "flex-1 flex flex-col overflow-hidden bg-background transition-all duration-300 ease-in-out",
             panelContext.isVisible && "mr-96"
@@ -192,7 +191,7 @@ export const MainLayout = ({
             />
           </div>
 
-          {/* Context-Aware Panel with standardized interaction patterns */}
+          {/* Context-Aware Panel */}
           <ContextAwarePanel
             type={panelContext.type}
             data={panelContext.data}
@@ -202,7 +201,7 @@ export const MainLayout = ({
           />
         </div>
 
-        {/* Enhanced User Presence Panel with standardized responsive behavior */}
+        {/* User Presence Panel - only for Individual Agents view */}
         {!showTeamView && (
           <UserPresencePanel 
             viewMode={viewMode}
