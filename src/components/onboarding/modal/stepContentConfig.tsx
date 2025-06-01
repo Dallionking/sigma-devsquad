@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Bot, MapPin, Sparkles, CheckCircle } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
+import { CompletionDashboard } from '../completion/CompletionDashboard';
 
 export const stepOrder: OnboardingStep[] = [
   'welcome',
@@ -113,28 +114,6 @@ export const stepContent: Record<OnboardingStep, {
     title: 'Setup Complete! 🎉',
     description: 'You\'re all set to start building with your AI development team.',
     icon: CheckCircle,
-    content: (
-      <div className="text-center space-y-6">
-        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
-          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            Welcome to Vibe DevSquad!
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            Your AI development team is ready. Start creating amazing projects with your new AI assistants.
-          </p>
-        </div>
-        <div className="tutorial-section rounded-lg p-6">
-          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Next Steps:</h4>
-          <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <li>• Explore your dashboard and agent overview</li>
-            <li>• Create your first project or task</li>
-            <li>• Start collaborating with your AI team</li>
-          </ul>
-        </div>
-      </div>
-    )
+    content: <CompletionDashboard />
   }
 };
