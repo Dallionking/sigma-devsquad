@@ -59,8 +59,8 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
         if (parsed.teamDescription && typeof parsed.teamDescription === 'string') {
           teamDescription.handleChange(parsed.teamDescription);
         }
-        if (parsed.teamType && typeof parsed.teamType === 'string' && (parsed.teamType === 'human' || parsed.teamType === 'ai')) {
-          setTeamType(parsed.teamType as 'human' | 'ai');
+        if (parsed.teamType && (parsed.teamType === 'human' || parsed.teamType === 'ai')) {
+          setTeamType(parsed.teamType);
         }
         if (parsed.teamAvatar && typeof parsed.teamAvatar === 'string') {
           setTeamAvatar(parsed.teamAvatar);
