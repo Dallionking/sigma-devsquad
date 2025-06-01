@@ -2,7 +2,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PanelLeft, PanelLeftClose, Bot } from 'lucide-react';
+import { PanelLeft, PanelLeftClose } from 'lucide-react';
+import { Logo } from '@/components/branding/Logo';
 
 interface HeaderLogoProps {
   isDashboardPage: boolean;
@@ -39,15 +40,12 @@ export const HeaderLogo = ({
 
       {/* Logo */}
       <div className="flex items-center space-x-2">
-        <Bot className="w-8 h-8 text-primary" />
-        <div>
-          <h1 className="text-xl font-bold">Vibe DevSquad</h1>
-          {isDashboardPage && (
-            <Badge variant="outline" className="text-xs">
-              {activeAgents}/{totalAgents} active
-            </Badge>
-          )}
-        </div>
+        <Logo size="sm" variant="full" />
+        {isDashboardPage && (
+          <Badge variant="outline" className="text-xs ml-2">
+            {activeAgents}/{totalAgents} active
+          </Badge>
+        )}
       </div>
     </div>
   );
