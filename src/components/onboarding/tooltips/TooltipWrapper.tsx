@@ -58,6 +58,8 @@ export const TooltipWrapper = ({
   };
 
   const handleMouseLeave = () => {
+    if (isDismissed) return;
+    
     if (trigger === 'hover') {
       // Add a small delay before hiding to prevent flickering
       timeoutRef.current = setTimeout(() => {
@@ -103,8 +105,8 @@ export const TooltipWrapper = ({
   }
 
   return (
-    <div className="relative inline-block w-full">
-      <div className="flex items-center gap-2 w-full">
+    <div className="relative">
+      <div className="flex items-center gap-2">
         <div 
           className="flex-1"
           onMouseEnter={handleMouseEnter}
@@ -131,7 +133,7 @@ export const TooltipWrapper = ({
         )}
       </div>
 
-      {showTooltip && (
+      {showTooltip && !isDismissed && (
         <InteractiveTooltip
           id={id}
           title={title}
@@ -140,7 +142,11 @@ export const TooltipWrapper = ({
           showOnMount={true}
           onDismiss={handleDismiss}
           className={className}
-          onMouseEnter={handleMouseEnter}
+          onMouseEnter={() => {
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+            }
+          }}
           onMouseLeave={handleMouseLeave}
         >
           <div />

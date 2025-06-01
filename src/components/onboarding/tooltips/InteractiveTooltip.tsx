@@ -51,17 +51,6 @@ export const InteractiveTooltip = ({
     setDontShowAgain(checked);
   };
 
-  // Smart positioning to avoid cutoff
-  const getSmartPosition = () => {
-    // For onboarding modals, prefer bottom position to avoid cutoff
-    if (position === 'top') {
-      return 'bottom';
-    }
-    return position;
-  };
-
-  const smartPosition = getSmartPosition();
-
   const positionClasses = {
     top: 'bottom-full mb-3 left-1/2 transform -translate-x-1/2',
     bottom: 'top-full mt-3 left-1/2 transform -translate-x-1/2',
@@ -81,27 +70,22 @@ export const InteractiveTooltip = ({
   }
 
   return (
-    <div className={cn("relative inline-block", className)}>
+    <div className={cn("relative", className)}>
       {children}
       
       <div className="relative">
         <Card 
           className={cn(
             "absolute w-80 shadow-xl border-0 bg-gray-900 text-white rounded-lg",
-            positionClasses[smartPosition],
+            positionClasses[position],
             "animate-in fade-in-0 zoom-in-95 duration-200",
-            // Ensure high z-index and proper overflow handling
-            "z-[9999] max-w-[90vw]"
+            "z-50 max-w-[90vw]"
           )}
-          style={{
-            // Ensure tooltip stays within viewport
-            maxWidth: 'min(320px, 90vw)',
-          }}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
           {/* Arrow */}
-          <div className={cn("absolute w-0 h-0", arrowClasses[smartPosition])} />
+          <div className={cn("absolute w-0 h-0", arrowClasses[position])} />
           
           <CardContent className="p-4">
             <div className="flex items-start justify-between mb-3">
