@@ -5,8 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useTeams } from "@/contexts/TeamContext";
 import { Team } from "@/types/teams";
-import { ChevronDown, Users, Plus } from "lucide-react";
+import { ChevronDown, Users, Plus, Settings } from "lucide-react";
 import { TeamCreationDialog } from "@/components/teams/TeamCreationDialog";
+import { useNavigate } from "react-router-dom";
 
 interface TeamSwitcherProps {
   currentTeamId?: string;
@@ -16,6 +17,7 @@ interface TeamSwitcherProps {
 
 export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: TeamSwitcherProps) => {
   const { teams, getTeamById } = useTeams();
+  const navigate = useNavigate();
   const currentTeam = currentTeamId ? getTeamById(currentTeamId) : teams[0];
 
   const getTeamIcon = (teamType: string) => {
@@ -29,6 +31,10 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
       product: "📋"
     };
     return iconMap[teamType as keyof typeof iconMap] || "👥";
+  };
+
+  const handleTeamSettings = (teamId: string) => {
+    navigate(`/team-settings/${teamId}`);
   };
 
   if (compact) {
@@ -61,6 +67,11 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
             ))}
           </SelectContent>
         </Select>
+        {currentTeam && (
+          <Button size="sm" variant="ghost" onClick={() => handleTeamSettings(currentTeam.id)}>
+            <Settings className="w-4 h-4" />
+          </Button>
+        )}
         <TeamCreationDialog>
           <Button size="sm" variant="outline">
             <Plus className="w-4 h-4" />
@@ -92,7 +103,12 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
                 {currentTeam.memberIds.length} members
               </p>
             </div>
-            <Badge variant="secondary">{currentTeam.status}</Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary">{currentTeam.status}</Badge>
+              <Button size="sm" variant="ghost" onClick={() => handleTeamSettings(currentTeam.id)}>
+                <Settings className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
