@@ -3,20 +3,10 @@ import React from 'react';
 import { Control } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-
-interface FormData {
-  name: string;
-  jobTitle: string;
-  company: string;
-  bio: string;
-  experience: "beginner" | "intermediate" | "advanced";
-  preferredLanguages: string[];
-  interests: string[];
-  profileImage: string;
-}
+import { type ProfileSetupFormData } from './types';
 
 interface ProfileSkillsSelectorProps {
-  control: Control<FormData>;
+  control: Control<ProfileSetupFormData>;
   selectedLanguages: string[];
   selectedInterests: string[];
   onLanguageToggle: (language: string) => void;

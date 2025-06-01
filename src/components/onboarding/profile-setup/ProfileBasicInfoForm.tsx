@@ -3,22 +3,12 @@ import React from 'react';
 import { Control } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-interface FormData {
-  name: string;
-  jobTitle: string;
-  company: string;
-  bio: string;
-  experience: "beginner" | "intermediate" | "advanced";
-  preferredLanguages: string[];
-  interests: string[];
-  profileImage: string;
-}
+import { type ProfileSetupFormData } from './types';
 
 interface ProfileBasicInfoFormProps {
-  control: Control<FormData>;
+  control: Control<ProfileSetupFormData>;
 }
 
 export const ProfileBasicInfoForm = ({ control }: ProfileBasicInfoFormProps) => {

@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from 'react';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
@@ -9,24 +7,12 @@ import { ProfileAvatarUpload } from './profile-setup/ProfileAvatarUpload';
 import { ProfileBasicInfoForm } from './profile-setup/ProfileBasicInfoForm';
 import { ProfileSkillsSelector } from './profile-setup/ProfileSkillsSelector';
 import { ProfileFormActions } from './profile-setup/ProfileFormActions';
-
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  jobTitle: z.string().min(2, { message: "Job title is required." }),
-  company: z.string().optional(),
-  bio: z.string().max(500).optional(),
-  profileImage: z.string().optional(),
-  experience: z.enum(["beginner", "intermediate", "advanced"]),
-  preferredLanguages: z.array(z.string()).min(1),
-  interests: z.array(z.string()).min(1),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import { profileSetupSchema, type ProfileSetupFormData } from './profile-setup/types';
 
 interface ProfileSetupFormProps {
-  onComplete: (data: FormData) => void;
+  onComplete: (data: ProfileSetupFormData) => void;
   onSkip: () => void;
-  initialData?: FormData | null;
+  initialData?: ProfileSetupFormData | null;
 }
 
 export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSetupFormProps) => {
@@ -35,8 +21,8 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ProfileSetupFormData>({
+    resolver: zodResolver(profileSetupSchema),
     defaultValues: {
       name: "",
       jobTitle: "",
@@ -93,7 +79,7 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
     return () => subscription.unsubscribe();
   }, [form]);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: ProfileSetupFormData) => {
     // Remove the draft when successfully submitting
     localStorage.removeItem('profile-setup-draft');
     
