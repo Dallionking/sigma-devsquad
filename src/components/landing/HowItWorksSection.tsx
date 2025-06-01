@@ -1,6 +1,9 @@
 
 import React from 'react';
 import { AnimatedSection } from "@/components/ui/animated-section";
+import { ResponsiveSection } from "@/components/layout/ResponsiveSection";
+import { ResponsiveContentBlock } from "@/components/layout/ResponsiveContentBlock";
+import { ResponsiveGrid } from "@/components/layout/ResponsiveGrid";
 import { useResponsiveDesign } from "@/hooks/useResponsiveDesign";
 import { 
   Users, 
@@ -9,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const HowItWorksSection = () => {
-  const { getGridCols } = useResponsiveDesign();
+  const { screenSize } = useResponsiveDesign();
 
   const steps = [
     {
@@ -29,21 +32,29 @@ export const HowItWorksSection = () => {
     }
   ];
 
+  const isMobile = screenSize === 'mobile';
+
   return (
-    <section id="how-it-works" className="py-12 md:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection animation="fade-up" delay={100}>
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+    <ResponsiveSection variant="content" id="how-it-works">
+      <AnimatedSection animation="fade-up" delay={100}>
+        <ResponsiveContentBlock maxWidth="xl" spacing="lg">
+          <div className="text-center">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 lg:mb-6">
               How It Works
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground leading-relaxed">
               Get started in three simple steps
             </p>
           </div>
-        </AnimatedSection>
+        </ResponsiveContentBlock>
+      </AnimatedSection>
 
-        <div className={`grid gap-8 ${getGridCols(1, 2, 3)}`}>
+      <div className="mt-12 lg:mt-16">
+        <ResponsiveGrid 
+          cols={{ mobile: 1, tablet: 2, desktop: 3 }}
+          gap={isMobile ? "lg" : "xl"}
+          variant="features"
+        >
           {steps.map((step, index) => (
             <AnimatedSection 
               key={index} 
@@ -51,18 +62,20 @@ export const HowItWorksSection = () => {
               delay={index * 150}
               className="text-center group"
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-vibe-primary to-vibe-secondary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform animate-gradient">
-                <span className="text-white font-bold text-xl">{index + 1}</span>
+              <div className="space-y-4 sm:space-y-6">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-vibe-primary to-vibe-secondary rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform animate-gradient">
+                  <span className="text-white font-bold text-lg sm:text-xl">{index + 1}</span>
+                </div>
+                <div className="mb-4">
+                  <step.icon className="w-6 h-6 sm:w-8 sm:h-8 text-vibe-primary mx-auto group-hover:scale-110 transition-transform" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">{step.description}</p>
               </div>
-              <div className="mb-4">
-                <step.icon className="w-8 h-8 text-vibe-primary mx-auto group-hover:scale-110 transition-transform" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{step.description}</p>
             </AnimatedSection>
           ))}
-        </div>
+        </ResponsiveGrid>
       </div>
-    </section>
+    </ResponsiveSection>
   );
 };
