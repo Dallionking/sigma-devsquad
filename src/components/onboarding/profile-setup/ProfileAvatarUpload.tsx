@@ -36,13 +36,13 @@ export const ProfileAvatarUpload = ({
     .slice(0, 2);
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <TooltipWrapper
-        id="profile-avatar"
-        title="Profile Photo"
-        content="Upload a profile photo that will be visible to your team members and in agent communications. You can skip this if you prefer to use your initials."
-        position="bottom"
-      >
+    <TooltipWrapper
+      id="profile-avatar-section"
+      title="Profile Photo Section"
+      content="Upload a profile photo that will be visible to your team members and in agent communications. You can skip this if you prefer to use your initials. Supported formats: JPG, PNG, GIF. Maximum size: 5MB."
+      position="bottom"
+    >
+      <div className="flex flex-col items-center justify-center">
         <Avatar className="w-24 h-24 border-2 border-primary/30">
           {avatarPreview ? (
             <AvatarImage src={avatarPreview} alt="Profile" />
@@ -52,15 +52,7 @@ export const ProfileAvatarUpload = ({
             </AvatarFallback>
           )}
         </Avatar>
-      </TooltipWrapper>
-      
-      <TooltipWrapper
-        id="avatar-upload-button"
-        title="Upload Photo"
-        content="Click to select a photo from your device. Supported formats: JPG, PNG, GIF. Maximum size: 5MB."
-        position="top"
-        showIcon={false}
-      >
+        
         <label htmlFor="avatar-upload" className="mt-4 inline-block">
           <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
             <span>Upload photo</span>
@@ -73,7 +65,7 @@ export const ProfileAvatarUpload = ({
             className="hidden"
           />
         </label>
-      </TooltipWrapper>
-    </div>
+      </div>
+    </TooltipWrapper>
   );
 };
