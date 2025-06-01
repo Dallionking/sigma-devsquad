@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-interface EnhancedButtonProps extends ButtonProps {
+interface EnhancedButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'enhanced-primary' | 'enhanced-secondary';
 }
 
@@ -35,7 +35,7 @@ export const EnhancedButton = ({
 
   return (
     <Button
-      variant={variant as any}
+      variant={variant as ButtonProps['variant']}
       className={className}
       {...props}
     >
