@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,6 +38,8 @@ const memberRoleOptions = [
   { value: 'member', label: 'Member' }
 ];
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) => {
   const { toast } = useToast();
   const [teamAvatar, setTeamAvatar] = useState<string>('');
@@ -62,7 +63,16 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
   });
 
   const memberEmail = useInputValidation(newMemberEmail, {
-    rules: { required: false, email: true },
+    rules: { 
+      required: false, 
+      pattern: emailRegex,
+      custom: (value: string) => {
+        if (value && !emailRegex.test(value)) {
+          return "Please enter a valid email address";
+        }
+        return null;
+      }
+    },
     validateOnChange: true,
     debounceMs: 300
   });
