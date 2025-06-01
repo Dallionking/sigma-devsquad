@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
@@ -8,6 +9,7 @@ import { SkipToContentLink } from "@/components/dashboard/SkipToContentLink";
 import { MainLayout } from "@/components/dashboard/MainLayout";
 import { FloatingActionButton } from "@/components/dashboard/FloatingActionButton";
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
+import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
