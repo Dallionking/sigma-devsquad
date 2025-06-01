@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -26,12 +25,12 @@ const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'login');
 
-  // Redirect if already authenticated
+  // Redirect authenticated users to dashboard, but only if they just signed in
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && (error === '' || success.includes('Successfully signed in'))) {
       navigate('/dashboard');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, error, success]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
