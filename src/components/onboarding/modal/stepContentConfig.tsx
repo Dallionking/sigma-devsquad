@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Users, Bot, MapPin, Sparkles, CheckCircle } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
@@ -25,7 +24,7 @@ export const stepContent: Record<OnboardingStep, {
     content: (
       <div className="text-center space-y-8">
         {/* Video Tutorial Section */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800 hover-no-grey">
+        <div className="tutorial-section rounded-xl p-6 border">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
@@ -38,7 +37,7 @@ export const stepContent: Record<OnboardingStep, {
                 <p className="text-sm text-blue-700 dark:text-blue-300">Get introduced to your AI-powered development team</p>
               </div>
             </div>
-            <button className="limitless-cta-secondary px-4 py-2 rounded-lg text-blue-600 dark:text-blue-400 text-sm font-medium hover-no-grey">
+            <button className="limitless-cta-secondary px-4 py-2 rounded-lg text-blue-600 dark:text-blue-400 text-sm font-medium">
               Watch Tutorial
             </button>
           </div>
@@ -58,7 +57,7 @@ export const stepContent: Record<OnboardingStep, {
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="p-6 bg-transparent rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 hover:shadow-md hover-no-grey btn-enhanced">
+            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
@@ -66,7 +65,7 @@ export const stepContent: Record<OnboardingStep, {
               <p className="text-sm text-gray-600 dark:text-gray-400">Organize your AI agents</p>
             </div>
 
-            <div className="p-6 bg-transparent rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-all duration-200 hover:shadow-md hover-no-grey btn-enhanced">
+            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Bot className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
@@ -74,7 +73,7 @@ export const stepContent: Record<OnboardingStep, {
               <p className="text-sm text-gray-600 dark:text-gray-400">Specialized AI assistants</p>
             </div>
 
-            <div className="p-6 bg-transparent rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 hover:shadow-md hover-no-grey btn-enhanced">
+            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
                 <MapPin className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
@@ -127,7 +126,7 @@ export const stepContent: Record<OnboardingStep, {
             Your AI development team is ready. Start creating amazing projects with your new AI assistants.
           </p>
         </div>
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg p-6 hover-no-grey">
+        <div className="tutorial-section rounded-lg p-6">
           <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Next Steps:</h4>
           <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
             <li>• Explore your dashboard and agent overview</li>
