@@ -28,10 +28,10 @@ export const CTASection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <AnimatedSection animation="scale" delay={100}>
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-fluid-3xl font-bold mb-6">
               Ready to Transform Your Development Process?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-fluid-subtitle text-muted-foreground mb-8">
               Join thousands of developers already using Vibe DevSquad
             </p>
             
@@ -53,15 +53,15 @@ export const CTASection = () => {
             <div className="flex items-center justify-center space-x-8 mt-8 pt-8 border-t">
               <div className="flex items-center space-x-2 group hover-lift">
                 <Shield className="w-5 h-5 text-vibe-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-muted-foreground">Enterprise Security</span>
+                <span className="text-fluid-caption text-muted-foreground">Enterprise Security</span>
               </div>
               <div className="flex items-center space-x-2 group hover-lift">
                 <Globe className="w-5 h-5 text-vibe-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-muted-foreground">99.9% Uptime</span>
+                <span className="text-fluid-caption text-muted-foreground">99.9% Uptime</span>
               </div>
               <div className="flex items-center space-x-2 group hover-lift">
                 <Building className="w-5 h-5 text-vibe-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-muted-foreground">SOC 2 Compliant</span>
+                <span className="text-fluid-caption text-muted-foreground">SOC 2 Compliant</span>
               </div>
             </div>
           </div>

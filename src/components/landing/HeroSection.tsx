@@ -57,10 +57,10 @@ export const HeroSection = () => {
           <div className="space-y-8">
             <AnimatedSection animation="fade-up" delay={100}>
               <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gradient-animated">
+                <h1 className="text-fluid-hero text-gradient-animated">
                   Transform Your Development Workflow with AI-Powered Agent Teams
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                <p className="text-fluid-subtitle text-muted-foreground max-w-2xl leading-relaxed">
                   Build, deploy, and manage intelligent agent teams that revolutionize how you approach 
                   software development, project planning, and team collaboration.
                 </p>
@@ -90,10 +90,10 @@ export const HeroSection = () => {
               <div className="flex flex-wrap gap-8 pt-8">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center group hover-lift">
-                    <div className="text-2xl font-bold text-vibe-primary">
+                    <div className="text-fluid-2xl font-bold text-vibe-primary">
                       <AnimatedCounter value={stat.value} />
                     </div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="text-fluid-caption text-muted-foreground">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -110,7 +110,7 @@ export const HeroSection = () => {
                     <EnhancedCard hoverEffect="lift" className="p-4">
                       <div className="flex items-center space-x-2 mb-3">
                         <Bot className="w-5 h-5 text-vibe-primary feature-icon transition-transform" />
-                        <span className="font-medium">Agent Team</span>
+                        <span className="text-fluid-base font-medium">Agent Team</span>
                         <PulsingDot className="ml-auto" />
                       </div>
                       <div className="space-y-2">
@@ -123,7 +123,7 @@ export const HeroSection = () => {
                     <EnhancedCard hoverEffect="glow" className="p-4">
                       <div className="flex items-center space-x-2 mb-3">
                         <BarChart className="w-5 h-5 text-vibe-secondary feature-icon transition-transform" />
-                        <span className="font-medium">Progress</span>
+                        <span className="text-fluid-base font-medium">Progress</span>
                       </div>
                       <div className="space-y-2">
                         <div className="h-2 bg-vibe-flow/20 rounded w-5/6"></div>
@@ -135,7 +135,7 @@ export const HeroSection = () => {
                     <EnhancedCard hoverEffect="tilt" className="p-4 col-span-2">
                       <div className="flex items-center space-x-2 mb-3">
                         <MessageSquare className="w-5 h-5 text-vibe-accent feature-icon transition-transform" />
-                        <span className="font-medium">Live Communication</span>
+                        <span className="text-fluid-base font-medium">Live Communication</span>
                         <PulsingDot className="ml-auto" color="bg-green-500" />
                       </div>
                       <div className="space-y-2">
