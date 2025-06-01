@@ -1,25 +1,19 @@
 
-import React, { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { X, Info, Activity, Settings, MessageSquare, Users, Clock } from 'lucide-react';
+import { X, Bot, Calendar, Mail, Users } from 'lucide-react';
 import { Agent, Task, Message } from '@/types';
 import { AgentProfile } from '@/types/teams';
 import { cn } from '@/lib/utils';
-import { AgentDetails } from './detail-panel/AgentDetails';
-import { TaskDetails } from './detail-panel/TaskDetails';
-import { MessageDetails } from './detail-panel/MessageDetails';
-import { AgentCommunicationInterface } from '@/components/teams/AgentCommunicationInterface';
 
 interface ContextAwarePanelProps {
   type: 'agent' | 'task' | 'message' | 'agentProfile' | null;
-  data: Agent | Task | Message | AgentProfile | null;
+  data: any;
   isVisible: boolean;
-  agents: Agent[];
+  agents?: Agent[];
   onDismiss: () => void;
-  className?: string;
 }
 
 export const ContextAwarePanel = ({
@@ -27,215 +21,152 @@ export const ContextAwarePanel = ({
   data,
   isVisible,
   agents,
-  onDismiss,
-  className
+  onDismiss
 }: ContextAwarePanelProps) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  useEffect(() => {
-    if (isVisible) {
-      setIsAnimating(true);
-    } else {
-      const timer = setTimeout(() => setIsAnimating(false), 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible]);
-
-  const getContextInfo = () => {
-    if (!data || !type) return null;
-
-    switch (type) {
-      case 'agent':
-        const agent = data as Agent;
-        return {
-          title: agent.name,
-          subtitle: agent.type,
-          status: agent.status,
-          icon: Users,
-          actions: [
-            { label: 'Configure', icon: Settings, action: () => console.log('Configure agent') },
-            { label: 'Chat', icon: MessageSquare, action: () => console.log('Chat with agent') }
-          ]
-        };
-      case 'task':
-        const task = data as Task;
-        return {
-          title: task.title,
-          subtitle: task.assignedAgent,
-          status: task.status,
-          icon: Clock,
-          actions: [
-            { label: 'Edit', icon: Settings, action: () => console.log('Edit task') },
-            { label: 'Activity', icon: Activity, action: () => console.log('View activity') }
-          ]
-        };
-      case 'message':
-        const message = data as Message;
-        return {
-          title: `${message.from} → ${message.to}`,
-          subtitle: message.type,
-          status: null,
-          icon: MessageSquare,
-          actions: [
-            { label: 'Reply', icon: MessageSquare, action: () => console.log('Reply to message') }
-          ]
-        };
-      case 'agentProfile':
-        const profile = data as AgentProfile;
-        return {
-          title: profile.name,
-          subtitle: profile.role,
-          status: profile.availability,
-          icon: Users,
-          actions: [
-            { label: 'Configure', icon: Settings, action: () => console.log('Configure profile') },
-            { label: 'Chat', icon: MessageSquare, action: () => console.log('Chat with profile') }
-          ]
-        };
-      default:
-        return null;
-    }
-  };
-
-  const contextInfo = getContextInfo();
-
-  if (!isAnimating && !isVisible) {
+  if (!isVisible || !data) {
     return null;
   }
 
-  if (type === 'agentProfile' && data) {
-    return (
-      <div className={cn(
-        "fixed right-0 top-0 h-full w-96 bg-background border-l border-border z-50 transition-transform duration-300 ease-in-out",
-        isVisible ? "translate-x-0" : "translate-x-full",
-        className
-      )}>
-        <AgentCommunicationInterface
-          agent={data as AgentProfile}
-          onClose={onDismiss}
-        />
-      </div>
-    );
-  }
+  const getIcon = () => {
+    switch (type) {
+      case 'agent': return Bot;
+      case 'agentProfile': return Users;
+      case 'task': return Calendar;
+      case 'message': return Mail;
+      default: return Bot;
+    }
+  };
+
+  const getTitle = () => {
+    switch (type) {
+      case 'agent': return data.name || 'Agent Details';
+      case 'agentProfile': return data.name || 'Agent Profile';
+      case 'task': return data.title || 'Task Details';
+      case 'message': return 'Message Details';
+      default: return 'Details';
+    }
+  };
+
+  const Icon = getIcon();
 
   return (
     <div className={cn(
-      "fixed right-0 top-0 h-full w-96 bg-background border-l border-border shadow-lg z-50 transition-all duration-300 ease-in-out overflow-hidden",
-      isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0",
-      className
+      "fixed right-0 top-0 h-full w-96 bg-background border-l border-border/60 shadow-lg transition-transform duration-300 ease-in-out z-40",
+      isVisible ? "translate-x-0" : "translate-x-full"
     )}>
-      {contextInfo && (
-        <div className="flex flex-col h-full">
-          {/* Enhanced Header */}
-          <div className="flex-shrink-0 p-4 border-b border-border bg-card/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="text-xs">
-                  {type}
+      <Card className="h-full border-0 rounded-none">
+        <CardHeader className="border-b border-border/30">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Icon className="w-5 h-5" />
+              {getTitle()}
+            </CardTitle>
+            <Button variant="ghost" size="sm" onClick={onDismiss}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="p-6 overflow-auto">
+          {type === 'agent' && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium mb-2">Status</h4>
+                <Badge variant={data.status === 'working' ? 'default' : 'secondary'}>
+                  {data.status}
                 </Badge>
-                {contextInfo.status && (
-                  <Badge 
-                    variant={
-                      contextInfo.status === "working" || contextInfo.status === "in-progress" || contextInfo.status === "available" ? "default" : 
-                      contextInfo.status === "error" || contextInfo.status === "blocked" ? "destructive" : 
-                      "secondary"
-                    }
-                    className="text-xs"
-                  >
-                    {contextInfo.status}
-                  </Badge>
-                )}
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onDismiss}
-                className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive transition-colors"
-                title="Close panel (Esc)"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            
-            <div className="mb-3">
-              <h3 className="font-semibold text-foreground text-sm line-clamp-1 mb-1">
-                {contextInfo.title}
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                {contextInfo.subtitle}
-              </p>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="flex flex-wrap gap-2">
-              {contextInfo.actions.map((action, index) => {
-                const Icon = action.icon;
-                return (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={action.action}
-                    className="h-7 px-2 text-xs hover:bg-primary/10 transition-colors"
-                  >
-                    <Icon className="w-3 h-3 mr-1" />
-                    {action.label}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Content with Tabs */}
-          <div className="flex-1 overflow-hidden">
-            <Tabs defaultValue="details" className="h-full flex flex-col">
-              <TabsList className="m-4 mb-2 grid w-auto grid-cols-2 bg-muted/50">
-                <TabsTrigger value="details" className="text-xs">
-                  <Info className="w-3 h-3 mr-1" />
-                  Details
-                </TabsTrigger>
-                <TabsTrigger value="activity" className="text-xs">
-                  <Activity className="w-3 h-3 mr-1" />
-                  Activity
-                </TabsTrigger>
-              </TabsList>
               
-              <div className="flex-1 overflow-y-auto px-4 pb-4">
-                <TabsContent value="details" className="mt-0">
-                  {type === 'agent' && <AgentDetails agent={data as Agent} />}
-                  {type === 'task' && <TaskDetails task={data as Task} agents={agents} />}
-                  {type === 'message' && <MessageDetails message={data as Message} agents={agents} />}
-                </TabsContent>
-                
-                <TabsContent value="activity" className="mt-0">
-                  <Card className="p-4">
-                    <h4 className="font-medium text-foreground mb-3">Recent Activity</h4>
-                    <div className="space-y-3">
-                      <div className="text-sm text-muted-foreground">
-                        Activity timeline will appear here
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2 text-xs">
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-muted-foreground">Status updated - 2 minutes ago</span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-xs">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-muted-foreground">Configuration changed - 1 hour ago</span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-xs">
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                          <span className="text-muted-foreground">Task assigned - 3 hours ago</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                </TabsContent>
+              <div>
+                <h4 className="font-medium mb-2">Type</h4>
+                <p className="text-sm text-muted-foreground">{data.type}</p>
               </div>
-            </Tabs>
-          </div>
-        </div>
-      )}
+              
+              {data.currentTask && (
+                <div>
+                  <h4 className="font-medium mb-2">Current Task</h4>
+                  <p className="text-sm text-muted-foreground">{data.currentTask}</p>
+                </div>
+              )}
+              
+              {data.progress !== undefined && (
+                <div>
+                  <h4 className="font-medium mb-2">Progress</h4>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 bg-muted rounded-full h-2">
+                      <div 
+                        className="bg-primary h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${data.progress}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-medium">{data.progress}%</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {type === 'agentProfile' && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium mb-2">Role</h4>
+                <Badge variant="outline">{data.role}</Badge>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Availability</h4>
+                <Badge variant={data.availability === 'available' ? 'default' : 'secondary'}>
+                  {data.availability}
+                </Badge>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Performance Rating</h4>
+                <p className="text-sm text-muted-foreground">{data.performanceRating}/10</p>
+              </div>
+            </div>
+          )}
+          
+          {type === 'task' && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium mb-2">Description</h4>
+                <p className="text-sm text-muted-foreground">{data.description || 'No description available'}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Status</h4>
+                <Badge variant={data.status === 'completed' ? 'default' : 'secondary'}>
+                  {data.status}
+                </Badge>
+              </div>
+              
+              {data.priority && (
+                <div>
+                  <h4 className="font-medium mb-2">Priority</h4>
+                  <Badge variant={data.priority === 'high' ? 'destructive' : 'outline'}>
+                    {data.priority}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {type === 'message' && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium mb-2">Content</h4>
+                <p className="text-sm text-muted-foreground">{data.content || 'No content available'}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Timestamp</h4>
+                <p className="text-sm text-muted-foreground">{data.timestamp || new Date().toLocaleString()}</p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

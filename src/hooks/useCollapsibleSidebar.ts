@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface UseCollapsibleSidebarProps {
   defaultCollapsed?: boolean;
@@ -9,53 +9,43 @@ interface UseCollapsibleSidebarProps {
 
 export const useCollapsibleSidebar = ({
   defaultCollapsed = false,
-  keyboardShortcut = 'b',
-  storageKey = 'sidebar-collapsed'
-}: UseCollapsibleSidebarProps = {}) => {
-  // Initialize from localStorage or default
+  keyboardShortcut,
+  storageKey
+}: UseCollapsibleSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    if (typeof window !== 'undefined') {
+    if (storageKey && typeof window !== 'undefined') {
       const stored = localStorage.getItem(storageKey);
       return stored ? JSON.parse(stored) : defaultCollapsed;
     }
     return defaultCollapsed;
   });
 
-  // Persist to localStorage
-  useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(isCollapsed));
-  }, [isCollapsed, storageKey]);
-
   const toggleSidebar = useCallback(() => {
-    setIsCollapsed(prev => !prev);
-  }, []);
+    setIsCollapsed((prev: boolean) => {
+      const newValue = !prev;
+      if (storageKey && typeof window !== 'undefined') {
+        localStorage.setItem(storageKey, JSON.stringify(newValue));
+      }
+      return newValue;
+    });
+  }, [storageKey]);
 
-  const collapseSidebar = useCallback(() => {
-    setIsCollapsed(true);
-  }, []);
-
-  const expandSidebar = useCallback(() => {
-    setIsCollapsed(false);
-  }, []);
-
-  // Keyboard shortcut handler
   useEffect(() => {
+    if (!keyboardShortcut) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === keyboardShortcut) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === keyboardShortcut.toLowerCase()) {
         event.preventDefault();
         toggleSidebar();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [keyboardShortcut, toggleSidebar]);
 
   return {
     isCollapsed,
-    toggleSidebar,
-    collapseSidebar,
-    expandSidebar,
-    setIsCollapsed
+    toggleSidebar
   };
 };

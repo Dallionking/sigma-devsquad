@@ -1,6 +1,7 @@
 
-import { OptimizedHeader } from "./header/OptimizedHeader";
-import { ViewMode, Agent } from "@/types";
+import React from 'react';
+import { OptimizedHeader } from './header/OptimizedHeader';
+import { ViewMode, Agent } from '@/types';
 
 interface HeaderProps {
   viewMode: ViewMode;
@@ -11,22 +12,6 @@ interface HeaderProps {
   showTeamView?: boolean;
 }
 
-export const Header = ({ 
-  viewMode, 
-  onViewModeChange, 
-  agents,
-  sidebarCollapsed,
-  onSidebarToggle,
-  showTeamView = false
-}: HeaderProps) => {
-  return (
-    <OptimizedHeader
-      viewMode={viewMode}
-      onViewModeChange={onViewModeChange}
-      agents={agents}
-      sidebarCollapsed={sidebarCollapsed}
-      onSidebarToggle={onSidebarToggle}
-      showTeamView={showTeamView}
-    />
-  );
+export const Header = (props: HeaderProps) => {
+  return <OptimizedHeader {...props} />;
 };

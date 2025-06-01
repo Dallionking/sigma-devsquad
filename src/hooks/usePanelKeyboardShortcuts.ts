@@ -11,15 +11,16 @@ export const usePanelKeyboardShortcuts = ({
   onDismiss
 }: UsePanelKeyboardShortcutsProps) => {
   useEffect(() => {
+    if (!isVisible) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Esc to close panel
-      if (event.key === 'Escape' && isVisible) {
+      if (event.key === 'Escape') {
         event.preventDefault();
         onDismiss();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isVisible, onDismiss]);
 };

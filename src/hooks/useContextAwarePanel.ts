@@ -1,30 +1,25 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { Agent, Task, Message } from '@/types';
-import { AgentProfile } from '@/types/teams';
+import { useState, useCallback } from 'react';
 
 interface PanelContext {
   type: 'agent' | 'task' | 'message' | 'agentProfile' | null;
-  data: Agent | Task | Message | AgentProfile | null;
+  data: any;
   isVisible: boolean;
-  previousType: string | null;
 }
 
 export const useContextAwarePanel = () => {
   const [panelContext, setPanelContext] = useState<PanelContext>({
     type: null,
     data: null,
-    isVisible: false,
-    previousType: null
+    isVisible: false
   });
 
-  const showPanel = useCallback((type: PanelContext['type'], data: PanelContext['data']) => {
-    setPanelContext(prev => ({
+  const showPanel = useCallback((type: PanelContext['type'], data: any) => {
+    setPanelContext({
       type,
       data,
-      isVisible: true,
-      previousType: prev.type
-    }));
+      isVisible: true
+    });
   }, []);
 
   const hidePanel = useCallback(() => {
@@ -32,35 +27,11 @@ export const useContextAwarePanel = () => {
       ...prev,
       isVisible: false
     }));
-    
-    // Clear data after animation completes
-    setTimeout(() => {
-      setPanelContext(prev => ({
-        type: null,
-        data: null,
-        isVisible: false,
-        previousType: prev.type
-      }));
-    }, 300);
   }, []);
-
-  const togglePanel = useCallback(() => {
-    if (panelContext.isVisible) {
-      hidePanel();
-    }
-  }, [panelContext.isVisible, hidePanel]);
-
-  // Auto-hide when no selection
-  useEffect(() => {
-    if (!panelContext.data && panelContext.isVisible) {
-      hidePanel();
-    }
-  }, [panelContext.data, panelContext.isVisible, hidePanel]);
 
   return {
     panelContext,
     showPanel,
-    hidePanel,
-    togglePanel
+    hidePanel
   };
 };
