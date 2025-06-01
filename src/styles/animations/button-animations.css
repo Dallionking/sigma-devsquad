@@ -104,7 +104,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: transparent;
+  background: transparent !important;
 }
 
 .btn-enhanced::before {
@@ -130,6 +130,7 @@
 .btn-enhanced:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+  background: transparent !important;
 }
 
 .btn-enhanced:active {
@@ -137,8 +138,10 @@
 }
 
 /* Completely disable grey hover backgrounds */
+.hover-no-grey,
 .hover-no-grey:hover,
-.hover-no-grey:hover * {
+.hover-no-grey:hover *,
+.hover-no-grey * {
   background-color: transparent !important;
 }
 
@@ -159,6 +162,13 @@ button:hover,
 /* Card hover states should not have grey backgrounds */
 .card:hover,
 .bg-card:hover {
+  background-color: transparent !important;
+}
+
+/* Ensure all welcome page elements don't show grey */
+[data-step="welcome"] button:hover,
+[data-step="welcome"] .card:hover,
+[data-step="welcome"] *:hover {
   background-color: transparent !important;
 }
 
