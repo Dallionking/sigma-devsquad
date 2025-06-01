@@ -42,7 +42,9 @@ export const TeamCreationForm = ({ onComplete, onSkip, initialData }: TeamCreati
         setTeamLogo(initialData.teamLogo);
       }
       if (initialData.invitedMembers) {
-        setInvitedMembers(initialData.invitedMembers);
+        setInvitedMembers(initialData.invitedMembers.filter((member): member is InvitedMember => 
+          member.email !== undefined && member.role !== undefined
+        ));
       }
     } else {
       // Try to load from localStorage
@@ -55,7 +57,9 @@ export const TeamCreationForm = ({ onComplete, onSkip, initialData }: TeamCreati
             setTeamLogo(parsedTeam.teamLogo);
           }
           if (parsedTeam.invitedMembers) {
-            setInvitedMembers(parsedTeam.invitedMembers);
+            setInvitedMembers(parsedTeam.invitedMembers.filter((member: any): member is InvitedMember => 
+              member.email !== undefined && member.role !== undefined
+            ));
           }
         } catch (error) {
           console.error('Failed to parse team data:', error);

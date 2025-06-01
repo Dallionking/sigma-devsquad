@@ -158,7 +158,7 @@ export const FirstAgentForm = ({ onComplete, onSkip, initialData }: FirstAgentFo
 
             {(selectedTemplate || showCustomBuilder) && (
               <AgentPreview
-                agent={{
+                agentData={{
                   name: form.watch("name"),
                   description: form.watch("description"),
                   role: form.watch("role"),

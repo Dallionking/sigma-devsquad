@@ -4,34 +4,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Bot, Brain, Zap, Target } from 'lucide-react';
-import { FirstAgentData } from './types';
-import { agentTemplates } from './constants';
+import { FirstAgentFormData } from './types';
+import { AGENT_TEMPLATES } from './constants';
 
 interface AgentPreviewProps {
-  agentData: FirstAgentData;
+  agentData: FirstAgentFormData;
 }
 
 export const AgentPreview = ({ agentData }: AgentPreviewProps) => {
   const template = agentData.templateId 
-    ? agentTemplates.find(t => t.id === agentData.templateId)
+    ? AGENT_TEMPLATES.find(t => t.id === agentData.templateId)
     : null;
 
   const displayName = agentData.name || (template?.name) || 'Unnamed Agent';
   const displayDescription = agentData.description || template?.description || 'No description provided';
-  const displaySkills = agentData.skills.length > 0 ? agentData.skills : (template?.skills || []);
   const displayCapabilities = agentData.capabilities.length > 0 ? agentData.capabilities : (template?.capabilities || []);
 
   const getAgentLevel = () => {
-    const skillCount = displaySkills.length;
-    if (skillCount <= 3) return 'Beginner';
-    if (skillCount <= 6) return 'Intermediate';
+    const capabilityCount = displayCapabilities.length;
+    if (capabilityCount <= 3) return 'Beginner';
+    if (capabilityCount <= 6) return 'Intermediate';
     return 'Advanced';
   };
 
   const getAgentType = () => {
     if (template) return template.type;
-    if (agentData.type === 'custom') return 'Custom';
-    return 'General';
+    return 'Custom';
   };
 
   return (
@@ -72,21 +70,21 @@ export const AgentPreview = ({ agentData }: AgentPreviewProps) => {
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Brain className="w-4 h-4 text-primary" />
-              <h4 className="font-medium text-sm">Skills ({displaySkills.length})</h4>
+              <h4 className="font-medium text-sm">Role & Specialization</h4>
             </div>
             <div className="flex flex-wrap gap-1">
-              {displaySkills.slice(0, 6).map((skill) => (
-                <Badge key={skill} variant="secondary" className="text-xs">
-                  {skill}
-                </Badge>
-              ))}
-              {displaySkills.length > 6 && (
-                <Badge variant="outline" className="text-xs">
-                  +{displaySkills.length - 6} more
+              {agentData.role && (
+                <Badge variant="secondary" className="text-xs">
+                  {agentData.role}
                 </Badge>
               )}
-              {displaySkills.length === 0 && (
-                <span className="text-xs text-muted-foreground">No skills configured</span>
+              {agentData.specialization && (
+                <Badge variant="outline" className="text-xs">
+                  {agentData.specialization}
+                </Badge>
+              )}
+              {!agentData.role && !agentData.specialization && (
+                <span className="text-xs text-muted-foreground">No role configured</span>
               )}
             </div>
           </div>
@@ -127,9 +125,9 @@ export const AgentPreview = ({ agentData }: AgentPreviewProps) => {
               </span>
             </div>
             <div className="flex justify-between">
-              <span>Skills Configuration</span>
-              <span className={displaySkills.length > 0 ? 'text-green-600' : 'text-yellow-600'}>
-                {displaySkills.length > 0 ? '✓' : '⚠'}
+              <span>Role Configuration</span>
+              <span className={agentData.role ? 'text-green-600' : 'text-yellow-600'}>
+                {agentData.role ? '✓' : '⚠'}
               </span>
             </div>
             <div className="flex justify-between">

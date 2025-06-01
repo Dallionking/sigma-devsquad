@@ -8,11 +8,12 @@ import { Camera, Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TeamAvatarUploadProps {
-  teamAvatar: string;
-  onAvatarChange: (avatar: string) => void;
+  teamLogo: string | null;
+  teamName: string;
+  onLogoChange: (logo: string) => void;
 }
 
-export const TeamAvatarUpload = ({ teamAvatar, onAvatarChange }: TeamAvatarUploadProps) => {
+export const TeamAvatarUpload = ({ teamLogo, teamName, onLogoChange }: TeamAvatarUploadProps) => {
   const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
 
@@ -37,10 +38,10 @@ export const TeamAvatarUpload = ({ teamAvatar, onAvatarChange }: TeamAvatarUploa
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      onAvatarChange(e.target?.result as string);
+      onLogoChange(e.target?.result as string);
     };
     reader.readAsDataURL(file);
-  }, [toast, onAvatarChange]);
+  }, [toast, onLogoChange]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -67,9 +68,9 @@ export const TeamAvatarUpload = ({ teamAvatar, onAvatarChange }: TeamAvatarUploa
       <CardContent>
         <div className="flex flex-col items-center space-y-4">
           <Avatar className="h-20 w-20 border-2 border-dashed border-border">
-            <AvatarImage src={teamAvatar} alt="Team Avatar" />
+            <AvatarImage src={teamLogo || ''} alt="Team Avatar" />
             <AvatarFallback className="bg-muted">
-              <Camera className="w-6 h-6 text-muted-foreground" />
+              {teamName ? teamName.charAt(0).toUpperCase() : <Camera className="w-6 h-6 text-muted-foreground" />}
             </AvatarFallback>
           </Avatar>
 
@@ -105,11 +106,11 @@ export const TeamAvatarUpload = ({ teamAvatar, onAvatarChange }: TeamAvatarUploa
             className="hidden"
           />
 
-          {teamAvatar && (
+          {teamLogo && (
             <Button
               variant="outline"
               size="sm"
-              onClick={() => onAvatarChange('')}
+              onClick={() => onLogoChange('')}
               className="flex items-center space-x-2"
             >
               <X className="w-4 h-4" />

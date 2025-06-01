@@ -81,3 +81,12 @@ export const AGENT_TEMPLATES: AgentTemplate[] = [
     specialization: 'Product management and strategic planning'
   }
 ];
+
+export const skillCategories = {
+  frontend: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'Sass', 'Tailwind CSS'],
+  backend: ['Node.js', 'Python', 'Java', 'C#', 'PHP', 'Ruby', 'Go', 'Rust', 'Express.js'],
+  devops: ['Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP', 'CI/CD', 'Jenkins', 'GitLab', 'Terraform'],
+  qa: ['Jest', 'Cypress', 'Selenium', 'Playwright', 'Testing Library', 'Mocha', 'Chai', 'Jasmine'],
+  design: ['Figma', 'Sketch', 'Adobe XD', 'Photoshop', 'Illustrator', 'InVision', 'Principle'],
+  data: ['SQL', 'MongoDB', 'PostgreSQL', 'Redis', 'Elasticsearch', 'GraphQL', 'REST APIs']
+};

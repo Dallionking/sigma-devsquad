@@ -10,15 +10,16 @@ import { useInputValidation } from '@/hooks/useInputValidation';
 import { useToast } from '@/hooks/use-toast';
 import { Mail, Plus, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TeamMember } from './types';
+import { InvitedMember } from './types';
 import { memberRoleOptions, emailRegex } from './constants';
 
 interface MemberInvitationProps {
-  members: TeamMember[];
-  onMembersChange: (members: TeamMember[]) => void;
+  members: InvitedMember[];
+  onMemberInvite: (member: InvitedMember) => void;
+  onMemberRemove: (email: string) => void;
 }
 
-export const MemberInvitation = ({ members, onMembersChange }: MemberInvitationProps) => {
+export const MemberInvitation = ({ members, onMemberInvite, onMemberRemove }: MemberInvitationProps) => {
   const { toast } = useToast();
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [newMemberRole, setNewMemberRole] = useState<'admin' | 'member'>('member');
@@ -41,7 +42,7 @@ export const MemberInvitation = ({ members, onMembersChange }: MemberInvitationP
   // Update member email validation when newMemberEmail changes
   useEffect(() => {
     memberEmail.handleChange(newMemberEmail);
-  }, [newMemberEmail]);
+  }, [newMemberEmail, memberEmail]);
 
   const addMember = () => {
     if (!newMemberEmail.trim() || memberEmail.error) {
@@ -63,25 +64,26 @@ export const MemberInvitation = ({ members, onMembersChange }: MemberInvitationP
       return;
     }
 
-    const newMember: TeamMember = {
-      id: crypto.randomUUID(),
+    const newMember: InvitedMember = {
       email: newMemberEmail.trim(),
       role: newMemberRole
     };
 
-    onMembersChange([...members, newMember]);
+    onMemberInvite(newMember);
     setNewMemberEmail('');
     setNewMemberRole('member');
   };
 
-  const removeMember = (memberId: string) => {
-    onMembersChange(members.filter(member => member.id !== memberId));
-  };
-
-  const updateMemberRole = (memberId: string, role: 'admin' | 'member') => {
-    onMembersChange(members.map(member => 
-      member.id === memberId ? { ...member, role } : member
-    ));
+  const updateMemberRole = (email: string, role: 'admin' | 'member') => {
+    const updatedMembers = members.map(member => 
+      member.email === email ? { ...member, role } : member
+    );
+    // Since we can't directly update the array, we need to remove and re-add
+    const memberToUpdate = members.find(m => m.email === email);
+    if (memberToUpdate) {
+      onMemberRemove(email);
+      onMemberInvite({ email, role });
+    }
   };
 
   return (
@@ -144,7 +146,7 @@ export const MemberInvitation = ({ members, onMembersChange }: MemberInvitationP
             <Label className="text-sm font-medium">Added Members ({members.length})</Label>
             <div className="space-y-2 max-h-32 overflow-y-auto">
               {members.map((member) => (
-                <div key={member.id} className="flex items-center justify-between p-2 bg-accent/30 rounded-md">
+                <div key={member.email} className="flex items-center justify-between p-2 bg-accent/30 rounded-md">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm">{member.email}</span>
                     <Badge variant={member.role === 'admin' ? 'default' : 'secondary'} className="text-xs">
@@ -154,7 +156,7 @@ export const MemberInvitation = ({ members, onMembersChange }: MemberInvitationP
                   <div className="flex items-center space-x-1">
                     <Select 
                       value={member.role} 
-                      onValueChange={(value: 'admin' | 'member') => updateMemberRole(member.id, value)}
+                      onValueChange={(value: 'admin' | 'member') => updateMemberRole(member.email, value)}
                     >
                       <SelectTrigger className="h-7 w-20 text-xs">
                         <SelectValue />
@@ -170,7 +172,7 @@ export const MemberInvitation = ({ members, onMembersChange }: MemberInvitationP
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => removeMember(member.id)}
+                      onClick={() => onMemberRemove(member.email)}
                       className="h-7 w-7 p-0 hover:bg-red-100 hover:text-red-600"
                     >
                       <Trash2 className="w-3 h-3" />
