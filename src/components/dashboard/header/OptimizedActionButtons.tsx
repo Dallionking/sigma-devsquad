@@ -1,29 +1,15 @@
 
 import { Button } from "@/components/ui/button";
 import { UserProfileDropdown } from "@/components/landing/UserProfileDropdown";
-import { TeamSwitcher } from "@/components/navigation/TeamSwitcher";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTeams } from "@/contexts/TeamContext";
 import { Bell, Search } from "lucide-react";
-import { useState } from "react";
 
 export const OptimizedActionButtons = () => {
   const { user } = useAuth();
-  const { teams } = useTeams();
-  const [currentTeamId, setCurrentTeamId] = useState<string>(teams[0]?.id || "");
 
   return (
     <div className="flex items-center space-x-3">
-      {/* Team Switcher */}
-      {user && (
-        <TeamSwitcher 
-          currentTeamId={currentTeamId}
-          onTeamChange={setCurrentTeamId}
-          compact
-        />
-      )}
-
-      {/* Action Buttons - No duplicate settings button */}
+      {/* Action Buttons - Removed Settings button since it's now in nav */}
       <div className="flex items-center space-x-2">
         {/* Search Button */}
         <Button 
