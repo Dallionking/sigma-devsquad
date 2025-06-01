@@ -1,72 +1,105 @@
 
-import { SettingsSection } from "./SettingsSection";
-import { ResponsiveSettingItem } from "./ResponsiveSettingItem";
-import { TouchOptimizedCard } from "./TouchOptimizedCard";
-import { EnhancedSettingsDemo } from "./EnhancedSettingsDemo";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { RotateCcw, HelpCircle } from 'lucide-react';
+import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface GeneralSettingsProps {
-  searchQuery?: string;
+  notifications: boolean;
+  setNotifications: (value: boolean) => void;
+  autoBackup: boolean;
+  setAutoBackup: (value: boolean) => void;
+  performanceMode: string;
+  setPerformanceMode: (value: string) => void;
 }
 
-export const GeneralSettings = ({ searchQuery = "" }: GeneralSettingsProps) => {
+export const GeneralSettings = ({
+  notifications,
+  setNotifications,
+  autoBackup,
+  setAutoBackup,
+  performanceMode,
+  setPerformanceMode,
+}: GeneralSettingsProps) => {
+  const { resetOnboarding } = useOnboarding();
+  const { toast } = useToast();
+
+  const handleRestartOnboarding = () => {
+    resetOnboarding();
+    toast({
+      title: "Onboarding Restarted",
+      description: "The onboarding tour will now begin from the start.",
+    });
+  };
+
   return (
     <div className="space-y-6">
-      <EnhancedSettingsDemo />
-      
-      <TouchOptimizedCard
-        title="Application Settings"
-        description="Configure general application behavior and preferences"
-        category="General"
-        status="active"
-      >
-        <ResponsiveSettingItem
-          id="language"
-          type="select"
-          label="Language"
-          description="Select your preferred language"
-          value="en"
-          onValueChange={() => {}}
-          options={[
-            { value: "en", label: "English" },
-            { value: "es", label: "Spanish" },
-            { value: "fr", label: "French" },
-            { value: "de", label: "German" }
-          ]}
-        />
+      <Card>
+        <CardHeader>
+          <CardTitle>General Preferences</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="notifications">Enable Notifications</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive notifications for important updates
+              </p>
+            </div>
+            <Switch
+              id="notifications"
+              checked={notifications}
+              onCheckedChange={setNotifications}
+            />
+          </div>
 
-        <ResponsiveSettingItem
-          id="timezone"
-          type="select"
-          label="Timezone"
-          description="Your local timezone for displaying dates and times"
-          value="UTC"
-          onValueChange={() => {}}
-          options={[
-            { value: "UTC", label: "UTC" },
-            { value: "EST", label: "Eastern Time" },
-            { value: "PST", label: "Pacific Time" },
-            { value: "GMT", label: "Greenwich Mean Time" }
-          ]}
-        />
+          <Separator />
 
-        <ResponsiveSettingItem
-          id="auto-update"
-          type="switch"
-          label="Automatic Updates"
-          description="Automatically download and install updates"
-          checked={true}
-          onCheckedChange={() => {}}
-        />
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="auto-backup">Auto Backup</Label>
+              <p className="text-sm text-muted-foreground">
+                Automatically save your work every few minutes
+              </p>
+            </div>
+            <Switch
+              id="auto-backup"
+              checked={autoBackup}
+              onCheckedChange={setAutoBackup}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-        <ResponsiveSettingItem
-          id="backup-settings"
-          type="button"
-          label="Backup Settings"
-          description="Export your current settings configuration"
-          buttonText="Export Settings"
-          onClick={() => console.log("Export settings")}
-        />
-      </TouchOptimizedCard>
+      <Card>
+        <CardHeader>
+          <CardTitle>Help & Guidance</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Restart Onboarding Tour</Label>
+              <p className="text-sm text-muted-foreground">
+                Go through the setup process again to learn about features
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRestartOnboarding}
+              className="flex items-center space-x-2"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Restart Tour</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
