@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -49,18 +48,6 @@ export const OnboardingModal = () => {
     skipOnboarding();
   };
 
-  const handleVideoComplete = () => {
-    // Auto-advance for video-only steps
-    if (progress.currentStep === 'welcome' || progress.currentStep === 'completion') {
-      completeStep(progress.currentStep);
-    }
-  };
-
-  const handleVideoSkip = () => {
-    // Skip video but continue to next step
-    completeStep(progress.currentStep);
-  };
-
   const handleProfileSetupComplete = (profileData: any) => {
     saveStepData('profile-setup', profileData);
     completeStep('profile-setup');
@@ -104,10 +91,9 @@ export const OnboardingModal = () => {
   const showTeamCreation = progress.currentStep === 'team-creation';
   const showFirstAgent = progress.currentStep === 'first-agent';
   const showPlanningTour = progress.currentStep === 'planning-tour';
-  const showVideoTutorial = progress.currentStep === 'welcome' || progress.currentStep === 'completion';
 
-  // Don't show actions for form steps or video-only steps
-  const showActions = !showProfileSetup && !showTeamCreation && !showFirstAgent && !showPlanningTour && !showVideoTutorial;
+  // Don't show actions for form steps
+  const showActions = !showProfileSetup && !showTeamCreation && !showFirstAgent && !showPlanningTour;
 
   return (
     <>
@@ -163,8 +149,6 @@ export const OnboardingModal = () => {
                 onFirstAgentSkip={handleFirstAgentSkip}
                 onPlanningTourComplete={handlePlanningTourComplete}
                 onPlanningTourSkip={handlePlanningTourSkip}
-                onVideoComplete={handleVideoComplete}
-                onVideoSkip={handleVideoSkip}
                 getStepData={getStepData}
               />
 
@@ -191,7 +175,6 @@ export const OnboardingModal = () => {
           currentStep={progress.currentStep}
           isCollapsed={isHelpCollapsed}
           onToggleCollapse={toggleHelpPanel}
-          completedSteps={progress.completedSteps}
         />
       )}
     </>

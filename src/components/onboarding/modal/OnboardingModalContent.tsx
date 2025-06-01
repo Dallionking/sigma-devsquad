@@ -5,7 +5,6 @@ import { ProfileSetupForm } from '../ProfileSetupForm';
 import { TeamCreationForm } from '../TeamCreationForm';
 import { FirstAgentForm } from '../first-agent/FirstAgentForm';
 import { PlanningTourForm } from '../PlanningTourForm';
-import { OnboardingVideoTutorial } from '../video-tutorials/OnboardingVideoTutorial';
 
 interface OnboardingModalContentProps {
   currentStep: OnboardingStep;
@@ -18,8 +17,6 @@ interface OnboardingModalContentProps {
   onFirstAgentSkip: () => void;
   onPlanningTourComplete: () => void;
   onPlanningTourSkip: () => void;
-  onVideoComplete?: () => void;
-  onVideoSkip?: () => void;
   getStepData: (step: OnboardingStep) => any;
 }
 
@@ -34,31 +31,15 @@ export const OnboardingModalContent = ({
   onFirstAgentSkip,
   onPlanningTourComplete,
   onPlanningTourSkip,
-  onVideoComplete,
-  onVideoSkip,
   getStepData
 }: OnboardingModalContentProps) => {
   const showProfileSetup = currentStep === 'profile-setup';
   const showTeamCreation = currentStep === 'team-creation';
   const showFirstAgent = currentStep === 'first-agent';
   const showPlanningTour = currentStep === 'planning-tour';
-  
-  // Show video tutorials for welcome and completion steps
-  const showVideoTutorial = currentStep === 'welcome' || currentStep === 'completion';
 
   return (
-    <div className="py-6 space-y-6">
-      {/* Video Tutorial Section */}
-      {showVideoTutorial && onVideoComplete && onVideoSkip && (
-        <OnboardingVideoTutorial
-          step={currentStep}
-          onComplete={onVideoComplete}
-          onSkip={onVideoSkip}
-          autoPlay={currentStep === 'welcome'}
-        />
-      )}
-
-      {/* Form Content */}
+    <div className="py-6">
       {showProfileSetup ? (
         <ProfileSetupForm 
           onComplete={onProfileSetupComplete}
@@ -80,9 +61,9 @@ export const OnboardingModalContent = ({
           onComplete={onPlanningTourComplete}
           onSkip={onPlanningTourSkip}
         />
-      ) : !showVideoTutorial ? (
+      ) : (
         stepContent
-      ) : null}
+      )}
     </div>
   );
 };

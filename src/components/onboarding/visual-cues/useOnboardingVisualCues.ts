@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { OnboardingStep } from '@/contexts/onboarding/types';
+import { OnboardingStep } from '@/contexts/OnboardingContext';
 
 interface VisualCue {
   id: string;
