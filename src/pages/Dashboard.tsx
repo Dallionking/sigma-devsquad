@@ -8,12 +8,19 @@ import { LoadingScreen } from "@/components/dashboard/LoadingScreen";
 import { SkipToContentLink } from "@/components/dashboard/SkipToContentLink";
 import { MainLayout } from "@/components/dashboard/MainLayout";
 import { FloatingActionButton } from "@/components/dashboard/FloatingActionButton";
+import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
+import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
+import { SampleProjectsModal } from "@/components/sample-projects/SampleProjectsModal";
+import { ContextualHelp } from "@/components/help/ContextualHelp";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
 import { useTeams } from "@/contexts/TeamContext";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
+import { Button } from "@/components/ui/button";
+import { Star, HelpCircle } from "lucide-react";
 
 const Dashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -26,12 +33,14 @@ const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showTeamView, setShowTeamView] = useState(true);
   const [syncPanelCollapsed, setSyncPanelCollapsed] = useState(false);
+  const [showSampleProjects, setShowSampleProjects] = useState(false);
 
   // Use centralized state management with proper error handling
   const agentContext = useAgents();
   const taskContext = useTasks();
   const messageContext = useMessages();
   const teamContext = useTeams();
+  const { progress } = useOnboarding();
 
   // Ensure contexts are available before rendering
   if (!agentContext || !taskContext || !messageContext || !teamContext) {
@@ -68,14 +77,30 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Vibe DevSquad Enhanced Header */}
-      <Header 
-        viewMode={viewMode} 
-        onViewModeChange={setViewMode}
-        agents={agents || []}
-        sidebarCollapsed={sidebarCollapsed}
-        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
+      {/* Vibe DevSquad Enhanced Header with Help */}
+      <div className="relative">
+        <Header 
+          viewMode={viewMode} 
+          onViewModeChange={setViewMode}
+          agents={agents || []}
+          sidebarCollapsed={sidebarCollapsed}
+          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
+        
+        {/* Quick Actions Bar */}
+        <div className="absolute top-2 right-4 flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSampleProjects(true)}
+            className="text-muted-foreground hover:text-foreground"
+            title="Browse sample projects"
+          >
+            <Star className="w-4 h-4" />
+          </Button>
+          <ContextualHelp context="dashboard" />
+        </div>
+      </div>
       
       {/* Real-time Notifications with Vibe styling */}
       <div className="px-4 py-2">
@@ -87,6 +112,13 @@ const Dashboard = () => {
         showTeamView={showTeamView}
         onToggleView={handleToggleView}
       />
+
+      {/* Onboarding Progress - Show if not complete */}
+      {!progress.isOnboardingComplete && (
+        <div className="px-6 py-4">
+          <OnboardingProgress />
+        </div>
+      )}
       
       {/* Main layout with integrated User Presence Panel */}
       <MainLayout
@@ -126,6 +158,15 @@ const Dashboard = () => {
       
       {/* Enhanced floating action button with Vibe styling */}
       <FloatingActionButton />
+      
+      {/* Onboarding Modal */}
+      <OnboardingModal />
+      
+      {/* Sample Projects Modal */}
+      <SampleProjectsModal
+        open={showSampleProjects}
+        onOpenChange={setShowSampleProjects}
+      />
       
       {/* Vibe DevSquad subtle background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">

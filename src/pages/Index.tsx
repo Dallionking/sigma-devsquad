@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
@@ -8,10 +7,12 @@ import { LoadingScreen } from "@/components/dashboard/LoadingScreen";
 import { SkipToContentLink } from "@/components/dashboard/SkipToContentLink";
 import { MainLayout } from "@/components/dashboard/MainLayout";
 import { FloatingActionButton } from "@/components/dashboard/FloatingActionButton";
+import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
 import { useTeams } from "@/contexts/TeamContext";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 
@@ -64,6 +65,8 @@ const Index = () => {
     }
   };
 
+  const { progress } = useOnboarding();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
@@ -87,6 +90,13 @@ const Index = () => {
         showTeamView={showTeamView}
         onToggleView={handleToggleView}
       />
+
+      {/* Onboarding Progress - Show if not complete */}
+      {!progress.isOnboardingComplete && (
+        <div className="px-6 py-4">
+          <OnboardingProgress />
+        </div>
+      )}
       
       {/* Main layout with integrated User Presence Panel */}
       <MainLayout
@@ -126,6 +136,9 @@ const Index = () => {
       
       {/* Enhanced floating action button with Vibe styling */}
       <FloatingActionButton />
+
+      {/* Onboarding Modal */}
+      <OnboardingModal />
       
       {/* Vibe DevSquad subtle background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
