@@ -96,25 +96,31 @@
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.3));
   }
   50% {
     box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+    filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.6));
   }
 }
 
-/* Limitless-inspired animations */
+/* Enhanced Limitless-inspired animations */
 @keyframes limitless-glow {
   0% {
     opacity: 0.4;
-    transform: scale(0.98);
+    transform: scale(0.98) rotate(0deg);
   }
-  50% {
+  33% {
     opacity: 0.7;
-    transform: scale(1.02);
+    transform: scale(1.02) rotate(1deg);
+  }
+  66% {
+    opacity: 0.6;
+    transform: scale(1.01) rotate(-0.5deg);
   }
   100% {
     opacity: 0.4;
-    transform: scale(0.98);
+    transform: scale(0.98) rotate(0deg);
   }
 }
 
@@ -122,30 +128,37 @@
   0%, 100% {
     opacity: 0.6;
     transform: scale(1);
+    filter: brightness(1);
   }
   50% {
     opacity: 1;
     transform: scale(1.05);
+    filter: brightness(1.2);
   }
 }
 
 @keyframes fade-in-delayed {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px) scale(0.95);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes line-grow {
   0% {
     width: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
   }
   100% {
     width: 100%;
+    opacity: 1;
   }
 }
 
@@ -153,10 +166,31 @@
   0%, 100% {
     opacity: 0.3;
     transform: scale(1);
+    filter: hue-rotate(0deg);
+  }
+  33% {
+    opacity: 0.6;
+    transform: scale(1.1);
+    filter: hue-rotate(90deg);
+  }
+  66% {
+    opacity: 0.8;
+    transform: scale(1.05);
+    filter: hue-rotate(180deg);
+  }
+}
+
+@keyframes enhanced-shimmer {
+  0% {
+    background-position: -200% 0;
+    opacity: 0.5;
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    background-position: 200% 0;
+    opacity: 0.5;
   }
 }
 
@@ -173,22 +207,9 @@
   .animate-shimmer {
     position: relative;
     overflow: hidden;
-  }
-
-  .animate-shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.4),
-      transparent
-    );
-    animation: shimmer 2s infinite;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: enhanced-shimmer 2s infinite;
   }
 
   .animate-bounce-gentle {
@@ -219,7 +240,7 @@
     animation: pulse-glow 2s ease-in-out infinite;
   }
 
-  /* Limitless-inspired animations */
+  /* Enhanced Limitless-inspired animations */
   .animate-limitless-glow {
     animation: limitless-glow 4s ease-in-out infinite;
   }
@@ -240,9 +261,27 @@
     animation: neural-pulse 2s ease-in-out infinite;
   }
 
-  /* Limitless-specific styling */
+  /* Enhanced Limitless-specific styling */
   .limitless-badge {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .limitless-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s;
   }
 
   .limitless-badge:hover {
@@ -250,8 +289,13 @@
     box-shadow: 0 10px 25px -5px rgba(108, 92, 231, 0.3);
   }
 
+  .limitless-badge:hover::before {
+    left: 100%;
+  }
+
   .pill-icon {
     filter: drop-shadow(0 0 8px rgba(108, 92, 231, 0.5));
+    animation: limitless-pulse 3s ease-in-out infinite;
   }
 
   .limitless-tagline {
@@ -261,6 +305,7 @@
   .limitless-tagline-text {
     display: inline-block;
     transition: all 0.3s ease;
+    position: relative;
   }
 
   .limitless-tagline-text:hover {
@@ -283,13 +328,15 @@
     width: 100%;
   }
 
-  /* Enhanced CTA buttons with Limitless styling */
+  /* Enhanced CTA buttons with improved Limitless styling */
   .limitless-cta-primary {
     background: linear-gradient(135deg, #6366F1, #8B5CF6, #06B6D4);
     background-size: 200% 200%;
     animation: gradient 3s ease infinite;
     position: relative;
     overflow: hidden;
+    border: none;
+    box-shadow: 0 8px 32px -8px rgba(108, 92, 231, 0.3);
   }
 
   .limitless-cta-primary::before {
@@ -319,10 +366,11 @@
 
   .limitless-cta-secondary {
     border: 2px solid transparent;
-    background: linear-gradient(white, white) padding-box,
+    background: linear-gradient(var(--background), var(--background)) padding-box,
                 linear-gradient(135deg, #6C5CE7, #00B8D9) border-box;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 20px -4px rgba(0, 184, 217, 0.2);
   }
 
   .limitless-cta-secondary::before {
@@ -337,8 +385,28 @@
     transition: opacity 0.3s ease;
   }
 
+  .limitless-cta-secondary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(108, 92, 231, 0.2),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
   .limitless-cta-secondary:hover::before {
     opacity: 1;
+  }
+
+  .limitless-cta-secondary:hover::after {
+    left: 100%;
   }
 
   .limitless-cta-secondary:hover {
@@ -346,7 +414,7 @@
     box-shadow: 0 15px 35px -5px rgba(0, 184, 217, 0.3);
   }
 
-  /* Hero headline enhancement */
+  /* Enhanced hero headline with improved glow effect */
   .hero-headline-enhanced {
     position: relative;
   }
@@ -399,12 +467,7 @@
     animation-delay: 700ms;
   }
 
-  /* Parallax scroll effects */
-  .parallax-slow {
-    transform: translateY(var(--scroll-offset, 0px));
-  }
-
-  /* Interactive hover states */
+  /* Enhanced interactive hover states */
   .hover-lift {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -414,11 +477,13 @@
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
   }
 
-  /* Loading skeleton animations */
-  .skeleton-pulse {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+  /* Enhanced feature icon transitions */
+  .feature-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .group:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
   }
 }
 
@@ -472,7 +537,7 @@
   transform: scale(1.1) rotate(5deg);
 }
 
-/* Text gradient animation */
+/* Enhanced text gradient animation */
 .text-gradient-animated {
   background: linear-gradient(
     45deg,
