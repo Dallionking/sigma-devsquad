@@ -1,18 +1,15 @@
 
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { AnimatedSection } from "@/components/ui/animated-section";
-import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { Logo } from "@/components/branding/Logo";
+import { EnhancedButton } from "@/components/ui/enhanced-button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { ArrowRight, Menu, X, LogOut } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export const Header = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleGetStarted = () => {
@@ -23,121 +20,109 @@ export const Header = () => {
     }
   };
 
-  const handleLogin = () => {
-    if (user) {
-      navigate("/dashboard");
-    } else {
-      navigate("/auth?tab=login");
+  const handleSignIn = () => {
+    navigate("/auth?tab=signin");
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    setMobileMenuOpen(false);
-  };
+  const navItems = [
+    { label: "Features", onClick: () => scrollToSection("features") },
+    { label: "How it Works", onClick: () => scrollToSection("how-it-works") },
+    { label: "Benefits", onClick: () => scrollToSection("benefits") },
+  ];
 
   return (
-    <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <AnimatedSection animation="slide-left" delay={100}>
-            <div className="flex items-center">
-              <Logo size={isMobile ? "sm" : "md"} variant="full" />
-            </div>
-          </AnimatedSection>
+          <div className="flex items-center">
+            <Logo size="md" variant="full" />
+          </div>
 
           {/* Desktop Navigation */}
-          <AnimatedSection animation="fade-in" delay={200}>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-foreground/80 hover:text-vibe-primary transition-all duration-300 hover:scale-105">
-                Features
-              </a>
-              <a href="#how-it-works" className="text-foreground/80 hover:text-vibe-primary transition-all duration-300 hover:scale-105">
-                How It Works
-              </a>
-              <a href="#benefits" className="text-foreground/80 hover:text-vibe-primary transition-all duration-300 hover:scale-105">
-                Benefits
-              </a>
-            </nav>
-          </AnimatedSection>
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item, index) => (
+              <button
+                key={index}
+                onClick={item.onClick}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
 
-          {/* Desktop Auth Buttons */}
-          <AnimatedSection animation="slide-right" delay={300}>
-            <div className="hidden md:flex items-center space-x-4">
-              {user ? (
-                <>
-                  <EnhancedButton variant="outline" onClick={() => navigate('/dashboard')}>
-                    Dashboard
-                  </EnhancedButton>
-                  <EnhancedButton variant="outline" onClick={handleSignOut}>
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
-                  </EnhancedButton>
-                </>
-              ) : (
-                <>
-                  <Button variant="ghost" onClick={handleLogin} className="btn-enhanced">
-                    Login
-                  </Button>
-                  <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted}>
-                    Get Started
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </EnhancedButton>
-                </>
-              )}
-            </div>
-          </AnimatedSection>
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
+            {!user ? (
+              <>
+                <EnhancedButton variant="ghost" onClick={handleSignIn}>
+                  Sign In
+                </EnhancedButton>
+                <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted}>
+                  Get Started
+                </EnhancedButton>
+              </>
+            ) : (
+              <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted}>
+                Dashboard
+              </EnhancedButton>
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <AnimatedSection animation="fade-up" className="md:hidden border-t bg-background py-4">
-            <nav className="flex flex-col space-y-4">
-              <a href="#features" className="text-foreground/80 hover:text-vibe-primary transition-colors">
-                Features
-              </a>
-              <a href="#how-it-works" className="text-foreground/80 hover:text-vibe-primary transition-colors">
-                How It Works
-              </a>
-              <a href="#benefits" className="text-foreground/80 hover:text-vibe-primary transition-colors">
-                Benefits
-              </a>
-              <div className="flex flex-col space-y-2 pt-4 border-t">
-                {user ? (
-                  <>
-                    <EnhancedButton variant="outline" onClick={() => navigate('/dashboard')} className="justify-start">
-                      Dashboard
+          <div className="md:hidden border-t bg-background">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={item.onClick}
+                  className="block w-full text-left px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors rounded-md"
+                >
+                  {item.label}
+                </button>
+              ))}
+              <div className="pt-4 pb-3 border-t">
+                {!user ? (
+                  <div className="space-y-2">
+                    <EnhancedButton variant="ghost" onClick={handleSignIn} className="w-full">
+                      Sign In
                     </EnhancedButton>
-                    <EnhancedButton variant="outline" onClick={handleSignOut} className="justify-start">
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Sign Out
-                    </EnhancedButton>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="ghost" onClick={handleLogin} className="justify-start">
-                      Login
-                    </Button>
-                    <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted} className="justify-start">
+                    <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted} className="w-full">
                       Get Started
-                      <ArrowRight className="w-4 h-4 ml-2" />
                     </EnhancedButton>
-                  </>
+                  </div>
+                ) : (
+                  <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted} className="w-full">
+                    Dashboard
+                  </EnhancedButton>
                 )}
               </div>
-            </nav>
-          </AnimatedSection>
+            </div>
+          </div>
         )}
       </div>
     </header>
