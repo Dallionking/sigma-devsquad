@@ -1,20 +1,15 @@
 
 import React from 'react';
-import { MainWorkflowArea } from "./MainWorkflowArea";
-import { TeamDashboard } from "@/components/teams/TeamDashboard";
-import { TeamsWorkflowVisualization } from "@/components/teams/TeamsWorkflowVisualization";
-import { UnifiedCommunicationHub } from "@/components/communication/UnifiedCommunicationHub";
-import { AdvancedCommunicationPanel } from "@/components/planning-agent/AdvancedCommunicationPanel";
-import { InteractiveTeamCommunicationFlow } from "@/components/analytics/InteractiveTeamCommunicationFlow";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { ViewMode, Agent, Task, Message } from "@/types";
+import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
+import { AgentGrid } from "./agent-grid/AgentGrid";
+import { TaskManagement } from "./TaskManagement";
+import { CommunicationHistory } from "../communication/CommunicationHistory";
+import { WorkflowCanvas } from "../workflow/WorkflowCanvas";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bot, Users, MessageSquare, Workflow } from "lucide-react";
 
 interface MainContentRendererProps {
-  showTeamView: boolean;
-  selectedTeam: Team | null;
-  selectedAgentProfile: AgentProfile | null;
   viewMode: ViewMode;
   agents: Agent[];
   tasks: Task[];
@@ -22,18 +17,18 @@ interface MainContentRendererProps {
   selectedAgent: Agent | null;
   selectedTask: Task | null;
   selectedMessage: Message | null;
-  onTeamSelect: (team: Team | null) => void;
+  selectedTeam: Team | null;
+  selectedAgentProfile: AgentProfile | null;
+  showTeamView: boolean;
   onAgentSelect: (agent: Agent | null) => void;
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
+  onTeamSelect: (team: Team | null) => void;
   onAgentProfileSelect: (profile: AgentProfile | null) => void;
   onViewModeChange: (mode: ViewMode) => void;
 }
 
 export const MainContentRenderer = ({
-  showTeamView,
-  selectedTeam,
-  selectedAgentProfile,
   viewMode,
   agents,
   tasks,
@@ -41,108 +36,120 @@ export const MainContentRenderer = ({
   selectedAgent,
   selectedTask,
   selectedMessage,
-  onTeamSelect,
+  showTeamView,
   onAgentSelect,
   onTaskSelect,
   onMessageSelect,
-  onAgentProfileSelect,
   onViewModeChange,
 }: MainContentRendererProps) => {
-  
-  const renderMainContent = () => {
-    if (showTeamView) {
-      if (selectedTeam) {
-        return (
-          <div className="space-y-6">
-            {/* Back navigation button */}
-            <div className="flex items-center gap-4 p-6 pb-0">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onTeamSelect(null)}
-                className="flex items-center gap-2 hover:bg-primary/10"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Teams
-              </Button>
-              <h1 className="text-2xl font-bold text-foreground">{selectedTeam.name}</h1>
-            </div>
-            <div className="px-6">
-              <TeamDashboard team={selectedTeam} />
-            </div>
-          </div>
-        );
-      }
+
+  // For team view, show team-specific content
+  if (showTeamView) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-8">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Team Collaboration
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              Team view is active. Use the sidebar to explore teams and team members.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Render content based on individual view mode
+  switch (viewMode) {
+    case 'workflow':
       return (
-        <div className="w-full p-6">
-          <TeamsWorkflowVisualization
-            onTeamSelect={onTeamSelect}
-            onAgentSelect={onAgentProfileSelect}
-          />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-4">
+            <WorkflowCanvas 
+              agents={agents}
+              onAgentSelect={onAgentSelect}
+              selectedAgent={selectedAgent}
+            />
+          </div>
         </div>
       );
-    } else {
-      // Individual view mode content
-      if (viewMode === "communication") {
-        return (
-          <div className="h-full p-6 space-y-6">
-            {/* Enhanced Interactive Team Communication Flow */}
-            <InteractiveTeamCommunicationFlow 
-              agents={agents}
-              onAgentClick={(agentId) => {
-                const agent = agents.find(a => a.id === agentId);
-                if (agent) onAgentSelect(agent);
-              }}
-              onTeamClick={(teamId) => {
-                console.log("Team clicked:", teamId);
-              }}
-              collapsed={false}
-            />
-            
-            {/* Unified Communication Hub */}
-            <UnifiedCommunicationHub 
-              defaultTab="chat"
-            />
-          </div>
-        );
-      }
-      
-      if (viewMode === "messages") {
-        return (
-          <div className="h-full p-6">
-            <AdvancedCommunicationPanel
-              agents={agents}
-              messages={messages}
-              selectedMessage={selectedMessage}
-              onMessageSelect={onMessageSelect}
-            />
-          </div>
-        );
-      }
-      
-      return (
-        <MainWorkflowArea 
-          viewMode={viewMode}
-          agents={agents}
-          tasks={tasks}
-          messages={messages}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          onAgentSelect={onAgentSelect}
-          onTaskSelect={onTaskSelect}
-          onMessageSelect={onMessageSelect}
-        />
-      );
-    }
-  };
 
-  return (
-    <div className="flex-1 flex flex-col min-h-0 bg-background">
-      {/* Main content area */}
-      <div className="flex-1 transition-all duration-300 ease-in-out min-h-0 overflow-auto bg-background">
-        {renderMainContent()}
-      </div>
-    </div>
-  );
+    case 'communication':
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Communication Hub
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CommunicationHistory
+                  messages={messages}
+                  selectedMessage={selectedMessage}
+                  onMessageSelect={onMessageSelect}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+
+    case 'tasks':
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-4">
+            <TaskManagement
+              tasks={tasks}
+              agents={agents}
+              selectedTask={selectedTask}
+              onTaskSelect={onTaskSelect}
+            />
+          </div>
+        </div>
+      );
+
+    case 'messages':
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Messages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CommunicationHistory
+                  messages={messages}
+                  selectedMessage={selectedMessage}
+                  onMessageSelect={onMessageSelect}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+
+    default:
+      // Default to agent grid view
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-4">
+            <AgentGrid 
+              agents={agents} 
+              onAgentSelect={onAgentSelect}
+            />
+          </div>
+        </div>
+      );
+  }
 };

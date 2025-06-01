@@ -74,21 +74,21 @@ export const MainLayout = ({
 
   // Memoize the current selection to prevent unnecessary updates
   const currentSelection = React.useMemo(() => {
-    if (selectedAgent) return { type: 'agent', data: selectedAgent };
-    if (selectedTask) return { type: 'task', data: selectedTask };
-    if (selectedMessage) return { type: 'message', data: selectedMessage };
-    if (selectedAgentProfile) return { type: 'agentProfile', data: selectedAgentProfile };
+    if (selectedAgent) return { type: 'agent' as const, data: selectedAgent, id: selectedAgent.id };
+    if (selectedTask) return { type: 'task' as const, data: selectedTask, id: selectedTask.id };
+    if (selectedMessage) return { type: 'message' as const, data: selectedMessage, id: selectedMessage.id };
+    if (selectedAgentProfile) return { type: 'agentProfile' as const, data: selectedAgentProfile, id: selectedAgentProfile.id };
     return null;
-  }, [selectedAgent, selectedTask, selectedMessage, selectedAgentProfile]);
+  }, [selectedAgent?.id, selectedTask?.id, selectedMessage?.id, selectedAgentProfile?.id]);
 
-  // Update panel when selections change - fixed dependency array
+  // Update panel when selections change - fixed to prevent infinite loops
   React.useEffect(() => {
     if (currentSelection) {
-      showPanel(currentSelection.type as any, currentSelection.data);
+      showPanel(currentSelection.type, currentSelection.data);
     } else {
       hidePanel();
     }
-  }, [currentSelection?.type, currentSelection?.data, showPanel, hidePanel]);
+  }, [currentSelection?.type, currentSelection?.id, showPanel, hidePanel]);
 
   // Handle panel dismissal
   const handlePanelDismiss = React.useCallback(() => {
