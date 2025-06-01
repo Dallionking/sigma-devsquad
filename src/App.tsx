@@ -14,7 +14,10 @@ import { FilterProvider } from "@/contexts/FilterContext";
 import { CurrentUserProvider } from "@/contexts/CurrentUserContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { DataPersistenceProvider } from "@/contexts/DataPersistenceContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
+import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import LLMIntegration from "./pages/LLMIntegration";
@@ -29,46 +32,81 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <AppStateProvider>
-        <AgentProvider>
-          <TaskProvider>
-            <MessageProvider>
-              <TeamProvider>
-                <FilterProvider>
-                  <CurrentUserProvider>
-                    <DataPersistenceProvider>
-                      {/* Wrap with WebSocket for real-time collaboration */}
-                      <WebSocketProvider userId="current-user" userName="Current User">
-                        <TooltipProvider>
-                          <Toaster />
-                          <Sonner />
-                          <BrowserRouter>
-                            <Routes>
-                              <Route path="/" element={<LandingPage />} />
-                              <Route path="/dashboard" element={<Dashboard />} />
-                              <Route path="/settings" element={<Settings />} />
-                              <Route path="/llm-integration" element={<LLMIntegration />} />
-                              <Route path="/agent-configuration" element={<AgentConfiguration />} />
-                              <Route path="/agent-creation" element={<AgentCreation />} />
-                              <Route path="/mcp-management" element={<MCPManagement />} />
-                              <Route path="/ide-integration" element={<IDEIntegration />} />
-                              <Route path="/planning-agent" element={<PlanningAgent />} />
-                              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                              <Route path="*" element={<NotFound />} />
-                            </Routes>
-                          </BrowserRouter>
-                        </TooltipProvider>
-                      </WebSocketProvider>
-                    </DataPersistenceProvider>
-                  </CurrentUserProvider>
-                </FilterProvider>
-              </TeamProvider>
-            </MessageProvider>
-          </TaskProvider>
-        </AgentProvider>
-      </AppStateProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <AppStateProvider>
+          <AgentProvider>
+            <TaskProvider>
+              <MessageProvider>
+                <TeamProvider>
+                  <FilterProvider>
+                    <CurrentUserProvider>
+                      <DataPersistenceProvider>
+                        {/* Wrap with WebSocket for real-time collaboration */}
+                        <WebSocketProvider userId="current-user" userName="Current User">
+                          <TooltipProvider>
+                            <Toaster />
+                            <Sonner />
+                            <BrowserRouter>
+                              <Routes>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route path="/auth" element={<AuthPage />} />
+                                <Route path="/dashboard" element={
+                                  <ProtectedRoute>
+                                    <Dashboard />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/settings" element={
+                                  <ProtectedRoute>
+                                    <Settings />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/llm-integration" element={
+                                  <ProtectedRoute>
+                                    <LLMIntegration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/agent-configuration" element={
+                                  <ProtectedRoute>
+                                    <AgentConfiguration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/agent-creation" element={
+                                  <ProtectedRoute>
+                                    <AgentCreation />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/mcp-management" element={
+                                  <ProtectedRoute>
+                                    <MCPManagement />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/ide-integration" element={
+                                  <ProtectedRoute>
+                                    <IDEIntegration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/planning-agent" element={
+                                  <ProtectedRoute>
+                                    <PlanningAgent />
+                                  </ProtectedRoute>
+                                } />
+                                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                                <Route path="*" element={<NotFound />} />
+                              </Routes>
+                            </BrowserRouter>
+                          </TooltipProvider>
+                        </WebSocketProvider>
+                      </DataPersistenceProvider>
+                    </CurrentUserProvider>
+                  </FilterProvider>
+                </TeamProvider>
+              </MessageProvider>
+            </TaskProvider>
+          </AgentProvider>
+        </AppStateProvider>
+      </ThemeProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/ui/animated-section";
@@ -6,6 +5,7 @@ import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { FloatingElement, PulsingDot } from "@/components/ui/floating-elements";
 import { Logo } from "@/components/branding/Logo";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Bot, 
   Users, 
@@ -24,22 +24,44 @@ import {
   Globe,
   Menu,
   X,
-  Sparkles
+  Sparkles,
+  LogOut
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user, signOut, loading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
+
   const handleGetStarted = () => {
-    navigate("/dashboard");
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      navigate("/auth?tab=signup");
+    }
   };
 
   const handleLogin = () => {
-    navigate("/dashboard");
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      navigate("/auth?tab=login");
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setMobileMenuOpen(false);
   };
 
   const features = [
@@ -117,6 +139,14 @@ const LandingPage = () => {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-vibe-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 overflow-x-hidden">
       {/* Navigation Header */}
@@ -148,13 +178,27 @@ const LandingPage = () => {
             {/* Desktop Auth Buttons */}
             <AnimatedSection animation="fade-in" delay={300}>
               <div className="hidden md:flex items-center space-x-4">
-                <Button variant="ghost" onClick={handleLogin} className="btn-enhanced">
-                  Login
-                </Button>
-                <Button onClick={handleGetStarted} className="bg-vibe-primary hover:bg-vibe-primary/90 btn-enhanced">
-                  Get Started
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="ghost" onClick={() => navigate('/dashboard')} className="btn-enhanced">
+                      Dashboard
+                    </Button>
+                    <Button variant="ghost" onClick={handleSignOut} className="btn-enhanced">
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" onClick={handleLogin} className="btn-enhanced">
+                      Login
+                    </Button>
+                    <Button onClick={handleGetStarted} className="bg-vibe-primary hover:bg-vibe-primary/90 btn-enhanced">
+                      Get Started
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </>
+                )}
               </div>
             </AnimatedSection>
 
@@ -183,13 +227,27 @@ const LandingPage = () => {
                   Benefits
                 </a>
                 <div className="flex flex-col space-y-2 pt-4 border-t">
-                  <Button variant="ghost" onClick={handleLogin} className="justify-start">
-                    Login
-                  </Button>
-                  <Button onClick={handleGetStarted} className="bg-vibe-primary hover:bg-vibe-primary/90 justify-start">
-                    Get Started
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  {user ? (
+                    <>
+                      <Button variant="ghost" onClick={() => navigate('/dashboard')} className="justify-start">
+                        Dashboard
+                      </Button>
+                      <Button variant="ghost" onClick={handleSignOut} className="justify-start">
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="ghost" onClick={handleLogin} className="justify-start">
+                        Login
+                      </Button>
+                      <Button onClick={handleGetStarted} className="bg-vibe-primary hover:bg-vibe-primary/90 justify-start">
+                        Get Started
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </>
+                  )}
                 </div>
               </nav>
             </AnimatedSection>
