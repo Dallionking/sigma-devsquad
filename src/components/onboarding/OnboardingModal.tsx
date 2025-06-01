@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -10,6 +9,7 @@ import { useOnboarding, type OnboardingStep } from '@/contexts/OnboardingContext
 import { useProjectTemplates } from '@/contexts/ProjectTemplateContext';
 import { ProfileSetupForm } from './ProfileSetupForm';
 import { TeamCreationForm } from './TeamCreationForm';
+import { FirstAgentForm } from './first-agent/FirstAgentForm';
 import { cn } from '@/lib/utils';
 
 const stepContent = {
@@ -62,22 +62,7 @@ const stepContent = {
     title: 'Configure Your First Agent',
     description: 'Create an AI agent specialized for your development needs.',
     icon: Bot,
-    content: (
-      <div className="space-y-4">
-        <p className="text-muted-foreground">
-          AI agents are your specialized team members, each with unique skills and capabilities.
-        </p>
-        <div className="bg-accent/50 p-4 rounded-lg">
-          <h4 className="font-semibold mb-2">Popular Agent Types:</h4>
-          <ul className="space-y-1 text-sm">
-            <li>• React Developer - Frontend specialist</li>
-            <li>• API Developer - Backend services</li>
-            <li>• Code Reviewer - Quality assurance</li>
-            <li>• Documentation Writer - Technical docs</li>
-          </ul>
-        </div>
-      </div>
-    )
+    content: null // Will be replaced with FirstAgentForm
   },
   'planning-tour': {
     title: 'Discover Planning Agent',
@@ -131,7 +116,6 @@ const stepContent = {
   }
 };
 
-// Template selection content for the 'first-agent' step
 const TemplateSelectionContent = () => {
   const { getPopularTemplates, createProjectFromTemplate } = useProjectTemplates();
   const popularTemplates = getPopularTemplates();
@@ -210,7 +194,6 @@ export const OnboardingModal = () => {
   };
 
   const handleProfileSetupComplete = (profileData: any) => {
-    // Save profile data to localStorage or context
     localStorage.setItem('onboarding-profile', JSON.stringify(profileData));
     completeStep('profile-setup');
   };
@@ -220,7 +203,6 @@ export const OnboardingModal = () => {
   };
 
   const handleTeamCreationComplete = (teamData: any) => {
-    // Save team data to localStorage or context
     localStorage.setItem('onboarding-team', JSON.stringify(teamData));
     completeStep('team-creation');
   };
@@ -229,14 +211,22 @@ export const OnboardingModal = () => {
     completeStep('team-creation');
   };
 
-  // Show specific forms for different steps
-  const showTemplateSelection = progress.currentStep === 'first-agent';
+  const handleFirstAgentComplete = (agentData: any) => {
+    localStorage.setItem('onboarding-agent', JSON.stringify(agentData));
+    completeStep('first-agent');
+  };
+
+  const handleFirstAgentSkip = () => {
+    completeStep('first-agent');
+  };
+
   const showProfileSetup = progress.currentStep === 'profile-setup';
   const showTeamCreation = progress.currentStep === 'team-creation';
+  const showFirstAgent = progress.currentStep === 'first-agent';
 
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -289,15 +279,18 @@ export const OnboardingModal = () => {
                 onComplete={handleTeamCreationComplete}
                 onSkip={handleTeamCreationSkip}
               />
-            ) : showTemplateSelection ? (
-              <TemplateSelectionContent />
+            ) : showFirstAgent ? (
+              <FirstAgentForm
+                onComplete={handleFirstAgentComplete}
+                onSkip={handleFirstAgentSkip}
+              />
             ) : (
               currentContent.content
             )}
           </div>
 
           {/* Actions - Only show for non-form steps */}
-          {!showProfileSetup && !showTeamCreation && (
+          {!showProfileSetup && !showTeamCreation && !showFirstAgent && (
             <div className="flex justify-between">
               {progress.currentStep !== 'completion' ? (
                 <>
