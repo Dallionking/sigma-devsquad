@@ -3,6 +3,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
+import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
 import { cn } from '@/lib/utils';
 
 interface MiniStepProgressProps {
@@ -12,81 +13,13 @@ interface MiniStepProgressProps {
   className?: string;
 }
 
-const getStepProgress = (step: OnboardingStep, stepData?: any) => {
-  switch (step) {
-    case 'profile-setup':
-      const hasBasicInfo = !!(stepData?.name && stepData?.email);
-      const hasSkills = !!(stepData?.skills && stepData.skills.length > 0);
-      const hasExperience = !!stepData?.experience;
-      const requiredComplete = hasBasicInfo && hasSkills && hasExperience;
-      const optionalComplete = !!stepData?.avatar;
-      
-      return {
-        completed: requiredComplete ? (optionalComplete ? 4 : 3) : (hasBasicInfo ? 1 : 0),
-        total: 4,
-        required: 3,
-        isComplete: requiredComplete,
-        status: requiredComplete ? 'complete' : hasBasicInfo || hasSkills || hasExperience ? 'progress' : 'pending'
-      };
-
-    case 'team-creation':
-      const hasTeamInfo = !!(stepData?.teamName && stepData?.description);
-      const hasVisibility = stepData?.isPublic !== undefined;
-      const teamRequiredComplete = hasTeamInfo && hasVisibility;
-      const hasTeamAvatar = !!stepData?.teamAvatar;
-      
-      return {
-        completed: teamRequiredComplete ? (hasTeamAvatar ? 3 : 2) : (hasTeamInfo ? 1 : 0),
-        total: 3,
-        required: 2,
-        isComplete: teamRequiredComplete,
-        status: teamRequiredComplete ? 'complete' : hasTeamInfo || hasVisibility ? 'progress' : 'pending'
-      };
-
-    case 'first-agent':
-      const hasTemplate = !!(stepData?.templateId || stepData?.role);
-      const hasConfig = !!(stepData?.specialization && stepData?.capabilities);
-      const hasName = !!stepData?.name;
-      const agentComplete = hasTemplate && hasConfig && hasName;
-      
-      return {
-        completed: agentComplete ? 3 : (hasTemplate ? 1 : 0) + (hasConfig ? 1 : 0) + (hasName ? 1 : 0),
-        total: 3,
-        required: 3,
-        isComplete: agentComplete,
-        status: agentComplete ? 'complete' : hasTemplate || hasConfig || hasName ? 'progress' : 'pending'
-      };
-
-    case 'planning-tour':
-      const hasExplored = !!stepData?.hasExplored;
-      const hasTried = !!stepData?.hasTried;
-      
-      return {
-        completed: hasExplored ? (hasTried ? 2 : 1) : 0,
-        total: 2,
-        required: 1,
-        isComplete: hasExplored,
-        status: hasExplored ? 'complete' : 'pending'
-      };
-
-    default:
-      return {
-        completed: 1,
-        total: 1,
-        required: 1,
-        isComplete: true,
-        status: 'complete' as const
-      };
-  }
-};
-
 export const MiniStepProgress = ({ 
   currentStep, 
   stepData, 
   showLabel = true, 
   className 
 }: MiniStepProgressProps) => {
-  const progress = getStepProgress(currentStep, stepData);
+  const progress = useOnboardingProgress(currentStep, stepData);
   
   const getStatusIcon = () => {
     switch (progress.status) {

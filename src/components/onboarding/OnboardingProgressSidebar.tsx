@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Circle, Lock, Users, Bot, MapPin, Sparkles, Play } from 'lucide-react';
 import { useOnboarding, type OnboardingStep } from '@/contexts/OnboardingContext';
 import { MiniStepProgress } from './progress/MiniStepProgress';
+import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
 import { cn } from '@/lib/utils';
 
 const stepConfig = {
