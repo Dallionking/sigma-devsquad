@@ -53,16 +53,26 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
-        teamName.handleChange(parsed.teamName || '');
-        teamDescription.handleChange(parsed.teamDescription || '');
-        setTeamType(parsed.teamType || 'human');
-        setTeamAvatar(parsed.teamAvatar || '');
-        setMembers(parsed.members || []);
+        if (parsed.teamName && typeof parsed.teamName === 'string') {
+          teamName.handleChange(parsed.teamName);
+        }
+        if (parsed.teamDescription && typeof parsed.teamDescription === 'string') {
+          teamDescription.handleChange(parsed.teamDescription);
+        }
+        if (parsed.teamType && (parsed.teamType === 'human' || parsed.teamType === 'ai')) {
+          setTeamType(parsed.teamType);
+        }
+        if (parsed.teamAvatar && typeof parsed.teamAvatar === 'string') {
+          setTeamAvatar(parsed.teamAvatar);
+        }
+        if (parsed.members && Array.isArray(parsed.members)) {
+          setMembers(parsed.members);
+        }
       } catch (error) {
         console.error('Failed to load saved team data:', error);
       }
     }
-  }, []);
+  }, [teamName, teamDescription]);
 
   const isFormValid = () => {
     return (
