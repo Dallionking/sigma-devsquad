@@ -39,7 +39,8 @@ export const VideoTutorialManager = ({
 
   const handleVideoComplete = () => {
     if (selectedVideo && 'step' in selectedVideo) {
-      onVideoComplete?.(selectedVideo.step);
+      const tutorialWithStep = selectedVideo as VideoTutorial & { step: OnboardingStep };
+      onVideoComplete?.(tutorialWithStep.step);
     }
   };
 

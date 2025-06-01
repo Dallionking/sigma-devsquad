@@ -26,6 +26,14 @@ export const OptimizedHeader = ({
 }: OptimizedHeaderProps) => {
   const activeAgents = agents.filter(agent => agent.status === 'active').length;
 
+  // Mock notification counts for ViewModeSelector
+  const notificationCounts = {
+    workflow: 0,
+    communication: 0,
+    tasks: 0,
+    messages: 0
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,8 +45,11 @@ export const OptimizedHeader = ({
               totalAgents={agents.length}
             />
             <HeaderLogo 
+              isDashboardPage={true}
               sidebarCollapsed={sidebarCollapsed}
               onSidebarToggle={onSidebarToggle}
+              activeAgents={activeAgents}
+              totalAgents={agents.length}
             />
           </div>
 
@@ -47,7 +58,7 @@ export const OptimizedHeader = ({
             <ViewModeSelector
               viewMode={viewMode}
               onViewModeChange={onViewModeChange}
-              showTeamView={showTeamView}
+              notificationCounts={notificationCounts}
             />
           </div>
 
@@ -66,7 +77,7 @@ export const OptimizedHeader = ({
           <ViewModeSelector
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}
-            showTeamView={showTeamView}
+            notificationCounts={notificationCounts}
           />
         </div>
       </div>
