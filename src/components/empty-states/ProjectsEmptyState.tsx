@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { FolderOpen, Plus, Rocket, BookOpen, Star } from 'lucide-react';
 import { EmptyStateCard } from './EmptyStateCard';
 import { SampleProjectsModal } from '@/components/sample-projects/SampleProjectsModal';
+import { ProjectCreationWizard } from '@/components/projects/ProjectCreationWizard';
 import { useNavigate } from 'react-router-dom';
 
 interface ProjectsEmptyStateProps {
@@ -12,6 +13,7 @@ interface ProjectsEmptyStateProps {
 export const ProjectsEmptyState = ({ onCreateProject }: ProjectsEmptyStateProps) => {
   const navigate = useNavigate();
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showCreationWizard, setShowCreationWizard] = useState(false);
 
   const handleImportProject = () => {
     // Handle project import
@@ -20,6 +22,14 @@ export const ProjectsEmptyState = ({ onCreateProject }: ProjectsEmptyStateProps)
 
   const handleViewSamples = () => {
     setShowTemplates(true);
+  };
+
+  const handleCreateProject = () => {
+    if (onCreateProject) {
+      onCreateProject();
+    } else {
+      setShowCreationWizard(true);
+    }
   };
 
   const tips = [
@@ -41,10 +51,10 @@ export const ProjectsEmptyState = ({ onCreateProject }: ProjectsEmptyStateProps)
           label: "Browse Templates",
           onClick: handleViewSamples
         }}
-        secondaryAction={onCreateProject ? {
+        secondaryAction={{
           label: "Create from Scratch",
-          onClick: onCreateProject
-        } : undefined}
+          onClick: handleCreateProject
+        }}
         tertiaryAction={{
           label: "Import Project",
           onClick: handleImportProject
@@ -54,6 +64,11 @@ export const ProjectsEmptyState = ({ onCreateProject }: ProjectsEmptyStateProps)
       <SampleProjectsModal
         open={showTemplates}
         onOpenChange={setShowTemplates}
+      />
+      
+      <ProjectCreationWizard
+        open={showCreationWizard}
+        onOpenChange={setShowCreationWizard}
       />
     </>
   );

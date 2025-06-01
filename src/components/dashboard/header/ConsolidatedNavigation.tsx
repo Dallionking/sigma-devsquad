@@ -16,7 +16,8 @@ import {
   Cog, 
   Layers, 
   ChevronDown,
-  Home
+  Home,
+  FolderOpen
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,7 @@ export const ConsolidatedNavigation = ({
   const isIDEPage = location.pathname === "/ide-integration";
   const isPlanningAgentPage = location.pathname === "/planning-agent";
   const isDashboardPage = location.pathname === "/dashboard";
+  const isProjectsPage = location.pathname === "/projects";
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -54,6 +56,7 @@ export const ConsolidatedNavigation = ({
 
   const primaryNavItems = [
     { path: "/", label: "Home", icon: Home, active: location.pathname === "/" },
+    { path: "/projects", label: "Projects", icon: FolderOpen, active: isProjectsPage },
     { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
   ];
