@@ -43,7 +43,15 @@ export const SettingsContent = ({
         role="tabpanel"
         aria-labelledby="general-tab"
       >
-        <GeneralSettings searchQuery={searchQuery} />
+        <GeneralSettings 
+          searchQuery={searchQuery}
+          notifications={notifications}
+          setNotifications={setNotifications}
+          autoBackup={autoBackup}
+          setAutoBackup={setAutoBackup}
+          performanceMode={performanceMode}
+          setPerformanceMode={setPerformanceMode}
+        />
       </TabsContent>
 
       <TabsContent 

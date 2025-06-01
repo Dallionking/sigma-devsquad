@@ -10,6 +10,7 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface GeneralSettingsProps {
+  searchQuery?: string;
   notifications: boolean;
   setNotifications: (value: boolean) => void;
   autoBackup: boolean;
@@ -19,6 +20,7 @@ interface GeneralSettingsProps {
 }
 
 export const GeneralSettings = ({
+  searchQuery,
   notifications,
   setNotifications,
   autoBackup,
