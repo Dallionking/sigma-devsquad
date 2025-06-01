@@ -3,7 +3,6 @@ import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 import { TeamHierarchy } from "../teams/TeamHierarchy";
-import { CompactTeamHierarchy } from "../teams/CompactTeamHierarchy";
 import { AgentSidebar } from "./AgentSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot } from "lucide-react";
@@ -78,7 +77,7 @@ export const SidebarRenderer = ({
         </div>
         
         <div className="flex-1 overflow-auto">
-          <CompactTeamHierarchy
+          <TeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
             selectedTeamId={selectedTeam?.id}

@@ -40,7 +40,7 @@ export const TeamHierarchy = ({
   const getTeamIcon = (teamType: string) => {
     const iconMap = {
       frontend: "🎨",
-      backend: "⚙️",
+      backend: "⚙️", 
       devops: "🚀",
       qa: "🧪",
       data: "📊",
@@ -48,6 +48,19 @@ export const TeamHierarchy = ({
       product: "📋"
     };
     return iconMap[teamType as keyof typeof iconMap] || "👥";
+  };
+
+  const getTeamColorClass = (teamType: string) => {
+    const colorMap = {
+      frontend: "bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 dark:from-orange-950 dark:to-red-950 dark:border-orange-800",
+      backend: "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 dark:from-blue-950 dark:to-indigo-950 dark:border-blue-800",
+      devops: "bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 dark:from-purple-950 dark:to-pink-950 dark:border-purple-800",
+      qa: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800",
+      data: "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 dark:from-yellow-950 dark:to-amber-950 dark:border-yellow-800",
+      design: "bg-gradient-to-r from-pink-50 to-rose-50 border-pink-200 dark:from-pink-950 dark:to-rose-950 dark:border-pink-800",
+      product: "bg-gradient-to-r from-slate-50 to-gray-50 border-slate-200 dark:from-slate-950 dark:to-gray-950 dark:border-slate-800"
+    };
+    return colorMap[teamType as keyof typeof colorMap] || "bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200";
   };
 
   const getStatusColor = (status: string) => {
@@ -70,143 +83,125 @@ export const TeamHierarchy = ({
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Team Hierarchy
-          </CardTitle>
-          <TeamCreationDialog>
-            <Button size="sm" variant="outline">
-              <Plus className="w-4 h-4 mr-1" />
-              Add Team
-            </Button>
-          </TeamCreationDialog>
-        </div>
-      </CardHeader>
+    <div className="h-full p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-medium text-muted-foreground">Teams</h3>
+        <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+          <Plus className="w-4 h-4" />
+        </Button>
+      </div>
       
-      <CardContent className="p-0">
-        <div className="space-y-1">
-          {teams.map((team) => {
-            const isExpanded = expandedTeams.has(team.id);
-            const members = getTeamMembers(team.id);
-            const teamLead = team.leaderId ? getAgentProfileById(team.leaderId) : null;
-            const isSelected = selectedTeamId === team.id;
+      <div className="space-y-2">
+        {teams.map((team) => {
+          const isExpanded = expandedTeams.has(team.id);
+          const members = getTeamMembers(team.id);
+          const teamLead = team.leaderId ? getAgentProfileById(team.leaderId) : null;
+          const isSelected = selectedTeamId === team.id;
 
-            return (
-              <div key={team.id} className="border-l-2 border-transparent hover:border-primary/20">
-                {/* Team Header */}
-                <div 
-                  className={cn(
-                    "flex items-center justify-between p-3 hover:bg-muted/50 cursor-pointer transition-colors",
-                    isSelected && "bg-primary/10 border-l-primary"
-                  )}
-                  onClick={() => onTeamSelect(team)}
-                >
-                  <div className="flex items-center gap-3 flex-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTeamExpansion(team.id);
-                      }}
-                    >
-                      {isExpanded ? (
-                        <ChevronDown className="w-4 h-4" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4" />
-                      )}
-                    </Button>
-                    
-                    <div className="text-lg">{getTeamIcon(team.type)}</div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-medium truncate">{team.name}</h3>
-                        <Badge 
-                          variant="secondary" 
-                          className={cn("text-xs", getStatusColor(team.status))}
-                        >
-                          {team.status}
-                        </Badge>
+          return (
+            <div key={team.id} className="space-y-1">
+              {/* Team Card */}
+              <div 
+                className={cn(
+                  "rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md",
+                  getTeamColorClass(team.type),
+                  isSelected && "ring-2 ring-primary"
+                )}
+                onClick={() => onTeamSelect(team)}
+              >
+                <div className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-5 w-5 p-0 hover:bg-white/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTeamExpansion(team.id);
+                        }}
+                      >
+                        {isExpanded ? (
+                          <ChevronDown className="w-3 h-3" />
+                        ) : (
+                          <ChevronRight className="w-3 h-3" />
+                        )}
+                      </Button>
+                      
+                      <div className="text-lg">{getTeamIcon(team.type)}</div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-sm truncate">{team.name}</h4>
+                          <Badge 
+                            variant="secondary" 
+                            className={cn("text-xs", getStatusColor(team.status))}
+                          >
+                            {team.status}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {members.length} members
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {members.length} members
-                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Team Members */}
+                {/* Team Members - Expanded */}
                 {isExpanded && (
-                  <div className="ml-6 border-l border-border/30">
-                    {members.map((member) => {
-                      const isLeader = member.id === team.leaderId;
-                      const isAgentSelected = selectedAgentId === member.id;
-                      
-                      return (
-                        <div
-                          key={member.id}
-                          className={cn(
-                            "flex items-center gap-3 p-2 mx-2 rounded hover:bg-muted/50 cursor-pointer transition-colors",
-                            isAgentSelected && "bg-primary/10"
-                          )}
-                          onClick={() => onAgentSelect(member)}
-                        >
-                          <Avatar className="w-7 h-7">
-                            <AvatarImage src={member.avatar} />
-                            <AvatarFallback className="text-xs">
-                              {member.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium truncate">
-                                {member.name}
-                              </span>
-                              {isLeader && getRoleIcon("lead")}
-                              {!isLeader && getRoleIcon(member.role)}
+                  <div className="px-3 pb-3">
+                    <div className="ml-8 space-y-1">
+                      {members.map((member) => {
+                        const isLeader = member.id === team.leaderId;
+                        const isAgentSelected = selectedAgentId === member.id;
+                        
+                        return (
+                          <div
+                            key={member.id}
+                            className={cn(
+                              "flex items-center gap-2 p-2 rounded hover:bg-white/20 cursor-pointer transition-colors",
+                              isAgentSelected && "bg-white/30"
+                            )}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onAgentSelect(member);
+                            }}
+                          >
+                            <Avatar className="w-6 h-6">
+                              <AvatarImage src={member.avatar} />
+                              <AvatarFallback className="text-xs">
+                                {member.name.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium truncate">
+                                  {member.name}
+                                </span>
+                                {isLeader && getRoleIcon("lead")}
+                                {!isLeader && getRoleIcon(member.role)}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <span className="text-xs text-muted-foreground">
-                                {member.specialization.replace(/-/g, ' ')}
-                              </span>
-                              <div className={cn(
-                                "w-2 h-2 rounded-full",
-                                member.availability === "available" && "bg-green-500",
-                                member.availability === "busy" && "bg-yellow-500",
-                                member.availability === "offline" && "bg-gray-500"
-                              )} />
-                            </div>
+                            
+                            <div className={cn(
+                              "w-2 h-2 rounded-full flex-shrink-0",
+                              member.availability === "available" && "bg-green-500",
+                              member.availability === "busy" && "bg-yellow-500", 
+                              member.availability === "offline" && "bg-gray-500"
+                            )} />
                           </div>
-                        </div>
-                      );
-                    })}
-                    
-                    {/* Add Member Button */}
-                    <div className="p-2 mx-2">
-                      <AgentAdditionDialog teamId={team.id}>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="w-full justify-start text-muted-foreground"
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add Member
-                        </Button>
-                      </AgentAdditionDialog>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
               </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };

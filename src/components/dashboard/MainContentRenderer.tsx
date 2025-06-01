@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
@@ -65,53 +64,42 @@ export const MainContentRenderer = ({
       );
     }
 
-    // If no specific team is selected, show team overview/hierarchy
+    // If no specific team is selected, show team overview only (no second hierarchy)
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-            {/* Team Hierarchy */}
-            <TeamHierarchy
-              onTeamSelect={onTeamSelect}
-              onAgentSelect={onAgentProfileSelect}
-              selectedTeamId={selectedTeam?.id}
-              selectedAgentId={selectedAgentProfile?.id}
-            />
-            
-            {/* Team Overview Card */}
-            <Card className="h-fit">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Teams Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-muted/50 rounded-lg">
-                      <div className="text-2xl font-bold text-primary">4</div>
-                      <div className="text-sm text-muted-foreground">Active Teams</div>
-                    </div>
-                    <div className="text-center p-4 bg-muted/50 rounded-lg">
-                      <div className="text-2xl font-bold text-primary">12</div>
-                      <div className="text-sm text-muted-foreground">Team Members</div>
-                    </div>
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Teams Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">4</div>
+                    <div className="text-sm text-muted-foreground">Active Teams</div>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    Select a team from the hierarchy to view detailed information, 
-                    team performance metrics, and manage team members.
-                  </p>
+                  <div className="text-center p-4 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">12</div>
+                    <div className="text-sm text-muted-foreground">Team Members</div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+                <p className="text-muted-foreground text-sm">
+                  Select a team from the sidebar to view detailed information, 
+                  team performance metrics, and manage team members.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
   }
 
-  // Render content based on individual view mode
+  // Individual agents view switch statement
   switch (viewMode) {
     case 'workflow':
       return (
