@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Header } from "@/components/landing/Header";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { FeaturesSection } from "@/components/landing/FeaturesSection";
+import { EnhancedFeaturesSection } from "@/components/landing/EnhancedFeaturesSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { BenefitsSection } from "@/components/landing/BenefitsSection";
 import { PricingSection } from "@/components/landing/PricingSection";
@@ -52,7 +52,7 @@ const LandingPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 overflow-x-hidden">
       <Header />
       <HeroSection />
-      <FeaturesSection />
+      <EnhancedFeaturesSection />
       <HowItWorksSection />
       <BenefitsSection />
       <PricingSection />
