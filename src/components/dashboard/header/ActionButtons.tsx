@@ -1,20 +1,35 @@
 
 import { Button } from "@/components/ui/button";
-import { Bell, Moon, Sun } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { UserProfileDropdown } from "@/components/landing/UserProfileDropdown";
+import { useAuth } from "@/contexts/AuthContext";
+import { Settings, Bell, Search } from "lucide-react";
 
 export const ActionButtons = () => {
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { user } = useAuth();
 
   return (
-    <div className="flex items-center space-x-1 sm:space-x-2">
-      <Button variant="ghost" size="sm" onClick={toggleDarkMode}>
-        {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    <div className="flex items-center space-x-2">
+      {/* Search Button */}
+      <Button variant="ghost" size="sm" className="h-9 w-9">
+        <Search className="h-4 w-4" />
       </Button>
       
-      <Button variant="ghost" size="sm">
-        <Bell className="w-4 h-4" />
+      {/* Notifications Button */}
+      <Button variant="ghost" size="sm" className="h-9 w-9">
+        <Bell className="h-4 w-4" />
       </Button>
+      
+      {/* Settings Button */}
+      <Button variant="ghost" size="sm" className="h-9 w-9">
+        <Settings className="h-4 w-4" />
+      </Button>
+
+      {/* User Profile Dropdown - only show if user is authenticated */}
+      {user && (
+        <div className="ml-2">
+          <UserProfileDropdown />
+        </div>
+      )}
     </div>
   );
 };
