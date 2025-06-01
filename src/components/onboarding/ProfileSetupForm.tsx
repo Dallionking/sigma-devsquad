@@ -1,14 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { ProfileAvatarUpload } from './profile-setup/ProfileAvatarUpload';
+import { EnhancedProfileAvatarUpload } from './profile-setup/EnhancedProfileAvatarUpload';
 import { ProfileBasicInfoForm } from './profile-setup/ProfileBasicInfoForm';
 import { ProfileSkillsSelector } from './profile-setup/ProfileSkillsSelector';
 import { ProfileFormActions } from './profile-setup/ProfileFormActions';
 import { ValidationMessage } from './completion/ValidationMessage';
+import { MicroProgressIndicators } from './micro-progress/MicroProgressIndicators';
+import { useMicroProgress } from '@/hooks/useMicroProgress';
 import { profileSetupSchema, type ProfileSetupFormData } from './profile-setup/types';
 
 interface ProfileSetupFormProps {
@@ -22,6 +23,7 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const { progressState, showProcessing, showSuccess, hideProgress } = useMicroProgress();
 
   const form = useForm<ProfileSetupFormData>({
     resolver: zodResolver(profileSetupSchema),
@@ -81,7 +83,12 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
     return () => subscription.unsubscribe();
   }, [form]);
 
-  const onSubmit = (data: ProfileSetupFormData) => {
+  const onSubmit = async (data: ProfileSetupFormData) => {
+    showProcessing('Saving your profile...');
+    
+    // Simulate processing time
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     // Remove the draft when successfully submitting
     localStorage.removeItem('profile-setup-draft');
     
@@ -89,7 +96,11 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
     data.preferredLanguages = selectedLanguages;
     data.interests = selectedInterests;
     
-    onComplete(data);
+    showSuccess('Profile saved successfully!');
+    
+    setTimeout(() => {
+      onComplete(data);
+    }, 1000);
   };
 
   const handleAvatarChange = (avatarUrl: string) => {
@@ -102,10 +113,12 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
       if (prev.includes(language)) {
         const updated = prev.filter(l => l !== language);
         form.setValue("preferredLanguages", updated);
+        showSuccess(`Removed ${language}`);
         return updated;
       } else {
         const updated = [...prev, language];
         form.setValue("preferredLanguages", updated);
+        showSuccess(`Added ${language}`);
         return updated;
       }
     });
@@ -116,10 +129,12 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
       if (prev.includes(interest)) {
         const updated = prev.filter(i => i !== interest);
         form.setValue("interests", updated);
+        showSuccess(`Removed ${interest}`);
         return updated;
       } else {
         const updated = [...prev, interest];
         form.setValue("interests", updated);
+        showSuccess(`Added ${interest}`);
         return updated;
       }
     });
@@ -143,9 +158,19 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
         stepData={currentFormData}
       />
       
+      {/* Micro progress indicator */}
+      {progressState.isVisible && (
+        <MicroProgressIndicators
+          type={progressState.type!}
+          message={progressState.message}
+          isVisible={progressState.isVisible}
+          onComplete={hideProgress}
+        />
+      )}
+      
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <ProfileAvatarUpload
+          <EnhancedProfileAvatarUpload
             avatarPreview={avatarPreview}
             userName={userName}
             onAvatarChange={handleAvatarChange}

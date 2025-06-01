@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -8,6 +9,7 @@ import { OnboardingModalActions } from './modal/OnboardingModalActions';
 import { OnboardingStepIndicators } from './modal/OnboardingStepIndicators';
 import { OnboardingHelpPanel } from './help/OnboardingHelpPanel';
 import { OnboardingVisualCues } from './visual-cues/OnboardingVisualCues';
+import { StepTransitionAnimations } from './micro-progress/StepTransitionAnimations';
 import { useOnboardingHelp } from './help/useOnboardingHelp';
 import { useOnboardingVisualCues } from './visual-cues/useOnboardingVisualCues';
 import { stepContent, stepOrder } from './modal/stepContentConfig';
@@ -25,6 +27,12 @@ export const OnboardingModal = () => {
   } = useOnboarding();
 
   const [showProgressSidebar, setShowProgressSidebar] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionData, setTransitionData] = useState<{
+    fromStep: string;
+    toStep: string;
+  } | null>(null);
+  
   const { isHelpCollapsed, toggleHelpPanel } = useOnboardingHelp(progress.currentStep);
   
   // Get current form state for visual cues
@@ -41,6 +49,23 @@ export const OnboardingModal = () => {
   const Icon = currentContent.icon;
 
   const handleNext = () => {
+    const currentStepIndex = stepOrder.findIndex(step => step === progress.currentStep);
+    const nextStep = stepOrder[currentStepIndex + 1];
+    
+    if (nextStep) {
+      setTransitionData({
+        fromStep: progress.currentStep,
+        toStep: nextStep
+      });
+      setIsTransitioning(true);
+    } else {
+      completeStep(progress.currentStep);
+    }
+  };
+
+  const handleTransitionComplete = () => {
+    setIsTransitioning(false);
+    setTransitionData(null);
     completeStep(progress.currentStep);
   };
 
@@ -97,6 +122,16 @@ export const OnboardingModal = () => {
 
   return (
     <>
+      {/* Step Transition Animations */}
+      {isTransitioning && transitionData && (
+        <StepTransitionAnimations
+          fromStep={transitionData.fromStep as any}
+          toStep={transitionData.toStep as any}
+          isTransitioning={isTransitioning}
+          onTransitionComplete={handleTransitionComplete}
+        />
+      )}
+
       <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
         <DialogContent className={`max-w-6xl max-h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row ${isHelpCollapsed ? '' : 'mr-96'}`}>
           {/* Progress Sidebar (collapsible on mobile) */}
@@ -131,8 +166,8 @@ export const OnboardingModal = () => {
                 showProgressSidebar={showProgressSidebar}
                 percentage={percentage}
                 stepOrder={stepOrder}
-                onToggleProgressSidebar={toggleProgressSidebar}
-                onSkip={handleSkip}
+                onToggleProgressSidebar={() => setShowProgressSidebar(prev => !prev)}
+                onSkip={() => skipOnboarding()}
                 showSkipButton={progress.currentStep !== 'completion'}
                 onToggleHelp={toggleHelpPanel}
                 isHelpCollapsed={isHelpCollapsed}
@@ -141,14 +176,23 @@ export const OnboardingModal = () => {
               <OnboardingModalContent
                 currentStep={progress.currentStep}
                 stepContent={currentContent.content}
-                onProfileSetupComplete={handleProfileSetupComplete}
-                onProfileSetupSkip={handleProfileSetupSkip}
-                onTeamCreationComplete={handleTeamCreationComplete}
-                onTeamCreationSkip={handleTeamCreationSkip}
-                onFirstAgentComplete={handleFirstAgentComplete}
-                onFirstAgentSkip={handleFirstAgentSkip}
-                onPlanningTourComplete={handlePlanningTourComplete}
-                onPlanningTourSkip={handlePlanningTourSkip}
+                onProfileSetupComplete={(data) => {
+                  saveStepData('profile-setup', data);
+                  completeStep('profile-setup');
+                }}
+                onProfileSetupSkip={() => completeStep('profile-setup')}
+                onTeamCreationComplete={(data) => {
+                  saveStepData('team-creation', data);
+                  completeStep('team-creation');
+                }}
+                onTeamCreationSkip={() => completeStep('team-creation')}
+                onFirstAgentComplete={(data) => {
+                  saveStepData('first-agent', data);
+                  completeStep('first-agent');
+                }}
+                onFirstAgentSkip={() => completeStep('first-agent')}
+                onPlanningTourComplete={() => completeStep('planning-tour')}
+                onPlanningTourSkip={() => completeStep('planning-tour')}
                 getStepData={getStepData}
               />
 
@@ -156,7 +200,7 @@ export const OnboardingModal = () => {
                 currentStep={progress.currentStep}
                 showActions={showActions}
                 onNext={handleNext}
-                onSkip={handleSkip}
+                onSkip={() => skipOnboarding()}
                 onFinish={() => setShowOnboarding(false)}
               />
 
