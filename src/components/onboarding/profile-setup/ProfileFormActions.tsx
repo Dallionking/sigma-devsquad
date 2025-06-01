@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { AnimatedActionButton } from '../visual-cues/AnimatedActionButton';
 
 interface ProfileFormActionsProps {
   onSkip: () => void;
@@ -25,12 +26,14 @@ export const ProfileFormActions = ({
         Skip for now
       </Button>
 
-      <Button 
+      <AnimatedActionButton 
         type="submit" 
         disabled={!canSubmit}
+        isPrimary={true}
+        showPulse={canSubmit}
       >
         Save Profile
-      </Button>
+      </AnimatedActionButton>
     </div>
   );
 };

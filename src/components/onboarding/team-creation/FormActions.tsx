@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { AnimatedActionButton } from '../visual-cues/AnimatedActionButton';
 import { CheckCircle } from 'lucide-react';
 
 interface FormActionsProps {
@@ -17,14 +18,16 @@ export const FormActions = ({ isFormValid, onSubmit, onSkip }: FormActionsProps)
         <Button variant="outline" onClick={onSkip}>
           Skip for Now
         </Button>
-        <Button 
+        <AnimatedActionButton 
           onClick={onSubmit}
           disabled={!isFormValid}
+          isPrimary={true}
+          showPulse={isFormValid}
           className="flex items-center space-x-2"
         >
           <CheckCircle className="w-4 h-4" />
           <span>Create Team</span>
-        </Button>
+        </AnimatedActionButton>
       </div>
 
       {/* Auto-save indicator */}

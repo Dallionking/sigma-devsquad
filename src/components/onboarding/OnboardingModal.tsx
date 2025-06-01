@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -8,7 +7,9 @@ import { OnboardingModalContent } from './modal/OnboardingModalContent';
 import { OnboardingModalActions } from './modal/OnboardingModalActions';
 import { OnboardingStepIndicators } from './modal/OnboardingStepIndicators';
 import { OnboardingHelpPanel } from './help/OnboardingHelpPanel';
+import { OnboardingVisualCues } from './visual-cues/OnboardingVisualCues';
 import { useOnboardingHelp } from './help/useOnboardingHelp';
+import { useOnboardingVisualCues } from './visual-cues/useOnboardingVisualCues';
 import { stepContent, stepOrder } from './modal/stepContentConfig';
 
 export const OnboardingModal = () => {
@@ -25,6 +26,13 @@ export const OnboardingModal = () => {
 
   const [showProgressSidebar, setShowProgressSidebar] = useState(true);
   const { isHelpCollapsed, toggleHelpPanel } = useOnboardingHelp(progress.currentStep);
+  
+  // Get current form state for visual cues
+  const currentStepData = getStepData(progress.currentStep);
+  const { activeCues, updateCueProgress, removeCue } = useOnboardingVisualCues(
+    progress.currentStep, 
+    currentStepData
+  );
   
   if (!showOnboarding) return null;
 
@@ -99,7 +107,21 @@ export const OnboardingModal = () => {
           )}
           
           {/* Main content */}
-          <div className="flex-1 h-[90vh] overflow-y-auto">
+          <div className="flex-1 h-[90vh] overflow-y-auto relative">
+            {/* Render visual cues */}
+            {activeCues.map((cue) => (
+              <OnboardingVisualCues
+                key={cue.id}
+                targetId={cue.targetId}
+                type={cue.type}
+                direction={cue.direction}
+                message={cue.message}
+                isComplete={cue.isComplete}
+                progress={cue.progress}
+                className={cue.targetId ? `absolute z-10` : ''}
+              />
+            ))}
+            
             <div className="p-6 space-y-6">
               <OnboardingModalHeader
                 currentStep={progress.currentStep}
