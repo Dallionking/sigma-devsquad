@@ -99,7 +99,7 @@
   }
 }
 
-/* Enhanced button animations - remove grey background issues */
+/* Enhanced button animations - completely remove grey backgrounds */
 .btn-enhanced {
   position: relative;
   overflow: hidden;
@@ -136,14 +136,30 @@
   transform: translateY(0);
 }
 
-/* Remove grey hover backgrounds on cards and buttons */
-.hover-no-grey:hover {
+/* Completely disable grey hover backgrounds */
+.hover-no-grey:hover,
+.hover-no-grey:hover * {
   background-color: transparent !important;
 }
 
-/* Ensure proper button hover states */
-button:hover {
-  background-color: var(--hover-bg, transparent);
+/* Override all button hover states to prevent grey */
+button:hover,
+.btn:hover,
+[role="button"]:hover {
+  background-color: transparent !important;
+}
+
+/* Specific overrides for shadcn button variants */
+.bg-background:hover,
+.bg-muted:hover,
+.bg-secondary:hover {
+  background-color: transparent !important;
+}
+
+/* Card hover states should not have grey backgrounds */
+.card:hover,
+.bg-card:hover {
+  background-color: transparent !important;
 }
 
 /* Dark mode adjustments for buttons */
