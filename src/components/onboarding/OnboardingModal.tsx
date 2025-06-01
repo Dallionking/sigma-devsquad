@@ -10,6 +10,7 @@ import { useProjectTemplates } from '@/contexts/ProjectTemplateContext';
 import { ProfileSetupForm } from './ProfileSetupForm';
 import { TeamCreationForm } from './TeamCreationForm';
 import { FirstAgentForm } from './first-agent/FirstAgentForm';
+import { PlanningTourForm } from './PlanningTourForm';
 import { cn } from '@/lib/utils';
 
 const stepContent = {
@@ -68,22 +69,7 @@ const stepContent = {
     title: 'Discover Planning Agent',
     description: 'Learn how AI can help you plan and manage your projects.',
     icon: MapPin,
-    content: (
-      <div className="space-y-4">
-        <p className="text-muted-foreground">
-          The Planning Agent helps break down complex projects into manageable tasks.
-        </p>
-        <div className="bg-accent/50 p-4 rounded-lg">
-          <h4 className="font-semibold mb-2">Planning Features:</h4>
-          <ul className="space-y-1 text-sm">
-            <li>• Project breakdown and estimation</li>
-            <li>• Task dependency mapping</li>
-            <li>• Timeline and milestone planning</li>
-            <li>• Resource allocation suggestions</li>
-          </ul>
-        </div>
-      </div>
-    )
+    content: null // Will be replaced with PlanningTourForm
   },
   completion: {
     title: 'You\'re All Set! 🎉',
@@ -220,9 +206,18 @@ export const OnboardingModal = () => {
     completeStep('first-agent');
   };
 
+  const handlePlanningTourComplete = () => {
+    completeStep('planning-tour');
+  };
+
+  const handlePlanningTourSkip = () => {
+    completeStep('planning-tour');
+  };
+
   const showProfileSetup = progress.currentStep === 'profile-setup';
   const showTeamCreation = progress.currentStep === 'team-creation';
   const showFirstAgent = progress.currentStep === 'first-agent';
+  const showPlanningTour = progress.currentStep === 'planning-tour';
 
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
@@ -284,13 +279,18 @@ export const OnboardingModal = () => {
                 onComplete={handleFirstAgentComplete}
                 onSkip={handleFirstAgentSkip}
               />
+            ) : showPlanningTour ? (
+              <PlanningTourForm
+                onComplete={handlePlanningTourComplete}
+                onSkip={handlePlanningTourSkip}
+              />
             ) : (
               currentContent.content
             )}
           </div>
 
           {/* Actions - Only show for non-form steps */}
-          {!showProfileSetup && !showTeamCreation && !showFirstAgent && (
+          {!showProfileSetup && !showTeamCreation && !showFirstAgent && !showPlanningTour && (
             <div className="flex justify-between">
               {progress.currentStep !== 'completion' ? (
                 <>
