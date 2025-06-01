@@ -103,6 +103,10 @@
 }
 
 @layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
   .animate-gradient {
     animation: gradient 3s ease infinite;
     background-size: 200% 200%;
@@ -178,6 +182,12 @@
   }
   .stagger-animation > *:nth-child(6) {
     animation-delay: 500ms;
+  }
+  .stagger-animation > *:nth-child(7) {
+    animation-delay: 600ms;
+  }
+  .stagger-animation > *:nth-child(8) {
+    animation-delay: 700ms;
   }
 
   /* Parallax scroll effects */
@@ -272,6 +282,7 @@
 
 /* Responsive motion preferences */
 @media (prefers-reduced-motion: reduce) {
+  .animate-float,
   .animate-gradient,
   .animate-shimmer,
   .animate-bounce-gentle,

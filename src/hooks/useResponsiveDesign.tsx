@@ -1,78 +1,35 @@
 
 import { useState, useEffect } from 'react';
-import { useIsMobile } from './use-mobile';
-
-interface ResponsiveConfig {
-  mobile: any;
-  tablet: any;
-  desktop: any;
-}
 
 export const useResponsiveDesign = () => {
-  const isMobile = useIsMobile();
-  const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  const [screenSize, setScreenSize] = useState('lg');
 
   useEffect(() => {
-    const checkScreenSize = () => {
+    const updateScreenSize = () => {
       const width = window.innerWidth;
-      if (width < 768) {
-        setScreenSize('mobile');
-      } else if (width < 1024) {
-        setScreenSize('tablet');
-      } else {
-        setScreenSize('desktop');
-      }
+      if (width < 640) setScreenSize('sm');
+      else if (width < 768) setScreenSize('md');
+      else if (width < 1024) setScreenSize('lg');
+      else setScreenSize('xl');
     };
 
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
+    updateScreenSize();
+    window.addEventListener('resize', updateScreenSize);
+    return () => window.removeEventListener('resize', updateScreenSize);
   }, []);
 
-  const getResponsiveValue = <T,>(config: ResponsiveConfig) => {
-    return config[screenSize] as T;
+  const getGridCols = (sm: number, md: number, lg: number) => {
+    const colMap = {
+      1: 'grid-cols-1',
+      2: 'grid-cols-2', 
+      3: 'grid-cols-3',
+      4: 'grid-cols-4',
+      5: 'grid-cols-5',
+      6: 'grid-cols-6'
+    };
+
+    return `${colMap[sm as keyof typeof colMap]} sm:${colMap[md as keyof typeof colMap]} lg:${colMap[lg as keyof typeof colMap]}`;
   };
 
-  const getResponsiveClasses = (baseClasses: string, responsiveClasses?: {
-    mobile?: string;
-    tablet?: string;
-    desktop?: string;
-  }) => {
-    const classes = [baseClasses];
-    
-    if (responsiveClasses) {
-      if (responsiveClasses.mobile && screenSize === 'mobile') {
-        classes.push(responsiveClasses.mobile);
-      }
-      if (responsiveClasses.tablet && screenSize === 'tablet') {
-        classes.push(responsiveClasses.tablet);
-      }
-      if (responsiveClasses.desktop && screenSize === 'desktop') {
-        classes.push(responsiveClasses.desktop);
-      }
-    }
-    
-    return classes.join(' ');
-  };
-
-  const getGridCols = (mobile: number, tablet: number, desktop: number) => {
-    switch (screenSize) {
-      case 'mobile':
-        return `grid-cols-${mobile}`;
-      case 'tablet':
-        return `grid-cols-${tablet}`;
-      case 'desktop':
-        return `grid-cols-${desktop}`;
-      default:
-        return `grid-cols-${desktop}`;
-    }
-  };
-
-  return {
-    screenSize,
-    isMobile,
-    getResponsiveValue,
-    getResponsiveClasses,
-    getGridCols
-  };
+  return { screenSize, getGridCols };
 };

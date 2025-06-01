@@ -4,41 +4,34 @@ import { cn } from '@/lib/utils';
 
 interface FloatingElementProps {
   children: React.ReactNode;
-  className?: string;
   delay?: number;
+  className?: string;
 }
 
-export const FloatingElement = ({ 
-  children, 
-  className, 
-  delay = 0 
-}: FloatingElementProps) => {
+export const FloatingElement = ({ children, delay = 0, className }: FloatingElementProps) => {
   return (
     <div
-      className={cn(
-        'animate-[float_6s_ease-in-out_infinite]',
-        className
-      )}
-      style={{ animationDelay: `${delay}ms` }}
+      className={cn('animate-float', className)}
+      style={{
+        animationDelay: `${delay}ms`,
+        animationDuration: '6s'
+      }}
     >
       {children}
     </div>
   );
 };
 
-export const PulsingDot = ({ 
-  className, 
-  color = 'bg-vibe-primary' 
-}: { 
-  className?: string; 
-  color?: string; 
-}) => (
-  <div className={cn('relative', className)}>
-    <div className={cn('w-3 h-3 rounded-full', color)} />
-    <div className={cn(
-      'absolute inset-0 w-3 h-3 rounded-full animate-ping',
-      color,
-      'opacity-30'
-    )} />
-  </div>
-);
+interface PulsingDotProps {
+  className?: string;
+  color?: string;
+}
+
+export const PulsingDot = ({ className, color = 'bg-green-500' }: PulsingDotProps) => {
+  return (
+    <div className={cn('relative', className)}>
+      <div className={`w-2 h-2 ${color} rounded-full`} />
+      <div className={`absolute inset-0 w-2 h-2 ${color} rounded-full animate-ping opacity-75`} />
+    </div>
+  );
+};

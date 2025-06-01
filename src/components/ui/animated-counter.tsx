@@ -1,53 +1,47 @@
 
 import React, { useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
 
 interface AnimatedCounterProps {
   value: string;
   duration?: number;
-  className?: string;
 }
 
-export const AnimatedCounter = ({ 
-  value, 
-  duration = 2000, 
-  className 
-}: AnimatedCounterProps) => {
+export const AnimatedCounter = ({ value, duration = 2000 }: AnimatedCounterProps) => {
   const [displayValue, setDisplayValue] = useState('0');
-  const { ref, inView } = useInView({ threshold: 0.3, triggerOnce: true });
 
   useEffect(() => {
-    if (!inView) return;
-
-    // Extract numeric value for animation
-    const numericMatch = value.match(/(\d+)/);
+    // Extract numeric part and suffix
+    const numericMatch = value.match(/(\d+(?:\.\d+)?)/);
+    const suffix = value.replace(/[\d.]/g, '');
+    
     if (!numericMatch) {
       setDisplayValue(value);
       return;
     }
 
-    const targetNumber = parseInt(numericMatch[1]);
-    const suffix = value.replace(numericMatch[1], '');
+    const targetNumber = parseFloat(numericMatch[1]);
+    const isPercentage = value.includes('%');
+    const hasDecimal = value.includes('.');
     
-    let startTime: number;
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
+    let currentNumber = 0;
+    const increment = targetNumber / (duration / 16); // 60fps
+    
+    const timer = setInterval(() => {
+      currentNumber += increment;
       
-      const currentNumber = Math.floor(targetNumber * progress);
-      setDisplayValue(`${currentNumber}${suffix}`);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
+      if (currentNumber >= targetNumber) {
+        setDisplayValue(value);
+        clearInterval(timer);
+      } else {
+        const formattedNumber = hasDecimal 
+          ? currentNumber.toFixed(1)
+          : Math.floor(currentNumber).toString();
+        setDisplayValue(formattedNumber + suffix);
       }
-    };
+    }, 16);
 
-    requestAnimationFrame(animate);
-  }, [inView, value, duration]);
+    return () => clearInterval(timer);
+  }, [value, duration]);
 
-  return (
-    <span ref={ref} className={className}>
-      {displayValue}
-    </span>
-  );
+  return <span>{displayValue}</span>;
 };
