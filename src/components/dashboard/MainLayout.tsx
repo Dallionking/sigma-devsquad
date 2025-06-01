@@ -111,13 +111,15 @@ export const MainLayout = ({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background">
-      {/* View Mode Tabs - only show for Individual Agents view */}
+      {/* View Mode Tabs - Restored for Individual Agents view */}
       {!showTeamView && (
-        <ViewModeTabs
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-          notificationCounts={notificationCounts}
-        />
+        <div className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
+          <ViewModeTabs
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            notificationCounts={notificationCounts}
+          />
+        </div>
       )}
 
       {/* Main Content Area */}
