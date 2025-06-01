@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingProgressSidebar } from './OnboardingProgressSidebar';
 import { OnboardingModalHeader } from './modal/OnboardingModalHeader';
@@ -134,6 +135,11 @@ export const OnboardingModal = () => {
 
       <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
         <DialogContent className={`max-w-6xl max-h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row ${isHelpCollapsed ? '' : 'mr-96'}`}>
+          <VisuallyHidden>
+            <DialogTitle>{currentContent.title}</DialogTitle>
+            <DialogDescription>{currentContent.description}</DialogDescription>
+          </VisuallyHidden>
+          
           {/* Progress Sidebar (collapsible on mobile) */}
           {showProgressSidebar && (
             <div className="hidden sm:block">

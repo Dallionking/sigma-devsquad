@@ -99,12 +99,11 @@
   }
 }
 
-/* Enhanced button animations - fixed to prevent translucency */
+/* Enhanced button animations - NO GREY EFFECTS */
 .btn-enhanced {
   position: relative;
   overflow: hidden;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Remove the transparent background that was causing issues */
 }
 
 .btn-enhanced::before {
@@ -130,56 +129,26 @@
 .btn-enhanced:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
-  /* Ensure solid background on hover */
-  background-color: hsl(var(--card)) !important;
 }
 
 .btn-enhanced:active {
   transform: translateY(0);
 }
 
-/* Fixed hover states - maintain solid backgrounds */
-.hover-no-grey,
-.hover-no-grey:hover,
-.hover-no-grey:hover *,
-.hover-no-grey * {
-  /* Ensure elements maintain their original background instead of becoming transparent */
-}
-
-/* Override all button hover states with solid backgrounds */
+/* NO GREY HOVER EFFECTS - Completely remove all grey hover states */
 button:hover,
 .btn:hover,
-[role="button"]:hover {
-  /* Remove the transparent override and let elements keep their backgrounds */
-}
-
-/* Specific overrides for shadcn button variants - maintain solid backgrounds */
-.bg-background:hover {
-  background-color: hsl(var(--background)) !important;
-}
-
-.bg-muted:hover {
-  background-color: hsl(var(--muted)) !important;
-}
-
-.bg-secondary:hover {
-  background-color: hsl(var(--secondary)) !important;
-}
-
-/* Card hover states should maintain their backgrounds */
+[role="button"]:hover,
 .card:hover,
-.bg-card:hover {
-  background-color: hsl(var(--card)) !important;
+.bg-card:hover,
+.bg-background:hover,
+.bg-muted:hover,
+.bg-secondary:hover {
+  /* Remove any grey background changes */
+  background-color: inherit !important;
 }
 
-/* Ensure all welcome page elements maintain solid backgrounds */
-[data-step="welcome"] button:hover,
-[data-step="welcome"] .card:hover,
-[data-step="welcome"] *:hover {
-  /* Let elements maintain their natural backgrounds */
-}
-
-/* Feature cards specific styling to prevent translucency */
+/* Feature cards specific styling - NO GREY HOVER */
 .feature-card {
   background-color: hsl(var(--card)) !important;
   border: 1px solid hsl(var(--border));
@@ -187,13 +156,13 @@ button:hover,
 }
 
 .feature-card:hover {
-  background-color: hsl(var(--card)) !important;
+  background-color: hsl(var(--card)) !important; /* Keep original background */
   border-color: hsl(var(--primary));
   transform: translateY(-2px);
   box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Tutorial section styling */
+/* Tutorial section styling - NO GREY HOVER */
 .tutorial-section {
   background: linear-gradient(135deg, 
     hsl(var(--primary) / 0.05), 
@@ -210,7 +179,39 @@ button:hover,
   border-color: hsl(var(--primary) / 0.3);
 }
 
-/* Dark mode adjustments for buttons */
+/* Onboarding specific - NO GREY HOVER ANYWHERE */
+[data-step="welcome"] *:hover,
+[data-step="profile-setup"] *:hover,
+[data-step="team-creation"] *:hover,
+[data-step="first-agent"] *:hover,
+[data-step="planning-tour"] *:hover,
+[data-step="completion"] *:hover {
+  background-color: inherit !important;
+}
+
+/* Agent template cards - NO GREY HOVER */
+.agent-template-card:hover {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--primary));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile setup cards - NO GREY HOVER */
+.profile-card:hover {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--primary));
+  transform: translateY(-1px);
+}
+
+/* Team creation cards - NO GREY HOVER */
+.team-card:hover {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--primary));
+  transform: translateY(-1px);
+}
+
+/* Dark mode adjustments - NO GREY HOVER */
 @media (prefers-color-scheme: dark) {
   .limitless-cta-secondary {
     background: linear-gradient(var(--background), var(--background)) padding-box,
@@ -226,11 +227,11 @@ button:hover,
     );
   }
 
-  .feature-card {
-    background-color: hsl(var(--card)) !important;
-  }
-
-  .feature-card:hover {
+  .feature-card,
+  .feature-card:hover,
+  .agent-template-card:hover,
+  .profile-card:hover,
+  .team-card:hover {
     background-color: hsl(var(--card)) !important;
   }
 
@@ -255,7 +256,10 @@ button:hover,
   .limitless-cta-secondary,
   .btn-enhanced,
   .feature-card,
-  .tutorial-section {
+  .tutorial-section,
+  .agent-template-card,
+  .profile-card,
+  .team-card {
     animation: none !important;
     transition: none !important;
   }
@@ -264,7 +268,10 @@ button:hover,
   .limitless-cta-secondary:hover,
   .btn-enhanced:hover,
   .feature-card:hover,
-  .tutorial-section:hover {
+  .tutorial-section:hover,
+  .agent-template-card:hover,
+  .profile-card:hover,
+  .team-card:hover {
     transform: none !important;
   }
 }

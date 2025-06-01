@@ -36,10 +36,11 @@ export const AgentTemplateCard = ({ template, isSelected, onSelect }: AgentTempl
   return (
     <Card 
       className={cn(
-        "cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1",
+        "cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 agent-template-card",
         isSelected && "ring-2 ring-primary border-primary shadow-lg"
       )}
       onClick={() => onSelect(template)}
+      style={{ backgroundColor: 'hsl(var(--card))' }}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Users, Bot, MapPin, Sparkles, CheckCircle } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
@@ -23,7 +24,7 @@ export const stepContent: Record<OnboardingStep, {
     description: 'Your AI-powered development team is ready to help you build amazing projects.',
     icon: Sparkles,
     content: (
-      <div className="text-center space-y-8">
+      <div className="text-center space-y-8" data-step="welcome">
         {/* Video Tutorial Section */}
         <div className="tutorial-section rounded-xl p-6 border">
           <div className="flex items-center justify-between mb-4">
@@ -38,7 +39,10 @@ export const stepContent: Record<OnboardingStep, {
                 <p className="text-sm text-blue-700 dark:text-blue-300">Get introduced to your AI-powered development team</p>
               </div>
             </div>
-            <button className="limitless-cta-secondary px-4 py-2 rounded-lg text-blue-600 dark:text-blue-400 text-sm font-medium">
+            <button 
+              className="limitless-cta-secondary px-4 py-2 rounded-lg text-blue-600 dark:text-blue-400 text-sm font-medium"
+              style={{ backgroundColor: 'inherit' }}
+            >
               Watch Tutorial
             </button>
           </div>
@@ -58,7 +62,10 @@ export const stepContent: Record<OnboardingStep, {
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
+            <div 
+              className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced"
+              style={{ backgroundColor: 'hsl(var(--card))' }}
+            >
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
@@ -66,7 +73,10 @@ export const stepContent: Record<OnboardingStep, {
               <p className="text-sm text-gray-600 dark:text-gray-400">Organize your AI agents</p>
             </div>
 
-            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
+            <div 
+              className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced"
+              style={{ backgroundColor: 'hsl(var(--card))' }}
+            >
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Bot className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
@@ -74,7 +84,10 @@ export const stepContent: Record<OnboardingStep, {
               <p className="text-sm text-gray-600 dark:text-gray-400">Specialized AI assistants</p>
             </div>
 
-            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
+            <div 
+              className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced"
+              style={{ backgroundColor: 'hsl(var(--card))' }}
+            >
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
                 <MapPin className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
