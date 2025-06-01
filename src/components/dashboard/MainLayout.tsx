@@ -72,26 +72,29 @@ export const MainLayout = ({
   // Context-aware panel management with standardized patterns
   const { panelContext, showPanel, hidePanel } = useContextAwarePanel();
 
-  // Update panel when selections change
+  // Memoize the current selection to prevent unnecessary updates
+  const currentSelection = React.useMemo(() => {
+    if (selectedAgent) return { type: 'agent', data: selectedAgent };
+    if (selectedTask) return { type: 'task', data: selectedTask };
+    if (selectedMessage) return { type: 'message', data: selectedMessage };
+    if (selectedAgentProfile) return { type: 'agentProfile', data: selectedAgentProfile };
+    return null;
+  }, [selectedAgent, selectedTask, selectedMessage, selectedAgentProfile]);
+
+  // Update panel when selections change - using stable dependencies
   React.useEffect(() => {
-    if (selectedAgent) {
-      showPanel('agent', selectedAgent);
-    } else if (selectedTask) {
-      showPanel('task', selectedTask);
-    } else if (selectedMessage) {
-      showPanel('message', selectedMessage);
-    } else if (selectedAgentProfile) {
-      showPanel('agentProfile', selectedAgentProfile);
+    if (currentSelection) {
+      showPanel(currentSelection.type as any, currentSelection.data);
     } else {
       hidePanel();
     }
-  }, [selectedAgent, selectedTask, selectedMessage, selectedAgentProfile, showPanel, hidePanel]);
+  }, [currentSelection, showPanel, hidePanel]);
 
   // Handle panel dismissal with standardized keyboard support
-  const handlePanelDismiss = () => {
+  const handlePanelDismiss = React.useCallback(() => {
     hidePanel();
     onDismissSelection();
-  };
+  }, [hidePanel, onDismissSelection]);
 
   // Enhanced keyboard shortcuts for panel management
   usePanelKeyboardShortcuts({
@@ -99,12 +102,12 @@ export const MainLayout = ({
     onDismiss: handlePanelDismiss
   });
   
-  const notificationCounts = {
+  const notificationCounts = React.useMemo(() => ({
     workflow: 3,
     communication: 2,
     tasks: 5,
     messages: 1,
-  };
+  }), []);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background">
