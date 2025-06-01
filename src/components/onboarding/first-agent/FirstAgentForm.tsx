@@ -59,7 +59,11 @@ export const FirstAgentForm = ({ onComplete, onSkip, initialData }: FirstAgentFo
     const subscription = form.watch((value) => {
       localStorage.setItem('first-agent-draft', JSON.stringify(value));
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      if (subscription && typeof subscription.unsubscribe === 'function') {
+        subscription.unsubscribe();
+      }
+    };
   }, [form]);
 
   const onSubmit = (data: FirstAgentFormData) => {
@@ -67,17 +71,18 @@ export const FirstAgentForm = ({ onComplete, onSkip, initialData }: FirstAgentFo
     onComplete(data);
   };
 
-  const handleTemplateSelect = (templateId: string) => {
-    const template = AGENT_TEMPLATES.find(t => t.id === templateId);
-    if (template) {
+  const handleTemplateSelect = (template: any) => {
+    const templateId = typeof template === 'string' ? template : template.id;
+    const templateData = AGENT_TEMPLATES.find(t => t.id === templateId);
+    if (templateData) {
       setSelectedTemplate(templateId);
       setShowCustomBuilder(false);
       form.setValue("templateId", templateId);
-      form.setValue("name", template.name);
-      form.setValue("description", template.description);
-      form.setValue("role", template.role);
-      form.setValue("specialization", template.specialization);
-      form.setValue("capabilities", template.capabilities);
+      form.setValue("name", templateData.name);
+      form.setValue("description", templateData.description);
+      form.setValue("role", templateData.role);
+      form.setValue("specialization", templateData.specialization);
+      form.setValue("capabilities", templateData.capabilities);
     }
   };
 
@@ -148,16 +153,18 @@ export const FirstAgentForm = ({ onComplete, onSkip, initialData }: FirstAgentFo
             </div>
 
             {showCustomBuilder && (
-              <CustomAgentBuilder control={form.control} />
+              <CustomAgentBuilder form={form} />
             )}
 
             {(selectedTemplate || showCustomBuilder) && (
               <AgentPreview
-                name={form.watch("name")}
-                description={form.watch("description")}
-                role={form.watch("role")}
-                specialization={form.watch("specialization")}
-                capabilities={form.watch("capabilities")}
+                agent={{
+                  name: form.watch("name"),
+                  description: form.watch("description"),
+                  role: form.watch("role"),
+                  specialization: form.watch("specialization"),
+                  capabilities: form.watch("capabilities")
+                }}
               />
             )}
           </div>

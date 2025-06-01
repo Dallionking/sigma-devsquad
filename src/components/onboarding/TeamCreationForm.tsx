@@ -69,7 +69,11 @@ export const TeamCreationForm = ({ onComplete, onSkip, initialData }: TeamCreati
     const subscription = form.watch((value) => {
       localStorage.setItem('team-creation-draft', JSON.stringify(value));
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      if (subscription && typeof subscription.unsubscribe === 'function') {
+        subscription.unsubscribe();
+      }
+    };
   }, [form]);
 
   const onSubmit = (data: TeamCreationFormData) => {
@@ -106,21 +110,22 @@ export const TeamCreationForm = ({ onComplete, onSkip, initialData }: TeamCreati
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <TeamAvatarUpload
-            logoPreview={teamLogo}
+            teamLogo={teamLogo}
             teamName={teamName}
             onLogoChange={handleLogoChange}
           />
 
-          <TeamInformationForm control={form.control} />
+          <TeamInformationForm form={form} />
 
           <MemberInvitation
-            invitedMembers={invitedMembers}
+            members={invitedMembers}
             onMemberInvite={handleMemberInvite}
             onMemberRemove={handleMemberRemove}
           />
 
           <FormActions
             onSkip={onSkip}
+            onSubmit={form.handleSubmit(onSubmit)}
             isFormValid={form.formState.isValid}
           />
         </form>
