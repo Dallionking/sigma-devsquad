@@ -3,8 +3,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { EnhancedCard } from "@/components/ui/enhanced-card";
-import { SectionContainer } from "@/components/layout/AdvancedResponsiveContainer";
-import { useAdvancedResponsive } from "@/hooks/useAdvancedResponsive";
+import { useResponsiveDesign } from "@/hooks/useResponsiveDesign";
 import { 
   Bot, 
   MessageSquare, 
@@ -13,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const FeaturesSection = () => {
-  const { getOptimalGridCols } = useAdvancedResponsive();
+  const { getGridCols } = useResponsiveDesign();
 
   const features = [
     {
@@ -42,42 +41,40 @@ export const FeaturesSection = () => {
     }
   ];
 
-  const gridCols = getOptimalGridCols(4);
-
   return (
     <section id="features" className="py-12 md:py-24 bg-muted/30">
-      <SectionContainer>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animation="fade-up" delay={100}>
           <div className="text-center mb-16">
-            <h2 className="text-fluid-3xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Powerful Features for Modern Development
             </h2>
-            <p className="text-fluid-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Everything you need to build, manage, and scale intelligent agent teams
             </p>
           </div>
         </AnimatedSection>
 
-        <div className={`intrinsic-layout stagger-animation`} style={{ '--item-min-width': '280px' } as React.CSSProperties}>
-          {features.slice(0, gridCols).map((feature, index) => (
+        <div className={`grid gap-8 ${getGridCols(1, 2, 4)} stagger-animation`}>
+          {features.map((feature, index) => (
             <AnimatedSection 
               key={index} 
               animation="fade-up" 
               delay={index * 100}
             >
-              <EnhancedCard hoverEffect="lift" className="card-responsive h-full">
+              <EnhancedCard hoverEffect="lift" className="p-6 h-full">
                 <CardContent className="p-0">
                   <div className={`w-12 h-12 bg-vibe-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <feature.icon className={`w-6 h-6 ${feature.color} feature-icon transition-transform`} />
                   </div>
-                  <h3 className="text-fluid-lg font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-fluid-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
                 </CardContent>
               </EnhancedCard>
             </AnimatedSection>
           ))}
         </div>
-      </SectionContainer>
+      </div>
     </section>
   );
 };
