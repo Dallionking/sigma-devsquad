@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +8,7 @@ import { ProfileAvatarUpload } from './profile-setup/ProfileAvatarUpload';
 import { ProfileBasicInfoForm } from './profile-setup/ProfileBasicInfoForm';
 import { ProfileSkillsSelector } from './profile-setup/ProfileSkillsSelector';
 import { ProfileFormActions } from './profile-setup/ProfileFormActions';
+import { ValidationMessage } from './completion/ValidationMessage';
 import { profileSetupSchema, type ProfileSetupFormData } from './profile-setup/types';
 
 interface ProfileSetupFormProps {
@@ -124,33 +126,48 @@ export const ProfileSetupForm = ({ onComplete, onSkip, initialData }: ProfileSet
   };
 
   const userName = form.watch("name") || "";
-  const hasRequiredSelections = selectedLanguages.length > 0 && selectedInterests.length > 0;
+  const hasRequiredSelections = selectedLanguages.length >= 2 && selectedInterests.length >= 3;
+  
+  // Get current form data for validation
+  const currentFormData = {
+    ...form.getValues(),
+    preferredLanguages: selectedLanguages,
+    interests: selectedInterests
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <ProfileAvatarUpload
-          avatarPreview={avatarPreview}
-          userName={userName}
-          onAvatarChange={handleAvatarChange}
-        />
+    <div className="space-y-6">
+      {/* Validation status message */}
+      <ValidationMessage 
+        step="profile-setup"
+        stepData={currentFormData}
+      />
+      
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <ProfileAvatarUpload
+            avatarPreview={avatarPreview}
+            userName={userName}
+            onAvatarChange={handleAvatarChange}
+          />
 
-        <ProfileBasicInfoForm control={form.control} />
+          <ProfileBasicInfoForm control={form.control} />
 
-        <ProfileSkillsSelector
-          control={form.control}
-          selectedLanguages={selectedLanguages}
-          selectedInterests={selectedInterests}
-          onLanguageToggle={toggleLanguage}
-          onInterestToggle={toggleInterest}
-        />
+          <ProfileSkillsSelector
+            control={form.control}
+            selectedLanguages={selectedLanguages}
+            selectedInterests={selectedInterests}
+            onLanguageToggle={toggleLanguage}
+            onInterestToggle={toggleInterest}
+          />
 
-        <ProfileFormActions
-          onSkip={onSkip}
-          isFormValid={form.formState.isValid}
-          hasRequiredSelections={hasRequiredSelections}
-        />
-      </form>
-    </Form>
+          <ProfileFormActions
+            onSkip={onSkip}
+            isFormValid={form.formState.isValid}
+            hasRequiredSelections={hasRequiredSelections}
+          />
+        </form>
+      </Form>
+    </div>
   );
 };
