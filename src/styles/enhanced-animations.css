@@ -194,6 +194,22 @@
   }
 }
 
+/* Solo entrepreneur highlight animation */
+@keyframes solo-highlight {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
 @layer utilities {
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -259,6 +275,48 @@
 
   .animate-neural-pulse {
     animation: neural-pulse 2s ease-in-out infinite;
+  }
+
+  /* Solo entrepreneur highlight styling */
+  .solo-entrepreneur-highlight {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: solo-highlight 4s ease-in-out infinite;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.05), rgba(0, 184, 217, 0.05));
+  }
+
+  .solo-entrepreneur-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(0, 184, 217, 0.1));
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .solo-entrepreneur-highlight:hover::before {
+    opacity: 1;
+  }
+
+  .solo-entrepreneur-highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #6C5CE7, #00B8D9);
+    transition: width 0.3s ease;
+  }
+
+  .solo-entrepreneur-highlight:hover::after {
+    width: 100%;
   }
 
   /* Enhanced Limitless-specific styling */
@@ -575,7 +633,8 @@
   .card-enhanced-hover,
   .text-gradient-animated,
   .limitless-cta-primary,
-  .limitless-cta-secondary {
+  .limitless-cta-secondary,
+  .solo-entrepreneur-highlight {
     animation: none !important;
     transition: none !important;
   }
@@ -584,7 +643,8 @@
   .limitless-badge:hover,
   .limitless-tagline-text:hover,
   .limitless-cta-primary:hover,
-  .limitless-cta-secondary:hover {
+  .limitless-cta-secondary:hover,
+  .solo-entrepreneur-highlight:hover {
     transform: none !important;
   }
 }
@@ -594,5 +654,13 @@
   .limitless-cta-secondary {
     background: linear-gradient(var(--background), var(--background)) padding-box,
                 linear-gradient(135deg, #6C5CE7, #00B8D9) border-box;
+  }
+
+  .solo-entrepreneur-highlight {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.08), rgba(0, 184, 217, 0.08));
+  }
+
+  .solo-entrepreneur-highlight::before {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.15), rgba(0, 184, 217, 0.15));
   }
 }

@@ -108,12 +108,15 @@ export const HeroSection = () => {
                   </h1>
                 </div>
                 
-                {/* Enhanced subheadline with better typography */}
+                {/* Enhanced subheadline with solo entrepreneur messaging */}
                 <p className="text-xl lg:text-2xl text-muted-foreground max-w-2xl leading-relaxed">
                   Transform your development workflow with intelligent agent teams that collaborate, 
                   plan, and execute complex projects autonomously.{' '}
+                  <span className="solo-entrepreneur-highlight inline-block">
+                    Whether you're a <span className="font-semibold text-vibe-primary bg-gradient-to-r from-vibe-primary to-vibe-secondary bg-clip-text text-transparent">solo entrepreneur</span> or leading a team,
+                  </span>{' '}
                   <span className="text-vibe-primary font-semibold bg-gradient-to-r from-vibe-primary to-vibe-secondary bg-clip-text text-transparent">
-                    Which means your teams focus on building—not juggling.
+                    Vibe DevSquad lets you focus on building—not juggling.
                   </span>
                 </p>
 
