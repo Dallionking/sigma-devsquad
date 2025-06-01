@@ -84,6 +84,7 @@ export const useTeamForm = (onSuccess: () => void) => {
         objectives: formData.objectives,
         memberIds: [],
         status: "active",
+        kpis: [], // Add the missing kpis property with empty array as default
       });
 
       toast({
