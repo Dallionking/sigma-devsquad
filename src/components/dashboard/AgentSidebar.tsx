@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Bot, Layers, Code, Server, TestTube, FileText, Settings, ChevronLeft, ChevronRight } from "lucide-react";
-import { Agent, AgentType } from "@/types";
+import { Agent, AgentType, ViewMode } from "@/types";
 import { NavigationItem } from "./NavigationItem";
 import { useCollapsibleSidebar } from "@/hooks/useCollapsibleSidebar";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ interface AgentSidebarProps {
   agents: Agent[];
   selectedAgent: Agent | null;
   onAgentSelect: (agent: Agent | null) => void;
+  viewMode?: ViewMode;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
 }
@@ -43,7 +44,8 @@ const statusLabels = {
 export const AgentSidebar = ({ 
   agents, 
   selectedAgent, 
-  onAgentSelect, 
+  onAgentSelect,
+  viewMode,
   collapsed,
   onToggleCollapse 
 }: AgentSidebarProps) => {

@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -9,9 +8,10 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "rec
 
 interface TeamDashboardProps {
   team: Team | null;
+  onAgentSelect?: (profile: AgentProfile | null) => void;
 }
 
-export const TeamDashboard = ({ team }: TeamDashboardProps) => {
+export const TeamDashboard = ({ team, onAgentSelect }: TeamDashboardProps) => {
   const { getTeamMembers, getTeamTasks, getAgentProfileById } = useTeams();
   
   // Early return if no team is selected
