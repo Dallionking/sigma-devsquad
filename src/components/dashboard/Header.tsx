@@ -1,12 +1,6 @@
 
-import { ConsolidatedNavigation } from "./header/ConsolidatedNavigation";
-import { HeaderLogo } from "./header/HeaderLogo";
-import { StatusBadge } from "./header/StatusBadge";
-import { ActionButtons } from "./header/ActionButtons";
-import { ConnectionStatusHeader } from "./header/ConnectionStatusHeader";
-import { MobileProjectSwitcher } from "@/components/projects/MobileProjectSwitcher";
+import { OptimizedHeader } from "./header/OptimizedHeader";
 import { ViewMode, Agent } from "@/types";
-import { useLocation } from "react-router-dom";
 
 interface HeaderProps {
   viewMode: ViewMode;
@@ -14,6 +8,7 @@ interface HeaderProps {
   agents: Agent[];
   sidebarCollapsed?: boolean;
   onSidebarToggle?: () => void;
+  showTeamView?: boolean;
 }
 
 export const Header = ({ 
@@ -21,62 +16,17 @@ export const Header = ({
   onViewModeChange, 
   agents,
   sidebarCollapsed,
-  onSidebarToggle 
+  onSidebarToggle,
+  showTeamView = false
 }: HeaderProps) => {
-  const location = useLocation();
-  const isDashboardPage = location.pathname === "/";
-  
-  // Calculate agent status counts
-  const activeAgents = agents.filter(agent => agent.status === "working").length;
-  const totalAgents = agents.length;
-  
-  // Mock notification counts - in a real app, these would come from context/state
-  const notificationCounts = {
-    workflow: 0,
-    communication: 0,
-    tasks: 0,
-    messages: 0
-  };
-
   return (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      <div className="flex h-14 items-center justify-between px-4 lg:px-6">
-        {/* Left Section: Logo and Sidebar Toggle */}
-        <div className="flex items-center space-x-4">
-          <HeaderLogo 
-            isDashboardPage={isDashboardPage}
-            sidebarCollapsed={sidebarCollapsed}
-            onSidebarToggle={onSidebarToggle}
-            activeAgents={activeAgents}
-            totalAgents={totalAgents}
-          />
-          
-          {/* Mobile Project Switcher */}
-          <div className="lg:hidden w-48">
-            <MobileProjectSwitcher />
-          </div>
-        </div>
-        
-        {/* Center Section: Consolidated Navigation */}
-        <div className="flex-1 flex justify-center">
-          <ConsolidatedNavigation 
-            viewMode={viewMode}
-            onViewModeChange={onViewModeChange}
-            notificationCounts={notificationCounts}
-          />
-        </div>
-        
-        {/* Right Section: Status, Connection, and Actions */}
-        <div className="flex items-center space-x-2">
-          <StatusBadge 
-            activeAgents={activeAgents}
-            totalAgents={totalAgents}
-          />
-          <div className="w-px h-6 bg-border/50" />
-          <ConnectionStatusHeader />
-          <ActionButtons />
-        </div>
-      </div>
-    </header>
+    <OptimizedHeader
+      viewMode={viewMode}
+      onViewModeChange={onViewModeChange}
+      agents={agents}
+      sidebarCollapsed={sidebarCollapsed}
+      onSidebarToggle={onSidebarToggle}
+      showTeamView={showTeamView}
+    />
   );
 };

@@ -20,7 +20,7 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 import { Button } from "@/components/ui/button";
-import { Star, HelpCircle } from "lucide-react";
+import { Star } from "lucide-react";
 
 const Dashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -51,7 +51,7 @@ const Dashboard = () => {
   const { tasks } = taskContext;
   const { messages } = messageContext;
 
-  // Check if there's any selection to show the detail panel - properly convert to boolean
+  // Check if there's any selection to show the detail panel
   const hasSelection = Boolean(selectedAgent || selectedTask || selectedMessage || selectedTeam || selectedAgentProfile);
 
   const handleDismissSelection = () => {
@@ -77,7 +77,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Vibe DevSquad Enhanced Header with Help */}
+      {/* Optimized Header with Status Sub-Header */}
       <div className="relative">
         <Header 
           viewMode={viewMode} 
@@ -85,6 +85,7 @@ const Dashboard = () => {
           agents={agents || []}
           sidebarCollapsed={sidebarCollapsed}
           onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          showTeamView={showTeamView}
         />
         
         {/* Quick Actions Bar */}
@@ -102,25 +103,25 @@ const Dashboard = () => {
         </div>
       </div>
       
-      {/* Real-time Notifications with Vibe styling */}
+      {/* Real-time Notifications */}
       <div className="px-4 py-2">
         <RealtimeNotifications />
       </div>
       
-      {/* Enhanced View Toggle with Vibe branding */}
+      {/* View Toggle */}
       <ViewToggle 
         showTeamView={showTeamView}
         onToggleView={handleToggleView}
       />
 
-      {/* Onboarding Progress - Show if not complete */}
+      {/* Onboarding Progress */}
       {!progress.isOnboardingComplete && (
         <div className="px-6 py-4">
           <OnboardingProgress />
         </div>
       )}
       
-      {/* Main layout with integrated User Presence Panel */}
+      {/* Main layout */}
       <MainLayout
         showTeamView={showTeamView}
         sidebarCollapsed={sidebarCollapsed}
@@ -146,7 +147,7 @@ const Dashboard = () => {
         onViewModeChange={setViewMode}
       />
       
-      {/* Enhanced footer with Vibe branding and smooth animations */}
+      {/* Footer */}
       {showFooter && (
         <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0">
           <SystemFooter 
@@ -156,19 +157,17 @@ const Dashboard = () => {
         </div>
       )}
       
-      {/* Enhanced floating action button with Vibe styling */}
+      {/* Floating action button */}
       <FloatingActionButton />
       
-      {/* Onboarding Modal */}
+      {/* Modals */}
       <OnboardingModal />
-      
-      {/* Sample Projects Modal */}
       <SampleProjectsModal
         open={showSampleProjects}
         onOpenChange={setShowSampleProjects}
       />
       
-      {/* Vibe DevSquad subtle background effects */}
+      {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-vibe-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-vibe-secondary/5 rounded-full blur-3xl" />
