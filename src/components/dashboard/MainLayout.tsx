@@ -2,17 +2,14 @@
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
-import { SidebarRenderer } from "./SidebarRenderer";
-import { MainContentRenderer } from "./MainContentRenderer";
-import { ViewModeTabs } from "./ViewModeTabs";
-import { UserPresencePanel } from "./UserPresencePanel";
 import { ContextAwarePanel } from "./ContextAwarePanel";
-import { Button } from "@/components/ui/button";
-import { PanelLeft, PanelLeftClose } from "lucide-react";
+import { MainLayoutHeader } from "./layout/MainLayoutHeader";
+import { MainLayoutSidebar } from "./layout/MainLayoutSidebar";
+import { MainLayoutContent } from "./layout/MainLayoutContent";
+import { MainLayoutFooter } from "./layout/MainLayoutFooter";
 import { useCollapsibleSidebar } from "@/hooks/useCollapsibleSidebar";
 import { useContextAwarePanel } from "@/hooks/useContextAwarePanel";
 import { usePanelKeyboardShortcuts } from "@/hooks/usePanelKeyboardShortcuts";
-import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
   showTeamView: boolean;
@@ -111,87 +108,58 @@ export const MainLayout = ({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
-      {/* View Mode Tabs - Always show for Individual Agents view */}
-      {!showTeamView && (
-        <div className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-          <ViewModeTabs
-            viewMode={viewMode}
-            onViewModeChange={onViewModeChange}
-            notificationCounts={notificationCounts}
-          />
-        </div>
-      )}
+      {/* View Mode Tabs Header */}
+      <MainLayoutHeader
+        showTeamView={showTeamView}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        notificationCounts={notificationCounts}
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 flex overflow-hidden relative">
-          {/* Sidebar Toggle */}
-          <div className="flex-shrink-0 border-r border-border/60 bg-card/50 backdrop-blur-sm">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleSidebar}
-              className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-all duration-200 hover:scale-105"
-              title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
-            >
-              {isCollapsed ? (
-                <PanelLeft className="w-4 h-4" />
-              ) : (
-                <PanelLeftClose className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
+          {/* Sidebar */}
+          <MainLayoutSidebar
+            isCollapsed={isCollapsed}
+            showTeamView={showTeamView}
+            viewMode={viewMode}
+            agents={agents}
+            tasks={tasks}
+            messages={messages}
+            selectedAgent={selectedAgent}
+            selectedTask={selectedTask}
+            selectedMessage={selectedMessage}
+            selectedTeam={selectedTeam}
+            selectedAgentProfile={selectedAgentProfile}
+            onToggleCollapse={toggleSidebar}
+            onAgentSelect={onAgentSelect}
+            onTaskSelect={onTaskSelect}
+            onMessageSelect={onMessageSelect}
+            onTeamSelect={onTeamSelect}
+            onAgentProfileSelect={onAgentProfileSelect}
+          />
 
-          {/* Enhanced Sidebar */}
-          <div className={cn(
-            "bg-background/95 backdrop-blur-sm border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 shadow-sm",
-            isCollapsed ? "w-16" : (showTeamView ? "w-80" : "w-96")
-          )}>
-            <SidebarRenderer
-              viewMode={viewMode}
-              agents={agents}
-              tasks={tasks}
-              messages={messages}
-              selectedAgent={selectedAgent}
-              selectedTask={selectedTask}
-              selectedMessage={selectedMessage}
-              selectedTeam={selectedTeam}
-              selectedAgentProfile={selectedAgentProfile}
-              showTeamView={showTeamView}
-              collapsed={isCollapsed}
-              onToggleCollapse={toggleSidebar}
-              onAgentSelect={onAgentSelect}
-              onTaskSelect={onTaskSelect}
-              onMessageSelect={onMessageSelect}
-              onTeamSelect={onTeamSelect}
-              onAgentProfileSelect={onAgentProfileSelect}
-            />
-          </div>
-
-          {/* Main Content with Enhanced Styling */}
-          <div className={cn(
-            "flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background to-muted/10 transition-all duration-300 ease-in-out",
-            panelContext.isVisible && "mr-96"
-          )}>
-            <MainContentRenderer
-              viewMode={viewMode}
-              agents={agents}
-              tasks={tasks}
-              messages={messages}
-              selectedAgent={selectedAgent}
-              selectedTask={selectedTask}
-              selectedMessage={selectedMessage}
-              selectedTeam={selectedTeam}
-              selectedAgentProfile={selectedAgentProfile}
-              showTeamView={showTeamView}
-              onAgentSelect={onAgentSelect}
-              onTaskSelect={onTaskSelect}
-              onMessageSelect={onMessageSelect}
-              onTeamSelect={onTeamSelect}
-              onAgentProfileSelect={onAgentProfileSelect}
-              onViewModeChange={onViewModeChange}
-            />
-          </div>
+          {/* Main Content */}
+          <MainLayoutContent
+            showContextPanel={panelContext.isVisible}
+            viewMode={viewMode}
+            agents={agents}
+            tasks={tasks}
+            messages={messages}
+            selectedAgent={selectedAgent}
+            selectedTask={selectedTask}
+            selectedMessage={selectedMessage}
+            selectedTeam={selectedTeam}
+            selectedAgentProfile={selectedAgentProfile}
+            showTeamView={showTeamView}
+            onAgentSelect={onAgentSelect}
+            onTaskSelect={onTaskSelect}
+            onMessageSelect={onMessageSelect}
+            onTeamSelect={onTeamSelect}
+            onAgentProfileSelect={onAgentProfileSelect}
+            onViewModeChange={onViewModeChange}
+          />
 
           {/* Context-Aware Panel */}
           <ContextAwarePanel
@@ -203,18 +171,11 @@ export const MainLayout = ({
           />
         </div>
 
-        {/* User Presence Panel - Enhanced for Individual Agents view */}
-        {!showTeamView && (
-          <div className="border-t border-border/30 bg-background/80 backdrop-blur-sm">
-            <UserPresencePanel 
-              viewMode={viewMode}
-              componentId={`${viewMode}-view`}
-              projectId="current-project"
-              showPerformance={true}
-              className="animate-in slide-in-from-bottom duration-300"
-            />
-          </div>
-        )}
+        {/* Footer for Individual Agents view */}
+        <MainLayoutFooter
+          showTeamView={showTeamView}
+          viewMode={viewMode}
+        />
       </div>
     </div>
   );

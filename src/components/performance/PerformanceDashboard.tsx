@@ -1,9 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { usePerformanceMonitoring } from '@/hooks/performance/usePerformanceMonitoring';
 import { StateMetricsPanel } from './StateMetricsPanel';
 import { RenderTimeTracker } from './RenderTimeTracker';
@@ -11,7 +9,9 @@ import { NetworkTracker } from './NetworkTracker';
 import { MemoryVisualization } from './MemoryVisualization';
 import { BottleneckAnalyzer } from './BottleneckAnalyzer';
 import { OptimizationSuggestions } from './OptimizationSuggestions';
-import { Activity, Zap, TrendingUp, AlertTriangle, RefreshCw } from 'lucide-react';
+import { PerformanceHeader } from './dashboard/PerformanceHeader';
+import { PerformanceOverviewTab } from './dashboard/PerformanceOverviewTab';
+import { Activity, Zap, TrendingUp, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PerformanceDashboardProps {
@@ -70,50 +70,13 @@ export const PerformanceDashboard = ({
 
   return (
     <div className={cn("space-y-6", className)}>
-      {/* Dashboard Header */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5" />
-              Performance Dashboard
-              <Badge variant={overallStatus.color as any}>
-                {overallStatus.status}
-              </Badge>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRefresh}
-                className="flex items-center gap-1"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Refresh
-              </Button>
-              
-              <Button
-                variant={isRecording ? "destructive" : "default"}
-                size="sm"
-                onClick={handleToggleRecording}
-                className="flex items-center gap-1"
-              >
-                {isRecording ? (
-                  <>
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    Recording
-                  </>
-                ) : (
-                  <>
-                    <Activity className="w-4 h-4" />
-                    Start Recording
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardTitle>
-        </CardHeader>
+        <PerformanceHeader
+          overallStatus={overallStatus}
+          isRecording={isRecording}
+          onToggleRecording={handleToggleRecording}
+          onRefresh={handleRefresh}
+        />
         
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -145,59 +108,7 @@ export const PerformanceDashboard = ({
             </TabsList>
             
             <TabsContent value="overview" className="mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {performanceData && (
-                  <>
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
-                          {performanceData.renderTime?.toFixed(2) || '0.00'}ms
-                        </div>
-                        <div className="text-sm text-muted-foreground">Avg Render Time</div>
-                        <Badge variant={performanceData.renderTime > 16 ? "destructive" : "secondary"} className="mt-1">
-                          {performanceData.renderTime > 16 ? "Slow" : "Good"}
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
-                          {((performanceData.memoryUsage || 0) / (1024 * 1024)).toFixed(1)}MB
-                        </div>
-                        <div className="text-sm text-muted-foreground">Memory Usage</div>
-                        <Badge variant={performanceData.memoryUsage > 50 * 1024 * 1024 ? "destructive" : "secondary"} className="mt-1">
-                          {performanceData.memoryUsage > 50 * 1024 * 1024 ? "High" : "Normal"}
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
-                          {performanceData.stateUpdateTime?.toFixed(2) || '0.00'}ms
-                        </div>
-                        <div className="text-sm text-muted-foreground">State Update Time</div>
-                        <Badge variant={performanceData.stateUpdateTime > 5 ? "destructive" : "secondary"} className="mt-1">
-                          {performanceData.stateUpdateTime > 5 ? "Slow" : "Fast"}
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
-                          {performanceData.componentCount || 0}
-                        </div>
-                        <div className="text-sm text-muted-foreground">Active Components</div>
-                        <Badge variant="secondary" className="mt-1">
-                          Tracked
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                  </>
-                )}
-              </div>
+              <PerformanceOverviewTab performanceData={performanceData} />
             </TabsContent>
             
             <TabsContent value="state" className="mt-4">
