@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { usePersistenceManager } from '@/hooks/usePersistenceManager';
 
 interface AppSessionData {
@@ -12,13 +12,34 @@ interface AppSessionData {
   projectData: any;
 }
 
+interface PerformanceMetrics {
+  averageRenderTime?: number;
+  memoryUsage?: number;
+  renderTime?: number;
+  stateUpdateTime?: number;
+  networkRequestTime?: number;
+}
+
+interface BatchingStats {
+  total: number;
+  pending: number;
+  completed: number;
+}
+
+interface PerformanceMonitoring {
+  metrics?: PerformanceMetrics;
+  getPerformanceSnapshot: () => PerformanceMetrics;
+  measureMemoryUsage: () => void;
+}
+
+interface PerformanceBatching {
+  getQueueStats: () => BatchingStats;
+  flushBatch: () => void;
+}
+
 interface PerformanceData {
-  monitoring: {
-    metrics?: {
-      averageRenderTime?: number;
-      memoryUsage?: number;
-    };
-  };
+  monitoring: PerformanceMonitoring;
+  batching: PerformanceBatching;
 }
 
 interface BackupData {
@@ -52,19 +73,22 @@ const defaultSessionData: AppSessionData = {
   projectData: null
 };
 
-const defaultPerformanceData: PerformanceData = {
-  monitoring: {
-    metrics: {
-      averageRenderTime: 12,
-      memoryUsage: 1024 * 1024 * 50 // 50MB
-    }
-  }
-};
-
 export const DataPersistenceProvider = ({ children }: { children: ReactNode }) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [pendingSync, setPendingSync] = useState(0);
   const [backups, setBackups] = useState<BackupData[]>([]);
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetrics>({
+    averageRenderTime: 12,
+    memoryUsage: 1024 * 1024 * 50, // 50MB
+    renderTime: 12,
+    stateUpdateTime: 3,
+    networkRequestTime: 150
+  });
+  const [batchingStats, setBatchingStats] = useState<BatchingStats>({
+    total: 0,
+    pending: 0,
+    completed: 0
+  });
 
   const {
     data: sessionData,
@@ -114,6 +138,65 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
     }
   }, [backups, updateSessionData]);
 
+  // Performance monitoring methods
+  const getPerformanceSnapshot = useCallback(() => {
+    // Simulate performance measurement
+    const newMetrics = {
+      ...performanceMetrics,
+      renderTime: Math.random() * 20 + 5,
+      stateUpdateTime: Math.random() * 10 + 1,
+      networkRequestTime: Math.random() * 300 + 50,
+      memoryUsage: performanceMetrics.memoryUsage + (Math.random() - 0.5) * 1024 * 1024
+    };
+    setPerformanceMetrics(newMetrics);
+    return newMetrics;
+  }, [performanceMetrics]);
+
+  const measureMemoryUsage = useCallback(() => {
+    // Simulate memory measurement
+    if ('memory' in performance) {
+      const memory = (performance as any).memory;
+      const newMetrics = {
+        ...performanceMetrics,
+        memoryUsage: memory.usedJSHeapSize
+      };
+      setPerformanceMetrics(newMetrics);
+    } else {
+      // Fallback simulation
+      const newMetrics = {
+        ...performanceMetrics,
+        memoryUsage: Math.random() * 100 * 1024 * 1024 // Random value up to 100MB
+      };
+      setPerformanceMetrics(newMetrics);
+    }
+  }, [performanceMetrics]);
+
+  // Batching methods
+  const getQueueStats = useCallback(() => {
+    return batchingStats;
+  }, [batchingStats]);
+
+  const flushBatch = useCallback(() => {
+    setBatchingStats(prev => ({
+      ...prev,
+      pending: 0,
+      completed: prev.total
+    }));
+  }, []);
+
+  // Create performance system
+  const performanceSystem: PerformanceData = {
+    monitoring: {
+      metrics: performanceMetrics,
+      getPerformanceSnapshot,
+      measureMemoryUsage
+    },
+    batching: {
+      getQueueStats,
+      flushBatch
+    }
+  };
+
   return (
     <DataPersistenceContext.Provider value={{
       sessionData,
@@ -123,7 +206,7 @@ export const DataPersistenceProvider = ({ children }: { children: ReactNode }) =
       pendingSync,
       forceSync,
       clearSyncQueue,
-      performance: defaultPerformanceData,
+      performance: performanceSystem,
       backups,
       restoreFromBackup
     }}>
