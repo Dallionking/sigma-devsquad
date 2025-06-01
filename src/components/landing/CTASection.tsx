@@ -13,7 +13,8 @@ import {
   CheckCircle,
   Sparkles,
   Clock,
-  CreditCard
+  MessageSquare,
+  Zap
 } from "lucide-react";
 
 export const CTASection = () => {
@@ -28,11 +29,11 @@ export const CTASection = () => {
     }
   };
 
-  const features = [
-    "No credit card required",
-    "Free 14-day trial",
-    "Setup in under 5 minutes",
-    "Cancel anytime"
+  const urgencyFeatures = [
+    "Join 2,500+ development teams",
+    "Setup completes in under 5 minutes",
+    "See results in your first session",
+    "No technical expertise required"
   ];
 
   const trustBadges = [
@@ -54,9 +55,9 @@ export const CTASection = () => {
   ];
 
   return (
-    <section className="py-12 md:py-24 relative overflow-hidden">
+    <section className="py-12 md:py-24 relative overflow-hidden bg-gradient-to-br from-vibe-primary/10 via-transparent to-vibe-secondary/10">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-vibe-primary/5 via-transparent to-vibe-secondary/5 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-dot-pattern opacity-30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <AnimatedSection animation="scale" delay={100}>
@@ -66,17 +67,17 @@ export const CTASection = () => {
               <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-vibe-primary/10 to-vibe-secondary/10 rounded-full border border-vibe-primary/20 mb-6">
                 <Sparkles className="w-4 h-4 text-vibe-primary mr-2" />
                 <span className="text-sm font-medium text-vibe-primary">
-                  Start Your AI Development Journey Today
+                  Ready to Transform Your Development?
                 </span>
               </div>
               
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                Ready to Transform Your Development Process?
+                Start Building with AI Today
               </h2>
               
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Join over 2,500 development teams who've already revolutionized their workflow. 
-                Experience the future of software development with AI-powered agent teams.
+                Don't let your team fall behind. Join the AI development revolution and 
+                experience 10x faster delivery with zero learning curve.
               </p>
               
               {/* CTA Buttons */}
@@ -87,44 +88,50 @@ export const CTASection = () => {
                   variant="enhanced-primary"
                   className="px-8 py-4 text-lg"
                 >
-                  Start Free Trial
+                  Start Free Trial Now
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </EnhancedButton>
-                <EnhancedButton variant="outline" size="lg" className="px-8 py-4 text-lg">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Schedule Demo
+                <EnhancedButton variant="enhanced-secondary" size="lg" className="px-8 py-4 text-lg">
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Talk to an Expert
                 </EnhancedButton>
               </div>
 
-              {/* Feature highlights */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-12">
-                {features.map((feature, index) => (
+              {/* Urgency highlights */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-12">
+                {urgencyFeatures.map((feature, index) => (
                   <div key={index} className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
                     <CheckCircle className="w-4 h-4 text-vibe-flow flex-shrink-0" />
-                    <span>{feature}</span>
+                    <span className="text-center">{feature}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Pricing teaser */}
+            {/* Social Proof Card */}
             <AnimatedSection animation="fade-up" delay={200}>
-              <EnhancedCard className="p-8 mb-12 bg-gradient-to-br from-white to-gray-50/50">
+              <EnhancedCard className="p-8 mb-12 bg-gradient-to-br from-white to-gray-50/50 border-2 border-vibe-primary/20">
                 <div className="text-center">
                   <div className="flex items-center justify-center space-x-2 mb-4">
-                    <CreditCard className="w-5 h-5 text-vibe-primary" />
-                    <span className="text-sm font-medium text-vibe-primary">Special Launch Pricing</span>
+                    <Zap className="w-5 h-5 text-vibe-energy" />
+                    <span className="text-sm font-medium text-vibe-energy">Live Activity</span>
                   </div>
-                  <div className="text-4xl font-bold mb-2">
-                    <span className="text-muted-foreground line-through text-2xl mr-2">$299</span>
-                    <span className="text-vibe-primary">$99</span>
-                    <span className="text-lg font-normal text-muted-foreground">/month</span>
+                  <div className="text-2xl font-bold mb-2 text-vibe-primary">
+                    Real teams are shipping faster right now
                   </div>
-                  <p className="text-muted-foreground mb-4">
-                    Per team • Unlimited agents • All features included
-                  </p>
-                  <div className="inline-flex items-center px-3 py-1 bg-vibe-energy/10 rounded-full text-sm text-vibe-energy font-medium">
-                    67% OFF - Limited Time
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-vibe-primary">127</div>
+                      <div className="text-sm text-muted-foreground">Teams signed up this week</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-vibe-secondary">1,247</div>
+                      <div className="text-sm text-muted-foreground">AI agents deployed today</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-vibe-accent">89%</div>
+                      <div className="text-sm text-muted-foreground">Teams upgrade after trial</div>
+                    </div>
                   </div>
                 </div>
               </EnhancedCard>
@@ -157,7 +164,7 @@ export const CTASection = () => {
                 <div className="flex items-center justify-center space-x-2 text-sm">
                   <div className="w-2 h-2 bg-vibe-energy rounded-full animate-pulse"></div>
                   <span className="text-vibe-energy font-medium">
-                    127 teams signed up in the last 7 days
+                    Don't wait – every day without AI agents costs your team 5+ hours of productivity
                   </span>
                 </div>
               </div>

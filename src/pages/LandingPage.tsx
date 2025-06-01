@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { BenefitsSection } from "@/components/landing/BenefitsSection";
+import { PricingSection } from "@/components/landing/PricingSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { Footer } from "@/components/landing/Footer";
 
@@ -45,7 +46,7 @@ const LandingPage = () => {
         <div className="text-muted-foreground text-sm">Loading your experience...</div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 overflow-x-hidden">
@@ -54,6 +55,7 @@ const LandingPage = () => {
       <FeaturesSection />
       <HowItWorksSection />
       <BenefitsSection />
+      <PricingSection />
       <CTASection />
       <Footer />
     </div>

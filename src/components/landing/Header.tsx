@@ -36,6 +36,7 @@ export const Header = () => {
     { label: "Features", onClick: () => scrollToSection("features") },
     { label: "How it Works", onClick: () => scrollToSection("how-it-works") },
     { label: "Benefits", onClick: () => scrollToSection("benefits") },
+    { label: "Pricing", onClick: () => scrollToSection("pricing") },
   ];
 
   return (
