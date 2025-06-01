@@ -18,7 +18,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
   const isMCPPage = location.pathname === "/mcp-management";
   const isIDEPage = location.pathname === "/ide-integration";
   const isPlanningAgentPage = location.pathname === "/planning-agent";
-  const isDashboardPage = location.pathname === "/";
+  const isDashboardPage = location.pathname === "/dashboard";
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -35,7 +35,7 @@ export const NavigationButtons = ({ onTeamViewToggle, showTeamView }: Navigation
       <Button 
         variant={isDashboardPage && !showTeamView ? "default" : "ghost"} 
         size="sm"
-        onClick={() => handleNavigation("/")}
+        onClick={() => handleNavigation("/dashboard")}
         className="h-8"
       >
         Dashboard

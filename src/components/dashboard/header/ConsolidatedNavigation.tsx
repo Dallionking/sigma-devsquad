@@ -46,14 +46,14 @@ export const ConsolidatedNavigation = ({
   const isMCPPage = location.pathname === "/mcp-management";
   const isIDEPage = location.pathname === "/ide-integration";
   const isPlanningAgentPage = location.pathname === "/planning-agent";
-  const isDashboardPage = location.pathname === "/";
+  const isDashboardPage = location.pathname === "/dashboard";
 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
 
   const primaryNavItems = [
-    { path: "/", label: "Dashboard", icon: Home, active: isDashboardPage },
+    { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
   ];
 

@@ -14,7 +14,8 @@ import { FilterProvider } from "@/contexts/FilterContext";
 import { CurrentUserProvider } from "@/contexts/CurrentUserContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { DataPersistenceProvider } from "@/contexts/DataPersistenceContext";
-import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
+import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import LLMIntegration from "./pages/LLMIntegration";
 import AgentConfiguration from "./pages/AgentConfiguration";
@@ -44,7 +45,8 @@ const App = () => (
                           <Sonner />
                           <BrowserRouter>
                             <Routes>
-                              <Route path="/" element={<Index />} />
+                              <Route path="/" element={<LandingPage />} />
+                              <Route path="/dashboard" element={<Dashboard />} />
                               <Route path="/settings" element={<Settings />} />
                               <Route path="/llm-integration" element={<LLMIntegration />} />
                               <Route path="/agent-configuration" element={<AgentConfiguration />} />

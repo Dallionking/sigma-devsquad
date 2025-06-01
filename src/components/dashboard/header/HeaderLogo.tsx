@@ -56,7 +56,7 @@ export const HeaderLogo = ({
             handleLogoClick();
           }
         }}
-        aria-label="Go to dashboard"
+        aria-label="Go to home page"
       >
         <Logo 
           size={isMobile ? "sm" : "md"} 
