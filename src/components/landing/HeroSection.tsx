@@ -84,21 +84,39 @@ export const HeroSection = () => {
           <div className="space-y-8">
             <AnimatedSection animation="fade-up" delay={100}>
               <div className="space-y-6">
-                <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-vibe-primary/10 to-vibe-secondary/10 rounded-full border border-vibe-primary/20 mb-6 backdrop-blur-sm">
-                  <Sparkles className="w-4 h-4 text-vibe-primary mr-2" />
-                  <span className="text-sm font-medium text-vibe-primary">
-                    Revolutionary AI Development Platform
+                {/* Limitless Badge */}
+                <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#6C5CE7]/10 to-[#00B8D9]/10 rounded-full border border-[#6C5CE7]/20 mb-6 backdrop-blur-sm limitless-badge animate-pulse-glow">
+                  <div className="w-4 h-4 mr-2 bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] rounded-full pill-icon animate-pulse"></div>
+                  <span className="text-sm font-medium bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] bg-clip-text text-transparent">
+                    Unlock Your Development Potential
                   </span>
                 </div>
                 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gradient-animated leading-tight">
-                  Build Smarter with AI-Powered Developer Teams
-                </h1>
+                {/* Preserved headline with Limitless glow effect */}
+                <div className="relative">
+                  <div className="absolute -top-8 -left-4 w-[110%] h-[140%] bg-gradient-to-r from-[#6C5CE7]/20 via-[#00B8D9]/10 to-transparent rounded-full blur-3xl opacity-60 animate-limitless-glow pointer-events-none"></div>
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight relative z-10 hero-headline-enhanced">
+                    <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
+                      Build Smarter with AI-Powered Developer Teams
+                    </span>
+                  </h1>
+                </div>
                 
+                {/* Preserved subheadline */}
                 <p className="text-xl lg:text-2xl text-muted-foreground max-w-2xl leading-relaxed">
                   Transform your development workflow with intelligent agent teams that collaborate, 
                   plan, and execute complex projects autonomously. <span className="text-vibe-primary font-semibold">Which means your teams focus on building—not juggling.</span>
                 </p>
+
+                {/* New Limitless tagline */}
+                <div className="limitless-tagline opacity-0 animate-fade-in-delayed">
+                  <p className="text-2xl lg:text-3xl font-semibold">
+                    <span className="bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] bg-clip-text text-transparent relative limitless-tagline-text">
+                      Develop Beyond Limits
+                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] animate-line-grow"></span>
+                    </span>
+                  </p>
+                </div>
 
                 {/* Problem visualization */}
                 <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 rounded-xl p-6 border border-red-200/50 dark:border-red-800/50">
@@ -126,12 +144,12 @@ export const HeroSection = () => {
                   size="lg" 
                   onClick={handleGetStarted}
                   variant="enhanced-primary"
-                  className="px-8 py-4 text-lg"
+                  className="px-8 py-4 text-lg limitless-cta-primary"
                 >
                   Start Building for Free
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </EnhancedButton>
-                <EnhancedButton variant="enhanced-secondary" size="lg" className="px-8 py-4 text-lg">
+                <EnhancedButton variant="enhanced-secondary" size="lg" className="px-8 py-4 text-lg limitless-cta-secondary">
                   <Play className="w-5 h-5 mr-2" />
                   Watch 3-Min Demo
                 </EnhancedButton>
