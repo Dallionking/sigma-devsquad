@@ -1,11 +1,17 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { FloatingElement, PulsingDot } from "@/components/ui/floating-elements";
+import { EnhancedButton } from "@/components/ui/enhanced-button";
+import { EnhancedCard } from "@/components/ui/enhanced-card";
+import { LoadingProgress } from "@/components/ui/loading-progress";
 import { Logo } from "@/components/branding/Logo";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useResponsiveDesign } from "@/hooks/useResponsiveDesign";
 import { 
   Bot, 
   Users, 
@@ -33,15 +39,27 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const LandingPage = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { screenSize, getGridCols } = useResponsiveDesign();
   const { user, signOut, loading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // Redirect authenticated users to dashboard
-  // useEffect(() => {
-  //   if (!loading && user) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [user, loading, navigate]);
+  // Simulate initial page loading
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(timer);
+          setTimeout(() => setPageLoading(false), 500);
+          return 100;
+        }
+        return prev + Math.random() * 30;
+      });
+    }, 100);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleGetStarted = () => {
     if (user) {
@@ -139,10 +157,17 @@ const LandingPage = () => {
     }
   ];
 
-  if (loading) {
+  if (loading || pageLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-vibe-primary"></div>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col items-center justify-center">
+        <Logo size="lg" variant="full" className="mb-8 animate-pulse" />
+        <LoadingProgress 
+          isLoading={true} 
+          progress={loadingProgress} 
+          variant="bar"
+          className="w-64 mb-4"
+        />
+        <div className="text-muted-foreground text-sm">Loading your experience...</div>
       </div>
     );
   }
@@ -154,7 +179,7 @@ const LandingPage = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <AnimatedSection animation="fade-in" delay={100}>
+            <AnimatedSection animation="slide-left" delay={100}>
               <div className="flex items-center">
                 <Logo size={isMobile ? "sm" : "md"} variant="full" />
               </div>
@@ -176,27 +201,27 @@ const LandingPage = () => {
             </AnimatedSection>
 
             {/* Desktop Auth Buttons */}
-            <AnimatedSection animation="fade-in" delay={300}>
+            <AnimatedSection animation="slide-right" delay={300}>
               <div className="hidden md:flex items-center space-x-4">
                 {user ? (
                   <>
-                    <Button variant="ghost" onClick={() => navigate('/dashboard')} className="btn-enhanced">
+                    <EnhancedButton variant="outline" onClick={() => navigate('/dashboard')}>
                       Dashboard
-                    </Button>
-                    <Button variant="ghost" onClick={handleSignOut} className="btn-enhanced">
+                    </EnhancedButton>
+                    <EnhancedButton variant="outline" onClick={handleSignOut}>
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
-                    </Button>
+                    </EnhancedButton>
                   </>
                 ) : (
                   <>
                     <Button variant="ghost" onClick={handleLogin} className="btn-enhanced">
                       Login
                     </Button>
-                    <Button onClick={handleGetStarted} className="bg-vibe-primary hover:bg-vibe-primary/90 btn-enhanced">
+                    <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted}>
                       Get Started
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </EnhancedButton>
                   </>
                 )}
               </div>
@@ -215,7 +240,7 @@ const LandingPage = () => {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <AnimatedSection animation="fade-in" className="md:hidden border-t bg-background py-4">
+            <AnimatedSection animation="slide-up" className="md:hidden border-t bg-background py-4">
               <nav className="flex flex-col space-y-4">
                 <a href="#features" className="text-foreground/80 hover:text-vibe-primary transition-colors">
                   Features
@@ -229,23 +254,23 @@ const LandingPage = () => {
                 <div className="flex flex-col space-y-2 pt-4 border-t">
                   {user ? (
                     <>
-                      <Button variant="ghost" onClick={() => navigate('/dashboard')} className="justify-start">
+                      <EnhancedButton variant="outline" onClick={() => navigate('/dashboard')} className="justify-start">
                         Dashboard
-                      </Button>
-                      <Button variant="ghost" onClick={handleSignOut} className="justify-start">
+                      </EnhancedButton>
+                      <EnhancedButton variant="outline" onClick={handleSignOut} className="justify-start">
                         <LogOut className="w-4 h-4 mr-2" />
                         Sign Out
-                      </Button>
+                      </EnhancedButton>
                     </>
                   ) : (
                     <>
                       <Button variant="ghost" onClick={handleLogin} className="justify-start">
                         Login
                       </Button>
-                      <Button onClick={handleGetStarted} className="bg-vibe-primary hover:bg-vibe-primary/90 justify-start">
+                      <EnhancedButton variant="enhanced-primary" onClick={handleGetStarted} className="justify-start">
                         Get Started
                         <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
+                      </EnhancedButton>
                     </>
                   )}
                 </div>
@@ -260,7 +285,7 @@ const LandingPage = () => {
         {/* Floating background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <FloatingElement delay={0} className="absolute top-20 left-10 opacity-20">
-            <Sparkles className="w-8 h-8 text-vibe-primary" />
+            <Sparkles className="w-8 h-8 text-vibe-primary animate-pulse-glow" />
           </FloatingElement>
           <FloatingElement delay={2000} className="absolute top-40 right-20 opacity-20">
             <Bot className="w-6 h-6 text-vibe-secondary" />
@@ -271,7 +296,7 @@ const LandingPage = () => {
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className={`grid gap-12 items-center ${getGridCols(1, 1, 2)}`}>
             <div className="space-y-8">
               <AnimatedSection animation="fade-up" delay={100}>
                 <div className="space-y-4">
@@ -287,18 +312,19 @@ const LandingPage = () => {
 
               <AnimatedSection animation="fade-up" delay={200}>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
+                  <EnhancedButton 
                     size="lg" 
                     onClick={handleGetStarted}
-                    className="bg-vibe-primary hover:bg-vibe-primary/90 text-white px-8 py-3 btn-enhanced group"
+                    variant="enhanced-primary"
+                    className="px-8 py-3"
                   >
                     Start Building Today
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                  <Button variant="outline" size="lg" className="px-8 py-3 btn-enhanced group">
-                    <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </EnhancedButton>
+                  <EnhancedButton variant="outline" size="lg" className="px-8 py-3">
+                    <Play className="w-5 h-5 mr-2" />
                     Watch Demo
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </AnimatedSection>
 
@@ -306,8 +332,8 @@ const LandingPage = () => {
               <AnimatedSection animation="fade-up" delay={300}>
                 <div className="flex flex-wrap gap-8 pt-8">
                   {stats.map((stat, index) => (
-                    <div key={index} className="text-center group">
-                      <div className="text-2xl font-bold text-vibe-primary group-hover:scale-110 transition-transform">
+                    <div key={index} className="text-center group hover-lift">
+                      <div className="text-2xl font-bold text-vibe-primary">
                         <AnimatedCounter value={stat.value} />
                       </div>
                       <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -318,13 +344,13 @@ const LandingPage = () => {
             </div>
 
             {/* Hero Visual */}
-            <AnimatedSection animation="fade-up" delay={400}>
+            <AnimatedSection animation="scale-in" delay={400}>
               <div className="relative">
                 <div className="bg-gradient-to-br from-vibe-primary via-vibe-secondary to-vibe-accent rounded-2xl p-1 animate-gradient">
                   <div className="bg-background rounded-xl p-8">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${getGridCols(2, 2, 2)}`}>
                       {/* Mock dashboard preview */}
-                      <Card className="p-4 card-enhanced-hover group">
+                      <EnhancedCard hoverEffect="lift" className="p-4">
                         <div className="flex items-center space-x-2 mb-3">
                           <Bot className="w-5 h-5 text-vibe-primary feature-icon transition-transform" />
                           <span className="font-medium">Agent Team</span>
@@ -335,8 +361,9 @@ const LandingPage = () => {
                           <div className="h-2 bg-vibe-secondary/20 rounded w-3/4"></div>
                           <div className="h-2 bg-vibe-accent/20 rounded w-1/2"></div>
                         </div>
-                      </Card>
-                      <Card className="p-4 card-enhanced-hover group">
+                      </EnhancedCard>
+                      
+                      <EnhancedCard hoverEffect="glow" className="p-4">
                         <div className="flex items-center space-x-2 mb-3">
                           <BarChart className="w-5 h-5 text-vibe-secondary feature-icon transition-transform" />
                           <span className="font-medium">Progress</span>
@@ -346,8 +373,9 @@ const LandingPage = () => {
                           <div className="h-2 bg-vibe-energy/20 rounded w-2/3"></div>
                           <div className="h-2 bg-vibe-primary/20 rounded w-3/4"></div>
                         </div>
-                      </Card>
-                      <Card className="p-4 col-span-2 card-enhanced-hover group">
+                      </EnhancedCard>
+                      
+                      <EnhancedCard hoverEffect="tilt" className="p-4 col-span-2">
                         <div className="flex items-center space-x-2 mb-3">
                           <MessageSquare className="w-5 h-5 text-vibe-accent feature-icon transition-transform" />
                           <span className="font-medium">Live Communication</span>
@@ -363,7 +391,7 @@ const LandingPage = () => {
                             <div className="h-2 bg-muted rounded flex-1 mt-2 w-3/4"></div>
                           </div>
                         </div>
-                      </Card>
+                      </EnhancedCard>
                     </div>
                   </div>
                 </div>
@@ -387,14 +415,14 @@ const LandingPage = () => {
             </div>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 stagger-animation">
+          <div className={`grid gap-8 ${getGridCols(1, 2, 4)} stagger-animation`}>
             {features.map((feature, index) => (
               <AnimatedSection 
                 key={index} 
                 animation="fade-up" 
                 delay={index * 100}
               >
-                <Card className="p-6 card-enhanced-hover group h-full">
+                <EnhancedCard hoverEffect="lift" className="p-6 h-full">
                   <CardContent className="p-0">
                     <div className={`w-12 h-12 bg-vibe-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <feature.icon className={`w-6 h-6 ${feature.color} feature-icon transition-transform`} />
@@ -402,7 +430,7 @@ const LandingPage = () => {
                     <h3 className="font-semibold mb-2">{feature.title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
                   </CardContent>
-                </Card>
+                </EnhancedCard>
               </AnimatedSection>
             ))}
           </div>
@@ -423,7 +451,7 @@ const LandingPage = () => {
             </div>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className={`grid gap-8 ${getGridCols(1, 2, 3)}`}>
             {steps.map((step, index) => (
               <AnimatedSection 
                 key={index} 
@@ -448,8 +476,8 @@ const LandingPage = () => {
       {/* Benefits Section */}
       <section id="benefits" className="py-12 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <AnimatedSection animation="fade-up" delay={100}>
+          <div className={`grid gap-12 items-center ${getGridCols(1, 1, 2)}`}>
+            <AnimatedSection animation="slide-in-left" delay={100}>
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
                   Why Choose Vibe DevSquad?
@@ -465,7 +493,7 @@ const LandingPage = () => {
                       animation="fade-up" 
                       delay={200 + index * 50}
                     >
-                      <div className="flex items-center space-x-3 group">
+                      <div className="flex items-center space-x-3 group hover-lift">
                         <div className="w-6 h-6 bg-vibe-flow rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                           <Check className="w-4 h-4 text-white" />
                         </div>
@@ -477,10 +505,10 @@ const LandingPage = () => {
               </div>
             </AnimatedSection>
 
-            <AnimatedSection animation="fade-up" delay={200}>
+            <AnimatedSection animation="slide-in-right" delay={200}>
               <div className="space-y-6">
                 {testimonials.map((testimonial, index) => (
-                  <Card key={index} className="p-6 card-enhanced-hover">
+                  <EnhancedCard key={index} hoverEffect="glow" className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="flex space-x-1 mb-3">
                         {[...Array(5)].map((_, i) => (
@@ -502,7 +530,7 @@ const LandingPage = () => {
                         </div>
                       </div>
                     </div>
-                  </Card>
+                  </EnhancedCard>
                 ))}
               </div>
             </AnimatedSection>
@@ -513,7 +541,7 @@ const LandingPage = () => {
       {/* CTA Section */}
       <section className="py-12 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <AnimatedSection animation="fade-up" delay={100}>
+          <AnimatedSection animation="scale-in" delay={100}>
             <div className="max-w-3xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Ready to Transform Your Development Process?
@@ -523,29 +551,30 @@ const LandingPage = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
+                <EnhancedButton 
                   size="lg" 
                   onClick={handleGetStarted}
-                  className="bg-vibe-primary hover:bg-vibe-primary/90 text-white px-8 py-3 btn-enhanced group"
+                  variant="enhanced-primary"
+                  className="px-8 py-3"
                 >
                   Get Started Free
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button variant="outline" size="lg" className="px-8 py-3 btn-enhanced">
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </EnhancedButton>
+                <EnhancedButton variant="outline" size="lg" className="px-8 py-3">
                   Schedule Demo
-                </Button>
+                </EnhancedButton>
               </div>
 
               <div className="flex items-center justify-center space-x-8 mt-8 pt-8 border-t">
-                <div className="flex items-center space-x-2 group">
+                <div className="flex items-center space-x-2 group hover-lift">
                   <Shield className="w-5 h-5 text-vibe-primary group-hover:scale-110 transition-transform" />
                   <span className="text-sm text-muted-foreground">Enterprise Security</span>
                 </div>
-                <div className="flex items-center space-x-2 group">
+                <div className="flex items-center space-x-2 group hover-lift">
                   <Globe className="w-5 h-5 text-vibe-primary group-hover:scale-110 transition-transform" />
                   <span className="text-sm text-muted-foreground">99.9% Uptime</span>
                 </div>
-                <div className="flex items-center space-x-2 group">
+                <div className="flex items-center space-x-2 group hover-lift">
                   <Building className="w-5 h-5 text-vibe-primary group-hover:scale-110 transition-transform" />
                   <span className="text-sm text-muted-foreground">SOC 2 Compliant</span>
                 </div>
@@ -559,7 +588,7 @@ const LandingPage = () => {
       <footer className="border-t bg-muted/30 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection animation="fade-up" delay={100}>
-            <div className="grid md:grid-cols-4 gap-8">
+            <div className={`grid gap-8 ${getGridCols(1, 2, 4)}`}>
               <div className="space-y-4">
                 <Logo size="sm" variant="full" />
                 <p className="text-sm text-muted-foreground">
@@ -570,30 +599,30 @@ const LandingPage = () => {
               <div>
                 <h4 className="font-semibold mb-4">Product</h4>
                 <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Features</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Pricing</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Documentation</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">API</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Features</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Pricing</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Documentation</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">API</div>
                 </div>
               </div>
               
               <div>
                 <h4 className="font-semibold mb-4">Company</h4>
                 <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">About</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Blog</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Careers</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Contact</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">About</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Blog</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Careers</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Contact</div>
                 </div>
               </div>
               
               <div>
                 <h4 className="font-semibold mb-4">Support</h4>
                 <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Help Center</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Community</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Status</div>
-                  <div className="hover:text-vibe-primary transition-colors cursor-pointer">Security</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Help Center</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Community</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Status</div>
+                  <div className="hover:text-vibe-primary transition-colors cursor-pointer hover-lift">Security</div>
                 </div>
               </div>
             </div>
