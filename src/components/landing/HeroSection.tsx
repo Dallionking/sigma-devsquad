@@ -107,11 +107,6 @@ export const HeroSection = () => {
                   </span>
                 </p>
 
-                {/* LIMITLESS TAGLINE with enhanced animations - VERIFIED */}
-                <div className="py-4">
-                  <LimitlessTagline />
-                </div>
-
                 {/* Problem visualization with enhanced styling */}
                 <ProblemStats />
               </div>
@@ -154,97 +149,106 @@ export const HeroSection = () => {
           </div>
 
           {/* Enhanced hero visual with improved agent team hierarchy */}
-          <AnimatedSection animation="scale" delay={400}>
-            <div className="relative">
-              {/* Outer glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-br from-vibe-primary/20 via-vibe-secondary/10 to-vibe-accent/20 rounded-3xl blur-2xl opacity-50 animate-limitless-glow"></div>
-              
-              <div className="bg-gradient-to-br from-vibe-primary via-vibe-secondary to-vibe-accent rounded-2xl p-1 animate-gradient bg-[length:200%_200%] relative z-10">
-                <div className="bg-background/95 backdrop-blur-xl rounded-xl p-8 border border-white/10">
-                  <div className={`grid gap-4 ${getGridCols(2, 2, 2)}`}>
-                    {/* Enhanced DevOps Agent card */}
-                    <EnhancedCard hoverEffect="lift" className="p-4 bg-gradient-to-br from-card/90 to-card/70 border-vibe-primary/20">
-                      <div className="flex items-center space-x-2 mb-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-vibe-primary to-vibe-secondary rounded-lg flex items-center justify-center">
-                          <Bot className="w-5 h-5 text-white feature-icon transition-transform" />
-                        </div>
-                        <span className="font-medium">DevOps Agent</span>
-                        <PulsingDot className="ml-auto" />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                          <span>Deploying v2.1.3</span>
-                        </div>
-                        <div className="h-2 bg-gradient-to-r from-vibe-primary/30 to-vibe-primary/10 rounded animate-shimmer"></div>
-                        <div className="h-2 bg-gradient-to-r from-vibe-secondary/30 to-vibe-secondary/10 rounded w-3/4"></div>
-                        <div className="h-2 bg-gradient-to-r from-vibe-accent/30 to-vibe-accent/10 rounded w-1/2"></div>
-                      </div>
-                    </EnhancedCard>
-                    
-                    {/* Enhanced Performance card */}
-                    <EnhancedCard hoverEffect="glow" className="p-4 bg-gradient-to-br from-card/90 to-card/70 border-vibe-secondary/20">
-                      <div className="flex items-center space-x-2 mb-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-vibe-secondary to-vibe-accent rounded-lg flex items-center justify-center">
-                          <BarChart className="w-5 h-5 text-white feature-icon transition-transform" />
-                        </div>
-                        <span className="font-medium">Performance</span>
-                        <div className="flex items-center ml-auto">
-                          <TrendingUp className="w-4 h-4 text-green-500 animate-bounce-gentle" />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-xs">
-                          <span className="text-muted-foreground">Build Time</span>
-                          <span className="text-green-500 font-medium animate-pulse">↓ 68%</span>
-                        </div>
-                        <div className="h-2 bg-gradient-to-r from-vibe-flow/30 to-vibe-flow/10 rounded w-5/6"></div>
-                        <div className="h-2 bg-gradient-to-r from-vibe-energy/30 to-vibe-energy/10 rounded w-2/3"></div>
-                        <div className="h-2 bg-gradient-to-r from-vibe-primary/30 to-vibe-primary/10 rounded w-3/4"></div>
-                      </div>
-                    </EnhancedCard>
-                    
-                    {/* Enhanced Agent Team Coordination card */}
-                    <EnhancedCard hoverEffect="tilt" className="p-4 col-span-2 bg-gradient-to-br from-card/90 to-card/70 border-vibe-accent/20">
-                      <div className="flex items-center space-x-2 mb-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-vibe-accent to-vibe-flow rounded-lg flex items-center justify-center">
-                          <MessageSquare className="w-5 h-5 text-white feature-icon transition-transform" />
-                        </div>
-                        <span className="font-medium">Agent Team Coordination</span>
-                        <PulsingDot className="ml-auto" color="bg-green-500" />
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex space-x-2">
-                          <div className="w-6 h-6 bg-gradient-to-br from-vibe-primary to-vibe-secondary rounded-full animate-bounce-gentle flex items-center justify-center text-xs text-white font-bold">PM</div>
-                          <div className="flex-1">
-                            <div className="text-xs text-muted-foreground mb-1">Planning Agent</div>
-                            <div className="h-2 bg-gradient-to-r from-vibe-primary/30 to-transparent rounded animate-shimmer"></div>
+          <div className="space-y-6">
+            <AnimatedSection animation="scale" delay={400}>
+              <div className="relative">
+                {/* Outer glow effect */}
+                <div className="absolute -inset-4 bg-gradient-to-br from-vibe-primary/20 via-vibe-secondary/10 to-vibe-accent/20 rounded-3xl blur-2xl opacity-50 animate-limitless-glow"></div>
+                
+                <div className="bg-gradient-to-br from-vibe-primary via-vibe-secondary to-vibe-accent rounded-2xl p-1 animate-gradient bg-[length:200%_200%] relative z-10">
+                  <div className="bg-background/95 backdrop-blur-xl rounded-xl p-8 border border-white/10">
+                    <div className={`grid gap-4 ${getGridCols(2, 2, 2)}`}>
+                      {/* Enhanced DevOps Agent card */}
+                      <EnhancedCard hoverEffect="lift" className="p-4 bg-gradient-to-br from-card/90 to-card/70 border-vibe-primary/20">
+                        <div className="flex items-center space-x-2 mb-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-vibe-primary to-vibe-secondary rounded-lg flex items-center justify-center">
+                            <Bot className="w-5 h-5 text-white feature-icon transition-transform" />
                           </div>
-                          <div className="text-xs text-green-500 font-medium animate-pulse">Active</div>
+                          <span className="font-medium">DevOps Agent</span>
+                          <PulsingDot className="ml-auto" />
                         </div>
-                        <div className="flex space-x-2">
-                          <div className="w-6 h-6 bg-gradient-to-br from-vibe-secondary to-vibe-accent rounded-full flex items-center justify-center text-xs text-white font-bold animate-pulse">QA</div>
-                          <div className="flex-1">
-                            <div className="text-xs text-muted-foreground mb-1">Testing Agent</div>
-                            <div className="h-2 bg-gradient-to-r from-vibe-secondary/30 to-transparent rounded w-3/4"></div>
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span>Deploying v2.1.3</span>
                           </div>
-                          <div className="text-xs text-blue-500 font-medium">Testing</div>
+                          <div className="h-2 bg-gradient-to-r from-vibe-primary/30 to-vibe-primary/10 rounded animate-shimmer"></div>
+                          <div className="h-2 bg-gradient-to-r from-vibe-secondary/30 to-vibe-secondary/10 rounded w-3/4"></div>
+                          <div className="h-2 bg-gradient-to-r from-vibe-accent/30 to-vibe-accent/10 rounded w-1/2"></div>
                         </div>
-                        <div className="flex space-x-2">
-                          <div className="w-6 h-6 bg-gradient-to-br from-vibe-accent to-vibe-flow rounded-full flex items-center justify-center text-xs text-white font-bold animate-bounce-gentle">DV</div>
-                          <div className="flex-1">
-                            <div className="text-xs text-muted-foreground mb-1">Dev Agent</div>
-                            <div className="h-2 bg-gradient-to-r from-vibe-accent/30 to-transparent rounded w-4/5 animate-shimmer"></div>
+                      </EnhancedCard>
+                      
+                      {/* Enhanced Performance card */}
+                      <EnhancedCard hoverEffect="glow" className="p-4 bg-gradient-to-br from-card/90 to-card/70 border-vibe-secondary/20">
+                        <div className="flex items-center space-x-2 mb-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-vibe-secondary to-vibe-accent rounded-lg flex items-center justify-center">
+                            <BarChart className="w-5 h-5 text-white feature-icon transition-transform" />
                           </div>
-                          <div className="text-xs text-purple-500 font-medium animate-pulse">Coding</div>
+                          <span className="font-medium">Performance</span>
+                          <div className="flex items-center ml-auto">
+                            <TrendingUp className="w-4 h-4 text-green-500 animate-bounce-gentle" />
+                          </div>
                         </div>
-                      </div>
-                    </EnhancedCard>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">Build Time</span>
+                            <span className="text-green-500 font-medium animate-pulse">↓ 68%</span>
+                          </div>
+                          <div className="h-2 bg-gradient-to-r from-vibe-flow/30 to-vibe-flow/10 rounded w-5/6"></div>
+                          <div className="h-2 bg-gradient-to-r from-vibe-energy/30 to-vibe-energy/10 rounded w-2/3"></div>
+                          <div className="h-2 bg-gradient-to-r from-vibe-primary/30 to-vibe-primary/10 rounded w-3/4"></div>
+                        </div>
+                      </EnhancedCard>
+                      
+                      {/* Enhanced Agent Team Coordination card */}
+                      <EnhancedCard hoverEffect="tilt" className="p-4 col-span-2 bg-gradient-to-br from-card/90 to-card/70 border-vibe-accent/20">
+                        <div className="flex items-center space-x-2 mb-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-vibe-accent to-vibe-flow rounded-lg flex items-center justify-center">
+                            <MessageSquare className="w-5 h-5 text-white feature-icon transition-transform" />
+                          </div>
+                          <span className="font-medium">Agent Team Coordination</span>
+                          <PulsingDot className="ml-auto" color="bg-green-500" />
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex space-x-2">
+                            <div className="w-6 h-6 bg-gradient-to-br from-vibe-primary to-vibe-secondary rounded-full animate-bounce-gentle flex items-center justify-center text-xs text-white font-bold">PM</div>
+                            <div className="flex-1">
+                              <div className="text-xs text-muted-foreground mb-1">Planning Agent</div>
+                              <div className="h-2 bg-gradient-to-r from-vibe-primary/30 to-transparent rounded animate-shimmer"></div>
+                            </div>
+                            <div className="text-xs text-green-500 font-medium animate-pulse">Active</div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <div className="w-6 h-6 bg-gradient-to-br from-vibe-secondary to-vibe-accent rounded-full flex items-center justify-center text-xs text-white font-bold animate-pulse">QA</div>
+                            <div className="flex-1">
+                              <div className="text-xs text-muted-foreground mb-1">Testing Agent</div>
+                              <div className="h-2 bg-gradient-to-r from-vibe-secondary/30 to-transparent rounded w-3/4"></div>
+                            </div>
+                            <div className="text-xs text-blue-500 font-medium">Testing</div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <div className="w-6 h-6 bg-gradient-to-br from-vibe-accent to-vibe-flow rounded-full flex items-center justify-center text-xs text-white font-bold animate-bounce-gentle">DV</div>
+                            <div className="flex-1">
+                              <div className="text-xs text-muted-foreground mb-1">Dev Agent</div>
+                              <div className="h-2 bg-gradient-to-r from-vibe-accent/30 to-transparent rounded w-4/5 animate-shimmer"></div>
+                            </div>
+                            <div className="text-xs text-purple-500 font-medium animate-pulse">Coding</div>
+                          </div>
+                        </div>
+                      </EnhancedCard>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </AnimatedSection>
+            </AnimatedSection>
+
+            {/* LIMITLESS TAGLINE moved to right side underneath animation - VERIFIED */}
+            <AnimatedSection animation="fade-up" delay={500}>
+              <div className="py-4">
+                <LimitlessTagline />
+              </div>
+            </AnimatedSection>
+          </div>
         </div>
       </div>
     </section>
