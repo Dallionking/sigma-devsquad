@@ -50,7 +50,14 @@ const initialProgress: OnboardingProgress = {
   hasCreatedAgent: false,
   hasCreatedTeam: false,
   hasUsedPlanning: false,
-  stepData: {}
+  stepData: {
+    welcome: null,
+    'profile-setup': null,
+    'team-creation': null,
+    'first-agent': null,
+    'planning-tour': null,
+    completion: null
+  }
 };
 
 export const OnboardingProvider = ({ children }: { children: React.ReactNode }) => {
@@ -68,7 +75,7 @@ export const OnboardingProvider = ({ children }: { children: React.ReactNode }) 
           setProgress({
             ...initialProgress,
             ...parsedProgress,
-            stepData: parsedProgress.stepData || {}
+            stepData: parsedProgress.stepData || initialProgress.stepData
           });
           
           // Show onboarding if not complete and it's a first visit
@@ -216,7 +223,7 @@ export const OnboardingProvider = ({ children }: { children: React.ReactNode }) 
 export const useOnboarding = () => {
   const context = useContext(OnboardingContext);
   if (context === undefined) {
-    throw new error('useOnboarding must be used within an OnboardingProvider');
+    throw new Error('useOnboarding must be used within an OnboardingProvider');
   }
   return context;
 };
