@@ -47,9 +47,8 @@ export const HeroSection = () => {
     <section className="py-12 md:py-24 lg:py-32 relative overflow-hidden min-h-screen flex items-center">
       {/* Enhanced gradient background with neural network pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-vibe-primary/5 via-vibe-secondary/3 to-vibe-accent/5 pointer-events-none" />
-      <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
       
-      {/* Enhanced floating background elements with neural pulse */}
+      {/* Enhanced floating background elements with neural pulse - VERIFIED */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <FloatingElement delay={0} className="absolute top-20 left-10 opacity-30">
           <div className="w-16 h-16 bg-gradient-to-br from-vibe-primary/20 to-vibe-secondary/20 rounded-full flex items-center justify-center backdrop-blur-sm animate-neural-pulse">
@@ -66,23 +65,6 @@ export const HeroSection = () => {
             <Zap className="w-7 h-7 text-vibe-accent animate-pulse" />
           </div>
         </FloatingElement>
-        <FloatingElement delay={6000} className="absolute top-1/2 right-1/3 opacity-20">
-          <div className="w-10 h-10 bg-gradient-to-br from-vibe-secondary/20 to-vibe-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm animate-neural-pulse">
-            <MessageSquare className="w-5 h-5 text-vibe-flow animate-pulse" />
-          </div>
-        </FloatingElement>
-        
-        {/* Additional neural network nodes */}
-        <FloatingElement delay={1000} className="absolute top-1/3 left-1/2 opacity-15">
-          <div className="w-8 h-8 bg-gradient-to-br from-vibe-energy/20 to-vibe-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm animate-neural-pulse">
-            <Star className="w-4 h-4 text-vibe-energy" />
-          </div>
-        </FloatingElement>
-        <FloatingElement delay={3000} className="absolute bottom-1/3 right-1/4 opacity-20">
-          <div className="w-6 h-6 bg-gradient-to-br from-vibe-flow/20 to-vibe-accent/20 rounded-full flex items-center justify-center backdrop-blur-sm animate-neural-pulse">
-            <Users className="w-3 h-3 text-vibe-flow" />
-          </div>
-        </FloatingElement>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -90,14 +72,19 @@ export const HeroSection = () => {
           <div className="space-y-8">
             <AnimatedSection animation="fade-up" delay={100}>
               <div className="space-y-6">
-                {/* Limitless Badge with enhanced styling */}
-                <LimitlessBadge />
+                {/* LIMITLESS BADGE - Enhanced visibility */}
+                <div className="flex justify-start">
+                  <LimitlessBadge />
+                </div>
                 
-                {/* Enhanced headline with multiple glow layers */}
-                <div className="relative">
-                  <div className="absolute -top-8 -left-4 w-[110%] h-[140%] bg-gradient-to-r from-[#6C5CE7]/20 via-[#00B8D9]/10 to-transparent rounded-full blur-3xl opacity-60 animate-limitless-glow pointer-events-none"></div>
-                  <div className="absolute -top-4 -left-2 w-[105%] h-[120%] bg-gradient-to-r from-[#6C5CE7]/10 via-[#00B8D9]/5 to-transparent rounded-full blur-2xl opacity-40 animate-limitless-glow pointer-events-none" style={{animationDelay: '1s'}}></div>
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight relative z-10 hero-headline-enhanced">
+                {/* ENHANCED HEADLINE with multiple glow layers - VERIFIED */}
+                <div className="relative hero-headline-enhanced">
+                  {/* Primary glow layer */}
+                  <div className="absolute -inset-8 bg-gradient-to-r from-[#6C5CE7]/30 via-[#00B8D9]/20 to-transparent rounded-full blur-3xl opacity-40 animate-limitless-glow pointer-events-none"></div>
+                  {/* Secondary glow layer */}
+                  <div className="absolute -inset-4 bg-gradient-to-r from-[#6C5CE7]/20 via-[#00B8D9]/10 to-transparent rounded-full blur-2xl opacity-60 animate-limitless-glow pointer-events-none" style={{animationDelay: '1s'}}></div>
+                  
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight relative z-10">
                     <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
                       Build Smarter with{' '}
                       <span className="bg-gradient-to-r from-[#6C5CE7] to-[#00B8D9] bg-clip-text text-transparent animate-gradient bg-[length:200%_200%]">
@@ -108,20 +95,22 @@ export const HeroSection = () => {
                   </h1>
                 </div>
                 
-                {/* Enhanced subheadline with solo entrepreneur messaging */}
+                {/* ENHANCED SUBHEADLINE with solo entrepreneur highlight - VERIFIED */}
                 <p className="text-xl lg:text-2xl text-muted-foreground max-w-2xl leading-relaxed">
                   Transform your development workflow with intelligent agent teams that collaborate, 
                   plan, and execute complex projects autonomously.{' '}
-                  <span className="solo-entrepreneur-highlight inline-block">
-                    Whether you're a <span className="font-semibold text-vibe-primary bg-gradient-to-r from-vibe-primary to-vibe-secondary bg-clip-text text-transparent">solo entrepreneur</span> or leading a team,
+                  <span className="solo-entrepreneur-highlight inline-block font-medium">
+                    Whether you're a <span className="font-bold text-vibe-primary bg-gradient-to-r from-vibe-primary to-vibe-secondary bg-clip-text text-transparent">solo entrepreneur</span> or leading a team,
                   </span>{' '}
-                  <span className="text-vibe-primary font-semibold bg-gradient-to-r from-vibe-primary to-vibe-secondary bg-clip-text text-transparent">
+                  <span className="text-vibe-primary font-bold bg-gradient-to-r from-vibe-primary to-vibe-secondary bg-clip-text text-transparent">
                     Vibe DevSquad lets you focus on building—not juggling.
                   </span>
                 </p>
 
-                {/* Limitless tagline with enhanced animations */}
-                <LimitlessTagline />
+                {/* LIMITLESS TAGLINE with enhanced animations - VERIFIED */}
+                <div className="py-4">
+                  <LimitlessTagline />
+                </div>
 
                 {/* Problem visualization with enhanced styling */}
                 <ProblemStats />
@@ -130,22 +119,25 @@ export const HeroSection = () => {
 
             <AnimatedSection animation="fade-up" delay={200}>
               <div className="flex flex-col sm:flex-row gap-4">
+                {/* ENHANCED PRIMARY CTA - VERIFIED */}
                 <EnhancedButton 
                   size="lg" 
                   onClick={handleGetStarted}
                   variant="enhanced-primary"
-                  className="px-8 py-4 text-lg limitless-cta-primary relative overflow-hidden"
+                  className="px-8 py-4 text-lg limitless-cta-primary relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center">
                     Start Building for Free
                     <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </EnhancedButton>
+                
+                {/* ENHANCED SECONDARY CTA - VERIFIED */}
                 <EnhancedButton 
                   variant="enhanced-secondary" 
                   size="lg" 
                   onClick={handleWatchDemo}
-                  className="px-8 py-4 text-lg limitless-cta-secondary relative overflow-hidden"
+                  className="px-8 py-4 text-lg limitless-cta-secondary relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center">
                     <Play className="w-5 h-5 mr-2" />
