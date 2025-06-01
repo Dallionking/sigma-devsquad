@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useInputValidation } from '@/hooks/useInputValidation';
 import { useAutoSave } from '@/hooks/useAutoSave';
@@ -72,7 +71,7 @@ export const TeamCreationForm = ({ onComplete, onSkip }: TeamCreationFormProps) 
         console.error('Failed to load saved team data:', error);
       }
     }
-  }, [teamName, teamDescription]);
+  }, []); // Remove teamName and teamDescription from dependencies to avoid infinite loop
 
   const isFormValid = () => {
     return (
