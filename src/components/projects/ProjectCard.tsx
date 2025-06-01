@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Calendar, Users, Target, Settings, Archive, Play, Pause } from 'lucide-react';
+import { MoreHorizontal, Calendar, Users, Target, Settings, Archive, Play, Pause, Star } from 'lucide-react';
 import { useProjects } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
 
@@ -20,6 +19,7 @@ interface Project {
   targetDate: string;
   team: string[];
   objectives: string[];
+  isFavorite?: boolean;
 }
 
 interface ProjectCardProps {
@@ -30,7 +30,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: ProjectCardProps) => {
-  const { updateProject } = useProjects();
+  const { updateProject, toggleFavorite } = useProjects();
 
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
@@ -56,6 +56,11 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
     updateProject(project.id, { status: newStatus });
   };
 
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFavorite(project.id);
+  };
+
   const calculateDaysRemaining = () => {
     const today = new Date();
     const target = new Date(project.targetDate);
@@ -69,7 +74,7 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
   return (
     <Card 
       className={cn(
-        "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] group",
+        "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] group relative",
         isSelected && "ring-2 ring-primary ring-offset-2"
       )}
       onClick={() => onSelect(project)}
@@ -89,40 +94,65 @@ export const ProjectCard = ({ project, onSelect, onEdit, isSelected = false }: P
             </CardDescription>
           </div>
           
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(project); }}>
-                <Settings className="w-4 h-4 mr-2" />
-                Edit Project
-              </DropdownMenuItem>
-              {project.status === 'active' && (
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange('paused'); }}>
-                  <Pause className="w-4 h-4 mr-2" />
-                  Pause Project
+          <div className="flex items-center space-x-1">
+            {/* Favorite Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+              onClick={handleToggleFavorite}
+            >
+              <Star 
+                className={cn(
+                  "w-4 h-4",
+                  project.isFavorite ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
+                )} 
+              />
+            </Button>
+
+            {/* Menu Button */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(project); }}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Edit Project
                 </DropdownMenuItem>
-              )}
-              {project.status === 'paused' && (
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange('active'); }}>
-                  <Play className="w-4 h-4 mr-2" />
-                  Resume Project
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleToggleFavorite(e); }}>
+                  <Star className={cn(
+                    "w-4 h-4 mr-2",
+                    project.isFavorite ? "fill-yellow-400 text-yellow-400" : ""
+                  )} />
+                  {project.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
                 </DropdownMenuItem>
-              )}
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange('archived'); }}>
-                <Archive className="w-4 h-4 mr-2" />
-                Archive Project
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                {project.status === 'active' && (
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange('paused'); }}>
+                    <Pause className="w-4 h-4 mr-2" />
+                    Pause Project
+                  </DropdownMenuItem>
+                )}
+                {project.status === 'paused' && (
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange('active'); }}>
+                    <Play className="w-4 h-4 mr-2" />
+                    Resume Project
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange('archived'); }}>
+                  <Archive className="w-4 h-4 mr-2" />
+                  Archive Project
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </CardHeader>
 

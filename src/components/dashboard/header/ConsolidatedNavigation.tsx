@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
+import { ProjectSwitcher } from "@/components/projects/ProjectSwitcher";
 
 interface ConsolidatedNavigationProps {
   viewMode: ViewMode;
@@ -70,7 +71,15 @@ export const ConsolidatedNavigation = ({
   ];
 
   return (
-    <div className="flex items-center space-x-1">
+    <div className="flex items-center space-x-4">
+      {/* Project Switcher */}
+      <div className="hidden lg:block">
+        <ProjectSwitcher />
+      </div>
+
+      {/* Divider */}
+      <div className="w-px h-6 bg-border hidden lg:block" />
+
       {/* Primary Navigation */}
       <div className="flex items-center space-x-1">
         {primaryNavItems.map((item) => {

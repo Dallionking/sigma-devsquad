@@ -4,6 +4,7 @@ import { HeaderLogo } from "./header/HeaderLogo";
 import { StatusBadge } from "./header/StatusBadge";
 import { ActionButtons } from "./header/ActionButtons";
 import { ConnectionStatusHeader } from "./header/ConnectionStatusHeader";
+import { MobileProjectSwitcher } from "@/components/projects/MobileProjectSwitcher";
 import { ViewMode, Agent } from "@/types";
 import { useLocation } from "react-router-dom";
 
@@ -49,6 +50,11 @@ export const Header = ({
             activeAgents={activeAgents}
             totalAgents={totalAgents}
           />
+          
+          {/* Mobile Project Switcher */}
+          <div className="lg:hidden w-48">
+            <MobileProjectSwitcher />
+          </div>
         </div>
         
         {/* Center Section: Consolidated Navigation */}
