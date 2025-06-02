@@ -55,17 +55,17 @@ export const TeamPerformanceFilters = ({
 
   return (
     <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2">
+      <CardContent className="p-3">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-3">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Filter className="w-4 h-4 text-muted-foreground" />
             <span className="text-sm font-medium">Filters:</span>
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Time Range:</span>
-            <div className="flex gap-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
+            <span className="text-sm text-muted-foreground flex-shrink-0">Time:</span>
+            <div className="flex gap-1 overflow-x-auto">
               {(['today', 'week', 'month', 'custom'] as TimeRange[]).map((range) => (
                 <Button
                   key={range}
@@ -77,7 +77,7 @@ export const TeamPerformanceFilters = ({
                       onCustomDateRangeChange(null);
                     }
                   }}
-                  className="capitalize"
+                  className="capitalize text-xs flex-shrink-0"
                 >
                   {range}
                 </Button>
@@ -89,12 +89,14 @@ export const TeamPerformanceFilters = ({
           {timeRange === 'custom' && (
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <CalendarIcon className="w-4 h-4" />
-                  {customDateRange 
-                    ? `${format(customDateRange.start, 'MMM dd')} - ${format(customDateRange.end, 'MMM dd')}`
-                    : 'Select dates'
-                  }
+                <Button variant="outline" size="sm" className="gap-2 min-w-0 max-w-48">
+                  <CalendarIcon className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">
+                    {customDateRange 
+                      ? `${format(customDateRange.start, 'MMM dd')} - ${format(customDateRange.end, 'MMM dd')}`
+                      : 'Select dates'
+                    }
+                  </span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -102,7 +104,7 @@ export const TeamPerformanceFilters = ({
                   mode="range"
                   selected={selectedRange}
                   onSelect={handleDateRangeSelect}
-                  numberOfMonths={2}
+                  numberOfMonths={1}
                   className="pointer-events-auto"
                 />
               </PopoverContent>
@@ -110,15 +112,15 @@ export const TeamPerformanceFilters = ({
           )}
 
           {/* Comparison Type Selector */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Compare:</span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
+            <span className="text-sm text-muted-foreground flex-shrink-0">Compare:</span>
             <Select value={comparisonType} onValueChange={(value: ComparisonType) => onComparisonTypeChange(value)}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-full sm:w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">No comparison</SelectItem>
-                <SelectItem value="previous-period">vs Previous period</SelectItem>
+                <SelectItem value="previous-period">vs Previous</SelectItem>
                 <SelectItem value="target">vs Target</SelectItem>
               </SelectContent>
             </Select>

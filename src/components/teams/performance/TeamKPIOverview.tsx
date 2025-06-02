@@ -89,9 +89,9 @@ export const TeamKPIOverview = ({
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="w-4 h-4 text-emerald-500" />;
-      case 'down': return <TrendingDown className="w-4 h-4 text-red-500" />;
-      case 'stable': return <Minus className="w-4 h-4 text-yellow-500" />;
+      case 'up': return <TrendingUp className="w-3 h-3 text-emerald-500" />;
+      case 'down': return <TrendingDown className="w-3 h-3 text-red-500" />;
+      case 'stable': return <Minus className="w-3 h-3 text-yellow-500" />;
       default: return null;
     }
   };
@@ -104,7 +104,7 @@ export const TeamKPIOverview = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       {kpiMetrics.map((metric) => {
         const Icon = metric.icon;
         const progressValue = metric.target ? (metric.value / metric.target) * 100 : 0;
@@ -112,18 +112,18 @@ export const TeamKPIOverview = ({
         return (
           <Card key={metric.id} className="relative overflow-hidden">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-xs font-medium text-muted-foreground truncate">
                 {metric.title}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
               <div className="flex items-center justify-between">
-                <div className="space-y-1">
+                <div className="space-y-1 min-w-0 flex-1">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold">
+                    <span className="text-lg font-bold truncate">
                       {metric.value}
                     </span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       {metric.unit}
                     </span>
                   </div>
@@ -134,27 +134,24 @@ export const TeamKPIOverview = ({
                       <span className={`text-xs font-medium ${getChangeColor(metric.trend, metric.changePercent)}`}>
                         {metric.changePercent > 0 ? '+' : ''}{metric.changePercent}%
                       </span>
-                      <span className="text-xs text-muted-foreground">
-                        vs {comparisonType === 'previous-period' ? 'last period' : 'target'}
-                      </span>
                     </div>
                   )}
                 </div>
                 
-                <div className={`p-2 rounded-lg bg-muted/50`}>
-                  <Icon className={`w-5 h-5 ${metric.color}`} />
+                <div className={`p-2 rounded-lg bg-muted/50 flex-shrink-0`}>
+                  <Icon className={`w-4 h-4 ${metric.color}`} />
                 </div>
               </div>
               
               {metric.target && (
-                <div className="mt-3 space-y-1">
+                <div className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Progress to target</span>
+                    <span className="text-muted-foreground">Target</span>
                     <span className="font-medium">
                       {metric.value}/{metric.target} {metric.unit}
                     </span>
                   </div>
-                  <Progress value={progressValue} className="h-2" />
+                  <Progress value={progressValue} className="h-1.5" />
                 </div>
               )}
             </CardContent>

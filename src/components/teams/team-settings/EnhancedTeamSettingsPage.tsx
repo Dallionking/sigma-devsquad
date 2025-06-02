@@ -32,8 +32,8 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
 
   if (!team) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-center max-w-md w-full">
           <h1 className="text-2xl font-bold mb-2">Team Not Found</h1>
           <p className="text-muted-foreground mb-4">
             The team you're looking for doesn't exist or has been removed.
@@ -57,10 +57,10 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <div className="container max-w-7xl mx-auto px-4 py-6">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Button 
             onClick={() => navigate('/dashboard')}
             variant="ghost" 
@@ -70,14 +70,14 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
             Back to Dashboard
           </Button>
           
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-3">
-                <Settings className="w-8 h-8" />
-                Team Settings
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold flex items-center gap-3">
+                <Settings className="w-6 h-6 flex-shrink-0" />
+                <span className="truncate">Team Settings</span>
               </h1>
-              <div className="flex items-center gap-3 mt-2">
-                <h2 className="text-xl text-muted-foreground">{team.name}</h2>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <h2 className="text-lg text-muted-foreground truncate">{team.name}</h2>
                 <Badge variant="secondary" className="capitalize">
                   {team.type}
                 </Badge>
@@ -90,7 +90,7 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline" className="flex items-center gap-1">
                 <Eye className="w-3 h-3" />
                 {team.visibility || 'Public'}
@@ -104,17 +104,17 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
 
         {/* Settings Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 mb-8">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 mb-6 h-auto">
             {settingsTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger 
                   key={tab.id} 
                   value={tab.id} 
-                  className="flex items-center gap-2"
+                  className="flex flex-col lg:flex-row items-center gap-1 lg:gap-2 p-2 text-xs lg:text-sm"
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="hidden sm:inline lg:inline">{tab.label}</span>
                 </TabsTrigger>
               );
             })}
@@ -133,7 +133,7 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
             </Card>
           </TabsContent>
 
-          <TabsContent value="performance">
+          <TabsContent value="performance" className="space-y-0">
             <TeamPerformanceDashboard team={team} />
           </TabsContent>
 

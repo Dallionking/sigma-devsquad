@@ -60,14 +60,14 @@ export const TeamPerformanceCharts = ({
 
   if (chartType === 'overview') {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         {/* Productivity Trend */}
         <Card>
           <CardHeader>
-            <CardTitle>Productivity Trend</CardTitle>
+            <CardTitle className="text-base">Productivity Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={productivityData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -90,10 +90,10 @@ export const TeamPerformanceCharts = ({
         {/* Task Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Task Distribution</CardTitle>
+            <CardTitle className="text-base">Task Distribution</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -118,12 +118,12 @@ export const TeamPerformanceCharts = ({
         </Card>
 
         {/* Daily Tasks */}
-        <Card className="lg:col-span-2">
+        <Card className="xl:col-span-2">
           <CardHeader>
-            <CardTitle>Daily Task Completion</CardTitle>
+            <CardTitle className="text-base">Daily Task Completion</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={productivityData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -141,14 +141,14 @@ export const TeamPerformanceCharts = ({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
       {/* Team Velocity */}
       <Card>
         <CardHeader>
-          <CardTitle>Team Velocity</CardTitle>
+          <CardTitle className="text-base">Team Velocity</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={productivityData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -170,10 +170,10 @@ export const TeamPerformanceCharts = ({
       {/* Member Performance */}
       <Card>
         <CardHeader>
-          <CardTitle>Member Performance</CardTitle>
+          <CardTitle className="text-base">Member Performance</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={memberPerformanceData}>
                 <CartesianGrid strokeDasharray="3 3" />
