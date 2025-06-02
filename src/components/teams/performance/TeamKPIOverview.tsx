@@ -132,10 +132,14 @@ export const TeamKPIOverview = ({
     }
   };
 
-  const getChangeColor = (trend: string, changePercent: number) => {
+  const getChangeColor = (trend: string, changePercent: number, metricId: string) => {
     if (changePercent === 0) return 'text-muted-foreground';
+    
+    // For blocked tasks, red is always bad
+    if (metricId === 'blocked-tasks') return 'text-red-600';
+    
     if (trend === 'up' && changePercent > 0) return 'text-emerald-600';
-    if (trend === 'down' && changePercent < 0 && trend !== 'blocked-tasks') return 'text-emerald-600';
+    if (trend === 'down' && changePercent < 0) return 'text-emerald-600';
     return 'text-red-600';
   };
 
@@ -167,7 +171,7 @@ export const TeamKPIOverview = ({
                   {comparisonType !== 'none' && metric.changePercent !== 0 && (
                     <div className="flex items-center gap-1">
                       {getTrendIcon(metric.trend)}
-                      <span className={`text-xs font-medium ${getChangeColor(metric.trend, metric.changePercent)}`}>
+                      <span className={`text-xs font-medium ${getChangeColor(metric.trend, metric.changePercent, metric.id)}`}>
                         {metric.changePercent > 0 ? '+' : ''}{metric.changePercent}%
                       </span>
                     </div>
