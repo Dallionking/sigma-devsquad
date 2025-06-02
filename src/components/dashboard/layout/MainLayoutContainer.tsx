@@ -87,7 +87,7 @@ export const MainLayoutContainer = ({
         {/* Sidebar */}
         <MainLayoutSidebar
           showTeamView={showTeamView}
-          collapsed={sidebarCollapsed}
+          sidebarCollapsed={sidebarCollapsed}
           agents={agents}
           tasks={tasks}
           messages={messages}
@@ -102,7 +102,7 @@ export const MainLayoutContainer = ({
           onMessageSelect={onMessageSelect}
           onTeamSelect={onTeamSelect}
           onAgentProfileSelect={onAgentProfileSelect}
-          onToggle={onSidebarToggle}
+          onSidebarToggle={onSidebarToggle}
         />
         
         {/* Main Content */}
