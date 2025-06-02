@@ -23,17 +23,36 @@ export const useTooltipPositioner = ({
     timeoutRefs.current = [];
   };
 
+  const findElementBySelectors = (selectors: string): HTMLElement | null => {
+    // Split by comma and try each selector
+    const selectorList = selectors.split(',').map(s => s.trim());
+    
+    for (const selector of selectorList) {
+      try {
+        const element = document.querySelector(selector) as HTMLElement;
+        if (element) {
+          console.log(`Found target element with selector: ${selector}`);
+          return element;
+        }
+      } catch (error) {
+        console.warn(`Invalid selector: ${selector}`, error);
+      }
+    }
+    
+    return null;
+  };
+
   useEffect(() => {
     if (!isActive || !currentStepData) {
       console.log('Tour not active or no step data');
       return;
     }
 
-    console.log(`Finding target for step:`, currentStepData.targetSelector);
+    console.log(`Finding target for step: ${currentStepData.id}`, currentStepData.targetSelector);
 
     const findTarget = () => {
-      const element = document.querySelector(currentStepData.targetSelector) as HTMLElement;
-      console.log(`Target element found:`, element);
+      const element = findElementBySelectors(currentStepData.targetSelector);
+      console.log(`Target element search result:`, element);
       
       if (element) {
         onTargetFound(element);
@@ -72,11 +91,11 @@ export const useTooltipPositioner = ({
         }
         
         // Ensure tooltip stays within viewport with proper margins
-        if (left + tooltipWidth > viewportWidth) {
-          left = viewportWidth - tooltipWidth - 20;
+        if (left + tooltipWidth > viewportWidth + scrollLeft) {
+          left = viewportWidth + scrollLeft - tooltipWidth - 20;
         }
-        if (left < 20) {
-          left = 20;
+        if (left < scrollLeft + 20) {
+          left = scrollLeft + 20;
         }
         if (top + tooltipHeight > viewportHeight + scrollTop) {
           top = viewportHeight + scrollTop - tooltipHeight - 20;
@@ -88,15 +107,22 @@ export const useTooltipPositioner = ({
         onPositionCalculated({ top, left });
         console.log(`Tooltip position set:`, { top, left });
         
-        // Scroll to target
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Scroll to target with some offset to ensure visibility
+        element.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'center'
+        });
         return true;
       } else {
-        console.warn(`Target element not found for selector: ${currentStepData.targetSelector}`);
+        console.warn(`Target element not found for selectors: ${currentStepData.targetSelector}`);
         // If target not found, position tooltip in center of screen
+        const centerTop = window.innerHeight / 2 - 140 + (window.pageYOffset || document.documentElement.scrollTop);
+        const centerLeft = window.innerWidth / 2 - 160 + (window.pageXOffset || document.documentElement.scrollLeft);
+        
         onPositionCalculated({
-          top: window.innerHeight / 2 - 140,
-          left: window.innerWidth / 2 - 160
+          top: centerTop,
+          left: centerLeft
         });
         onTargetFound(null);
         return false;
@@ -108,12 +134,13 @@ export const useTooltipPositioner = ({
 
     // Try to find target immediately
     if (!findTarget()) {
-      // Also try after delays to handle dynamic content
+      // Also try after delays to handle dynamic content and view transitions
       const timer1 = setTimeout(() => findTarget(), 100);
       const timer2 = setTimeout(() => findTarget(), 500);
       const timer3 = setTimeout(() => findTarget(), 1000);
+      const timer4 = setTimeout(() => findTarget(), 2000);
       
-      timeoutRefs.current = [timer1, timer2, timer3];
+      timeoutRefs.current = [timer1, timer2, timer3, timer4];
     }
     
     return clearAllTimeouts;

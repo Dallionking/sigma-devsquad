@@ -34,39 +34,63 @@ export const MainWorkflowContent = ({
     switch (viewMode) {
       case "workflow":
         return (
-          <WorkflowVisualization 
-            agents={agents}
-            tasks={tasks}
-            selectedAgent={selectedAgent}
-            onAgentSelect={onAgentSelect}
-          />
+          <div 
+            className="workflow-visualization"
+            data-tour="team-projects"
+            data-testid="team-projects"
+          >
+            <WorkflowVisualization 
+              agents={agents}
+              tasks={tasks}
+              selectedAgent={selectedAgent}
+              onAgentSelect={onAgentSelect}
+            />
+          </div>
         );
       case "communication":
         return (
-          <AdvancedCommunicationPanel
-            agents={agents}
-            messages={messages}
-            selectedMessage={selectedMessage}
-            onMessageSelect={onMessageSelect}
-          />
+          <div 
+            className="communication-hub unified-communication-hub"
+            data-tour="team-communication"
+            data-testid="communication-hub"
+          >
+            <AdvancedCommunicationPanel
+              agents={agents}
+              messages={messages}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         );
       case "tasks":
         return (
-          <TaskManagement 
-            tasks={tasks}
-            agents={agents}
-            selectedTask={selectedTask}
-            onTaskSelect={onTaskSelect}
-          />
+          <div 
+            className="task-management"
+            data-tour="team-tasks"
+            data-testid="team-tasks"
+          >
+            <TaskManagement 
+              tasks={tasks}
+              agents={agents}
+              selectedTask={selectedTask}
+              onTaskSelect={onTaskSelect}
+            />
+          </div>
         );
       case "messages":
         return (
-          <MessageInspector 
-            messages={messages}
-            agents={agents}
-            selectedMessage={selectedMessage}
-            onMessageSelect={onMessageSelect}
-          />
+          <div 
+            className="message-inspector"
+            data-tour="team-messages"
+            data-testid="team-messages"
+          >
+            <MessageInspector 
+              messages={messages}
+              agents={agents}
+              selectedMessage={selectedMessage}
+              onMessageSelect={onMessageSelect}
+            />
+          </div>
         );
       default:
         return (

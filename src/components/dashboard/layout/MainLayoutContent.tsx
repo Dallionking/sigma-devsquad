@@ -51,14 +51,39 @@ export const MainLayoutContent = ({
   onAgentProfileSelect,
   onViewModeChange
 }: MainLayoutContentProps) => {
+  // Generate appropriate data-tour attributes based on view and mode
+  const getTourAttribute = () => {
+    if (showTeamView) {
+      switch (viewMode) {
+        case 'workflow': return 'team-overview';
+        case 'communication': return 'team-communication';
+        case 'tasks': return 'team-tasks';
+        case 'messages': return 'team-messages';
+        default: return 'team-overview';
+      }
+    } else {
+      switch (viewMode) {
+        case 'workflow': return 'individual-agents';
+        case 'communication': return 'individual-communication';
+        case 'tasks': return 'individual-tasks';
+        case 'messages': return 'individual-messages';
+        default: return 'individual-agents';
+      }
+    }
+  };
+
   return (
-    <div className={cn(
-      "flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out",
-      showTeamView 
-        ? "bg-gradient-to-br from-blue-50/30 via-background to-blue-50/10 dark:from-blue-950/20 dark:via-background dark:to-blue-950/5"
-        : "bg-gradient-to-br from-purple-50/30 via-background to-purple-50/10 dark:from-purple-950/20 dark:via-background dark:to-purple-950/5",
-      !syncPanelCollapsed && hasSelection && "mr-96"
-    )}>
+    <div 
+      className={cn(
+        "flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out",
+        showTeamView 
+          ? "bg-gradient-to-br from-blue-50/30 via-background to-blue-50/10 dark:from-blue-950/20 dark:via-background dark:to-blue-950/5"
+          : "bg-gradient-to-br from-purple-50/30 via-background to-purple-50/10 dark:from-purple-950/20 dark:via-background dark:to-purple-950/5",
+        !syncPanelCollapsed && hasSelection && "mr-96"
+      )}
+      data-tour={getTourAttribute()}
+      data-testid={getTourAttribute()}
+    >
       {showTeamView ? (
         <TeamViewLayout
           viewMode={viewMode}
