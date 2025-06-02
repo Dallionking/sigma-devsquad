@@ -2,7 +2,7 @@
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
-import { TeamHierarchy } from "../teams/TeamHierarchy";
+import { FilteredTeamHierarchy } from "../teams/FilteredTeamHierarchy";
 import { AgentSidebar } from "./AgentSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail, Activity } from "lucide-react";
@@ -67,6 +67,8 @@ export const SidebarRenderer = ({
     }
   };
 
+  console.log('SidebarRenderer:', { showTeamView, collapsed, viewMode });
+
   if (collapsed) {
     return (
       <div className="w-full h-full flex flex-col items-center py-4 space-y-4">
@@ -89,19 +91,20 @@ export const SidebarRenderer = ({
         <div className="p-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5">
           <h2 className="font-semibold text-lg flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
-            Team Overview
+            Team Management
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Monitor team structure and collaboration
+            Filter and organize your teams
           </p>
         </div>
         
         <div className="flex-1 overflow-auto">
-          <TeamHierarchy
+          <FilteredTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
             selectedTeamId={selectedTeam?.id}
             selectedAgentId={selectedAgentProfile?.id}
+            showFilters={true}
           />
         </div>
       </div>
