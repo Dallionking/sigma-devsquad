@@ -65,7 +65,7 @@ export const MainLayoutSidebar = ({
         </Button>
       </div>
 
-      {/* Enhanced Sidebar */}
+      {/* Enhanced Sidebar - Focused on contextual content, not navigation */}
       <div className={cn(
         "bg-background/95 backdrop-blur-sm border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 shadow-sm",
         sidebarCollapsed ? "w-16" : (showTeamView ? "w-80" : "w-96")

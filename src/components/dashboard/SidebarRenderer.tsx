@@ -5,7 +5,7 @@ import { Team, AgentProfile } from "@/types/teams";
 import { TeamHierarchy } from "../teams/TeamHierarchy";
 import { AgentSidebar } from "./AgentSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail } from "lucide-react";
+import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail, Activity } from "lucide-react";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -59,11 +59,11 @@ export const SidebarRenderer = ({
 
   const getViewModeDescription = (mode: ViewMode) => {
     switch (mode) {
-      case 'workflow': return 'Visual workflow management';
-      case 'communication': return 'Team communication hub';
-      case 'tasks': return 'Task coordination center';
-      case 'messages': return 'Message history & analytics';
-      default: return 'Agent management';
+      case 'workflow': return 'Active workflows and processes';
+      case 'communication': return 'Team communication overview';
+      case 'tasks': return 'Task management and tracking';
+      case 'messages': return 'Message history and analytics';
+      default: return 'Agent status and management';
     }
   };
 
@@ -76,7 +76,7 @@ export const SidebarRenderer = ({
           </div>
         ) : (
           <div className="p-2 rounded-lg bg-primary/10">
-            <Bot className="w-6 h-6 text-primary" />
+            <Activity className="w-6 h-6 text-primary" />
           </div>
         )}
       </div>
@@ -89,10 +89,10 @@ export const SidebarRenderer = ({
         <div className="p-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5">
           <h2 className="font-semibold text-lg flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
-            Teams
+            Team Overview
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage and monitor your teams
+            Monitor team structure and collaboration
           </p>
         </div>
         
@@ -108,7 +108,7 @@ export const SidebarRenderer = ({
     );
   }
 
-  // Individual agents view
+  // Contextual content based on current view mode
   const ViewIcon = getViewModeIcon(viewMode);
   
   return (
@@ -116,7 +116,7 @@ export const SidebarRenderer = ({
       <div className="p-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5">
         <h2 className="font-semibold text-lg flex items-center gap-2">
           <ViewIcon className="w-5 h-5 text-primary" />
-          Agents
+          {viewMode === 'workflow' ? 'Workflow Status' : 'Agent Overview'}
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
           {getViewModeDescription(viewMode)}
@@ -132,20 +132,25 @@ export const SidebarRenderer = ({
         />
       </div>
       
-      {/* Quick Stats */}
+      {/* Activity Summary - No duplicate navigation */}
       <div className="p-4 border-t border-border/50 bg-muted/30">
-        <div className="grid grid-cols-2 gap-2 text-center">
-          <div className="p-2 rounded bg-card/50 border border-border/30">
-            <div className="text-lg font-bold text-primary">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Active Agents</span>
+            <span className="font-medium text-green-600">
               {agents.filter(a => a.status === 'working').length}
-            </div>
-            <div className="text-xs text-muted-foreground">Active</div>
+            </span>
           </div>
-          <div className="p-2 rounded bg-card/50 border border-border/30">
-            <div className="text-lg font-bold text-secondary">
-              {agents.length}
-            </div>
-            <div className="text-xs text-muted-foreground">Total</div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Total Agents</span>
+            <span className="font-medium">{agents.length}</span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">System Status</span>
+            <span className="font-medium text-green-600 flex items-center gap-1">
+              <Activity className="w-3 h-3" />
+              Optimal
+            </span>
           </div>
         </div>
       </div>
