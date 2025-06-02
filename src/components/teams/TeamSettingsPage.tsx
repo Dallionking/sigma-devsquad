@@ -8,10 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { useTeams } from "@/contexts/TeamContext";
 import { Team, AgentProfile, TeamRole } from "@/types/teams";
-import { Settings, Users, Save, Trash2, UserMinus, Crown } from "lucide-react";
+import { Settings, Users, Save, Trash2, UserMinus, Crown, RefreshCw } from "lucide-react";
 import { AgentAdditionDialog } from "./AgentAdditionDialog";
+import { TeamConversionButton } from "./team-conversion/TeamConversionButton";
 import { useToast } from "@/hooks/use-toast";
 
 interface TeamSettingsPageProps {
@@ -166,6 +168,32 @@ export const TeamSettingsPage = ({ teamId }: TeamSettingsPageProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Team Type Conversion */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <RefreshCw className="w-5 h-5" />
+            Team Type Conversion
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium">Current Team Type</h4>
+              <p className="text-sm text-muted-foreground mb-2">
+                This team is currently specialized as a <Badge variant="outline" className="capitalize">{team.type}</Badge> team.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                You can convert this team to a different specialization if needed.
+              </p>
+            </div>
+            <TeamConversionButton team={team} />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Separator />
 
       {/* Team Members */}
       <Card>
