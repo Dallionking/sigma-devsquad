@@ -15,6 +15,8 @@ export type TeamRole =
   | "mid" 
   | "junior";
 
+export type TeamVisibility = "public" | "private" | "secret";
+
 export type AgentSpecialization = 
   // Frontend specializations
   | "ui-ux-designer"
@@ -51,6 +53,34 @@ export type AgentSpecialization =
   | "business-analyst"
   | "technical-writer";
 
+export interface TeamNotificationPreferences {
+  memberJoined: boolean;
+  memberLeft: boolean;
+  taskAssigned: boolean;
+  taskCompleted: boolean;
+  taskOverdue: boolean;
+  newMessage: boolean;
+  mentionInMessage: boolean;
+  teamUpdates: boolean;
+  frequency: 'immediate' | 'hourly' | 'daily' | 'weekly';
+  channels: {
+    email: boolean;
+    inApp: boolean;
+    discord: boolean;
+    slack: boolean;
+  };
+}
+
+export interface TeamIntegration {
+  id: string;
+  name: string;
+  description: string;
+  icon: any;
+  enabled: boolean;
+  configured: boolean;
+  config?: Record<string, any>;
+}
+
 export interface Team {
   id: string;
   name: string;
@@ -64,6 +94,16 @@ export interface Team {
   createdAt: string;
   objectives: string[];
   kpis: TeamKPI[];
+  
+  // Team settings properties
+  visibility?: TeamVisibility;
+  notificationPreferences?: TeamNotificationPreferences;
+  integrations?: TeamIntegration[];
+  permissions?: Record<string, TeamRole[]>;
+  
+  // Archive properties
+  archiveReason?: string;
+  archivedAt?: string;
 }
 
 export interface TeamKPI {
