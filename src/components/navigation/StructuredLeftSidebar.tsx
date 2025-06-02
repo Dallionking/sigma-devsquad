@@ -199,28 +199,26 @@ export const StructuredLeftSidebar = ({
       <Separator className="mx-3" />
 
       {/* Main Navigation Section */}
-      <div className="sidebar-section main-nav-section flex-1 px-3 py-2 overflow-y-auto">
+      <div className="sidebar-section main-nav-section px-3 py-2 overflow-y-auto">
         <div className="sidebar-section-label px-1">MAIN</div>
-        <nav className="space-y-1">
+        <div className="space-y-1">
           {mainNavItems.map((item) => {
             const Icon = item.icon;
+            const active = isActive(item.path);
             return (
-              <Button
+              <button
                 key={item.path}
-                variant={isActive(item.path) ? "secondary" : "ghost"}
-                size="sm"
                 onClick={() => handleNavigation(item.path)}
-                className={cn(
-                  "w-full justify-start gap-3 h-9",
-                  collapsed && "justify-center px-2"
-                )}
+                className={cn("nav-link", active && "active")}
               >
-                <Icon className="w-4 h-4 flex-shrink-0" />
-                {!collapsed && <span className="truncate">{item.label}</span>}
-              </Button>
+                <span className="nav-link-icon">
+                  <Icon className="w-4 h-4" />
+                </span>
+                {!collapsed && <span className="nav-link-text">{item.label}</span>}
+              </button>
             );
           })}
-        </nav>
+        </div>
 
         {/* Favorites Section */}
         {!collapsed && (
@@ -236,51 +234,49 @@ export const StructuredLeftSidebar = ({
         {/* Configuration Section */}
         <div className="mt-6">
           <div className="sidebar-section-label px-1">CONFIG</div>
-          <nav className="space-y-1">
+          <div className="space-y-1">
             {configItems.map((item) => {
               const Icon = item.icon;
+              const active = isActive(item.path);
               return (
-                <Button
+                <button
                   key={item.path}
-                  variant={isActive(item.path) ? "secondary" : "ghost"}
-                  size="sm"
                   onClick={() => handleNavigation(item.path)}
-                  className={cn(
-                    "w-full justify-start gap-3 h-8 text-xs",
-                    collapsed && "justify-center px-2"
-                  )}
+                  className={cn("nav-link", active && "active")}
+                  style={{ padding: collapsed ? '8px' : '8px 12px', fontSize: '12px' }}
                 >
-                  <Icon className="w-3 h-3 flex-shrink-0" />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                </Button>
+                  <span className="nav-link-icon">
+                    <Icon className="w-3 h-3" />
+                  </span>
+                  {!collapsed && <span className="nav-link-text">{item.label}</span>}
+                </button>
               );
             })}
-          </nav>
+          </div>
         </div>
 
         {/* Account Section */}
         <div className="mt-6">
           <div className="sidebar-section-label px-1">ACCOUNT</div>
-          <nav className="space-y-1">
+          <div className="space-y-1">
             {accountItems.map((item) => {
               const Icon = item.icon;
+              const active = isActive(item.path);
               return (
-                <Button
+                <button
                   key={item.path}
-                  variant={isActive(item.path) ? "secondary" : "ghost"}
-                  size="sm"
                   onClick={() => handleNavigation(item.path)}
-                  className={cn(
-                    "w-full justify-start gap-3 h-8 text-xs",
-                    collapsed && "justify-center px-2"
-                  )}
+                  className={cn("nav-link", active && "active")}
+                  style={{ padding: collapsed ? '8px' : '8px 12px', fontSize: '12px' }}
                 >
-                  <Icon className="w-3 h-3 flex-shrink-0" />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                </Button>
+                  <span className="nav-link-icon">
+                    <Icon className="w-3 h-3" />
+                  </span>
+                  {!collapsed && <span className="nav-link-text">{item.label}</span>}
+                </button>
               );
             })}
-          </nav>
+          </div>
         </div>
       </div>
 

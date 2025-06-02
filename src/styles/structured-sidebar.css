@@ -75,6 +75,50 @@
   border-top: 1px solid hsl(var(--sidebar-border));
 }
 
+/* Main Navigation Link Styles */
+.main-nav-section .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.main-nav-section .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.main-nav-section .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.nav-link-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.nav-link-text {
+  font-size: 14px;
+}
+
 /* Dropdown Trigger Styles */
 .dropdown-trigger {
   display: flex;
@@ -199,6 +243,14 @@
   .dropdown-trigger-text {
     font-size: 13px;
   }
+
+  .main-nav-section .nav-link {
+    padding: 8px 10px;
+  }
+
+  .nav-link-text {
+    font-size: 13px;
+  }
 }
 
 /* Navigation item hover effects */
@@ -247,6 +299,20 @@
 .left-sidebar-container.w-16 .sidebar-section.project-section,
 .left-sidebar-container.w-16 .sidebar-section.team-section {
   display: none;
+}
+
+/* Hide navigation text when collapsed */
+.left-sidebar-container.w-16 .nav-link-text {
+  display: none;
+}
+
+.left-sidebar-container.w-16 .nav-link-icon {
+  margin-right: 0;
+}
+
+.left-sidebar-container.w-16 .main-nav-section .nav-link {
+  justify-content: center;
+  padding: 10px 8px;
 }
 
 /* Enhanced dropdown positioning for panels */
