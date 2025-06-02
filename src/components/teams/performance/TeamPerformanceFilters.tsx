@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { TimeRange, ComparisonType } from './TeamPerformanceDashboard';
 import { CalendarIcon, Filter } from 'lucide-react';
 import { format } from 'date-fns';
+import type { DateRange } from 'react-day-picker';
 
 interface TeamPerformanceFiltersProps {
   timeRange: TimeRange;
@@ -27,17 +28,30 @@ export const TeamPerformanceFilters = ({
   onCustomDateRangeChange
 }: TeamPerformanceFiltersProps) => {
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
-  const [selectedRange, setSelectedRange] = React.useState<{ from?: Date; to?: Date }>({});
+  const [selectedRange, setSelectedRange] = React.useState<DateRange | undefined>();
 
-  const handleDateRangeSelect = (range: { from?: Date; to?: Date } | undefined) => {
+  const handleDateRangeSelect = (range: DateRange | undefined) => {
+    setSelectedRange(range);
+    
     if (range?.from && range?.to) {
       onCustomDateRangeChange({ start: range.from, end: range.to });
-      setSelectedRange(range);
       setDatePickerOpen(false);
-    } else {
-      setSelectedRange(range || {});
+    } else if (!range?.from && !range?.to) {
+      onCustomDateRangeChange(null);
     }
   };
+
+  // Update selectedRange when customDateRange changes
+  React.useEffect(() => {
+    if (customDateRange) {
+      setSelectedRange({
+        from: customDateRange.start,
+        to: customDateRange.end
+      });
+    } else {
+      setSelectedRange(undefined);
+    }
+  }, [customDateRange]);
 
   return (
     <Card>
@@ -89,6 +103,7 @@ export const TeamPerformanceFilters = ({
                   selected={selectedRange}
                   onSelect={handleDateRangeSelect}
                   numberOfMonths={2}
+                  className="pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>
