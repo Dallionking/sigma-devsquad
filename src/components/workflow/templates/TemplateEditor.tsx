@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -85,32 +84,36 @@ export const TemplateEditor: React.FC<TemplateEditorProps> = ({
   };
 
   const handleWorkflowChange = (nodes: any[]) => {
-    // Convert workflow editor nodes to template nodes
-    const templateNodes: WorkflowTemplateNode[] = nodes.map(node => ({
-      id: node.id,
-      type: node.type,
-      title: node.title,
-      description: node.description,
-      position: node.position,
-      config: {
-        agentType: node.config?.agentType,
-        estimatedDuration: node.config?.estimatedDuration,
-        priority: node.config?.priority,
-        conditions: node.config?.conditions,
-        variables: node.config?.variables
-      }
-    }));
+    // Convert workflow editor nodes to template nodes, filtering out unsupported types
+    const templateNodes: WorkflowTemplateNode[] = nodes
+      .filter(node => ['start', 'task', 'decision', 'end'].includes(node.type))
+      .map(node => ({
+        id: node.id,
+        type: node.type as 'start' | 'task' | 'decision' | 'end',
+        title: node.title,
+        description: node.description,
+        position: node.position,
+        config: {
+          agentType: node.config?.agentType,
+          estimatedDuration: node.config?.estimatedDuration,
+          priority: node.config?.priority,
+          conditions: node.config?.conditions,
+          variables: node.config?.variables
+        }
+      }));
 
     // Convert connections
     const templateConnections: WorkflowTemplateConnection[] = [];
     nodes.forEach(node => {
-      node.connections?.forEach((targetId: string) => {
-        templateConnections.push({
-          id: `${node.id}-${targetId}`,
-          fromNodeId: node.id,
-          toNodeId: targetId
+      if (['start', 'task', 'decision', 'end'].includes(node.type)) {
+        node.connections?.forEach((targetId: string) => {
+          templateConnections.push({
+            id: `${node.id}-${targetId}`,
+            fromNodeId: node.id,
+            toNodeId: targetId
+          });
         });
-      });
+      }
     });
 
     setFormData(prev => ({
@@ -242,9 +245,9 @@ export const TemplateEditor: React.FC<TemplateEditorProps> = ({
       <div className="flex-1">
         <WorkflowEditor
           workflowId={template?.id}
-          initialNodes={formData.nodes?.map(node => ({
+          initialNodes={formData.nodes?.filter(node => ['start', 'task', 'decision', 'end'].includes(node.type)).map(node => ({
             id: node.id,
-            type: node.type,
+            type: node.type as 'start' | 'task' | 'decision' | 'end',
             title: node.title,
             description: node.description,
             position: node.position,
