@@ -4,7 +4,7 @@ import { Agent, Task, Message, ViewMode } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
 import { MainLayoutHeader } from './MainLayoutHeader';
 import { MainLayoutContent } from './MainLayoutContent';
-import { LeftNavigationSidebar } from './LeftNavigationSidebar';
+import { MainLayoutSidebar } from './MainLayoutSidebar';
 import { ViewSpecificOnboardingManager } from '@/components/onboarding/view-specific/ViewSpecificOnboardingManager';
 import { cn } from '@/lib/utils';
 
@@ -66,38 +66,43 @@ export const MainLayoutContainer = ({
     messages: messages.filter(m => !m.read).length,
   };
 
-  // Calculate agent statistics
-  const activeAgents = agents.filter(agent => agent.status === "working").length;
-  const totalAgents = agents.length;
-  const errorAgents = agents.filter(agent => agent.status === "error").length;
-  const idleAgents = agents.filter(agent => agent.status === "idle").length;
-
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden">
       {/* View-Specific Onboarding Manager */}
       <ViewSpecificOnboardingManager
         showTeamView={showTeamView}
         viewMode={viewMode}
       />
       
-      {/* Left Navigation Sidebar */}
-      <LeftNavigationSidebar
-        collapsed={sidebarCollapsed}
-        onToggle={onSidebarToggle}
-        activeAgents={activeAgents}
-        totalAgents={totalAgents}
-        errorAgents={errorAgents}
-        idleAgents={idleAgents}
+      {/* Main Layout Header */}
+      <MainLayoutHeader
+        showTeamView={showTeamView}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        notificationCounts={notificationCounts}
       />
       
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Main Layout Header - Simplified without logo */}
-        <MainLayoutHeader
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar */}
+        <MainLayoutSidebar
           showTeamView={showTeamView}
+          sidebarCollapsed={sidebarCollapsed}
+          agents={agents}
+          tasks={tasks}
+          messages={messages}
+          selectedAgent={selectedAgent}
+          selectedTask={selectedTask}
+          selectedMessage={selectedMessage}
+          selectedTeam={selectedTeam}
+          selectedAgentProfile={selectedAgentProfile}
           viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-          notificationCounts={notificationCounts}
+          onAgentSelect={onAgentSelect}
+          onTaskSelect={onTaskSelect}
+          onMessageSelect={onMessageSelect}
+          onTeamSelect={onTeamSelect}
+          onAgentProfileSelect={onAgentProfileSelect}
+          onSidebarToggle={onSidebarToggle}
         />
         
         {/* Main Content */}

@@ -24,14 +24,12 @@ export const MainLayoutHeader = ({
 }: MainLayoutHeaderProps) => {
   return (
     <div className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-      {/* Simplified View Indicator - No breadcrumb navigation */}
-      <div className="px-6 py-2 border-b border-border/30">
-        <h1 className="text-lg font-semibold text-foreground">
-          {showTeamView ? "Team Dashboard" : "Dashboard"}
-        </h1>
+      {/* Persistent View Indicator */}
+      <div className="px-6 py-3 border-b border-border/30">
+        <ViewIndicator showTeamView={showTeamView} />
       </div>
       
-      {/* View Mode Tabs - Only for Individual View, no unnecessary tabs */}
+      {/* View Mode Tabs - Only for Individual View */}
       {!showTeamView && (
         <ViewModeTabs
           viewMode={viewMode}
