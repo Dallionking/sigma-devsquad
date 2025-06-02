@@ -10,6 +10,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { TeamCreationDialog } from "./TeamCreationDialog";
 import { AgentAdditionDialog } from "./AgentAdditionDialog";
+import { TeamCompositionBadge } from "./TeamCompositionBadge";
+import { getTeamCompositionColor, getTeamTypeIcon } from "@/utils/teamVisualUtils";
 
 interface TeamHierarchyProps {
   onTeamSelect: (team: Team) => void;
@@ -37,30 +39,10 @@ export const TeamHierarchy = ({
     setExpandedTeams(newExpanded);
   };
 
-  const getTeamIcon = (teamType: string) => {
-    const iconMap = {
-      frontend: "🎨",
-      backend: "⚙️", 
-      devops: "🚀",
-      qa: "🧪",
-      data: "📊",
-      design: "✨",
-      product: "📋"
-    };
-    return iconMap[teamType as keyof typeof iconMap] || "👥";
-  };
-
-  const getTeamColorClass = (teamType: string) => {
-    const colorMap = {
-      frontend: "bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 dark:from-orange-950 dark:to-red-950 dark:border-orange-800",
-      backend: "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 dark:from-blue-950 dark:to-indigo-950 dark:border-blue-800",
-      devops: "bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 dark:from-purple-950 dark:to-pink-950 dark:border-purple-800",
-      qa: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800",
-      data: "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 dark:from-yellow-950 dark:to-amber-950 dark:border-yellow-800",
-      design: "bg-gradient-to-r from-pink-50 to-rose-50 border-pink-200 dark:from-pink-950 dark:to-rose-950 dark:border-pink-800",
-      product: "bg-gradient-to-r from-slate-50 to-gray-50 border-slate-200 dark:from-slate-950 dark:to-gray-950 dark:border-slate-800"
-    };
-    return colorMap[teamType as keyof typeof colorMap] || "bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200";
+  const getTeamColorClass = (team: Team) => {
+    // Use composition-based coloring instead of type-based
+    const compositionColors = getTeamCompositionColor(team.composition);
+    return compositionColors.gradient;
   };
 
   const getStatusColor = (status: string) => {
@@ -104,7 +86,7 @@ export const TeamHierarchy = ({
               <div 
                 className={cn(
                   "rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md",
-                  getTeamColorClass(team.type),
+                  getTeamColorClass(team),
                   isSelected && "ring-2 ring-primary"
                 )}
                 onClick={() => onTeamSelect(team)}
@@ -128,21 +110,27 @@ export const TeamHierarchy = ({
                         )}
                       </Button>
                       
-                      <div className="text-lg">{getTeamIcon(team.type)}</div>
+                      <div className="text-lg">{getTeamTypeIcon(team.type)}</div>
                       
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 mb-1">
                           <h4 className="font-medium text-sm truncate">{team.name}</h4>
+                          <TeamCompositionBadge 
+                            composition={team.composition} 
+                            size="sm"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
                           <Badge 
                             variant="secondary" 
                             className={cn("text-xs", getStatusColor(team.status))}
                           >
                             {team.status}
                           </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {members.length} members
+                          </span>
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                          {members.length} members
-                        </p>
                       </div>
                     </div>
                   </div>

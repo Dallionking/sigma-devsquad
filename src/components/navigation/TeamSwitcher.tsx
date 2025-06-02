@@ -8,6 +8,8 @@ import { Team } from "@/types/teams";
 import { ChevronDown, Users, Plus, Settings } from "lucide-react";
 import { TeamCreationDialog } from "@/components/teams/TeamCreationDialog";
 import { useNavigate } from "react-router-dom";
+import { TeamCompositionBadge } from "@/components/teams/TeamCompositionBadge";
+import { getTeamTypeIcon } from "@/utils/teamVisualUtils";
 
 interface TeamSwitcherProps {
   currentTeamId?: string;
@@ -20,19 +22,6 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
   const navigate = useNavigate();
   const currentTeam = currentTeamId ? getTeamById(currentTeamId) : teams[0];
 
-  const getTeamIcon = (teamType: string) => {
-    const iconMap = {
-      frontend: "🎨",
-      backend: "⚙️",
-      devops: "🚀",
-      qa: "🧪",
-      data: "📊",
-      design: "✨",
-      product: "📋"
-    };
-    return iconMap[teamType as keyof typeof iconMap] || "👥";
-  };
-
   const handleTeamSettings = (teamId: string) => {
     navigate(`/team-settings/${teamId}`);
   };
@@ -41,12 +30,17 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
     return (
       <div className="flex items-center gap-2">
         <Select value={currentTeam?.id || ""} onValueChange={onTeamChange}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-48">
             <SelectValue>
               {currentTeam ? (
                 <div className="flex items-center gap-2">
-                  <span>{getTeamIcon(currentTeam.type)}</span>
+                  <span>{getTeamTypeIcon(currentTeam.type)}</span>
                   <span className="truncate">{currentTeam.name}</span>
+                  <TeamCompositionBadge 
+                    composition={currentTeam.composition} 
+                    variant="emoji" 
+                    size="sm"
+                  />
                 </div>
               ) : (
                 "Select team"
@@ -57,8 +51,13 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
             {teams.map((team) => (
               <SelectItem key={team.id} value={team.id}>
                 <div className="flex items-center gap-2">
-                  <span>{getTeamIcon(team.type)}</span>
+                  <span>{getTeamTypeIcon(team.type)}</span>
                   <span>{team.name}</span>
+                  <TeamCompositionBadge 
+                    composition={team.composition} 
+                    variant="emoji" 
+                    size="sm"
+                  />
                   <Badge variant="outline" className="text-xs">
                     {team.memberIds.length}
                   </Badge>
@@ -96,9 +95,15 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
       {currentTeam && (
         <div className="p-3 border rounded-lg bg-muted/50">
           <div className="flex items-center gap-3">
-            <div className="text-2xl">{getTeamIcon(currentTeam.type)}</div>
+            <div className="text-2xl">{getTeamTypeIcon(currentTeam.type)}</div>
             <div className="flex-1">
-              <h4 className="font-medium">{currentTeam.name}</h4>
+              <div className="flex items-center gap-2 mb-1">
+                <h4 className="font-medium">{currentTeam.name}</h4>
+                <TeamCompositionBadge 
+                  composition={currentTeam.composition} 
+                  size="sm"
+                />
+              </div>
               <p className="text-sm text-muted-foreground">
                 {currentTeam.memberIds.length} members
               </p>
@@ -122,8 +127,14 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
             className="w-full justify-start"
             onClick={() => onTeamChange(team.id)}
           >
-            <span className="mr-2">{getTeamIcon(team.type)}</span>
+            <span className="mr-2">{getTeamTypeIcon(team.type)}</span>
             <span className="flex-1 text-left">{team.name}</span>
+            <TeamCompositionBadge 
+              composition={team.composition} 
+              variant="emoji" 
+              size="sm" 
+              className="mr-2"
+            />
             <Badge variant="outline" className="text-xs">
               {team.memberIds.length}
             </Badge>

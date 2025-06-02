@@ -1,233 +1,420 @@
-
 import { Team, AgentProfile, TeamCommunication, TeamTask } from '@/types/teams';
 
 export const mockTeams: Team[] = [
   {
-    id: "team_frontend",
-    name: "Frontend Team",
-    type: "frontend",
-    description: "Responsible for user interface and user experience development",
-    leaderId: "agent_frontend_lead",
-    memberIds: ["agent_frontend_lead", "agent_ui_designer", "agent_react_dev"],
-    color: "#3B82F6",
-    status: "active",
-    createdAt: "2024-01-15T09:00:00.000Z",
+    id: 'team_1',
+    name: 'Frontend Development',
+    type: 'frontend',
+    composition: 'ai', // AI team
+    description: 'Responsible for user interface development and user experience',
+    leaderId: 'agent_1',
+    memberIds: ['agent_1', 'agent_2', 'agent_3'],
+    color: '#3B82F6',
+    status: 'active',
+    createdAt: '2024-01-15T00:00:00Z',
     objectives: [
-      "Deliver pixel-perfect UI components",
-      "Maintain 98% test coverage",
-      "Ensure accessibility compliance"
+      'Develop responsive web interfaces',
+      'Implement design system components',
+      'Optimize application performance'
     ],
     kpis: [
-      { id: "kpi_1", name: "Story Points Completed", value: 85, target: 100, unit: "points", trend: "up" },
-      { id: "kpi_2", name: "Bug Rate", value: 2, target: 5, unit: "%", trend: "down" },
-      { id: "kpi_3", name: "Code Coverage", value: 92, target: 95, unit: "%", trend: "up" }
+      {
+        id: 'kpi_1',
+        name: 'Component Coverage',
+        value: 85,
+        target: 95,
+        unit: '%',
+        trend: 'up'
+      },
+      {
+        id: 'kpi_2',
+        name: 'Page Load Time',
+        value: 2.1,
+        target: 2.0,
+        unit: 's',
+        trend: 'down'
+      }
     ]
   },
   {
-    id: "team_backend",
-    name: "Backend Team",
-    type: "backend",
-    description: "Handles server-side logic, APIs, and database management",
-    leaderId: "agent_backend_lead",
-    memberIds: ["agent_backend_lead", "agent_api_dev", "agent_db_engineer"],
-    color: "#10B981",
-    status: "active",
-    createdAt: "2024-01-15T09:00:00.000Z",
+    id: 'team_2',
+    name: 'Backend Services',
+    type: 'backend',
+    composition: 'ai', // AI team
+    description: 'API development, database management, and server infrastructure',
+    leaderId: 'agent_4',
+    memberIds: ['agent_4', 'agent_5'],
+    color: '#10B981',
+    status: 'active',
+    createdAt: '2024-01-16T00:00:00Z',
     objectives: [
-      "Maintain 99.9% API uptime",
-      "Optimize database performance",
-      "Implement secure authentication"
+      'Build scalable REST APIs',
+      'Implement microservices architecture',
+      'Ensure data security and compliance'
     ],
     kpis: [
-      { id: "kpi_4", name: "API Response Time", value: 120, target: 200, unit: "ms", trend: "down" },
-      { id: "kpi_5", name: "System Uptime", value: 99.95, target: 99.9, unit: "%", trend: "stable" },
-      { id: "kpi_6", name: "Security Score", value: 98, target: 95, unit: "%", trend: "up" }
+      {
+        id: 'kpi_3',
+        name: 'API Response Time',
+        value: 150,
+        target: 200,
+        unit: 'ms',
+        trend: 'stable'
+      },
+      {
+        id: 'kpi_4',
+        name: 'System Uptime',
+        value: 99.8,
+        target: 99.9,
+        unit: '%',
+        trend: 'up'
+      }
     ]
   },
   {
-    id: "team_devops",
-    name: "DevOps Team",
-    type: "devops",
-    description: "Infrastructure, deployment, and system reliability",
-    leaderId: "agent_devops_lead",
-    memberIds: ["agent_devops_lead", "agent_infra_engineer", "agent_security_expert"],
-    color: "#F59E0B",
-    status: "active",
-    createdAt: "2024-01-15T09:00:00.000Z",
+    id: 'team_3',
+    name: 'Human Resources',
+    type: 'product',
+    composition: 'human', // Human team
+    description: 'Human resource management and organizational development',
+    leaderId: 'human_1',
+    memberIds: ['human_1', 'human_2'],
+    color: '#8B5CF6',
+    status: 'active',
+    createdAt: '2024-01-17T00:00:00Z',
     objectives: [
-      "Automate deployment pipeline",
-      "Ensure infrastructure security",
-      "Monitor system performance"
+      'Manage team coordination',
+      'Handle strategic planning',
+      'Oversee compliance and policies'
     ],
     kpis: [
-      { id: "kpi_7", name: "Deployment Success Rate", value: 98, target: 95, unit: "%", trend: "up" },
-      { id: "kpi_8", name: "Mean Recovery Time", value: 15, target: 30, unit: "min", trend: "down" },
-      { id: "kpi_9", name: "Infrastructure Cost", value: 85, target: 100, unit: "$k", trend: "down" }
+      {
+        id: 'kpi_5',
+        name: 'Team Satisfaction',
+        value: 4.2,
+        target: 4.5,
+        unit: '/5',
+        trend: 'up'
+      }
+    ]
+  },
+  {
+    id: 'team_4',
+    name: 'Innovation Lab',
+    type: 'design',
+    composition: 'hybrid', // Hybrid team
+    description: 'Mixed human-AI team for experimental projects and innovation',
+    leaderId: 'human_3',
+    memberIds: ['human_3', 'agent_6', 'agent_7'],
+    color: '#F59E0B',
+    status: 'active',
+    createdAt: '2024-01-18T00:00:00Z',
+    objectives: [
+      'Explore emerging technologies',
+      'Prototype innovative solutions',
+      'Foster human-AI collaboration'
+    ],
+    kpis: [
+      {
+        id: 'kpi_6',
+        name: 'Innovation Index',
+        value: 78,
+        target: 85,
+        unit: '%',
+        trend: 'up'
+      }
     ]
   }
 ];
 
 export const mockAgentProfiles: AgentProfile[] = [
   {
-    id: "agent_frontend_lead",
-    name: "Sarah Chen",
-    teamId: "team_frontend",
-    role: "lead",
-    specialization: "react-specialist",
+    id: 'agent_1',
+    name: 'Alex Frontend',
+    teamId: 'team_1',
+    role: 'lead',
+    specialization: 'react-specialist',
     skills: [
-      { name: "React", level: 5, category: "technical" },
-      { name: "TypeScript", level: 5, category: "technical" },
-      { name: "Team Leadership", level: 4, category: "soft" },
-      { name: "UI/UX Design", level: 4, category: "domain" }
+      { name: 'React', level: 5, category: 'technical' },
+      { name: 'TypeScript', level: 4, category: 'technical' },
+      { name: 'UI/UX Design', level: 4, category: 'technical' },
+      { name: 'Leadership', level: 4, category: 'soft' }
     ],
-    frameworks: ["React", "Next.js", "Tailwind CSS", "Storybook"],
-    experience: 8,
-    availability: "available",
+    frameworks: ['React', 'Next.js', 'Tailwind CSS'],
+    experience: 5,
+    availability: 'available',
     performanceRating: 4.8,
-    communicationPreference: "direct",
-    avatar: "/avatars/sarah.jpg",
-    bio: "Frontend team lead with 8 years of experience in modern web development. Specializes in React ecosystem and component architecture."
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    bio: 'Senior AI agent specializing in React development and frontend architecture.'
   },
   {
-    id: "agent_ui_designer",
-    name: "Alex Rodriguez",
-    teamId: "team_frontend",
-    role: "senior",
-    specialization: "ui-ux-designer",
+    id: 'agent_2',
+    name: 'Jordan UI',
+    teamId: 'team_1',
+    role: 'mid',
+    specialization: 'ui-ux-designer',
     skills: [
-      { name: "Figma", level: 5, category: "technical" },
-      { name: "Design Systems", level: 5, category: "domain" },
-      { name: "User Research", level: 4, category: "domain" },
-      { name: "Prototyping", level: 4, category: "technical" }
+      { name: 'Figma', level: 5, category: 'technical' },
+      { name: 'Design Systems', level: 4, category: 'technical' },
+      { name: 'Prototyping', level: 4, category: 'technical' }
     ],
-    frameworks: ["Figma", "Adobe Creative Suite", "Principle", "Framer"],
+    frameworks: ['Figma', 'Adobe XD', 'Sketch'],
+    experience: 3,
+    availability: 'busy',
+    performanceRating: 4.5,
+    communicationPreference: 'mediated',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    bio: 'Creative AI agent focused on user interface design and user experience optimization.'
+  },
+  {
+    id: 'agent_3',
+    name: 'Casey Component',
+    teamId: 'team_1',
+    role: 'junior',
+    specialization: 'component-developer',
+    skills: [
+      { name: 'HTML/CSS', level: 4, category: 'technical' },
+      { name: 'JavaScript', level: 3, category: 'technical' },
+      { name: 'Component Libraries', level: 3, category: 'technical' }
+    ],
+    frameworks: ['React', 'Vue', 'Angular'],
+    experience: 1,
+    availability: 'available',
+    performanceRating: 4.0,
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    bio: 'Junior AI agent learning component development and frontend best practices.'
+  },
+  {
+    id: 'agent_4',
+    name: 'Morgan Backend',
+    teamId: 'team_2',
+    role: 'lead',
+    specialization: 'system-architect',
+    skills: [
+      { name: 'Node.js', level: 5, category: 'technical' },
+      { name: 'Database Design', level: 5, category: 'technical' },
+      { name: 'System Architecture', level: 5, category: 'technical' },
+      { name: 'Team Management', level: 4, category: 'soft' }
+    ],
+    frameworks: ['Express.js', 'PostgreSQL', 'Redis'],
     experience: 6,
-    availability: "busy",
-    performanceRating: 4.6,
-    communicationPreference: "mediated",
-    avatar: "/avatars/alex.jpg",
-    bio: "Senior UI/UX designer focused on creating intuitive and accessible user experiences. Expert in design systems and component libraries."
-  },
-  {
-    id: "agent_react_dev",
-    name: "Jordan Kim",
-    teamId: "team_frontend",
-    role: "mid",
-    specialization: "component-developer",
-    skills: [
-      { name: "React", level: 4, category: "technical" },
-      { name: "JavaScript", level: 4, category: "technical" },
-      { name: "CSS", level: 4, category: "technical" },
-      { name: "Testing", level: 3, category: "technical" }
-    ],
-    frameworks: ["React", "Vue.js", "SCSS", "Jest"],
-    experience: 4,
-    availability: "available",
-    performanceRating: 4.2,
-    communicationPreference: "direct",
-    avatar: "/avatars/jordan.jpg",
-    bio: "Mid-level frontend developer specializing in reusable component development and modern JavaScript frameworks."
-  },
-  {
-    id: "agent_backend_lead",
-    name: "Marcus Thompson",
-    teamId: "team_backend",
-    role: "lead",
-    specialization: "system-architect",
-    skills: [
-      { name: "Node.js", level: 5, category: "technical" },
-      { name: "System Design", level: 5, category: "domain" },
-      { name: "Database Design", level: 4, category: "technical" },
-      { name: "Team Management", level: 4, category: "soft" }
-    ],
-    frameworks: ["Node.js", "Express", "PostgreSQL", "Docker"],
-    experience: 10,
-    availability: "available",
+    availability: 'available',
     performanceRating: 4.9,
-    communicationPreference: "direct",
-    avatar: "/avatars/marcus.jpg",
-    bio: "Backend team lead and system architect with extensive experience in scalable system design and team leadership."
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
+    bio: 'Lead AI agent specializing in backend architecture and system design.'
+  },
+  {
+    id: 'agent_5',
+    name: 'Riley API',
+    teamId: 'team_2',
+    role: 'senior',
+    specialization: 'api-developer',
+    skills: [
+      { name: 'REST APIs', level: 4, category: 'technical' },
+      { name: 'GraphQL', level: 3, category: 'technical' },
+      { name: 'Authentication', level: 4, category: 'technical' }
+    ],
+    frameworks: ['FastAPI', 'Django', 'Flask'],
+    experience: 4,
+    availability: 'offline',
+    performanceRating: 4.6,
+    communicationPreference: 'mediated',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face',
+    bio: 'Senior AI agent focused on API development and integration services.'
+  },
+  {
+    id: 'human_1',
+    name: 'Sam Rodriguez',
+    teamId: 'team_3',
+    role: 'lead',
+    specialization: 'product-manager',
+    skills: [
+      { name: 'Product Strategy', level: 5, category: 'domain' },
+      { name: 'Stakeholder Management', level: 5, category: 'soft' },
+      { name: 'Analytics', level: 4, category: 'technical' }
+    ],
+    frameworks: ['Jira', 'Confluence', 'Figma'],
+    experience: 8,
+    availability: 'available',
+    performanceRating: 4.7,
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=150&h=150&fit=crop&crop=face',
+    bio: 'Experienced human product manager leading cross-functional initiatives.'
+  },
+  {
+    id: 'human_2',
+    name: 'Taylor Kim',
+    teamId: 'team_3',
+    role: 'mid',
+    specialization: 'business-analyst',
+    skills: [
+      { name: 'Business Analysis', level: 4, category: 'domain' },
+      { name: 'Process Optimization', level: 4, category: 'domain' },
+      { name: 'Communication', level: 5, category: 'soft' }
+    ],
+    frameworks: ['Excel', 'PowerBI', 'Tableau'],
+    experience: 5,
+    availability: 'busy',
+    performanceRating: 4.4,
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+    bio: 'Human business analyst specializing in process improvement and data analysis.'
+  },
+  {
+    id: 'human_3',
+    name: 'Dr. Elena Vasquez',
+    teamId: 'team_4',
+    role: 'lead',
+    specialization: 'product-designer',
+    skills: [
+      { name: 'Design Research', level: 5, category: 'domain' },
+      { name: 'Innovation Management', level: 5, category: 'soft' },
+      { name: 'AI Collaboration', level: 4, category: 'technical' }
+    ],
+    frameworks: ['Design Thinking', 'Lean Startup', 'Agile'],
+    experience: 12,
+    availability: 'available',
+    performanceRating: 4.9,
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face',
+    bio: 'Human innovation lead specializing in human-AI collaboration and design research.'
+  },
+  {
+    id: 'agent_6',
+    name: 'Avery Research',
+    teamId: 'team_4',
+    role: 'senior',
+    specialization: 'data-scientist',
+    skills: [
+      { name: 'Machine Learning', level: 5, category: 'technical' },
+      { name: 'Data Analysis', level: 5, category: 'technical' },
+      { name: 'Research Methods', level: 4, category: 'domain' }
+    ],
+    frameworks: ['Python', 'TensorFlow', 'PyTorch'],
+    experience: 4,
+    availability: 'available',
+    performanceRating: 4.8,
+    communicationPreference: 'mediated',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    bio: 'AI data scientist specializing in machine learning research and experimental analysis.'
+  },
+  {
+    id: 'agent_7',
+    name: 'Quinn Innovation',
+    teamId: 'team_4',
+    role: 'mid',
+    specialization: 'technical-writer',
+    skills: [
+      { name: 'Technical Documentation', level: 4, category: 'technical' },
+      { name: 'Research Synthesis', level: 4, category: 'domain' },
+      { name: 'Knowledge Management', level: 4, category: 'soft' }
+    ],
+    frameworks: ['Markdown', 'GitBook', 'Notion'],
+    experience: 3,
+    availability: 'available',
+    performanceRating: 4.3,
+    communicationPreference: 'direct',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    bio: 'AI technical writer focused on documenting innovation processes and research findings.'
   }
 ];
 
 export const mockTeamCommunications: TeamCommunication[] = [
   {
-    id: "msg_1",
-    teamId: "team_frontend",
-    fromAgentId: "agent_frontend_lead",
-    content: "Team standup in 15 minutes. Please have your updates ready!",
-    type: "announcement",
-    timestamp: "2024-05-30T09:45:00.000Z",
+    id: 'comm_1',
+    teamId: 'team_1',
+    fromAgentId: 'agent_1',
+    toAgentId: 'agent_2',
+    content: 'Can you review the new component designs for the dashboard?',
+    type: 'task-assignment',
+    timestamp: '2024-05-30T10:30:00Z',
     isRead: false,
-    priority: "medium"
+    priority: 'medium'
   },
   {
-    id: "msg_2",
-    teamId: "team_frontend",
-    fromAgentId: "agent_ui_designer",
-    toAgentId: "agent_react_dev",
-    content: "Hey Jordan, I've updated the design system with new button variants. Can you implement them?",
-    type: "task-assignment",
-    timestamp: "2024-05-30T10:30:00.000Z",
+    id: 'comm_2',
+    teamId: 'team_2',
+    fromAgentId: 'agent_4',
+    content: 'Database optimization completed. Performance improved by 30%.',
+    type: 'status-update',
+    timestamp: '2024-05-30T14:15:00Z',
     isRead: true,
-    priority: "high"
+    priority: 'high'
   },
   {
-    id: "msg_3",
-    teamId: "team_backend",
-    fromAgentId: "agent_backend_lead",
-    content: "API performance optimization is complete. Response times improved by 40%.",
-    type: "status-update",
-    timestamp: "2024-05-30T11:15:00.000Z",
+    id: 'comm_3',
+    teamId: 'team_3',
+    fromAgentId: 'human_1',
+    content: 'Team meeting scheduled for tomorrow at 2 PM to discuss Q2 goals.',
+    type: 'announcement',
+    timestamp: '2024-05-30T16:00:00Z',
     isRead: false,
-    priority: "low"
+    priority: 'medium'
   }
 ];
 
 export const mockTeamTasks: TeamTask[] = [
   {
-    id: "task_1",
-    title: "Implement New Dashboard Components",
-    description: "Create responsive dashboard components based on the latest design specifications",
-    teamId: "team_frontend",
-    assignedAgentId: "agent_react_dev",
-    status: "in-progress",
-    priority: "high",
-    deadline: "2024-06-05T17:00:00.000Z",
-    createdAt: "2024-05-28T09:00:00.000Z",
+    id: 'task_1',
+    title: 'Implement user authentication flow',
+    description: 'Create login, registration, and password reset functionality',
+    teamId: 'team_1',
+    assignedAgentId: 'agent_1',
+    status: 'in-progress',
+    priority: 'high',
+    deadline: '2024-06-15T00:00:00Z',
+    createdAt: '2024-05-25T00:00:00Z',
     estimatedHours: 16,
     actualHours: 8,
-    dependencies: [],
-    tags: ["dashboard", "components", "react"]
+    dependencies: ['task_3'],
+    tags: ['frontend', 'authentication', 'security']
   },
   {
-    id: "task_2",
-    title: "API Endpoint Optimization",
-    description: "Optimize user data retrieval endpoints for better performance",
-    teamId: "team_backend",
-    assignedAgentId: "agent_backend_lead",
-    status: "completed",
-    priority: "medium",
-    deadline: "2024-06-01T17:00:00.000Z",
-    createdAt: "2024-05-25T09:00:00.000Z",
+    id: 'task_2',
+    title: 'Design system documentation',
+    description: 'Document all components in the design system with usage examples',
+    teamId: 'team_1',
+    assignedAgentId: 'agent_2',
+    status: 'review',
+    priority: 'medium',
+    deadline: '2024-06-10T00:00:00Z',
+    createdAt: '2024-05-20T00:00:00Z',
     estimatedHours: 12,
     actualHours: 10,
     dependencies: [],
-    tags: ["api", "optimization", "performance"]
+    tags: ['documentation', 'design-system']
   },
   {
-    id: "task_3",
-    title: "Design System Updates",
-    description: "Update design system with new color palette and typography",
-    teamId: "team_frontend",
-    assignedAgentId: "agent_ui_designer",
-    status: "review",
-    priority: "medium",
-    deadline: "2024-06-03T17:00:00.000Z",
-    createdAt: "2024-05-27T09:00:00.000Z",
-    estimatedHours: 8,
-    actualHours: 7,
+    id: 'task_3',
+    title: 'API endpoint security audit',
+    description: 'Review and enhance security measures for all API endpoints',
+    teamId: 'team_2',
+    assignedAgentId: 'agent_4',
+    status: 'completed',
+    priority: 'urgent',
+    deadline: '2024-05-30T00:00:00Z',
+    createdAt: '2024-05-15T00:00:00Z',
+    estimatedHours: 20,
+    actualHours: 18,
     dependencies: [],
-    tags: ["design-system", "ui", "branding"]
+    tags: ['backend', 'security', 'api']
+  },
+  {
+    id: 'task_4',
+    title: 'Human-AI collaboration framework',
+    description: 'Develop best practices for human-AI team collaboration',
+    teamId: 'team_4',
+    assignedAgentId: 'human_3',
+    status: 'in-progress',
+    priority: 'high',
+    deadline: '2024-06-20T00:00:00Z',
+    createdAt: '2024-05-28T00:00:00Z',
+    estimatedHours: 24,
+    actualHours: 6,
+    dependencies: [],
+    tags: ['innovation', 'collaboration', 'framework']
   }
 ];

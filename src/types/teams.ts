@@ -1,4 +1,3 @@
-
 export type TeamType = 
   | "frontend" 
   | "backend" 
@@ -7,6 +6,8 @@ export type TeamType =
   | "data" 
   | "design" 
   | "product";
+
+export type TeamComposition = "human" | "ai" | "hybrid";
 
 export type TeamRole = 
   | "lead" 
@@ -54,6 +55,7 @@ export interface Team {
   id: string;
   name: string;
   type: TeamType;
+  composition: TeamComposition;
   description: string;
   leaderId?: string;
   memberIds: string[];
