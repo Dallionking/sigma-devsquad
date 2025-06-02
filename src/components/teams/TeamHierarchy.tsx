@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,15 +18,18 @@ interface TeamHierarchyProps {
   onAgentSelect: (agent: AgentProfile) => void;
   selectedTeamId?: string;
   selectedAgentId?: string;
+  teams?: Team[]; // Optional prop to override teams
 }
 
 export const TeamHierarchy = ({
   onTeamSelect,
   onAgentSelect,
   selectedTeamId,
-  selectedAgentId
+  selectedAgentId,
+  teams: teamsOverride
 }: TeamHierarchyProps) => {
-  const { teams, getTeamMembers, getAgentProfileById } = useTeams();
+  const { teams: allTeams, getTeamMembers, getAgentProfileById } = useTeams();
+  const teams = teamsOverride || allTeams;
   const [expandedTeams, setExpandedTeams] = useState<Set<string>>(new Set());
 
   const toggleTeamExpansion = (teamId: string) => {
@@ -68,7 +70,9 @@ export const TeamHierarchy = ({
   return (
     <div className="h-full p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-muted-foreground">Teams</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">
+          Teams {teamsOverride && `(${teams.length})`}
+        </h3>
         <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
           <Plus className="w-4 h-4" />
         </Button>

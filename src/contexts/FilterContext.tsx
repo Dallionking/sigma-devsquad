@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Agent, Task, Message, ViewMode } from '@/types';
+import { Team, TeamComposition, TeamType } from '@/types/teams';
 
 export interface FilterState {
   searchQuery: string;
@@ -12,6 +13,9 @@ export interface FilterState {
     from: Date | null;
     to: Date | null;
   };
+  // Team filtering
+  teamCompositions: TeamComposition[];
+  teamTypes: TeamType[];
   activeFiltersCount: number;
 }
 
@@ -23,6 +27,7 @@ interface FilterContextType {
   getFilteredAgents: (agents: Agent[]) => Agent[];
   getFilteredTasks: (tasks: Task[]) => Task[];
   getFilteredMessages: (messages: Message[]) => Message[];
+  getFilteredTeams: (teams: Team[]) => Team[];
   isFilterActive: boolean;
 }
 
@@ -33,6 +38,8 @@ const defaultFilters: FilterState = {
   taskStatuses: [],
   priority: [],
   dateRange: { from: null, to: null },
+  teamCompositions: [],
+  teamTypes: [],
   activeFiltersCount: 0
 };
 
@@ -49,6 +56,8 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (filterState.taskStatuses.length > 0) count++;
     if (filterState.priority.length > 0) count++;
     if (filterState.dateRange.from || filterState.dateRange.to) count++;
+    if (filterState.teamCompositions.length > 0) count++;
+    if (filterState.teamTypes.length > 0) count++;
     return count;
   }, []);
 
@@ -115,6 +124,21 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, [filters]);
 
+  const getFilteredTeams = useCallback((teams: Team[]) => {
+    return teams.filter(team => {
+      if (filters.searchQuery && !team.name.toLowerCase().includes(filters.searchQuery.toLowerCase())) {
+        return false;
+      }
+      if (filters.teamCompositions.length > 0 && !filters.teamCompositions.includes(team.composition)) {
+        return false;
+      }
+      if (filters.teamTypes.length > 0 && !filters.teamTypes.includes(team.type)) {
+        return false;
+      }
+      return true;
+    });
+  }, [filters]);
+
   const isFilterActive = filters.activeFiltersCount > 0;
 
   return (
@@ -126,6 +150,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       getFilteredAgents,
       getFilteredTasks,
       getFilteredMessages,
+      getFilteredTeams,
       isFilterActive
     }}>
       {children}
