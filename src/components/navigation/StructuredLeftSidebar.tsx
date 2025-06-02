@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -28,6 +28,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTeams } from '@/contexts/TeamContext';
 import { useProjects } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
+import '@/styles/structured-sidebar.css';
 
 interface StructuredLeftSidebarProps {
   collapsed: boolean;
@@ -49,6 +50,9 @@ export const StructuredLeftSidebar = ({
   const [currentTeamId, setCurrentTeamId] = useState<string>(teams[0]?.id || "");
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [showTeamDropdown, setShowTeamDropdown] = useState(false);
+  
+  const projectDropdownRef = useRef<HTMLDivElement>(null);
+  const teamDropdownRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -88,6 +92,21 @@ export const StructuredLeftSidebar = ({
     setShowProjectDropdown(false);
   };
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (projectDropdownRef.current && !projectDropdownRef.current.contains(event.target as Node)) {
+        setShowProjectDropdown(false);
+      }
+      if (teamDropdownRef.current && !teamDropdownRef.current.contains(event.target as Node)) {
+        setShowTeamDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className={cn(
       "left-sidebar-container bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out flex flex-col h-screen fixed top-0 left-0 z-50",
@@ -107,7 +126,7 @@ export const StructuredLeftSidebar = ({
 
       {/* Project Section */}
       {!collapsed && (
-        <div className="sidebar-section project-section">
+        <div className="sidebar-section project-section" ref={projectDropdownRef}>
           <div className="sidebar-section-label">PROJECT</div>
           <div 
             className="dropdown-trigger"
@@ -127,10 +146,13 @@ export const StructuredLeftSidebar = ({
             </span>
           </div>
           {showProjectDropdown && (
-            <div className="absolute left-64 top-0 z-50">
-              <div className="dropdown-panel">
-                <ProjectSwitcher />
-              </div>
+            <div className="dropdown-panel" style={{ 
+              position: 'fixed',
+              left: '264px',
+              top: projectDropdownRef.current?.getBoundingClientRect().top || 0,
+              zIndex: 1100
+            }}>
+              <ProjectSwitcher />
             </div>
           )}
         </div>
@@ -138,7 +160,7 @@ export const StructuredLeftSidebar = ({
 
       {/* Team Section */}
       {!collapsed && (
-        <div className="sidebar-section team-section">
+        <div className="sidebar-section team-section" ref={teamDropdownRef}>
           <div className="sidebar-section-label">TEAM</div>
           <div 
             className="dropdown-trigger"
@@ -158,14 +180,17 @@ export const StructuredLeftSidebar = ({
             </span>
           </div>
           {showTeamDropdown && (
-            <div className="absolute left-64 top-0 z-50">
-              <div className="dropdown-panel">
-                <TeamSwitcher 
-                  currentTeamId={currentTeamId}
-                  onTeamChange={setCurrentTeamId}
-                  compact
-                />
-              </div>
+            <div className="dropdown-panel" style={{ 
+              position: 'fixed',
+              left: '264px',
+              top: teamDropdownRef.current?.getBoundingClientRect().top || 0,
+              zIndex: 1100
+            }}>
+              <TeamSwitcher 
+                currentTeamId={currentTeamId}
+                onTeamChange={setCurrentTeamId}
+                compact
+              />
             </div>
           )}
         </div>

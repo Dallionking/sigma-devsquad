@@ -57,6 +57,7 @@
 .sidebar-section.team-section {
   border-bottom: 1px solid hsl(var(--sidebar-border));
   padding: 12px 16px;
+  position: relative;
 }
 
 .sidebar-section.main-nav-section {
@@ -248,11 +249,11 @@
   display: none;
 }
 
-/* Dropdown positioning for panels */
+/* Enhanced dropdown positioning for panels */
 .dropdown-panel {
   position: fixed;
   z-index: 1100;
-  background-color: hsl(var(--popover));
+  background-color: hsl(var(--background));
   border: 1px solid hsl(var(--border));
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -260,4 +261,20 @@
   max-width: 320px;
   max-height: 400px;
   overflow-y: auto;
+  backdrop-filter: blur(8px);
+  background-color: hsl(var(--background) / 0.95);
+}
+
+/* Ensure dropdown content has proper styling */
+.dropdown-panel > * {
+  background-color: transparent;
+}
+
+/* Dark mode adjustments for dropdowns */
+@media (prefers-color-scheme: dark) {
+  .dropdown-panel {
+    background-color: hsl(var(--background) / 0.98);
+    border-color: hsl(var(--border));
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
 }

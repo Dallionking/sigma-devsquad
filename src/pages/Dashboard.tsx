@@ -91,9 +91,6 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Import the structured sidebar CSS */}
-      <link rel="stylesheet" href="/src/styles/structured-sidebar.css" />
-      
       {/* Structured Left Sidebar */}
       <StructuredLeftSidebar
         collapsed={sidebarCollapsed}
