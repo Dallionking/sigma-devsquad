@@ -17,6 +17,7 @@ import { ProjectProvider } from "./contexts/ProjectContext";
 import { ProjectTemplateProvider } from "./contexts/ProjectTemplateContext";
 import { OnboardingProvider } from "./contexts/OnboardingContext";
 import { WebSocketProvider } from "./contexts/WebSocketContext";
+import { ContextualNavigationProvider } from "./components/navigation/ContextualNavigationProvider";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
@@ -56,80 +57,82 @@ function AppContent() {
                     <MessageProvider>
                       <TeamProvider>
                         <OnboardingProvider>
-                          <BrowserRouter>
-                            <Routes>
-                              <Route path="/" element={<LandingPage />} />
-                              <Route path="/auth" element={<AuthPage />} />
-                              <Route path="/index" element={
-                                <ProtectedRoute>
-                                  <Index />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/dashboard" element={
-                                <ProtectedRoute>
-                                  <Dashboard />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/projects" element={
-                                <ProtectedRoute>
-                                  <Projects />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/settings" element={
-                                <ProtectedRoute>
-                                  <Settings />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/profile" element={
-                                <ProtectedRoute>
-                                  <Profile />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/account" element={
-                                <ProtectedRoute>
-                                  <Account />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/planning-agent" element={
-                                <ProtectedRoute>
-                                  <PlanningAgent />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/agent-creation" element={
-                                <ProtectedRoute>
-                                  <AgentCreation />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/agent-configuration" element={
-                                <ProtectedRoute>
-                                  <AgentConfiguration />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/ide-integration" element={
-                                <ProtectedRoute>
-                                  <IDEIntegration />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/llm-integration" element={
-                                <ProtectedRoute>
-                                  <LLMIntegration />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/mcp-management" element={
-                                <ProtectedRoute>
-                                  <MCPManagement />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="/team-settings" element={
-                                <ProtectedRoute>
-                                  <TeamSettings />
-                                </ProtectedRoute>
-                              } />
-                              <Route path="*" element={<NotFound />} />
-                            </Routes>
-                          </BrowserRouter>
-                          <Toaster />
-                          <Sonner />
+                          <ContextualNavigationProvider>
+                            <BrowserRouter>
+                              <Routes>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route path="/auth" element={<AuthPage />} />
+                                <Route path="/index" element={
+                                  <ProtectedRoute>
+                                    <Index />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/dashboard" element={
+                                  <ProtectedRoute>
+                                    <Dashboard />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/projects" element={
+                                  <ProtectedRoute>
+                                    <Projects />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/settings" element={
+                                  <ProtectedRoute>
+                                    <Settings />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/profile" element={
+                                  <ProtectedRoute>
+                                    <Profile />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/account" element={
+                                  <ProtectedRoute>
+                                    <Account />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/planning-agent" element={
+                                  <ProtectedRoute>
+                                    <PlanningAgent />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/agent-creation" element={
+                                  <ProtectedRoute>
+                                    <AgentCreation />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/agent-configuration" element={
+                                  <ProtectedRoute>
+                                    <AgentConfiguration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/ide-integration" element={
+                                  <ProtectedRoute>
+                                    <IDEIntegration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/llm-integration" element={
+                                  <ProtectedRoute>
+                                    <LLMIntegration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/mcp-management" element={
+                                  <ProtectedRoute>
+                                    <MCPManagement />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/team-settings" element={
+                                  <ProtectedRoute>
+                                    <TeamSettings />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="*" element={<NotFound />} />
+                              </Routes>
+                            </BrowserRouter>
+                            <Toaster />
+                            <Sonner />
+                          </ContextualNavigationProvider>
                         </OnboardingProvider>
                       </TeamProvider>
                     </MessageProvider>
