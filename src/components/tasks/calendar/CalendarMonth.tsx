@@ -46,7 +46,7 @@ export const CalendarMonth = memo(({
             <div className="relative w-full h-full">
               <button 
                 {...buttonProps} 
-                className={cn(buttonProps.className, "w-full h-full")}
+                className={cn(buttonProps.className || "", "w-full h-full")}
               >
                 {date.getDate()}
                 {dayTasks.length > 0 && (
