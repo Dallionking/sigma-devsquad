@@ -41,39 +41,40 @@ export const ViewSpecificGuidedTour = ({
       if (element) {
         setTargetElement(element);
         
-        // Calculate tooltip position
+        // Calculate tooltip position with better viewport awareness
         const rect = element.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        
+        // Fixed tooltip dimensions
+        const tooltipWidth = 320;
+        const tooltipHeight = 280; // Increased to ensure buttons are visible
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
         
         let top = 0;
         let left = 0;
         
         switch (currentStepData.position) {
           case 'top':
-            top = rect.top + scrollTop - 320; // Increased space for tooltip
-            left = rect.left + scrollLeft + rect.width / 2;
+            top = rect.top + scrollTop - tooltipHeight - 20;
+            left = rect.left + scrollLeft + rect.width / 2 - tooltipWidth / 2;
             break;
           case 'bottom':
             top = rect.bottom + scrollTop + 20;
-            left = rect.left + scrollLeft + rect.width / 2;
+            left = rect.left + scrollLeft + rect.width / 2 - tooltipWidth / 2;
             break;
           case 'left':
-            top = rect.top + scrollTop + rect.height / 2;
-            left = rect.left + scrollLeft - 340; // Increased space for tooltip
+            top = rect.top + scrollTop + rect.height / 2 - tooltipHeight / 2;
+            left = rect.left + scrollLeft - tooltipWidth - 20;
             break;
           case 'right':
-            top = rect.top + scrollTop + rect.height / 2;
+            top = rect.top + scrollTop + rect.height / 2 - tooltipHeight / 2;
             left = rect.right + scrollLeft + 20;
             break;
         }
         
-        // Ensure tooltip stays within viewport
-        const tooltipWidth = 320;
-        const tooltipHeight = 200;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
+        // Ensure tooltip stays within viewport with proper margins
         if (left + tooltipWidth > viewportWidth) {
           left = viewportWidth - tooltipWidth - 20;
         }
@@ -143,16 +144,11 @@ export const ViewSpecificGuidedTour = ({
         className="fixed z-[1001] w-80 max-w-[90vw]"
         style={{
           top: tooltipPosition.top,
-          left: currentStepData.position === 'left' || currentStepData.position === 'right' 
-            ? tooltipPosition.left
-            : tooltipPosition.left - 160, // Center horizontally
-          transform: currentStepData.position === 'left' || currentStepData.position === 'right' 
-            ? 'translateY(-50%)' 
-            : 'none'
+          left: tooltipPosition.left,
         }}
       >
-        <Card className="shadow-xl border-0 bg-white dark:bg-gray-900 text-foreground">
-          <CardContent className="p-6">
+        <Card className="shadow-xl border-0 bg-white dark:bg-gray-900 text-foreground min-h-[280px] flex flex-col">
+          <CardContent className="p-6 flex flex-col flex-1">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -175,32 +171,32 @@ export const ViewSpecificGuidedTour = ({
               </Button>
             </div>
             
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            <p className="text-sm text-muted-foreground mb-6 leading-relaxed flex-1">
               {currentStepData.description}
             </p>
             
-            {/* Navigation Buttons - Fixed layout */}
-            <div className="flex items-center justify-between gap-3 mt-6">
+            {/* Navigation Buttons - Always visible at bottom */}
+            <div className="flex items-center justify-between gap-3 mt-auto pt-4 border-t border-border">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={onPrevious}
                 disabled={isFirstStep}
                 className={cn(
-                  "flex items-center gap-2 min-w-[80px]",
+                  "flex items-center gap-2 min-w-[80px] h-9",
                   isFirstStep && "opacity-50 cursor-not-allowed"
                 )}
               >
                 <ChevronLeft className="w-4 h-4" />
-                <span>Previous</span>
+                <span className="text-sm">Previous</span>
               </Button>
               
               <Button
                 onClick={handleNext}
                 size="sm"
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white min-w-[80px]"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white min-w-[80px] h-9"
               >
-                <span>{isLastStep ? 'Finish Tour' : 'Next'}</span>
+                <span className="text-sm">{isLastStep ? 'Finish Tour' : 'Next'}</span>
                 {!isLastStep && <ChevronRight className="w-4 h-4" />}
               </Button>
             </div>
