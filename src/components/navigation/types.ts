@@ -4,6 +4,6 @@ export interface NavItem {
   label: string;
   path: string;
   icon: React.ComponentType<any>;
-  level: 'primary' | 'secondary';
+  level: 'primary' | 'secondary' | 'tertiary';
   category?: string;
 }
