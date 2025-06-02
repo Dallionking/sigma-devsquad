@@ -141,6 +141,18 @@ export const TeamHierarchy = ({
                         </div>
                       </div>
                     </div>
+                    
+                    {/* Manage Team Button */}
+                    <TeamManagementModal team={team}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-white/20 opacity-70 hover:opacity-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Settings className="w-3 h-3" />
+                      </Button>
+                    </TeamManagementModal>
                   </div>
                 </div>
 

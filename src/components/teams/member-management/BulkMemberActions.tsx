@@ -85,10 +85,8 @@ export const BulkMemberActions = ({
           <div className="flex items-center gap-3">
             <Checkbox
               checked={allSelected}
-              ref={(el) => {
-                if (el) el.indeterminate = someSelected;
-              }}
               onCheckedChange={(checked) => onSelectAll(!!checked)}
+              className={someSelected ? "data-[state=checked]:bg-primary/50" : ""}
             />
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
