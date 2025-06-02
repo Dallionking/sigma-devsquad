@@ -127,6 +127,11 @@ function AppContent() {
                                     <TeamSettings />
                                   </ProtectedRoute>
                                 } />
+                                <Route path="/team-settings/:teamId" element={
+                                  <ProtectedRoute>
+                                    <TeamSettings />
+                                  </ProtectedRoute>
+                                } />
                                 <Route path="*" element={<NotFound />} />
                               </Routes>
                               <Toaster />
