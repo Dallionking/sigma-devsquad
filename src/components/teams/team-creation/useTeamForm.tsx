@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { TeamType } from "@/types/teams";
+import { TeamType, TeamComposition } from "@/types/teams";
 import { useTeams } from "@/contexts/TeamContext";
 import { useToast } from "@/hooks/use-toast";
 import { DEFAULT_TEAM_COLORS } from "./constants";
@@ -8,6 +8,7 @@ import { DEFAULT_TEAM_COLORS } from "./constants";
 interface TeamFormData {
   name: string;
   type: TeamType | "";
+  composition: TeamComposition;
   description: string;
   color: string;
   objectives: string[];
@@ -20,6 +21,7 @@ export const useTeamForm = (onSuccess: () => void) => {
   const [formData, setFormData] = useState<TeamFormData>({
     name: "",
     type: "",
+    composition: "hybrid", // Default to hybrid composition
     description: "",
     color: DEFAULT_TEAM_COLORS[0],
     objectives: [],
@@ -33,6 +35,7 @@ export const useTeamForm = (onSuccess: () => void) => {
     setFormData({
       name: "",
       type: "",
+      composition: "hybrid",
       description: "",
       color: DEFAULT_TEAM_COLORS[0],
       objectives: [],
@@ -79,12 +82,13 @@ export const useTeamForm = (onSuccess: () => void) => {
       createTeam({
         name: formData.name.trim(),
         type: formData.type as TeamType,
+        composition: formData.composition,
         description: formData.description.trim(),
         color: formData.color,
         objectives: formData.objectives,
         memberIds: [],
         status: "active",
-        kpis: [], // Add the missing kpis property with empty array as default
+        kpis: [],
       });
 
       toast({

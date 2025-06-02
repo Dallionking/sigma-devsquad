@@ -19,7 +19,7 @@ import {
   Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useCollapsibleSidebar } from '@/hooks/useCollapsibleSidebar';
+import { useCollapsibleSidebar } from '@/hooks/useCollapsibleSidebar.tsx';
 import { useResponsiveNavigation } from '@/hooks/useResponsiveNavigation';
 import { TouchOptimizedNavItem } from './TouchOptimizedNavItem';
 import { MobileHamburgerMenu } from './MobileHamburgerMenu';
