@@ -45,6 +45,10 @@ export const SignOutConfirmationDialog = ({
     onConfirm();
   };
 
+  const handleRememberChoiceChange = (checked: boolean | "indeterminate") => {
+    setRememberChoice(checked === true);
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-md">
@@ -83,7 +87,7 @@ export const SignOutConfirmationDialog = ({
             <Checkbox
               id="remember-choice"
               checked={rememberChoice}
-              onCheckedChange={setRememberChoice}
+              onCheckedChange={handleRememberChoiceChange}
               className="mt-1"
             />
             <div className="space-y-1">

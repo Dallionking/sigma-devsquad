@@ -6,8 +6,9 @@ import { PersonalInfoSection } from "./PersonalInfoSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { SecuritySection } from "./SecuritySection";
 import { NotificationPreferencesSection } from "./NotificationPreferencesSection";
+import { PresenceControlsSection } from "./PresenceControlsSection";
 import { ProfileHeader } from "./ProfileHeader";
-import { User, Settings, Shield, Bell } from "lucide-react";
+import { User, Settings, Shield, Bell, Circle } from "lucide-react";
 
 export const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -27,11 +28,16 @@ export const ProfilePage = () => {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-muted/50">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 bg-muted/50">
                 <TabsTrigger value="personal" className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   <span className="hidden sm:inline">Personal Info</span>
                   <span className="sm:hidden">Info</span>
+                </TabsTrigger>
+                <TabsTrigger value="presence" className="flex items-center gap-2">
+                  <Circle className="w-4 h-4" />
+                  <span className="hidden sm:inline">Presence</span>
+                  <span className="sm:hidden">Status</span>
                 </TabsTrigger>
                 <TabsTrigger value="preferences" className="flex items-center gap-2">
                   <Settings className="w-4 h-4" />
@@ -51,6 +57,10 @@ export const ProfilePage = () => {
 
               <TabsContent value="personal" className="mt-6">
                 <PersonalInfoSection />
+              </TabsContent>
+
+              <TabsContent value="presence" className="mt-6">
+                <PresenceControlsSection />
               </TabsContent>
 
               <TabsContent value="preferences" className="mt-6">
