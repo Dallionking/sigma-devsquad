@@ -75,24 +75,26 @@ export const StructuredLeftSidebar = ({
       collapsed ? "w-16" : "w-64"
     )}>
       {/* Logo Section */}
-      <div className="sidebar-section logo-section p-4">
-        {!collapsed ? (
-          <Logo size="sm" variant="full" />
-        ) : (
-          <div className="flex justify-center">
-            <Logo size="sm" variant="icon" />
+      <div className="sidebar-section logo-section">
+        <div className="logo-icon">
+          <Logo size="sm" variant="icon" />
+        </div>
+        {!collapsed && (
+          <div className="logo-text">
+            Vibe DevSquad
           </div>
         )}
       </div>
 
-      <Separator className="mx-3" />
-
       {/* Project Section */}
       {!collapsed && (
-        <div className="sidebar-section project-section px-3 py-2">
-          <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">PROJECT</div>
-          <ProjectSwitcher />
-        </div>
+        <>
+          <Separator className="mx-3" />
+          <div className="sidebar-section project-section px-3 py-2">
+            <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">PROJECT</div>
+            <ProjectSwitcher />
+          </div>
+        </>
       )}
 
       {/* Team Section */}
