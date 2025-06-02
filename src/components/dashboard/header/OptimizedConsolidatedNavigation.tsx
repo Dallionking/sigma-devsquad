@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -64,7 +63,7 @@ export const OptimizedConsolidatedNavigation = ({
     navigate(path);
   };
 
-  // Core navigation items with consistent 16px spacing
+  // Core navigation items with primary level styling - larger, more prominent
   const primaryNavItems = [
     { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
@@ -102,30 +101,30 @@ export const OptimizedConsolidatedNavigation = ({
         </div>
       </div>
 
-      {/* Center: Primary Navigation with consistent 16px spacing */}
-      <nav className="flex items-center" style={{ gap: '16px' }}>
+      {/* Center: Primary Navigation with enhanced styling for hierarchy */}
+      <nav className="flex items-center" style={{ gap: '20px' }}>
         {primaryNavItems.map((item) => {
           const Icon = item.icon;
           return (
             <Button
               key={item.path}
               variant={item.active ? "default" : "ghost"}
-              size="sm"
+              size="default"
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "h-9 px-4 font-medium transition-all duration-200",
+                "h-10 px-6 font-semibold text-base transition-all duration-200 shadow-sm",
                 item.active 
-                  ? "bg-primary text-primary-foreground shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                  ? "bg-primary text-primary-foreground shadow-md scale-105" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:scale-102"
               )}
             >
-              <Icon className="w-4 h-4 mr-2" />
+              <Icon className="w-5 h-5 mr-2.5" />
               <span className="hidden sm:inline">{item.label}</span>
             </Button>
           );
         })}
 
-        {/* Configuration Dropdown */}
+        {/* Configuration Dropdown - Secondary level styling */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
@@ -138,7 +137,7 @@ export const OptimizedConsolidatedNavigation = ({
               <ChevronDown className="w-3 h-3 ml-1" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-sm border shadow-lg">
+          <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-sm border shadow-lg z-50">
             {configurationItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -159,7 +158,7 @@ export const OptimizedConsolidatedNavigation = ({
         </DropdownMenu>
       </nav>
 
-      {/* Right: Account & Settings Dropdown */}
+      {/* Right: Account & Settings Dropdown - Secondary level */}
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
