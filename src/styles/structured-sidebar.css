@@ -56,6 +56,7 @@
 .sidebar-section.project-section,
 .sidebar-section.team-section {
   border-bottom: 1px solid hsl(var(--sidebar-border));
+  padding: 12px 16px;
 }
 
 .sidebar-section.main-nav-section {
@@ -71,6 +72,73 @@
 
 .sidebar-section.collapse-section {
   border-top: 1px solid hsl(var(--sidebar-border));
+}
+
+/* Dropdown Trigger Styles */
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: hsl(var(--sidebar-accent) / 0.1);
+  border: 1px solid hsl(var(--sidebar-border));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+}
+
+.dropdown-trigger:hover {
+  background-color: hsl(var(--sidebar-accent) / 0.2);
+  border-color: hsl(var(--sidebar-accent));
+}
+
+.dropdown-trigger-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--sidebar-foreground));
+}
+
+.dropdown-trigger-text {
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: hsl(var(--sidebar-foreground));
+}
+
+.dropdown-trigger-arrow {
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--sidebar-foreground) / 0.7);
+  transition: transform 0.2s ease;
+}
+
+.dropdown-trigger[aria-expanded="true"] .dropdown-trigger-arrow {
+  transform: rotate(180deg);
+}
+
+/* Section Labels */
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: hsl(var(--sidebar-foreground) / 0.6);
+  margin-bottom: 8px;
+  padding: 0 4px;
 }
 
 /* Scrollbar Styling */
@@ -116,6 +184,20 @@
   .logo-text {
     font-size: 16px;
   }
+
+  .sidebar-section.project-section,
+  .sidebar-section.team-section {
+    padding: 8px 12px;
+  }
+
+  .dropdown-trigger {
+    padding: 6px 8px;
+    min-height: 36px;
+  }
+
+  .dropdown-trigger-text {
+    font-size: 13px;
+  }
 }
 
 /* Navigation item hover effects */
@@ -158,4 +240,24 @@
 .left-sidebar-container.w-16 .sidebar-section.logo-section {
   justify-content: center;
   padding: 12px 8px;
+}
+
+/* Hide dropdown sections when collapsed */
+.left-sidebar-container.w-16 .sidebar-section.project-section,
+.left-sidebar-container.w-16 .sidebar-section.team-section {
+  display: none;
+}
+
+/* Dropdown positioning for panels */
+.dropdown-panel {
+  position: fixed;
+  z-index: 1100;
+  background-color: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
 }

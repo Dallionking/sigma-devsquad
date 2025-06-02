@@ -17,13 +17,16 @@ import {
   Settings,
   CreditCard,
   Activity,
-  Star
+  Star,
+  ChevronDown,
+  Users
 } from 'lucide-react';
 import { Logo } from '@/components/branding/Logo';
 import { ProjectSwitcher } from '@/components/projects/ProjectSwitcher';
 import { TeamSwitcher } from '@/components/navigation/TeamSwitcher';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTeams } from '@/contexts/TeamContext';
+import { useProjects } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
 
 interface StructuredLeftSidebarProps {
@@ -42,9 +45,15 @@ export const StructuredLeftSidebar = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { teams } = useTeams();
+  const { currentProject } = useProjects();
   const [currentTeamId, setCurrentTeamId] = useState<string>(teams[0]?.id || "");
+  const [showProjectDropdown, setShowProjectDropdown] = useState(false);
+  const [showTeamDropdown, setShowTeamDropdown] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Get current team
+  const currentTeam = teams.find(team => team.id === currentTeamId) || teams[0];
 
   const mainNavItems = [
     { path: "/dashboard", label: "Dashboard", icon: Home },
@@ -69,6 +78,16 @@ export const StructuredLeftSidebar = ({
     navigate(path);
   };
 
+  const toggleProjectDropdown = () => {
+    setShowProjectDropdown(!showProjectDropdown);
+    setShowTeamDropdown(false);
+  };
+
+  const toggleTeamDropdown = () => {
+    setShowTeamDropdown(!showTeamDropdown);
+    setShowProjectDropdown(false);
+  };
+
   return (
     <div className={cn(
       "left-sidebar-container bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out flex flex-col h-screen fixed top-0 left-0 z-50",
@@ -88,24 +107,67 @@ export const StructuredLeftSidebar = ({
 
       {/* Project Section */}
       {!collapsed && (
-        <>
-          <Separator className="mx-3" />
-          <div className="sidebar-section project-section px-3 py-2">
-            <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">PROJECT</div>
-            <ProjectSwitcher />
+        <div className="sidebar-section project-section">
+          <div className="sidebar-section-label">PROJECT</div>
+          <div 
+            className="dropdown-trigger"
+            onClick={toggleProjectDropdown}
+            aria-expanded={showProjectDropdown}
+            role="button"
+            tabIndex={0}
+          >
+            <span className="dropdown-trigger-icon">
+              <Folder className="w-4 h-4" />
+            </span>
+            <span className="dropdown-trigger-text">
+              {currentProject?.name || "Select Project"}
+            </span>
+            <span className="dropdown-trigger-arrow">
+              <ChevronDown className="w-3 h-3" />
+            </span>
           </div>
-        </>
+          {showProjectDropdown && (
+            <div className="absolute left-64 top-0 z-50">
+              <div className="dropdown-panel">
+                <ProjectSwitcher />
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
       {/* Team Section */}
       {!collapsed && (
-        <div className="sidebar-section team-section px-3 py-2">
-          <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">TEAM</div>
-          <TeamSwitcher 
-            currentTeamId={currentTeamId}
-            onTeamChange={setCurrentTeamId}
-            compact
-          />
+        <div className="sidebar-section team-section">
+          <div className="sidebar-section-label">TEAM</div>
+          <div 
+            className="dropdown-trigger"
+            onClick={toggleTeamDropdown}
+            aria-expanded={showTeamDropdown}
+            role="button"
+            tabIndex={0}
+          >
+            <span className="dropdown-trigger-icon">
+              <Users className="w-4 h-4" />
+            </span>
+            <span className="dropdown-trigger-text">
+              {currentTeam?.name || "Select Team"}
+            </span>
+            <span className="dropdown-trigger-arrow">
+              <ChevronDown className="w-3 h-3" />
+            </span>
+          </div>
+          {showTeamDropdown && (
+            <div className="absolute left-64 top-0 z-50">
+              <div className="dropdown-panel">
+                <TeamSwitcher 
+                  currentTeamId={currentTeamId}
+                  onTeamChange={setCurrentTeamId}
+                  compact
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -113,7 +175,7 @@ export const StructuredLeftSidebar = ({
 
       {/* Main Navigation Section */}
       <div className="sidebar-section main-nav-section flex-1 px-3 py-2 overflow-y-auto">
-        <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">MAIN</div>
+        <div className="sidebar-section-label px-1">MAIN</div>
         <nav className="space-y-1">
           {mainNavItems.map((item) => {
             const Icon = item.icon;
@@ -138,7 +200,7 @@ export const StructuredLeftSidebar = ({
         {/* Favorites Section */}
         {!collapsed && (
           <div className="mt-6">
-            <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">FAVORITES</div>
+            <div className="sidebar-section-label px-1">FAVORITES</div>
             <div className="text-sm text-sidebar-foreground/50 px-1">
               <Star className="w-4 h-4 inline mr-2" />
               No favorites yet
@@ -148,7 +210,7 @@ export const StructuredLeftSidebar = ({
 
         {/* Configuration Section */}
         <div className="mt-6">
-          <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">CONFIG</div>
+          <div className="sidebar-section-label px-1">CONFIG</div>
           <nav className="space-y-1">
             {configItems.map((item) => {
               const Icon = item.icon;
@@ -173,7 +235,7 @@ export const StructuredLeftSidebar = ({
 
         {/* Account Section */}
         <div className="mt-6">
-          <div className="text-xs font-medium text-sidebar-foreground/60 mb-2 px-1">ACCOUNT</div>
+          <div className="sidebar-section-label px-1">ACCOUNT</div>
           <nav className="space-y-1">
             {accountItems.map((item) => {
               const Icon = item.icon;
