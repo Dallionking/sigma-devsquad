@@ -83,11 +83,11 @@ export const TaskCalendarView = ({ tasks, onTaskSelect, onCreateTask }: TaskCale
         onSelect={(date) => date && setSelectedDate(date)}
         className="rounded-md border w-full"
         components={{
-          Day: ({ date, ...props }) => {
+          Day: ({ date, displayMonth, ...buttonProps }) => {
             const dayTasks = getTasksForDate(date);
             return (
               <div className="relative w-full h-full">
-                <button {...props} className={cn(props.className, "w-full h-full")}>
+                <button {...buttonProps} className={cn(buttonProps.className, "w-full h-full")}>
                   {date.getDate()}
                   {dayTasks.length > 0 && (
                     <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex gap-0.5">
