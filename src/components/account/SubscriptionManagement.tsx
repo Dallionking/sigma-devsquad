@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,6 +47,17 @@ export const SubscriptionManagement = () => {
 
       if (plansError) throw plansError;
 
+      // Transform the data to match our SubscriptionPlan interface
+      const transformedPlans: SubscriptionPlan[] = (plansData || []).map(plan => ({
+        id: plan.id,
+        name: plan.name,
+        description: plan.description || '',
+        price_monthly: plan.price_monthly,
+        price_yearly: plan.price_yearly,
+        features: Array.isArray(plan.features) ? plan.features as string[] : [],
+        is_active: plan.is_active || false,
+      }));
+
       // Fetch current user subscription
       const { data: subscriptionData, error: subscriptionError } = await supabase
         .from('user_subscriptions')
@@ -60,7 +70,7 @@ export const SubscriptionManagement = () => {
         throw subscriptionError;
       }
 
-      setPlans(plansData || []);
+      setPlans(transformedPlans);
       setCurrentSubscription(subscriptionData);
     } catch (error) {
       console.error('Error fetching subscription data:', error);
