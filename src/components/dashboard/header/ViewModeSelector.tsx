@@ -20,6 +20,11 @@ export const ViewModeSelector = ({
   onViewModeChange, 
   notificationCounts 
 }: ViewModeSelectorProps) => {
+  
+  // Debug logging
+  console.log('ViewModeSelector - Current viewMode:', viewMode);
+  console.log('ViewModeSelector - onViewModeChange function:', typeof onViewModeChange);
+
   const viewModeConfig = {
     workflow: { 
       icon: GitBranch, 
@@ -47,6 +52,11 @@ export const ViewModeSelector = ({
     }
   };
 
+  const handleViewModeClick = (mode: ViewMode) => {
+    console.log('ViewModeSelector - Switching to mode:', mode);
+    onViewModeChange(mode);
+  };
+
   return (
     <div className="flex items-center space-x-1 bg-muted/50 rounded-xl p-1 border border-border/50">
       {Object.entries(viewModeConfig).map(([mode, config]) => {
@@ -59,7 +69,7 @@ export const ViewModeSelector = ({
             <Button
               variant={isActive ? "default" : "ghost"}
               size="sm"
-              onClick={() => onViewModeChange(mode as ViewMode)}
+              onClick={() => handleViewModeClick(mode as ViewMode)}
               className={`
                 h-9 px-4 relative transition-all duration-200 group
                 ${isActive 

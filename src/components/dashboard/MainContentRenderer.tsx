@@ -49,6 +49,10 @@ export const MainContentRenderer = ({
   onViewModeChange,
 }: MainContentRendererProps) => {
 
+  // Debug logging
+  console.log('MainContentRenderer - Current viewMode:', viewMode);
+  console.log('MainContentRenderer - showTeamView:', showTeamView);
+
   // For team view, show team-specific content
   if (showTeamView) {
     // If a specific team is selected, show the team dashboard
@@ -103,6 +107,7 @@ export const MainContentRenderer = ({
   // Individual agents view switch statement
   switch (viewMode) {
     case 'workflow':
+      console.log('Rendering workflow view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
@@ -116,6 +121,7 @@ export const MainContentRenderer = ({
       );
 
     case 'communication':
+      console.log('Rendering communication view - CommunicationHub');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <CommunicationHub />
@@ -123,6 +129,7 @@ export const MainContentRenderer = ({
       );
 
     case 'tasks':
+      console.log('Rendering tasks view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
@@ -137,6 +144,7 @@ export const MainContentRenderer = ({
       );
 
     case 'messages':
+      console.log('Rendering messages view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
@@ -160,6 +168,7 @@ export const MainContentRenderer = ({
       );
 
     default:
+      console.log('Rendering default view - AgentGrid');
       // Default to agent grid view
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
