@@ -1,0 +1,152 @@
+
+/* Card-specific hover effects */
+
+/* Card-specific overrides with maximum force */
+[class*="card"]:hover,
+[class*="Card"]:hover,
+.feature-card:hover,
+.agent-template-card:hover,
+.profile-card:hover,
+.team-card:hover,
+.custom-agent-card:hover,
+.onboarding-form-card:hover,
+.planning-tour-card:hover,
+.tutorial-section:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  --tw-bg-opacity: 1 !important;
+}
+
+/* Force original card backgrounds - no grey allowed */
+.feature-card,
+.feature-card:hover,
+.feature-card *,
+.feature-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.feature-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Agent template cards - NUCLEAR FORCE */
+.agent-template-card,
+.agent-template-card:hover,
+.agent-template-card *,
+.agent-template-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.agent-template-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Profile setup cards - NUCLEAR FORCE */
+.profile-card,
+.profile-card:hover,
+.profile-card *,
+.profile-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.profile-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Team creation cards - NUCLEAR FORCE */
+.team-card,
+.team-card:hover,
+.team-card *,
+.team-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.team-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Custom agent builder cards - NUCLEAR FORCE */
+.custom-agent-card,
+.custom-agent-card:hover,
+.custom-agent-card *,
+.custom-agent-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.custom-agent-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Onboarding form cards - NUCLEAR FORCE */
+.onboarding-form-card,
+.onboarding-form-card:hover,
+.onboarding-form-card *,
+.onboarding-form-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease !important;
+}
+
+.onboarding-form-card:hover {
+  border-color: hsl(var(--primary)) !important;
+}
+
+/* Planning tour cards - NUCLEAR FORCE */
+.planning-tour-card,
+.planning-tour-card:hover,
+.planning-tour-card *,
+.planning-tour-card *:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.planning-tour-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Tutorial section styling - NUCLEAR FORCE */
+.tutorial-section,
+.tutorial-section:hover,
+.tutorial-section *,
+.tutorial-section *:hover {
+  background: linear-gradient(135deg, 
+    hsl(var(--primary) / 0.05), 
+    hsl(var(--secondary) / 0.05)
+  ) !important;
+  border: 1px solid hsl(var(--primary) / 0.2) !important;
+  transition: border-color 0.3s ease, background 0.3s ease !important;
+}
+
+.tutorial-section:hover {
+  background: linear-gradient(135deg, 
+    hsl(var(--primary) / 0.08), 
+    hsl(var(--secondary) / 0.08)
+  ) !important;
+  border-color: hsl(var(--primary) / 0.3) !important;
+}

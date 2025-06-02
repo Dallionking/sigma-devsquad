@@ -6,3 +6,12 @@
 @import './button-animations.css';
 @import './utility-animations.css';
 @import './onboarding-animations.css';
+
+/* Individual button animation modules */
+@import './limitless-button-effects.css';
+@import './enhanced-button-animations.css';
+@import './grey-hover-overrides.css';
+@import './card-hover-effects.css';
+@import './skill-badge-animations.css';
+@import './dark-mode-button-overrides.css';
+@import './accessibility-animations.css';

@@ -1,0 +1,13 @@
+
+/* Skill selector badge animations */
+.skill-badge {
+  background-color: hsl(var(--secondary)) !important;
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.skill-badge:hover {
+  background-color: hsl(var(--primary)) !important;
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  transform: scale(1.05) !important;
+}

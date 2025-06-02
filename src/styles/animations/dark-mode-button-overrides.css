@@ -1,0 +1,65 @@
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .limitless-cta-secondary {
+    background: linear-gradient(var(--background), var(--background)) padding-box,
+                linear-gradient(135deg, #6C5CE7, #00B8D9) border-box !important;
+  }
+  
+  .btn-enhanced::before {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent
+    ) !important;
+  }
+
+  .feature-card,
+  .feature-card:hover,
+  .feature-card *,
+  .feature-card *:hover,
+  .agent-template-card,
+  .agent-template-card:hover,
+  .agent-template-card *,
+  .agent-template-card *:hover,
+  .profile-card,
+  .profile-card:hover,
+  .profile-card *,
+  .profile-card *:hover,
+  .team-card,
+  .team-card:hover,
+  .team-card *,
+  .team-card *:hover,
+  .custom-agent-card,
+  .custom-agent-card:hover,
+  .custom-agent-card *,
+  .custom-agent-card *:hover,
+  .onboarding-form-card,
+  .onboarding-form-card:hover,
+  .onboarding-form-card *,
+  .onboarding-form-card *:hover,
+  .planning-tour-card,
+  .planning-tour-card:hover,
+  .planning-tour-card *,
+  .planning-tour-card *:hover {
+    background-color: hsl(var(--card)) !important;
+    background: hsl(var(--card)) !important;
+  }
+
+  .tutorial-section,
+  .tutorial-section *,
+  .tutorial-section *:hover {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary) / 0.1), 
+      hsl(var(--secondary) / 0.1)
+    ) !important;
+  }
+
+  .tutorial-section:hover {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary) / 0.15), 
+      hsl(var(--secondary) / 0.15)
+    ) !important;
+  }
+}

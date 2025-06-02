@@ -1,0 +1,89 @@
+
+/* NUCLEAR OPTION - ELIMINATE ALL GREY HOVER EFFECTS */
+/* Target every possible element that could have grey hover */
+* {
+  --hover-background: transparent !important;
+  --hover-bg: transparent !important;
+}
+
+*:hover {
+  --hover-background: transparent !important;
+  --hover-bg: transparent !important;
+}
+
+/* Override all possible grey hover states with maximum specificity */
+.onboarding-modal *:hover,
+.onboarding-modal div:hover,
+.onboarding-modal section:hover,
+.onboarding-modal article:hover,
+.onboarding-modal main:hover,
+.onboarding-modal aside:hover,
+.onboarding-modal header:hover,
+.onboarding-modal footer:hover,
+.onboarding-modal nav:hover,
+[data-step] *:hover,
+[data-step] div:hover,
+[data-step] section:hover,
+[data-step] article:hover,
+[data-step] main:hover,
+[data-step] aside:hover,
+[data-step] header:hover,
+[data-step] footer:hover,
+[data-step] nav:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  --tw-bg-opacity: 0 !important;
+}
+
+/* Target specific onboarding steps with nuclear force */
+[data-step="welcome"] *:hover,
+[data-step="welcome"] div:hover,
+[data-step="welcome"] section:hover,
+[data-step="profile-setup"] *:hover,
+[data-step="profile-setup"] div:hover,
+[data-step="profile-setup"] section:hover,
+[data-step="team-creation"] *:hover,
+[data-step="team-creation"] div:hover,
+[data-step="team-creation"] section:hover,
+[data-step="first-agent"] *:hover,
+[data-step="first-agent"] div:hover,
+[data-step="first-agent"] section:hover,
+[data-step="planning-tour"] *:hover,
+[data-step="planning-tour"] div:hover,
+[data-step="planning-tour"] section:hover,
+[data-step="completion"] *:hover,
+[data-step="completion"] div:hover,
+[data-step="completion"] section:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  --tw-bg-opacity: 0 !important;
+  --hover-bg: transparent !important;
+}
+
+/* Nuclear override for all shadcn/ui components */
+[data-radix-popper-content-wrapper] *:hover,
+[data-radix-select-content] *:hover,
+[data-radix-dropdown-menu-content] *:hover,
+[data-radix-popover-content] *:hover,
+[data-radix-dialog-content] *:hover,
+[data-radix-accordion-content] *:hover,
+[data-radix-collapsible-content] *:hover,
+.ui-card:hover,
+.ui-button:hover,
+.ui-input:hover,
+.ui-textarea:hover,
+.ui-select:hover,
+.ui-accordion:hover,
+.ui-collapsible:hover,
+.ui-dialog:hover,
+.ui-sheet:hover,
+.ui-popover:hover,
+.ui-dropdown:hover,
+.ui-menu:hover,
+.ui-navigation:hover,
+.ui-tabs:hover,
+.ui-table:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  --tw-bg-opacity: 0 !important;
+}

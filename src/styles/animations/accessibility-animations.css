@@ -1,0 +1,32 @@
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .limitless-cta-primary,
+  .limitless-cta-secondary,
+  .btn-enhanced,
+  .feature-card,
+  .tutorial-section,
+  .agent-template-card,
+  .profile-card,
+  .team-card,
+  .custom-agent-card,
+  .onboarding-form-card,
+  .planning-tour-card {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .limitless-cta-primary:hover,
+  .limitless-cta-secondary:hover,
+  .btn-enhanced:hover,
+  .feature-card:hover,
+  .tutorial-section:hover,
+  .agent-template-card:hover,
+  .profile-card:hover,
+  .team-card:hover,
+  .custom-agent-card:hover,
+  .onboarding-form-card:hover,
+  .planning-tour-card:hover {
+    transform: none !important;
+  }
+}
