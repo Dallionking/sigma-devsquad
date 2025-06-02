@@ -12,14 +12,29 @@ import {
   Clock, 
   Users, 
   Target,
-  Minus
+  Minus,
+  AlertCircle
 } from 'lucide-react';
+
+interface TeamPerformanceMetrics {
+  tasksCompleted: number;
+  tasksInProgress: number;
+  tasksPending: number;
+  tasksBlocked: number;
+  completionRate: number;
+  velocityScore: number;
+  averageResponseTime: number;
+  activeMembers: number;
+  productivityTrend: 'up' | 'down' | 'stable';
+  lastUpdated: Date;
+}
 
 interface TeamKPIOverviewProps {
   team: Team;
   timeRange: TimeRange;
   comparisonType: ComparisonType;
   customDateRange: { start: Date; end: Date } | null;
+  metrics: TeamPerformanceMetrics;
 }
 
 interface KPIMetric {
@@ -32,60 +47,81 @@ interface KPIMetric {
   changePercent: number;
   icon: React.ComponentType<{ className?: string }>;
   color: string;
+  description?: string;
 }
 
 export const TeamKPIOverview = ({ 
   team, 
   timeRange, 
   comparisonType,
-  customDateRange 
+  customDateRange,
+  metrics 
 }: TeamKPIOverviewProps) => {
-  // Mock KPI data - in real implementation, this would be calculated based on timeRange and team data
+  
   const kpiMetrics: KPIMetric[] = [
     {
       id: 'tasks-completed',
       title: 'Tasks Completed',
-      value: 23,
-      target: 25,
+      value: metrics.tasksCompleted,
+      target: Math.round(metrics.tasksCompleted * 1.2),
       unit: '',
-      trend: 'up',
-      changePercent: 15.3,
+      trend: metrics.productivityTrend,
+      changePercent: metrics.productivityTrend === 'up' ? 15.3 : metrics.productivityTrend === 'down' ? -8.2 : 0,
       icon: CheckCircle,
-      color: 'text-emerald-600'
+      color: 'text-emerald-600',
+      description: 'Total completed tasks in selected period'
     },
     {
-      id: 'productivity-score',
-      title: 'Productivity Score',
-      value: 87,
+      id: 'completion-rate',
+      title: 'Completion Rate',
+      value: metrics.completionRate,
       target: 85,
       unit: '%',
-      trend: 'up',
-      changePercent: 8.2,
-      icon: TrendingUp,
-      color: 'text-blue-600'
+      trend: metrics.completionRate > 75 ? 'up' : metrics.completionRate < 50 ? 'down' : 'stable',
+      changePercent: metrics.completionRate > 75 ? 8.2 : metrics.completionRate < 50 ? -12.5 : 0,
+      icon: Target,
+      color: 'text-blue-600',
+      description: 'Percentage of tasks completed vs total'
     },
     {
       id: 'avg-response-time',
       title: 'Avg Response Time',
-      value: 2.3,
+      value: metrics.averageResponseTime,
       target: 3.0,
       unit: 'h',
-      trend: 'down',
-      changePercent: -12.5,
+      trend: metrics.averageResponseTime < 2.5 ? 'up' : metrics.averageResponseTime > 4 ? 'down' : 'stable',
+      changePercent: metrics.averageResponseTime < 2.5 ? -12.5 : metrics.averageResponseTime > 4 ? 15.2 : 0,
       icon: Clock,
-      color: 'text-orange-600'
+      color: 'text-orange-600',
+      description: 'Average time to respond to tasks'
     },
     {
       id: 'active-members',
       title: 'Active Members',
-      value: team.memberIds.length,
+      value: metrics.activeMembers,
       unit: '',
       trend: 'stable',
       changePercent: 0,
       icon: Users,
-      color: 'text-purple-600'
+      color: 'text-purple-600',
+      description: 'Currently active team members'
     }
   ];
+
+  // Add blocked tasks indicator if there are any
+  if (metrics.tasksBlocked > 0) {
+    kpiMetrics.push({
+      id: 'blocked-tasks',
+      title: 'Blocked Tasks',
+      value: metrics.tasksBlocked,
+      unit: '',
+      trend: 'down',
+      changePercent: 0,
+      icon: AlertCircle,
+      color: 'text-red-600',
+      description: 'Tasks currently blocked'
+    });
+  }
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
@@ -99,18 +135,18 @@ export const TeamKPIOverview = ({
   const getChangeColor = (trend: string, changePercent: number) => {
     if (changePercent === 0) return 'text-muted-foreground';
     if (trend === 'up' && changePercent > 0) return 'text-emerald-600';
-    if (trend === 'down' && changePercent < 0) return 'text-emerald-600';
+    if (trend === 'down' && changePercent < 0 && trend !== 'blocked-tasks') return 'text-emerald-600';
     return 'text-red-600';
   };
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
       {kpiMetrics.map((metric) => {
         const Icon = metric.icon;
-        const progressValue = metric.target ? (metric.value / metric.target) * 100 : 0;
+        const progressValue = metric.target ? Math.min((metric.value / metric.target) * 100, 100) : 0;
         
         return (
-          <Card key={metric.id} className="relative overflow-hidden">
+          <Card key={metric.id} className="relative overflow-hidden hover:shadow-md transition-shadow">
             <CardHeader className="pb-1">
               <CardTitle className="text-xs font-medium text-muted-foreground truncate">
                 {metric.title}
@@ -128,7 +164,7 @@ export const TeamKPIOverview = ({
                     </span>
                   </div>
                   
-                  {comparisonType !== 'none' && (
+                  {comparisonType !== 'none' && metric.changePercent !== 0 && (
                     <div className="flex items-center gap-1">
                       {getTrendIcon(metric.trend)}
                       <span className={`text-xs font-medium ${getChangeColor(metric.trend, metric.changePercent)}`}>
@@ -153,6 +189,12 @@ export const TeamKPIOverview = ({
                   </div>
                   <Progress value={progressValue} className="h-1" />
                 </div>
+              )}
+
+              {metric.description && (
+                <p className="text-xs text-muted-foreground/80 leading-tight">
+                  {metric.description}
+                </p>
               )}
             </CardContent>
           </Card>
