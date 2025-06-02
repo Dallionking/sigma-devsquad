@@ -18,7 +18,8 @@ import {
   FolderOpen,
   Settings,
   Home,
-  Folder
+  Folder,
+  CreditCard
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
@@ -55,6 +56,7 @@ export const OptimizedConsolidatedNavigation = ({
   const isPlanningAgentPage = location.pathname === "/planning-agent";
   const isDashboardPage = location.pathname === "/dashboard";
   const isProjectsPage = location.pathname === "/projects";
+  const isAccountPage = location.pathname === "/account";
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -71,6 +73,11 @@ export const OptimizedConsolidatedNavigation = ({
     { path: "/mcp-management", label: "MCP Management", icon: Package, active: isMCPPage },
     { path: "/llm-integration", label: "LLM Integration", icon: Brain, active: isLLMPage },
     { path: "/ide-integration", label: "IDE Integration", icon: Monitor, active: isIDEPage },
+  ];
+
+  const accountItems = [
+    { path: "/settings", label: "Settings", icon: Settings, active: location.pathname === "/settings" },
+    { path: "/account", label: "Account & Billing", icon: CreditCard, active: isAccountPage },
   ];
 
   return (
@@ -149,17 +156,39 @@ export const OptimizedConsolidatedNavigation = ({
         </DropdownMenu>
       </nav>
 
-      {/* Right: Settings Button */}
+      {/* Right: Account & Settings Dropdown */}
       <div className="flex items-center">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => handleNavigation("/settings")}
-          className="h-9 px-4 font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200"
-        >
-          <Settings className="w-4 h-4 mr-2" />
-          <span className="hidden sm:inline">Settings</span>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 px-4 font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Account</span>
+              <ChevronDown className="w-3 h-3 ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52 bg-background/95 backdrop-blur-sm border shadow-lg">
+            {accountItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <DropdownMenuItem
+                  key={item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  className={cn(
+                    "flex items-center px-3 py-2.5 cursor-pointer transition-colors",
+                    item.active && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <Icon className="w-4 h-4 mr-3 text-muted-foreground" />
+                  <span className="font-medium">{item.label}</span>
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

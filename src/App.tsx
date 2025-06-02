@@ -24,6 +24,7 @@ import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import Account from "./pages/Account";
 import Projects from "./pages/Projects";
 import PlanningAgent from "./pages/PlanningAgent";
 import AgentCreation from "./pages/AgentCreation";
@@ -82,6 +83,11 @@ function AppContent() {
                               <Route path="/profile" element={
                                 <ProtectedRoute>
                                   <Profile />
+                                </ProtectedRoute>
+                              } />
+                              <Route path="/account" element={
+                                <ProtectedRoute>
+                                  <Account />
                                 </ProtectedRoute>
                               } />
                               <Route path="/planning-agent" element={
