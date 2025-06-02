@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -63,14 +64,14 @@ export const OptimizedConsolidatedNavigation = ({
     navigate(path);
   };
 
-  // Core navigation items with primary level styling - larger, more prominent
+  // PRIMARY LEVEL - Large, prominent, with enhanced visual effects
   const primaryNavItems = [
     { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
     { path: "/projects", label: "Projects", icon: Folder, active: isProjectsPage },
   ];
 
-  // Configuration dropdown items
+  // SECONDARY LEVEL - Medium size, distinct styling
   const configurationItems = [
     { path: "/agent-configuration", label: "Agent Configuration", icon: Bot, active: isAgentConfigPage },
     { path: "/mcp-management", label: "MCP Management", icon: Package, active: isMCPPage },
@@ -78,7 +79,7 @@ export const OptimizedConsolidatedNavigation = ({
     { path: "/ide-integration", label: "IDE Integration", icon: Monitor, active: isIDEPage },
   ];
 
-  // Account & Settings dropdown items
+  // SECONDARY LEVEL - Account items
   const accountItems = [
     { path: "/profile", label: "Profile", icon: User, active: isProfilePage },
     { path: "/account", label: "Account & Billing", icon: CreditCard, active: isAccountPage },
@@ -101,43 +102,46 @@ export const OptimizedConsolidatedNavigation = ({
         </div>
       </div>
 
-      {/* Center: Primary Navigation with enhanced styling for hierarchy */}
-      <nav className="flex items-center" style={{ gap: '20px' }}>
+      {/* Center: PRIMARY NAVIGATION - Enhanced with dramatic visual hierarchy */}
+      <nav className="flex items-center" style={{ gap: '32px' }}>
         {primaryNavItems.map((item) => {
           const Icon = item.icon;
           return (
             <Button
               key={item.path}
               variant={item.active ? "default" : "ghost"}
-              size="default"
+              size="lg"
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "h-10 px-6 font-semibold text-base transition-all duration-200 shadow-sm",
+                "h-14 px-8 font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110",
                 item.active 
-                  ? "bg-primary text-primary-foreground shadow-md scale-105" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:scale-102"
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-blue-500/30 scale-110 ring-2 ring-blue-300 ring-offset-2" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-gradient-to-r hover:from-accent/50 hover:to-accent/30 hover:shadow-lg border-2 border-transparent hover:border-primary/20"
               )}
             >
-              <Icon className="w-5 h-5 mr-2.5" />
-              <span className="hidden sm:inline">{item.label}</span>
+              <Icon className="w-6 h-6 mr-3 drop-shadow-sm" />
+              <span className="hidden sm:inline font-bold tracking-wide">{item.label}</span>
+              {item.active && (
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-blue-400 rounded-full animate-pulse" />
+              )}
             </Button>
           );
         })}
 
-        {/* Configuration Dropdown - Secondary level styling */}
+        {/* SECONDARY LEVEL - Configuration Dropdown with distinct styling */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-9 px-4 font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200"
+              variant="outline" 
+              size="default" 
+              className="h-10 px-5 font-semibold text-base text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950/30 hover:border-purple-300 transition-all duration-200 shadow-md hover:shadow-lg"
             >
-              <Bot className="w-4 h-4 mr-2" />
+              <Bot className="w-5 h-5 mr-2" />
               <span className="hidden sm:inline">Configure</span>
-              <ChevronDown className="w-3 h-3 ml-1" />
+              <ChevronDown className="w-4 h-4 ml-1" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-sm border shadow-lg z-50">
+          <DropdownMenuContent align="end" className="w-64 bg-gradient-to-b from-purple-50 to-white dark:from-purple-950/30 dark:to-background border-purple-200 dark:border-purple-800 shadow-xl z-50">
             {configurationItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -145,12 +149,12 @@ export const OptimizedConsolidatedNavigation = ({
                   key={item.path}
                   onClick={() => handleNavigation(item.path)}
                   className={cn(
-                    "flex items-center px-3 py-2.5 cursor-pointer transition-colors",
-                    item.active && "bg-accent text-accent-foreground"
+                    "flex items-center px-4 py-3 cursor-pointer transition-all duration-200 text-base font-medium",
+                    item.active && "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 border-l-4 border-purple-500"
                   )}
                 >
-                  <Icon className="w-4 h-4 mr-3 text-muted-foreground" />
-                  <span className="font-medium">{item.label}</span>
+                  <Icon className="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" />
+                  <span>{item.label}</span>
                 </DropdownMenuItem>
               );
             })}
@@ -158,21 +162,21 @@ export const OptimizedConsolidatedNavigation = ({
         </DropdownMenu>
       </nav>
 
-      {/* Right: Account & Settings Dropdown - Secondary level */}
+      {/* Right: SECONDARY LEVEL - Account & Settings Dropdown */}
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 px-4 font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200"
+              variant="outline"
+              size="default"
+              className="h-10 px-5 font-semibold text-base text-green-600 dark:text-green-400 border-green-200 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-950/30 hover:border-green-300 transition-all duration-200 shadow-md hover:shadow-lg"
             >
-              <User className="w-4 h-4 mr-2" />
+              <User className="w-5 h-5 mr-2" />
               <span className="hidden sm:inline">Account</span>
-              <ChevronDown className="w-3 h-3 ml-1" />
+              <ChevronDown className="w-4 h-4 ml-1" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-sm border shadow-lg">
+          <DropdownMenuContent align="end" className="w-64 bg-gradient-to-b from-green-50 to-white dark:from-green-950/30 dark:to-background border-green-200 dark:border-green-800 shadow-xl">
             {accountItems.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -180,12 +184,12 @@ export const OptimizedConsolidatedNavigation = ({
                   <DropdownMenuItem
                     onClick={() => handleNavigation(item.path)}
                     className={cn(
-                      "flex items-center px-3 py-2.5 cursor-pointer transition-colors",
-                      item.active && "bg-accent text-accent-foreground"
+                      "flex items-center px-4 py-3 cursor-pointer transition-all duration-200 text-base font-medium",
+                      item.active && "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-l-4 border-green-500"
                     )}
                   >
-                    <Icon className="w-4 h-4 mr-3 text-muted-foreground" />
-                    <span className="font-medium">{item.label}</span>
+                    <Icon className="w-5 h-5 mr-3 text-green-600 dark:text-green-400" />
+                    <span>{item.label}</span>
                   </DropdownMenuItem>
                   {index === 0 && <DropdownMenuSeparator />}
                 </div>

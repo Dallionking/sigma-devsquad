@@ -141,48 +141,66 @@ export const HierarchicalBreadcrumb = () => {
   }
 
   const getLevelStyles = (level: 'primary' | 'secondary' | 'tertiary', isLast: boolean) => {
-    const baseStyles = "flex items-center gap-1.5 transition-colors duration-200";
+    const baseStyles = "flex items-center gap-2 transition-all duration-300 hover:scale-105";
     
     switch (level) {
       case 'primary':
         return cn(baseStyles, 
           isLast 
-            ? "text-lg font-bold text-primary" 
-            : "text-base font-semibold text-primary hover:text-primary/80"
+            ? "text-2xl font-black text-blue-700 dark:text-blue-300 drop-shadow-lg" 
+            : "text-xl font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 shadow-md hover:shadow-lg"
         );
       case 'secondary':
         return cn(baseStyles,
           isLast 
-            ? "text-base font-semibold text-foreground"
-            : "text-sm font-medium text-muted-foreground hover:text-foreground"
+            ? "text-lg font-bold text-purple-600 dark:text-purple-300 drop-shadow-md"
+            : "text-base font-semibold text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-200 shadow-sm hover:shadow-md"
         );
       case 'tertiary':
         return cn(baseStyles,
           isLast 
-            ? "text-sm font-medium text-foreground"
-            : "text-sm text-muted-foreground hover:text-foreground"
+            ? "text-base font-semibold text-green-600 dark:text-green-300 drop-shadow-sm"
+            : "text-sm font-medium text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-200 hover:shadow-sm"
         );
       default:
         return baseStyles;
     }
   };
 
+  const getBackgroundStyles = (level: 'primary' | 'secondary' | 'tertiary') => {
+    switch (level) {
+      case 'primary':
+        return "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 border-blue-200 dark:border-blue-800";
+      case 'secondary':
+        return "bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 border-purple-200 dark:border-purple-800";
+      case 'tertiary':
+        return "bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/30 border-green-200 dark:border-green-800";
+      default:
+        return "bg-background border-border";
+    }
+  };
+
+  const currentLevel = breadcrumbs[breadcrumbs.length - 1]?.level || 'primary';
+
   return (
-    <div className="bg-background/80 backdrop-blur-sm border-b border-border/30 px-4 py-3">
+    <div className={cn(
+      "backdrop-blur-sm border-b-2 px-6 py-4 transition-all duration-300",
+      getBackgroundStyles(currentLevel)
+    )}>
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList className="gap-3">
           {breadcrumbs.map((crumb, index) => {
             const Icon = crumb.icon;
             const isLast = index === breadcrumbs.length - 1;
-            const iconSize = crumb.level === 'primary' ? 'w-5 h-5' : 'w-4 h-4';
+            const iconSize = crumb.level === 'primary' ? 'w-6 h-6' : crumb.level === 'secondary' ? 'w-5 h-5' : 'w-4 h-4';
             
             return (
               <React.Fragment key={crumb.path}>
                 <BreadcrumbItem>
                   {isLast ? (
                     <BreadcrumbPage className={getLevelStyles(crumb.level, isLast)}>
-                      <Icon className={iconSize} />
-                      {crumb.label}
+                      <Icon className={cn(iconSize, "drop-shadow-sm")} />
+                      <span className="font-inherit">{crumb.label}</span>
                     </BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
@@ -191,12 +209,13 @@ export const HierarchicalBreadcrumb = () => {
                         size="sm"
                         onClick={() => navigate(crumb.path)}
                         className={cn(
-                          "h-auto px-2 py-1",
-                          getLevelStyles(crumb.level, isLast)
+                          "h-auto px-3 py-2 rounded-lg border transition-all duration-200",
+                          getLevelStyles(crumb.level, isLast),
+                          "hover:bg-white/50 dark:hover:bg-black/20 border-current/20 hover:border-current/40"
                         )}
                       >
-                        <Icon className={iconSize} />
-                        {crumb.label}
+                        <Icon className={cn(iconSize, "drop-shadow-sm")} />
+                        <span className="font-inherit">{crumb.label}</span>
                       </Button>
                     </BreadcrumbLink>
                   )}
@@ -205,8 +224,8 @@ export const HierarchicalBreadcrumb = () => {
                 {!isLast && (
                   <BreadcrumbSeparator>
                     <ChevronRight className={cn(
-                      crumb.level === 'primary' ? 'w-5 h-5' : 'w-4 h-4',
-                      'text-muted-foreground/60'
+                      crumb.level === 'primary' ? 'w-6 h-6' : crumb.level === 'secondary' ? 'w-5 h-5' : 'w-4 h-4',
+                      'text-muted-foreground/60 drop-shadow-sm'
                     )} />
                   </BreadcrumbSeparator>
                 )}

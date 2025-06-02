@@ -15,8 +15,8 @@ interface BackButtonProps {
 
 export const BackButton = ({ 
   className, 
-  variant = 'ghost', 
-  size = 'sm',
+  variant = 'outline', 
+  size = 'default',
   customLabel,
   showIcon = true 
 }: BackButtonProps) => {
@@ -35,12 +35,17 @@ export const BackButton = ({
       size={size}
       onClick={goBack}
       className={cn(
-        "flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors",
+        "flex items-center gap-2 font-semibold transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg",
+        size === 'sm' && "h-8 px-3 text-sm",
+        size === 'default' && "h-10 px-4 text-base",
+        size === 'lg' && "h-12 px-6 text-lg",
         className
       )}
     >
-      {showIcon && <ArrowLeft className="w-4 h-4" />}
-      <span>{label}</span>
+      {showIcon && <ArrowLeft className={cn(
+        size === 'sm' ? "w-3 h-3" : size === 'default' ? "w-4 h-4" : "w-5 h-5"
+      )} />}
+      <span className="font-semibold">{label}</span>
     </Button>
   );
 };
