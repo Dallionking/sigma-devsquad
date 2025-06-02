@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,6 +17,7 @@ import {
   Settings,
   Home,
   Folder,
+  Presentation,
   CreditCard,
   User,
   MoreVertical
@@ -57,6 +57,7 @@ export const OptimizedConsolidatedNavigation = ({
   const isPlanningAgentPage = location.pathname === "/planning-agent";
   const isDashboardPage = location.pathname === "/dashboard";
   const isProjectsPage = location.pathname === "/projects";
+  const isPresentationsPage = location.pathname === "/presentations";
   const isAccountPage = location.pathname === "/account";
   const isProfilePage = location.pathname === "/profile";
   const isSettingsPage = location.pathname === "/settings";
@@ -70,6 +71,7 @@ export const OptimizedConsolidatedNavigation = ({
     { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage, priority: 1 },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage, priority: 2 },
     { path: "/projects", label: "Projects", icon: Folder, active: isProjectsPage, priority: 3 },
+    { path: "/presentations", label: "Presentations", icon: Presentation, active: isPresentationsPage, priority: 4 },
   ];
 
   // SECONDARY LEVEL - Configuration items

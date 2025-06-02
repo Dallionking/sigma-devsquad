@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,6 +8,7 @@ import {
   Home,
   Layers,
   Folder,
+  Presentation,
   Bot,
   Package,
   Brain,
@@ -46,6 +46,7 @@ const navigationItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: Home, level: 'primary' },
   { id: 'planning', label: 'Planning Agent', path: '/planning-agent', icon: Layers, level: 'primary' },
   { id: 'projects', label: 'Projects', path: '/projects', icon: Folder, level: 'primary' },
+  { id: 'presentations', label: 'Presentations', path: '/presentations', icon: Presentation, level: 'primary' },
   
   // Configuration section
   { id: 'agent-config', label: 'Agent Config', path: '/agent-configuration', icon: Bot, level: 'secondary', category: 'Configuration' },

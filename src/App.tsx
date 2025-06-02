@@ -34,6 +34,7 @@ import IDEIntegration from "./pages/IDEIntegration";
 import LLMIntegration from "./pages/LLMIntegration";
 import MCPManagement from "./pages/MCPManagement";
 import TeamSettings from "./pages/TeamSettings";
+import Presentations from "./pages/Presentations";
 import NotFound from "./pages/NotFound";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -75,6 +76,11 @@ function AppContent() {
                                 <Route path="/projects" element={
                                   <ProtectedRoute>
                                     <Projects />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/presentations" element={
+                                  <ProtectedRoute>
+                                    <Presentations />
                                   </ProtectedRoute>
                                 } />
                                 <Route path="/settings" element={
