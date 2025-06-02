@@ -23,8 +23,8 @@ function App() {
   return (
     <ThemeProvider>
       <TeamProvider>
-        <NavigationHierarchyProvider>
-          <Router>
+        <Router>
+          <NavigationHierarchyProvider>
             <Routes>
               {/* Landing page route */}
               <Route path="/" element={<LandingPage />} />
@@ -100,8 +100,8 @@ function App() {
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
             <Toaster />
-          </Router>
-        </NavigationHierarchyProvider>
+          </NavigationHierarchyProvider>
+        </Router>
       </TeamProvider>
     </ThemeProvider>
   )
