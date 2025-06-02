@@ -7,7 +7,7 @@ import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
 import { WorkflowCanvas } from "../workflow/WorkflowCanvas";
 import { TeamDashboard } from "../teams/TeamDashboard";
-import { UnifiedCommunicationHub } from "../communication/UnifiedCommunicationHub";
+import { CommunicationHub } from "../communication/CommunicationHub";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Users, MessageSquare, Workflow } from "lucide-react";
 
@@ -119,11 +119,7 @@ export const MainContentRenderer = ({
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
-            <UnifiedCommunicationHub 
-              defaultTab="chat"
-              projectId="current-project"
-              className="h-full"
-            />
+            <CommunicationHub />
           </div>
         </div>
       );
