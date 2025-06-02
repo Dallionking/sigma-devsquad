@@ -22,23 +22,23 @@ export const IndividualViewInfoPanel = () => {
               <div className="text-sm text-muted-foreground">Active Agents</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">12</div>
-              <div className="text-sm text-muted-foreground">Completed Tasks</div>
+              <div className="text-2xl font-bold text-green-600">3</div>
+              <div className="text-sm text-muted-foreground">Working</div>
             </div>
           </div>
           
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Frontend Agent</span>
+              <span className="text-sm">Code Generator</span>
               <Badge variant="default">Active</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Backend Agent</span>
-              <Badge variant="default">Active</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">DevOps Agent</span>
+              <span className="text-sm">Test Engineer</span>
               <Badge variant="secondary">Idle</Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Documentation Writer</span>
+              <Badge variant="default">Active</Badge>
             </div>
           </div>
         </CardContent>
@@ -55,15 +55,15 @@ export const IndividualViewInfoPanel = () => {
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm">Active Workflows</span>
-            <Badge variant="default">3</Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Pending Tasks</span>
-            <Badge variant="secondary">8</Badge>
+            <Badge variant="default">2</Badge>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">Completed Today</span>
-            <Badge variant="outline">5</Badge>
+            <Badge variant="secondary">7</Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Queue Length</span>
+            <Badge variant="outline">3</Badge>
           </div>
         </CardContent>
       </Card>
@@ -79,16 +79,16 @@ export const IndividualViewInfoPanel = () => {
         <CardContent className="space-y-3">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm">API Integration</span>
+              <span className="text-sm">API Development</span>
               <Badge variant="default">In Progress</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">UI Component Library</span>
-              <Badge variant="secondary">Planning</Badge>
+              <span className="text-sm">Code Review</span>
+              <Badge variant="secondary">Pending</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Database Optimization</span>
-              <Badge variant="outline">Review</Badge>
+              <span className="text-sm">Bug Fixes</span>
+              <Badge variant="outline">Assigned</Badge>
             </div>
           </div>
         </CardContent>
@@ -108,12 +108,12 @@ export const IndividualViewInfoPanel = () => {
             <Badge variant="secondary">3</Badge>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm">Pending Responses</span>
-            <Badge variant="destructive">2</Badge>
+            <span className="text-sm">Unread Messages</span>
+            <Badge variant="destructive">5</Badge>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">Recent Updates</span>
-            <Badge variant="outline">5</Badge>
+            <Badge variant="outline">12</Badge>
           </div>
         </CardContent>
       </Card>

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TooltipWrapper } from '../tooltips/TooltipWrapper';
 import { ViewMode } from '@/types';
 
@@ -16,6 +16,7 @@ export const ViewSpecificTooltips = ({
   isTooltipVisible,
   onDismissTooltip
 }: ViewSpecificTooltipsProps) => {
+  const [visibleTooltips, setVisibleTooltips] = useState<string[]>([]);
   const viewKey = showTeamView ? 'team' : 'individual';
   
   const tooltipConfigs = {
@@ -103,26 +104,52 @@ export const ViewSpecificTooltips = ({
 
   const currentTooltips = tooltipConfigs[viewKey][viewMode] || [];
 
+  // Check which tooltips should be visible
+  useEffect(() => {
+    const checkVisibleTooltips = () => {
+      const visible: string[] = [];
+      
+      currentTooltips.forEach((tooltip) => {
+        if (isTooltipVisible(tooltip.id)) {
+          const targetElement = document.querySelector(tooltip.targetSelector);
+          if (targetElement) {
+            visible.push(tooltip.id);
+          }
+        }
+      });
+      
+      setVisibleTooltips(visible);
+    };
+
+    // Check immediately and set up a timer to recheck
+    checkVisibleTooltips();
+    const interval = setInterval(checkVisibleTooltips, 1000);
+
+    return () => clearInterval(interval);
+  }, [currentTooltips, isTooltipVisible]);
+
+  // Only show tooltips if elements exist and tooltip should be visible
   return (
     <>
       {currentTooltips.map((tooltip) => {
-        if (!isTooltipVisible(tooltip.id)) return null;
+        if (!visibleTooltips.includes(tooltip.id)) return null;
         
-        const targetElement = document.querySelector(tooltip.targetSelector);
-        if (!targetElement) return null;
-
         return (
-          <TooltipWrapper
+          <div
             key={tooltip.id}
-            id={tooltip.id}
-            title={tooltip.title}
-            content={tooltip.content}
-            trigger="hover"
-            position="top"
-            showIcon={true}
+            className="fixed top-4 right-4 z-50 max-w-sm bg-background border rounded-lg shadow-lg p-4"
           >
-            <div />
-          </TooltipWrapper>
+            <div className="flex items-start justify-between mb-2">
+              <h4 className="font-semibold text-sm">{tooltip.title}</h4>
+              <button
+                onClick={() => onDismissTooltip(tooltip.id)}
+                className="text-muted-foreground hover:text-foreground text-xs"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-sm text-muted-foreground">{tooltip.content}</p>
+          </div>
         );
       })}
     </>

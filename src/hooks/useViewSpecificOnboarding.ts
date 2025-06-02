@@ -67,6 +67,11 @@ export const useViewSpecificOnboarding = (showTeamView: boolean, viewMode: ViewM
     saveState({ currentTourStep: nextStep });
   };
 
+  const previousTourStep = () => {
+    const prevStep = Math.max(0, state.currentTourStep - 1);
+    saveState({ currentTourStep: prevStep });
+  };
+
   const completeTour = () => {
     const tourId = `${viewKey}-${viewMode}`;
     saveState({
@@ -104,6 +109,7 @@ export const useViewSpecificOnboarding = (showTeamView: boolean, viewMode: ViewM
     state,
     startGuidedTour,
     nextTourStep,
+    previousTourStep,
     completeTour,
     dismissTooltip,
     dismissGettingStarted,

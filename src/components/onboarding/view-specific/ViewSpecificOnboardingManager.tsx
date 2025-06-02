@@ -20,6 +20,7 @@ export const ViewSpecificOnboardingManager = ({
     state,
     startGuidedTour,
     nextTourStep,
+    previousTourStep,
     completeTour,
     dismissTooltip,
     dismissGettingStarted,
@@ -31,6 +32,12 @@ export const ViewSpecificOnboardingManager = ({
 
   const handleCloseTour = () => {
     completeTour();
+  };
+
+  const handlePreviousStep = () => {
+    if (state.currentTourStep > 0) {
+      previousTourStep();
+    }
   };
 
   return (
@@ -62,12 +69,7 @@ export const ViewSpecificOnboardingManager = ({
         currentStep={state.currentTourStep}
         isActive={state.showGuidedTour}
         onNext={nextTourStep}
-        onPrevious={() => {
-          if (state.currentTourStep > 0) {
-            // We'll need to implement going back
-            console.log('Previous step not implemented yet');
-          }
-        }}
+        onPrevious={handlePreviousStep}
         onComplete={completeTour}
         onClose={handleCloseTour}
       />
