@@ -122,65 +122,73 @@ export const EnhancedTeamTypeSelection = ({
         </p>
       </div>
 
-      {/* Improved Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      {/* Horizontal Card Layout */}
+      <div className="space-y-3">
         {teamTypeOptions.map((option) => (
           <Card
             key={option.type}
             className={cn(
-              "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] group relative overflow-hidden border-2",
+              "cursor-pointer transition-all duration-200 hover:shadow-md group relative overflow-hidden border-2",
               selectedType === option.type 
                 ? "ring-2 ring-primary bg-primary/5 shadow-lg border-primary" 
                 : "hover:border-primary/30 border-border"
             )}
             onClick={() => onTypeSelect(option.type)}
           >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="text-2xl flex-shrink-0">{getTeamTypeIcon(option.type)}</div>
-                  <div className="min-w-0 flex-1">
-                    <CardTitle className="text-base font-semibold leading-tight flex items-center gap-2">
-                      {option.label}
-                      <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{option.description}</p>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-4">
+                {/* Icon Section */}
+                <div className="flex-shrink-0">
+                  <div className="text-3xl">{getTeamTypeIcon(option.type)}</div>
+                </div>
+
+                {/* Main Content Section */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <CardTitle className="text-lg font-semibold flex items-center gap-2 mb-1">
+                        {option.label}
+                        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground">{option.description}</p>
+                    </div>
+                    {selectedType === option.type && (
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                    )}
+                  </div>
+
+                  {/* Capabilities and Composition in horizontal layout */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* Capabilities */}
+                    <div>
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {option.capabilities.slice(0, 3).map((capability) => (
+                          <Badge key={capability} variant="secondary" className="text-xs px-2 py-1">
+                            {capability}
+                          </Badge>
+                        ))}
+                        {option.capabilities.length > 3 && (
+                          <Badge variant="outline" className="text-xs px-2 py-1">
+                            +{option.capabilities.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Team Composition */}
+                    <div className="flex flex-wrap gap-2">
+                      {option.recommendedComposition.map((comp) => {
+                        const Icon = getCompositionIcon(comp);
+                        return (
+                          <div key={comp} className="flex items-center gap-1.5 text-xs bg-muted/60 rounded-md px-2 py-1.5">
+                            <Icon className="w-3.5 h-3.5" />
+                            <span className="font-medium">{getCompositionLabel(comp)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-                {selectedType === option.type && (
-                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                )}
-              </div>
-            </CardHeader>
-            
-            <CardContent className="pt-0 space-y-4">
-              {/* Capabilities */}
-              <div>
-                <div className="flex flex-wrap gap-1.5">
-                  {option.capabilities.slice(0, 2).map((capability) => (
-                    <Badge key={capability} variant="secondary" className="text-xs px-2 py-1 font-medium">
-                      {capability}
-                    </Badge>
-                  ))}
-                  {option.capabilities.length > 2 && (
-                    <Badge variant="outline" className="text-xs px-2 py-1">
-                      +{option.capabilities.length - 2}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-
-              {/* Team Composition */}
-              <div className="flex flex-wrap gap-2">
-                {option.recommendedComposition.map((comp) => {
-                  const Icon = getCompositionIcon(comp);
-                  return (
-                    <div key={comp} className="flex items-center gap-1.5 text-xs bg-muted/60 rounded-md px-2 py-1.5">
-                      <Icon className="w-3.5 h-3.5" />
-                      <span className="font-medium">{getCompositionLabel(comp)}</span>
-                    </div>
-                  );
-                })}
               </div>
             </CardContent>
           </Card>
