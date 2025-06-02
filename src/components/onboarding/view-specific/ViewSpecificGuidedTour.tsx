@@ -28,6 +28,7 @@ export const ViewSpecificGuidedTour = ({
 }: ViewSpecificGuidedTourProps) => {
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [previousTargetElement, setPreviousTargetElement] = useState<HTMLElement | null>(null);
 
   const currentStepData = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
@@ -36,10 +37,25 @@ export const ViewSpecificGuidedTour = ({
   useEffect(() => {
     if (!isActive || !currentStepData) return;
 
+    console.log(`Finding target for step ${currentStep}:`, currentStepData.targetSelector);
+
     const findTarget = () => {
       const element = document.querySelector(currentStepData.targetSelector) as HTMLElement;
+      console.log(`Target element found:`, element);
+      
       if (element) {
+        // Clear previous target highlighting
+        if (previousTargetElement && previousTargetElement !== element) {
+          previousTargetElement.style.position = '';
+          previousTargetElement.style.zIndex = '';
+          previousTargetElement.style.outline = '';
+          previousTargetElement.style.outlineOffset = '';
+          previousTargetElement.style.borderRadius = '';
+          previousTargetElement.style.backgroundColor = '';
+        }
+
         setTargetElement(element);
+        setPreviousTargetElement(element);
         
         // Calculate tooltip position with better viewport awareness
         const rect = element.getBoundingClientRect();
@@ -48,7 +64,7 @@ export const ViewSpecificGuidedTour = ({
         
         // Fixed tooltip dimensions
         const tooltipWidth = 320;
-        const tooltipHeight = 280; // Increased to ensure buttons are visible
+        const tooltipHeight = 280;
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         
@@ -89,6 +105,7 @@ export const ViewSpecificGuidedTour = ({
         }
         
         setTooltipPosition({ top, left });
+        console.log(`Tooltip position set:`, { top, left });
         
         // Highlight the target element
         element.style.position = 'relative';
@@ -100,17 +117,32 @@ export const ViewSpecificGuidedTour = ({
         
         // Scroll to target
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        console.warn(`Target element not found for selector: ${currentStepData.targetSelector}`);
+        // If target not found, position tooltip in center of screen
+        setTooltipPosition({
+          top: window.innerHeight / 2 - 140,
+          left: window.innerWidth / 2 - 160
+        });
       }
     };
 
     // Try to find target immediately
     findTarget();
     
-    // Also try after a short delay in case elements are still rendering
-    const timer = setTimeout(findTarget, 100);
+    // Also try after delays to handle dynamic content
+    const timer1 = setTimeout(findTarget, 100);
+    const timer2 = setTimeout(findTarget, 500);
     
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [currentStep, isActive, currentStepData, previousTargetElement]);
+
+  // Cleanup when component unmounts or tour closes
+  useEffect(() => {
+    return () => {
       if (targetElement) {
         targetElement.style.position = '';
         targetElement.style.zIndex = '';
@@ -119,20 +151,39 @@ export const ViewSpecificGuidedTour = ({
         targetElement.style.borderRadius = '';
         targetElement.style.backgroundColor = '';
       }
+      if (previousTargetElement) {
+        previousTargetElement.style.position = '';
+        previousTargetElement.style.zIndex = '';
+        previousTargetElement.style.outline = '';
+        previousTargetElement.style.outlineOffset = '';
+        previousTargetElement.style.borderRadius = '';
+        previousTargetElement.style.backgroundColor = '';
+      }
     };
-  }, [currentStep, isActive, currentStepData, targetElement]);
+  }, [targetElement, previousTargetElement]);
 
-  if (!isActive || !currentStepData) return null;
+  if (!isActive || !currentStepData) {
+    console.log('Tour not active or no step data');
+    return null;
+  }
 
   const Icon = currentStepData.icon;
 
   const handleNext = () => {
+    console.log('Next button clicked, current step:', currentStep);
     if (isLastStep) {
       onComplete();
     } else {
       onNext();
     }
   };
+
+  const handlePrevious = () => {
+    console.log('Previous button clicked, current step:', currentStep);
+    onPrevious();
+  };
+
+  console.log('Rendering tooltip at position:', tooltipPosition);
 
   return (
     <>
@@ -180,7 +231,7 @@ export const ViewSpecificGuidedTour = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={onPrevious}
+                onClick={handlePrevious}
                 disabled={isFirstStep}
                 className={cn(
                   "flex items-center gap-2 min-w-[80px] h-9",
