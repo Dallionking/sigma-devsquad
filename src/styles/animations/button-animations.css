@@ -135,76 +135,96 @@
   transform: translateY(0);
 }
 
-/* COMPLETE REMOVAL OF ALL GREY HOVER EFFECTS */
-button:hover,
-.btn:hover,
-[role="button"]:hover,
-.card:hover,
-.bg-card:hover,
-.bg-background:hover,
-.bg-muted:hover,
-.bg-secondary:hover,
-div:hover,
-section:hover {
-  /* Completely prevent any grey background changes */
-  background-color: inherit !important;
-}
-
-/* ONBOARDING SPECIFIC - ABSOLUTE NO GREY HOVER */
-[data-step="welcome"],
-[data-step="profile-setup"], 
-[data-step="team-creation"],
-[data-step="first-agent"],
-[data-step="planning-tour"],
-[data-step="completion"] {
-  /* Prevent any hover effects on entire onboarding sections */
-  background-color: inherit !important;
-}
-
+/* ABSOLUTE PREVENTION OF ALL GREY HOVER EFFECTS */
+/* Target all elements within onboarding modal */
+.onboarding-modal *,
+.onboarding-modal *:hover,
+[data-step] *,
+[data-step] *:hover,
 [data-step="welcome"] *,
-[data-step="profile-setup"] *,
-[data-step="team-creation"] *,
-[data-step="first-agent"] *,
-[data-step="planning-tour"] *,
-[data-step="completion"] * {
-  /* Prevent hover effects on all children */
-  background-color: inherit !important;
-}
-
 [data-step="welcome"] *:hover,
+[data-step="profile-setup"] *,
 [data-step="profile-setup"] *:hover,
+[data-step="team-creation"] *,
 [data-step="team-creation"] *:hover,
+[data-step="first-agent"] *,
 [data-step="first-agent"] *:hover,
+[data-step="planning-tour"] *,
 [data-step="planning-tour"] *:hover,
+[data-step="completion"] *,
 [data-step="completion"] *:hover {
-  /* Override any hover states completely */
   background-color: inherit !important;
   background: inherit !important;
 }
 
-/* Feature cards specific styling - NO GREY HOVER */
-.feature-card {
-  background-color: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border));
-  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+/* Specifically target shadcn/ui components that might have grey hover */
+.ui-card:hover,
+.ui-button:hover,
+.ui-input:hover,
+.ui-textarea:hover,
+.ui-select:hover,
+.ui-accordion:hover,
+.ui-collapsible:hover,
+.ui-dialog:hover,
+.ui-sheet:hover,
+.ui-popover:hover,
+.ui-dropdown:hover,
+.ui-menu:hover,
+.ui-navigation:hover,
+.ui-tabs:hover,
+.ui-table:hover {
+  background-color: inherit !important;
+  background: inherit !important;
 }
 
+/* Override any possible hover states on cards, divs, sections */
+div:hover,
+section:hover,
+article:hover,
+main:hover,
+aside:hover,
+header:hover,
+footer:hover,
+nav:hover {
+  background-color: inherit !important;
+  background: inherit !important;
+}
+
+/* Specific targeting for onboarding screens */
+[data-step="welcome"] div:hover,
+[data-step="first-agent"] div:hover,
+[data-step="planning-tour"] div:hover,
+[data-step="welcome"] section:hover,
+[data-step="first-agent"] section:hover,
+[data-step="planning-tour"] section:hover {
+  background-color: inherit !important;
+  background: inherit !important;
+}
+
+/* Feature cards specific styling - FORCE original background */
+.feature-card,
 .feature-card:hover {
   background-color: hsl(var(--card)) !important;
   background: hsl(var(--card)) !important;
-  border-color: hsl(var(--primary));
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-/* Tutorial section styling - NO GREY HOVER */
-.tutorial-section {
+.feature-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Tutorial section styling - FORCE original background */
+.tutorial-section,
+.tutorial-section:hover {
   background: linear-gradient(135deg, 
     hsl(var(--primary) / 0.05), 
     hsl(var(--secondary) / 0.05)
   ) !important;
-  border: 1px solid hsl(var(--primary) / 0.2);
-  transition: border-color 0.3s ease, background 0.3s ease;
+  border: 1px solid hsl(var(--primary) / 0.2) !important;
+  transition: border-color 0.3s ease, background 0.3s ease !important;
 }
 
 .tutorial-section:hover {
@@ -212,107 +232,131 @@ section:hover {
     hsl(var(--primary) / 0.08), 
     hsl(var(--secondary) / 0.08)
   ) !important;
-  border-color: hsl(var(--primary) / 0.3);
+  border-color: hsl(var(--primary) / 0.3) !important;
 }
 
-/* Agent template cards - NO GREY HOVER */
-.agent-template-card {
-  background-color: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border));
-  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-}
-
+/* Agent template cards - FORCE original background */
+.agent-template-card,
 .agent-template-card:hover {
   background-color: hsl(var(--card)) !important;
   background: hsl(var(--card)) !important;
-  border-color: hsl(var(--primary));
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-/* Profile setup cards - NO GREY HOVER */
-.profile-card {
-  background-color: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border));
-  transition: border-color 0.3s ease, transform 0.3s ease;
+.agent-template-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1) !important;
 }
 
+/* Profile setup cards - FORCE original background */
+.profile-card,
 .profile-card:hover {
   background-color: hsl(var(--card)) !important;
   background: hsl(var(--card)) !important;
-  border-color: hsl(var(--primary));
-  transform: translateY(-1px);
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
 }
 
-/* Team creation cards - NO GREY HOVER */
-.team-card {
-  background-color: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border));
-  transition: border-color 0.3s ease, transform 0.3s ease;
+.profile-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
 }
 
+/* Team creation cards - FORCE original background */
+.team-card,
 .team-card:hover {
   background-color: hsl(var(--card)) !important;
   background: hsl(var(--card)) !important;
-  border-color: hsl(var(--primary));
-  transform: translateY(-1px);
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
 }
 
-/* Custom agent builder cards - NO GREY HOVER */
-.custom-agent-card {
-  background-color: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border));
-  transition: border-color 0.3s ease, transform 0.3s ease;
+.team-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
 }
 
+/* Custom agent builder cards - FORCE original background */
+.custom-agent-card,
 .custom-agent-card:hover {
   background-color: hsl(var(--card)) !important;
   background: hsl(var(--card)) !important;
-  border-color: hsl(var(--primary));
-  transform: translateY(-1px);
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
 }
 
-/* Onboarding form cards - NO GREY HOVER */
-.onboarding-form-card {
-  background-color: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border));
-  transition: border-color 0.3s ease;
+.custom-agent-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
 }
 
+/* Onboarding form cards - FORCE original background */
+.onboarding-form-card,
 .onboarding-form-card:hover {
   background-color: hsl(var(--card)) !important;
   background: hsl(var(--card)) !important;
-  border-color: hsl(var(--primary));
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease !important;
+}
+
+.onboarding-form-card:hover {
+  border-color: hsl(var(--primary)) !important;
+}
+
+/* Planning tour cards - FORCE original background */
+.planning-tour-card,
+.planning-tour-card:hover {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  transition: border-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.planning-tour-card:hover {
+  border-color: hsl(var(--primary)) !important;
+  transform: translateY(-1px) !important;
 }
 
 /* Skill selector badges - prevent grey hover */
 .skill-badge {
   background-color: hsl(var(--secondary)) !important;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
 }
 
 .skill-badge:hover {
   background-color: hsl(var(--primary)) !important;
   background: hsl(var(--primary)) !important;
   color: hsl(var(--primary-foreground)) !important;
-  transform: scale(1.05);
+  transform: scale(1.05) !important;
 }
 
-/* Override shadcn/ui default hover effects for onboarding */
-.onboarding-modal .ui-card:hover,
-.onboarding-modal .ui-button:hover,
-.onboarding-modal .ui-input:hover,
-.onboarding-modal .ui-textarea:hover,
-.onboarding-modal .ui-select:hover {
+/* Universal grey hover prevention for ALL elements in onboarding */
+[data-radix-popper-content-wrapper]:hover,
+[data-radix-select-content]:hover,
+[data-radix-dropdown-menu-content]:hover,
+[data-radix-popover-content]:hover,
+[data-radix-dialog-content]:hover,
+[data-radix-accordion-content]:hover,
+[data-radix-collapsible-content]:hover {
   background-color: inherit !important;
   background: inherit !important;
 }
 
-/* Dark mode adjustments - NO GREY HOVER */
+/* Prevent any generic hover states on common elements */
+button:not(.limitless-cta-primary):not(.limitless-cta-secondary):hover,
+.btn:not(.limitless-cta-primary):not(.limitless-cta-secondary):hover,
+[role="button"]:not(.limitless-cta-primary):not(.limitless-cta-secondary):hover {
+  background-color: inherit !important;
+  background: inherit !important;
+}
+
+/* Dark mode adjustments - FORCE original backgrounds */
 @media (prefers-color-scheme: dark) {
   .limitless-cta-secondary {
     background: linear-gradient(var(--background), var(--background)) padding-box,
-                linear-gradient(135deg, #6C5CE7, #00B8D9) border-box;
+                linear-gradient(135deg, #6C5CE7, #00B8D9) border-box !important;
   }
   
   .btn-enhanced::before {
@@ -321,7 +365,7 @@ section:hover {
       transparent,
       rgba(255, 255, 255, 0.05),
       transparent
-    );
+    ) !important;
   }
 
   .feature-card,
@@ -335,7 +379,9 @@ section:hover {
   .custom-agent-card,
   .custom-agent-card:hover,
   .onboarding-form-card,
-  .onboarding-form-card:hover {
+  .onboarding-form-card:hover,
+  .planning-tour-card,
+  .planning-tour-card:hover {
     background-color: hsl(var(--card)) !important;
     background: hsl(var(--card)) !important;
   }
@@ -366,7 +412,8 @@ section:hover {
   .profile-card,
   .team-card,
   .custom-agent-card,
-  .onboarding-form-card {
+  .onboarding-form-card,
+  .planning-tour-card {
     animation: none !important;
     transition: none !important;
   }
@@ -380,7 +427,8 @@ section:hover {
   .profile-card:hover,
   .team-card:hover,
   .custom-agent-card:hover,
-  .onboarding-form-card:hover {
+  .onboarding-form-card:hover,
+  .planning-tour-card:hover {
     transform: none !important;
   }
 }
