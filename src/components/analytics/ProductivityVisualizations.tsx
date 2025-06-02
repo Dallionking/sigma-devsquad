@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -40,6 +39,17 @@ export const ProductivityVisualizations = ({
 }: ProductivityVisualizationsProps) => {
   const [selectedTimeRange, setSelectedTimeRange] = useState(timeRange);
   const [selectedSprint, setSelectedSprint] = useState(sprintId || 'current');
+
+  // Type-safe handlers for Select components
+  const handleTimeRangeChange = (value: string) => {
+    if (value === '7d' || value === '14d' || value === '30d' || value === '90d') {
+      setSelectedTimeRange(value);
+    }
+  };
+
+  const handleSprintChange = (value: string) => {
+    setSelectedSprint(value);
+  };
 
   // Mock data for task completion 7-day trend
   const taskCompletionData = [
@@ -129,7 +139,7 @@ export const ProductivityVisualizations = ({
         </div>
         
         <div className="flex gap-2">
-          <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+          <Select value={selectedTimeRange} onValueChange={handleTimeRangeChange}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
@@ -141,7 +151,7 @@ export const ProductivityVisualizations = ({
             </SelectContent>
           </Select>
           
-          <Select value={selectedSprint} onValueChange={setSelectedSprint}>
+          <Select value={selectedSprint} onValueChange={handleSprintChange}>
             <SelectTrigger className="w-36">
               <SelectValue />
             </SelectTrigger>
