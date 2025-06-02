@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { TeamCreationDialog } from "./TeamCreationDialog";
 import { AgentAdditionDialog } from "./AgentAdditionDialog";
 import { TeamCompositionBadge } from "./TeamCompositionBadge";
+import { TeamTypeTooltip } from "./TeamTypeTooltip";
 import { getTeamCompositionColor, getTeamTypeIcon } from "@/utils/teamVisualUtils";
 
 interface TeamHierarchyProps {
@@ -119,6 +120,7 @@ export const TeamHierarchy = ({
                             composition={team.composition} 
                             size="sm"
                           />
+                          <TeamTypeTooltip teamType={team.type} />
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge 

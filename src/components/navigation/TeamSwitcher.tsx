@@ -9,6 +9,7 @@ import { ChevronDown, Users, Plus, Settings } from "lucide-react";
 import { TeamCreationDialog } from "@/components/teams/TeamCreationDialog";
 import { useNavigate } from "react-router-dom";
 import { TeamCompositionBadge } from "@/components/teams/TeamCompositionBadge";
+import { TeamTypeTooltip } from "@/components/teams/TeamTypeTooltip";
 import { getTeamTypeIcon } from "@/utils/teamVisualUtils";
 
 interface TeamSwitcherProps {
@@ -103,6 +104,7 @@ export const TeamSwitcher = ({ currentTeamId, onTeamChange, compact = false }: T
                   composition={currentTeam.composition} 
                   size="sm"
                 />
+                <TeamTypeTooltip teamType={currentTeam.type} />
               </div>
               <p className="text-sm text-muted-foreground">
                 {currentTeam.memberIds.length} members

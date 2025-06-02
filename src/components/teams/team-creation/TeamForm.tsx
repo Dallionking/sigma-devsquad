@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TeamType, TeamComposition } from '@/types/teams';
 import { DEFAULT_TEAM_COLORS } from './constants';
+import { TeamTypeTooltip } from '@/components/teams/TeamTypeTooltip';
 
 interface TeamFormData {
   name: string;
@@ -54,7 +55,10 @@ export const TeamForm = ({ data, onChange, onSubmit, onCancel }: TeamFormProps) 
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="type">Team Type</Label>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="type">Team Type</Label>
+          {data.type && <TeamTypeTooltip teamType={data.type as TeamType} />}
+        </div>
         <Select value={data.type} onValueChange={(value) => onChange('type', value)}>
           <SelectTrigger>
             <SelectValue placeholder="Select team type" />
