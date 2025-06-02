@@ -5,7 +5,7 @@ import { Team, AgentProfile } from "@/types/teams";
 import { FilteredTeamHierarchy } from "../teams/FilteredTeamHierarchy";
 import { AgentSidebar } from "./AgentSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail, Activity, Filter } from "lucide-react";
+import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail, Activity, Filter, Settings } from "lucide-react";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -73,8 +73,8 @@ export const SidebarRenderer = ({
     return (
       <div className="w-full h-full flex flex-col items-center py-4 space-y-4">
         {showTeamView ? (
-          <div className="p-2 rounded-lg bg-primary/10 relative">
-            <Users className="w-6 h-6 text-primary" />
+          <div className="p-2 rounded-lg bg-blue-500/10 relative">
+            <Users className="w-6 h-6 text-blue-600" />
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
               <Filter className="w-2 h-2 text-white" />
             </div>
@@ -90,19 +90,19 @@ export const SidebarRenderer = ({
 
   if (showTeamView) {
     return (
-      <div className="h-full flex flex-col bg-gradient-to-b from-background to-muted/30">
-        <div className="p-4 border-b border-border/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-950/30 dark:to-indigo-950/30">
+      <div className="h-full flex flex-col bg-gradient-to-b from-background to-blue-50/20 dark:to-blue-950/20">
+        <div className="p-4 border-b border-border/50 bg-gradient-to-r from-blue-50/80 to-blue-100/50 dark:from-blue-950/50 dark:to-blue-900/30">
           <h2 className="font-semibold text-lg flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary" />
-            Team Management
+            <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <span className="text-blue-900 dark:text-blue-100">Team Management</span>
           </h2>
-          <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+          <p className="text-sm text-blue-700 dark:text-blue-300 mt-1 flex items-center gap-1">
             <Filter className="w-3 h-3" />
-            Use filters below to organize teams
+            Filter and organize your teams below
           </p>
         </div>
         
-        <div className="flex-1 overflow-auto p-4">
+        <div className="flex-1 overflow-auto p-2">
           <FilteredTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}

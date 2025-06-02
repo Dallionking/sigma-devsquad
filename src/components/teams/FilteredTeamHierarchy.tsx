@@ -8,6 +8,7 @@ import { Team, AgentProfile } from '@/types/teams';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 
 interface FilteredTeamHierarchyProps {
@@ -42,50 +43,82 @@ export const FilteredTeamHierarchy = ({
     showFilters,
     activeFilterCount,
     teamsCount: teams.length,
-    filteredTeamsCount: filteredTeams.length
+    filteredTeamsCount: filteredTeams.length,
+    filtersExpanded
   });
 
   return (
     <div className="h-full flex flex-col space-y-4">
-      {/* Prominent Filter Section */}
+      {/* Always Visible Filter Header */}
       {showFilters && (
-        <div className="flex-shrink-0 bg-primary/5 border-2 border-primary/20 rounded-lg">
-          <div className="p-3">
-            <Button
-              variant="ghost"
-              onClick={() => setFiltersExpanded(!filtersExpanded)}
-              className="w-full flex items-center justify-between text-left hover:bg-primary/10"
-            >
+        <div className="flex-shrink-0">
+          {/* Filter Status Bar - Always Visible */}
+          <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-2">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Filter className="w-5 h-5 text-primary" />
-                <span className="font-medium">Team Filters</span>
+                <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                  Team Filters
+                </span>
                 {activeFilterCount > 0 && (
-                  <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs">
-                    {activeFilterCount}
-                  </span>
+                  <Badge variant="default" className="bg-blue-600 text-white">
+                    {activeFilterCount} active
+                  </Badge>
                 )}
               </div>
-              {filtersExpanded ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFiltersExpanded(!filtersExpanded)}
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+              >
+                {filtersExpanded ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
             
-            {filtersExpanded && (
-              <div className="mt-3">
-                <TeamFiltersPanel
-                  selectedCompositions={selectedCompositions}
-                  selectedTypes={selectedTypes}
-                  activeFilterCount={activeFilterCount}
-                  onCompositionChange={setCompositions}
-                  onTypeChange={setTypes}
-                  onClearFilters={clearAllFilters}
-                  onApplyPreset={applyPreset}
-                />
+            {/* Quick Filter Status */}
+            {activeFilterCount > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {selectedCompositions.length > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    {selectedCompositions.length} composition{selectedCompositions.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
+                {selectedTypes.length > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    {selectedTypes.length} type{selectedTypes.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="h-6 px-2 text-xs text-muted-foreground hover:text-destructive"
+                >
+                  Clear all
+                </Button>
               </div>
             )}
           </div>
+
+          {/* Expandable Filter Panel */}
+          {filtersExpanded && (
+            <div className="bg-card border rounded-lg p-4 shadow-sm">
+              <TeamFiltersPanel
+                selectedCompositions={selectedCompositions}
+                selectedTypes={selectedTypes}
+                activeFilterCount={activeFilterCount}
+                onCompositionChange={setCompositions}
+                onTypeChange={setTypes}
+                onClearFilters={clearAllFilters}
+                onApplyPreset={applyPreset}
+              />
+            </div>
+          )}
         </div>
       )}
       
@@ -94,14 +127,13 @@ export const FilteredTeamHierarchy = ({
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-sm">
             <Users className="w-4 h-4" />
-            Teams
-            {activeFilterCount > 0 && (
-              <span className="text-muted-foreground">
+            <span>Teams</span>
+            {activeFilterCount > 0 ? (
+              <span className="text-muted-foreground font-normal">
                 ({filteredTeams.length} of {teams.length} shown)
               </span>
-            )}
-            {activeFilterCount === 0 && (
-              <span className="text-muted-foreground">
+            ) : (
+              <span className="text-muted-foreground font-normal">
                 ({teams.length} total)
               </span>
             )}
