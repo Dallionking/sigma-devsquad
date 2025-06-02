@@ -42,11 +42,13 @@ export const CalendarMonth = memo(({
       components={{
         Day: ({ date, displayMonth, ...buttonProps }) => {
           const dayTasks = getTasksForDate(date);
+          // Type assertion to ensure buttonProps can have className
+          const props = buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>;
           return (
             <div className="relative w-full h-full">
               <button 
-                {...buttonProps} 
-                className={cn(buttonProps.className || "", "w-full h-full")}
+                {...props} 
+                className={cn(props.className || "", "w-full h-full")}
               >
                 {date.getDate()}
                 {dayTasks.length > 0 && (
