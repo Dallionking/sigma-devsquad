@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -55,6 +54,7 @@ export const TrendDetector = () => {
             threshold: 0, // Would be actual threshold
             severity: 'warning',
             message: `Early warning: ${trend.metricName} is trending ${trend.trend} and may breach threshold in ${Math.round(trend.timeToAlert)} minutes`,
+            acknowledged: false,
             trend: trend.trend
           });
         }

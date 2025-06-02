@@ -247,7 +247,8 @@ export const PerformanceAlertsProvider = ({ children }: { children: ReactNode })
               currentValue: value,
               threshold: severity === 'critical' ? threshold.criticalThreshold : threshold.warningThreshold,
               severity,
-              message: `${threshold.metricName} ${severity === 'critical' ? 'critically ' : ''}exceeded threshold: ${value.toFixed(2)}${threshold.unit} (threshold: ${severity === 'critical' ? threshold.criticalThreshold : threshold.warningThreshold}${threshold.unit})`
+              message: `${threshold.metricName} ${severity === 'critical' ? 'critically ' : ''}exceeded threshold: ${value.toFixed(2)}${threshold.unit} (threshold: ${severity === 'critical' ? threshold.criticalThreshold : threshold.warningThreshold}${threshold.unit})`,
+              acknowledged: false
             });
           }
         }
