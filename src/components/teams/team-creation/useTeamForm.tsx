@@ -21,7 +21,7 @@ export const useTeamForm = (onSuccess: () => void) => {
   const [formData, setFormData] = useState<TeamFormData>({
     name: "",
     type: "",
-    composition: "hybrid", // Default to hybrid composition
+    composition: "hybrid",
     description: "",
     color: DEFAULT_TEAM_COLORS[0],
     objectives: [],
@@ -79,7 +79,7 @@ export const useTeamForm = (onSuccess: () => void) => {
     if (!validateForm()) return;
 
     try {
-      createTeam({
+      const newTeam = createTeam({
         name: formData.name.trim(),
         type: formData.type as TeamType,
         composition: formData.composition,
@@ -92,15 +92,17 @@ export const useTeamForm = (onSuccess: () => void) => {
       });
 
       toast({
-        title: "Team Created",
-        description: `${formData.name} has been created successfully.`,
+        title: "Team Created Successfully!",
+        description: `${formData.name} has been created and is ready for team members.`,
       });
 
+      console.log('New team created:', newTeam);
       resetForm();
       onSuccess();
     } catch (error) {
+      console.error('Team creation error:', error);
       toast({
-        title: "Error",
+        title: "Error Creating Team",
         description: "Failed to create team. Please try again.",
         variant: "destructive",
       });
