@@ -4,22 +4,21 @@ export interface WorkflowRule {
   name: string;
   description: string;
   isEnabled: boolean;
+  priority: number;
   trigger: WorkflowTrigger;
   conditions: WorkflowCondition[];
   actions: WorkflowAction[];
-  priority: number;
   createdAt: string;
   lastExecuted?: string;
 }
 
 export interface WorkflowTrigger {
   type: 'card_created' | 'card_updated' | 'card_moved' | 'time_based' | 'webhook';
-  config?: {
-    // For time-based triggers
-    schedule?: string; // cron expression
-    delay?: number; // minutes
-    
-    // For webhook triggers
+  config: {
+    schedule?: string;
+    delay?: number;
+    time?: string;
+    secret?: string;
     webhookUrl?: string;
     method?: 'POST' | 'PUT' | 'PATCH';
     headers?: Record<string, string>;
@@ -37,34 +36,23 @@ export interface WorkflowCondition {
 export interface WorkflowAction {
   type: 'move_card' | 'assign_card' | 'update_property' | 'send_notification' | 'webhook_call' | 'create_card';
   config: {
-    // For move_card
     targetColumnId?: string;
-    
-    // For assign_card
-    assignmentStrategy?: 'round_robin' | 'least_loaded' | 'by_skill' | 'specific_user';
-    assigneeId?: string;
-    
-    // For update_property
+    assignmentStrategy?: AssignmentStrategy;
+    assignee?: string;
     propertyName?: string;
     propertyValue?: any;
-    
-    // For send_notification
+    notificationType?: string;
     recipients?: string[];
     message?: string;
-    notificationType?: 'email' | 'in_app' | 'webhook';
-    
-    // For webhook_call
     webhookUrl?: string;
-    method?: 'POST' | 'PUT' | 'PATCH';
+    method?: string;
     headers?: Record<string, string>;
     payload?: Record<string, any>;
-    
-    // For create_card
     cardTemplate?: {
       title: string;
       description?: string;
       columnId: string;
-      priority?: 'low' | 'medium' | 'high';
+      priority?: 'low' | 'medium' | 'high' | 'urgent';
       tags?: string[];
     };
   };
@@ -77,15 +65,8 @@ export interface AutomationExecution {
   status: 'success' | 'error' | 'skipped';
   executedAt: string;
   duration: number;
-  error?: string;
   result?: any;
+  error?: string;
 }
 
-export interface AssignmentStrategy {
-  type: 'round_robin' | 'least_loaded' | 'by_skill' | 'specific_user';
-  config: {
-    users?: string[];
-    skillMap?: Record<string, string[]>; // tag -> users with that skill
-    excludeUsers?: string[];
-  };
-}
+export type AssignmentStrategy = 'round_robin' | 'least_loaded' | 'by_skill' | 'manual';
