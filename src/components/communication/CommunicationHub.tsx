@@ -27,6 +27,9 @@ interface UnreadCounts {
 }
 
 export const CommunicationHub = () => {
+  // Debug logging
+  console.log('🚀 CommunicationHub component is rendering!');
+  
   const [activeTab, setActiveTab] = useState("direct");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -36,6 +39,14 @@ export const CommunicationHub = () => {
     channels: 2
   });
   const [notifications, setNotifications] = useState(true);
+
+  // Debug effect
+  useEffect(() => {
+    console.log('🚀 CommunicationHub mounted successfully!');
+    return () => {
+      console.log('🚀 CommunicationHub unmounting');
+    };
+  }, []);
 
   // Simulate real-time updates
   useEffect(() => {
@@ -53,6 +64,7 @@ export const CommunicationHub = () => {
   }, []);
 
   const handleTabChange = (value: string) => {
+    console.log('CommunicationHub - Tab changed to:', value);
     setActiveTab(value);
     // Mark messages as read when switching tabs
     if (value === "direct") {
@@ -61,6 +73,8 @@ export const CommunicationHub = () => {
       setUnreadCounts(prev => ({ ...prev, groups: 0 }));
     }
   };
+
+  console.log('🚀 CommunicationHub about to render JSX');
 
   return (
     <div className="h-full flex flex-col">

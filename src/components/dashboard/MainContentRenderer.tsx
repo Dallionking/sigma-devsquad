@@ -49,12 +49,18 @@ export const MainContentRenderer = ({
   onViewModeChange,
 }: MainContentRendererProps) => {
 
-  // Debug logging
-  console.log('MainContentRenderer - Current viewMode:', viewMode);
-  console.log('MainContentRenderer - showTeamView:', showTeamView);
+  // Enhanced debug logging
+  console.log('=== MainContentRenderer Debug ===');
+  console.log('Current viewMode:', viewMode);
+  console.log('showTeamView:', showTeamView);
+  console.log('ViewMode type:', typeof viewMode);
+  console.log('ViewMode exact value:', JSON.stringify(viewMode));
+  console.log('Is viewMode === "communication"?', viewMode === 'communication');
+  console.log('================================');
 
   // For team view, show team-specific content
   if (showTeamView) {
+    console.log('Rendering team view content');
     // If a specific team is selected, show the team dashboard
     if (selectedTeam) {
       return (
@@ -105,9 +111,11 @@ export const MainContentRenderer = ({
   }
 
   // Individual agents view switch statement
+  console.log('About to enter switch statement for viewMode:', viewMode);
+  
   switch (viewMode) {
     case 'workflow':
-      console.log('Rendering workflow view');
+      console.log('✅ SWITCH: Rendering workflow view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
@@ -121,15 +129,23 @@ export const MainContentRenderer = ({
       );
 
     case 'communication':
-      console.log('Rendering communication view - CommunicationHub');
+      console.log('✅ SWITCH: Rendering communication view - CommunicationHub');
+      console.log('About to render CommunicationHub component');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <CommunicationHub />
+          <div className="flex-1 p-6">
+            <div style={{ border: '2px solid red', padding: '10px', margin: '10px' }}>
+              <h2 style={{ color: 'red', fontSize: '18px', fontWeight: 'bold' }}>
+                DEBUG: CommunicationHub Container
+              </h2>
+              <CommunicationHub />
+            </div>
+          </div>
         </div>
       );
 
     case 'tasks':
-      console.log('Rendering tasks view');
+      console.log('✅ SWITCH: Rendering tasks view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
@@ -144,7 +160,7 @@ export const MainContentRenderer = ({
       );
 
     case 'messages':
-      console.log('Rendering messages view');
+      console.log('✅ SWITCH: Rendering messages view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6">
@@ -168,7 +184,8 @@ export const MainContentRenderer = ({
       );
 
     default:
-      console.log('Rendering default view - AgentGrid');
+      console.log('✅ SWITCH: Rendering default view - AgentGrid');
+      console.log('Default case reached with viewMode:', viewMode);
       // Default to agent grid view
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
