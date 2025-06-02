@@ -204,6 +204,85 @@
   background-color: hsl(var(--sidebar-accent));
 }
 
+/* Collapsed State Styles */
+.left-sidebar-container.collapsed {
+  width: 64px;
+}
+
+.left-sidebar-container.collapsed .logo-text,
+.left-sidebar-container.collapsed .dropdown-trigger-text,
+.left-sidebar-container.collapsed .nav-link-text,
+.left-sidebar-container.collapsed .sidebar-section-label {
+  display: none;
+}
+
+.left-sidebar-container.collapsed .logo-section {
+  justify-content: center;
+  padding: 12px 8px;
+}
+
+.left-sidebar-container.collapsed .logo-icon {
+  margin-right: 0;
+}
+
+.left-sidebar-container.collapsed .dropdown-trigger {
+  justify-content: center;
+  padding: 8px;
+}
+
+.left-sidebar-container.collapsed .dropdown-trigger-icon {
+  margin-right: 0;
+}
+
+.left-sidebar-container.collapsed .dropdown-trigger-arrow {
+  display: none;
+}
+
+.left-sidebar-container.collapsed .nav-link {
+  justify-content: center;
+  padding: 10px 8px;
+}
+
+.left-sidebar-container.collapsed .nav-link-icon {
+  margin-right: 0;
+}
+
+.left-sidebar-container.collapsed .project-section,
+.left-sidebar-container.collapsed .team-section {
+  padding: 8px;
+  text-align: center;
+}
+
+/* Toggle Button Styles */
+.sidebar-collapse-toggle {
+  background: none;
+  border: 1px solid hsl(var(--sidebar-border));
+  color: hsl(var(--sidebar-foreground) / 0.7);
+  width: 100%;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.sidebar-collapse-toggle:hover {
+  background-color: hsl(var(--sidebar-accent) / 0.1);
+  border-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-foreground));
+}
+
+.toggle-icon {
+  transition: transform 0.2s ease;
+}
+
+.left-sidebar-container.collapsed .toggle-icon {
+  transform: rotate(180deg);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .left-sidebar-container {
@@ -279,40 +358,6 @@
 /* Ensure proper spacing between sections */
 .sidebar-section + .sidebar-section {
   margin-top: 0;
-}
-
-/* Logo section specific styles for collapsed state */
-.left-sidebar-container.w-16 .logo-text {
-  display: none;
-}
-
-.left-sidebar-container.w-16 .logo-icon {
-  margin-right: 0;
-}
-
-.left-sidebar-container.w-16 .sidebar-section.logo-section {
-  justify-content: center;
-  padding: 12px 8px;
-}
-
-/* Hide dropdown sections when collapsed */
-.left-sidebar-container.w-16 .sidebar-section.project-section,
-.left-sidebar-container.w-16 .sidebar-section.team-section {
-  display: none;
-}
-
-/* Hide navigation text when collapsed */
-.left-sidebar-container.w-16 .nav-link-text {
-  display: none;
-}
-
-.left-sidebar-container.w-16 .nav-link-icon {
-  margin-right: 0;
-}
-
-.left-sidebar-container.w-16 .main-nav-section .nav-link {
-  justify-content: center;
-  padding: 10px 8px;
 }
 
 /* Enhanced dropdown positioning for panels */
@@ -401,4 +446,29 @@
 /* Ensure smooth transitions for all layout changes */
 * {
   transition: margin-left 0.3s ease, width 0.3s ease, padding 0.3s ease;
+}
+
+/* Tooltip styles for collapsed mode */
+.sidebar-tooltip {
+  position: absolute;
+  left: 68px;
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1200;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.left-sidebar-container.collapsed .nav-link:hover .sidebar-tooltip,
+.left-sidebar-container.collapsed .dropdown-trigger:hover .sidebar-tooltip {
+  opacity: 1;
+  visibility: visible;
 }

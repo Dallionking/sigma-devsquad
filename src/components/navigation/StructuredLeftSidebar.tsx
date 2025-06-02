@@ -19,6 +19,8 @@ import {
   Activity,
   Star,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Users
 } from 'lucide-react';
 import { Logo } from '@/components/branding/Logo';
@@ -83,14 +85,29 @@ export const StructuredLeftSidebar = ({
   };
 
   const toggleProjectDropdown = () => {
+    if (collapsed) return; // Don't open dropdowns when collapsed
     setShowProjectDropdown(!showProjectDropdown);
     setShowTeamDropdown(false);
   };
 
   const toggleTeamDropdown = () => {
+    if (collapsed) return; // Don't open dropdowns when collapsed
     setShowTeamDropdown(!showTeamDropdown);
     setShowProjectDropdown(false);
   };
+
+  // Keyboard shortcut for sidebar toggle (Ctrl+B)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'b') {
+        e.preventDefault();
+        onToggle();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onToggle]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -107,10 +124,18 @@ export const StructuredLeftSidebar = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close dropdowns when sidebar collapses
+  useEffect(() => {
+    if (collapsed) {
+      setShowProjectDropdown(false);
+      setShowTeamDropdown(false);
+    }
+  }, [collapsed]);
+
   return (
     <div className={cn(
       "left-sidebar-container bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out flex flex-col h-screen fixed top-0 left-0 z-50",
-      collapsed ? "w-16" : "w-64"
+      collapsed ? "collapsed w-16" : "w-64"
     )}>
       {/* Logo Section */}
       <div className="sidebar-section logo-section">
@@ -158,6 +183,23 @@ export const StructuredLeftSidebar = ({
         </div>
       )}
 
+      {/* Collapsed Project Icon */}
+      {collapsed && (
+        <div className="sidebar-section project-section">
+          <div 
+            className="dropdown-trigger"
+            title={currentProject?.name || "Select Project"}
+          >
+            <span className="dropdown-trigger-icon">
+              <Folder className="w-4 h-4" />
+            </span>
+            <div className="sidebar-tooltip">
+              {currentProject?.name || "Select Project"}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Team Section */}
       {!collapsed && (
         <div className="sidebar-section team-section" ref={teamDropdownRef}>
@@ -196,11 +238,28 @@ export const StructuredLeftSidebar = ({
         </div>
       )}
 
+      {/* Collapsed Team Icon */}
+      {collapsed && (
+        <div className="sidebar-section team-section">
+          <div 
+            className="dropdown-trigger"
+            title={currentTeam?.name || "Select Team"}
+          >
+            <span className="dropdown-trigger-icon">
+              <Users className="w-4 h-4" />
+            </span>
+            <div className="sidebar-tooltip">
+              {currentTeam?.name || "Select Team"}
+            </div>
+          </div>
+        </div>
+      )}
+
       <Separator className="mx-3" />
 
       {/* Main Navigation Section */}
       <div className="sidebar-section main-nav-section px-3 py-2 overflow-y-auto">
-        <div className="sidebar-section-label px-1">MAIN</div>
+        {!collapsed && <div className="sidebar-section-label px-1">MAIN</div>}
         <div className="space-y-1">
           {mainNavItems.map((item) => {
             const Icon = item.icon;
@@ -210,11 +269,17 @@ export const StructuredLeftSidebar = ({
                 key={item.path}
                 onClick={() => handleNavigation(item.path)}
                 className={cn("nav-link", active && "active")}
+                title={collapsed ? item.label : undefined}
               >
                 <span className="nav-link-icon">
                   <Icon className="w-4 h-4" />
                 </span>
                 {!collapsed && <span className="nav-link-text">{item.label}</span>}
+                {collapsed && (
+                  <div className="sidebar-tooltip">
+                    {item.label}
+                  </div>
+                )}
               </button>
             );
           })}
@@ -233,7 +298,7 @@ export const StructuredLeftSidebar = ({
 
         {/* Configuration Section */}
         <div className="mt-6">
-          <div className="sidebar-section-label px-1">CONFIG</div>
+          {!collapsed && <div className="sidebar-section-label px-1">CONFIG</div>}
           <div className="space-y-1">
             {configItems.map((item) => {
               const Icon = item.icon;
@@ -244,11 +309,17 @@ export const StructuredLeftSidebar = ({
                   onClick={() => handleNavigation(item.path)}
                   className={cn("nav-link", active && "active")}
                   style={{ padding: collapsed ? '8px' : '8px 12px', fontSize: '12px' }}
+                  title={collapsed ? item.label : undefined}
                 >
                   <span className="nav-link-icon">
                     <Icon className="w-3 h-3" />
                   </span>
                   {!collapsed && <span className="nav-link-text">{item.label}</span>}
+                  {collapsed && (
+                    <div className="sidebar-tooltip">
+                      {item.label}
+                    </div>
+                  )}
                 </button>
               );
             })}
@@ -257,7 +328,7 @@ export const StructuredLeftSidebar = ({
 
         {/* Account Section */}
         <div className="mt-6">
-          <div className="sidebar-section-label px-1">ACCOUNT</div>
+          {!collapsed && <div className="sidebar-section-label px-1">ACCOUNT</div>}
           <div className="space-y-1">
             {accountItems.map((item) => {
               const Icon = item.icon;
@@ -268,11 +339,17 @@ export const StructuredLeftSidebar = ({
                   onClick={() => handleNavigation(item.path)}
                   className={cn("nav-link", active && "active")}
                   style={{ padding: collapsed ? '8px' : '8px 12px', fontSize: '12px' }}
+                  title={collapsed ? item.label : undefined}
                 >
                   <span className="nav-link-icon">
                     <Icon className="w-3 h-3" />
                   </span>
                   {!collapsed && <span className="nav-link-text">{item.label}</span>}
+                  {collapsed && (
+                    <div className="sidebar-tooltip">
+                      {item.label}
+                    </div>
+                  )}
                 </button>
               );
             })}
@@ -305,7 +382,7 @@ export const StructuredLeftSidebar = ({
             </div>
           </div>
         ) : (
-          <div className="flex justify-center">
+          <div className="flex justify-center" title="System Status: Online">
             <div className="w-8 h-8 bg-sidebar-accent/30 rounded-lg flex items-center justify-center">
               <Activity className="w-4 h-4 text-green-500" />
             </div>
@@ -315,25 +392,16 @@ export const StructuredLeftSidebar = ({
 
       {/* Collapse Section */}
       <div className="sidebar-section collapse-section px-3 py-2">
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
+          className="sidebar-collapse-toggle"
           onClick={onToggle}
-          className={cn(
-            "w-full justify-start gap-3 h-8",
-            collapsed && "justify-center px-2"
-          )}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
         >
-          {collapsed ? (
-            <PanelLeft className="w-4 h-4" />
-          ) : (
-            <>
-              <PanelLeftClose className="w-4 h-4" />
-              <span className="text-xs">Collapse</span>
-            </>
-          )}
-        </Button>
+          <span className="toggle-icon">
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </span>
+          {!collapsed && <span className="ml-2 text-xs">Collapse</span>}
+        </button>
       </div>
     </div>
   );
