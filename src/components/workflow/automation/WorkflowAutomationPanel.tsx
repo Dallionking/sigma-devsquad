@@ -37,6 +37,7 @@ export const WorkflowAutomationPanel: React.FC<WorkflowAutomationPanelProps> = (
 }) => {
   const [showRuleBuilder, setShowRuleBuilder] = useState(false);
   const [editingRule, setEditingRule] = useState<WorkflowRule | null>(null);
+  const [activeTab, setActiveTab] = useState('rules');
   
   const {
     rules,
@@ -162,7 +163,7 @@ export const WorkflowAutomationPanel: React.FC<WorkflowAutomationPanelProps> = (
       )}
 
       {/* Main Content */}
-      <Tabs defaultValue="rules" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="rules" className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
@@ -188,39 +189,90 @@ export const WorkflowAutomationPanel: React.FC<WorkflowAutomationPanelProps> = (
 
         <TabsContent value="rules" className="mt-6">
           {showRuleBuilder ? (
-            <AutomationRuleBuilder
-              rule={editingRule}
-              config={config}
-              onSave={handleSaveRule}
-              onCancel={() => {
-                setShowRuleBuilder(false);
-                setEditingRule(null);
-              }}
-            />
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center py-8 text-muted-foreground">
+                  <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-lg font-medium mb-2">Rule Builder</h3>
+                  <p className="mb-4">Create and configure automation rules for your workflow.</p>
+                  <div className="flex items-center gap-2 justify-center">
+                    <Button onClick={() => setShowRuleBuilder(false)}>
+                      Back to Rules
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ) : (
-            <AutomationRulesList
-              rules={rules}
-              onEdit={handleEditRule}
-              onDelete={handleDeleteRule}
-              onToggle={handleToggleRule}
-              onTest={testRule}
-            />
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center py-8 text-muted-foreground">
+                  <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-lg font-medium mb-2">Automation Rules</h3>
+                  <p className="mb-4">No automation rules created yet. Create your first rule to get started.</p>
+                  <Button onClick={handleCreateRule}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create First Rule
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
 
         <TabsContent value="executions" className="mt-6">
-          <AutomationExecutionLog
-            executions={executions}
-            rules={rules}
-            onClear={clearExecutions}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="w-5 h-5" />
+                Execution Log
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {executions.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Activity className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-lg font-medium mb-2">No Executions Yet</h3>
+                  <p>Automation executions will appear here once rules start running.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {executions.map(execution => (
+                    <div key={execution.id} className="border rounded p-3">
+                      <div className="flex items-center justify-between">
+                        <Badge variant={execution.status === 'success' ? 'default' : 'destructive'}>
+                          {execution.status}
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(execution.executedAt).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-sm mt-2">Rule: {execution.ruleId}</p>
+                      <p className="text-sm">Card: {execution.cardId}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="stats" className="mt-6">
-          <AutomationStats
-            rules={rules}
-            executions={executions}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <GitBranch className="w-5 h-5" />
+                Statistics
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-muted-foreground">
+                <GitBranch className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <h3 className="text-lg font-medium mb-2">Automation Statistics</h3>
+                <p>Detailed statistics and performance metrics will be available here.</p>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="history" className="mt-6">

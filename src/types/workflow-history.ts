@@ -7,11 +7,11 @@ export interface WorkflowHistoryEntry {
   changedBy: string;
   timestamp: string;
   changes: WorkflowChange[];
-  snapshot: any; // Complete workflow state at this point
-  metadata: {
+  snapshot: any;
+  metadata?: {
     userAgent?: string;
-    ipAddress?: string;
     sessionId?: string;
+    [key: string]: any;
   };
 }
 
@@ -41,7 +41,6 @@ export interface WorkflowMetrics {
   successRate: number;
   averageExecutionTime: number;
   errorCount: number;
-  lastExecuted?: string;
   period: {
     start: string;
     end: string;
