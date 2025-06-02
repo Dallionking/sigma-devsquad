@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -60,150 +61,134 @@ export const TeamDashboard = ({ team, onAgentSelect }: TeamDashboardProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Team Header */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl">{team.name}</CardTitle>
-              <p className="text-muted-foreground mt-1">{team.description}</p>
-            </div>
-            <Badge 
-              variant="secondary" 
-              className="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-950 dark:to-indigo-950 dark:text-blue-300"
-            >
-              {team.status}
-            </Badge>
+    <div className="h-full overflow-auto">
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+        {/* Team Header - Compact */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">{team.name}</h1>
+            <p className="text-muted-foreground text-sm">{team.description}</p>
           </div>
-        </CardHeader>
-      </Card>
+          <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+            {team.status}
+          </Badge>
+        </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
+        {/* Key Metrics - Single Row */}
+        <div className="grid grid-cols-4 gap-4">
+          <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Active Members</p>
-                <p className="text-2xl font-bold">{activeMembers}/{members.length}</p>
+                <p className="text-xl font-bold">{activeMembers}/{members.length}</p>
               </div>
-              <Users className="w-8 h-8 text-blue-500" />
+              <Users className="w-6 h-6 text-blue-500" />
             </div>
-          </CardContent>
-        </Card>
+          </Card>
 
-        <Card>
-          <CardContent className="p-4">
+          <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Task Completion</p>
-                <p className="text-2xl font-bold">{completionRate.toFixed(0)}%</p>
-                <Progress value={completionRate} className="mt-2" />
+                <p className="text-sm text-muted-foreground">Completion</p>
+                <p className="text-xl font-bold">{completionRate.toFixed(0)}%</p>
+                <Progress value={completionRate} className="mt-1 h-2" />
               </div>
-              <Target className="w-8 h-8 text-green-500" />
+              <Target className="w-6 h-6 text-green-500" />
             </div>
-          </CardContent>
-        </Card>
+          </Card>
 
-        <Card>
-          <CardContent className="p-4">
+          <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">In Progress</p>
-                <p className="text-2xl font-bold">{inProgressTasks}</p>
+                <p className="text-xl font-bold">{inProgressTasks}</p>
               </div>
-              <Clock className="w-8 h-8 text-yellow-500" />
+              <Clock className="w-6 h-6 text-yellow-500" />
             </div>
-          </CardContent>
-        </Card>
+          </Card>
 
-        <Card>
-          <CardContent className="p-4">
+          <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Completed</p>
-                <p className="text-2xl font-bold">{completedTasks}</p>
+                <p className="text-xl font-bold">{completedTasks}</p>
               </div>
-              <CheckCircle className="w-8 h-8 text-emerald-500" />
+              <CheckCircle className="w-6 h-6 text-emerald-500" />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </Card>
+        </div>
 
-      {/* KPIs and Performance */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Team KPIs */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Team KPIs</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {team.kpis.map((kpi) => (
-              <div key={kpi.id} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{kpi.name}</span>
-                  <div className="flex items-center gap-1">
-                    {getTrendIcon(kpi.trend)}
-                    <span className="text-sm font-bold">
-                      {kpi.value}{kpi.unit}
-                    </span>
+        {/* Main Content Grid - 2 columns */}
+        <div className="grid grid-cols-3 gap-6">
+          {/* Left Column - KPIs */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Team KPIs</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {team.kpis.slice(0, 3).map((kpi) => (
+                <div key={kpi.id} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{kpi.name}</span>
+                    <div className="flex items-center gap-1">
+                      {getTrendIcon(kpi.trend)}
+                      <span className="text-sm font-bold">
+                        {kpi.value}{kpi.unit}
+                      </span>
+                    </div>
                   </div>
+                  <Progress value={(kpi.value / kpi.target) * 100} className="h-2" />
+                  <p className="text-xs text-muted-foreground">
+                    Target: {kpi.target}{kpi.unit}
+                  </p>
                 </div>
-                <Progress 
-                  value={(kpi.value / kpi.target) * 100} 
-                  className="h-2"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Target: {kpi.target}{kpi.unit}
-                </p>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+              ))}
+            </CardContent>
+          </Card>
 
-        {/* Performance Trend */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance Trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={performanceData}>
-                  <XAxis dataKey="week" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area 
-                    type="monotone" 
-                    dataKey="performance" 
-                    stroke="#3B82F6" 
-                    fill="#3B82F6" 
-                    fillOpacity={0.1}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Middle Column - Performance Chart */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Performance Trend</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-40">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={performanceData}>
+                    <XAxis dataKey="week" fontSize={12} />
+                    <YAxis fontSize={12} />
+                    <Tooltip />
+                    <Area 
+                      type="monotone" 
+                      dataKey="performance" 
+                      stroke="#3B82F6" 
+                      fill="#3B82F6" 
+                      fillOpacity={0.1}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Right Column - Objectives */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Team Objectives</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {team.objectives.slice(0, 4).map((objective, index) => (
+                  <div key={index} className="flex items-start gap-2 text-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                    <p className="leading-relaxed">{objective}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-
-      {/* Team Objectives */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Team Objectives</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {team.objectives.map((objective, index) => (
-              <div key={index} className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2" />
-                <p className="text-sm">{objective}</p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

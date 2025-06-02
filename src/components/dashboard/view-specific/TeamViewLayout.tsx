@@ -1,9 +1,11 @@
 
 import React from 'react';
-import { Agent, Task, Message, ViewMode } from '@/types';
+import { ViewMode } from '@/types';
+import { Agent, Task, Message } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
-import { TeamViewInfoPanel } from './TeamViewInfoPanel';
-import { MainContentRenderer } from '../MainContentRenderer';
+import { TeamDashboard } from '@/components/teams/TeamDashboard';
+import { TeamsEmptyState } from '@/components/empty-states';
+import { MainLayoutHeader } from '../layout/MainLayoutHeader';
 
 interface TeamViewLayoutProps {
   viewMode: ViewMode;
@@ -24,50 +26,25 @@ interface TeamViewLayoutProps {
 }
 
 export const TeamViewLayout = ({
-  viewMode,
-  agents,
-  tasks,
-  messages,
-  selectedAgent,
-  selectedTask,
-  selectedMessage,
   selectedTeam,
   selectedAgentProfile,
-  onAgentSelect,
-  onTaskSelect,
-  onMessageSelect,
-  onTeamSelect,
-  onAgentProfileSelect,
-  onViewModeChange
+  onAgentProfileSelect
 }: TeamViewLayoutProps) => {
+  
+  if (!selectedTeam) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <TeamsEmptyState />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex-1 flex gap-6 p-6 overflow-hidden">
-      {/* Left Info Panel */}
-      <div className="w-80 flex-shrink-0 overflow-y-auto">
-        <TeamViewInfoPanel />
-      </div>
-      
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <MainContentRenderer
-          viewMode={viewMode}
-          agents={agents}
-          tasks={tasks}
-          messages={messages}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          selectedTeam={selectedTeam}
-          selectedAgentProfile={selectedAgentProfile}
-          showTeamView={true}
-          onAgentSelect={onAgentSelect}
-          onTaskSelect={onTaskSelect}
-          onMessageSelect={onMessageSelect}
-          onTeamSelect={onTeamSelect}
-          onAgentProfileSelect={onAgentProfileSelect}
-          onViewModeChange={onViewModeChange}
-        />
-      </div>
+    <div className="h-full flex flex-col">
+      <TeamDashboard 
+        team={selectedTeam}
+        onAgentSelect={onAgentProfileSelect}
+      />
     </div>
   );
 };
