@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { StructuredLeftSidebar } from "@/components/navigation/StructuredLeftSidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -23,6 +24,7 @@ import { useViewSwitchingShortcuts } from "@/hooks/useViewSwitchingShortcuts";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
