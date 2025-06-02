@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
+import { useNavigate } from 'react-router-dom';
 import { 
   Presentation, 
   Plus, 
@@ -22,7 +22,8 @@ import {
   Grid,
   List,
   MoreVertical,
-  Share
+  Share,
+  Play
 } from 'lucide-react';
 
 interface PresentationsHeaderProps {
@@ -53,12 +54,17 @@ export const PresentationsHeader = ({
   onSortChange
 }: PresentationsHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleStatusToggle = (status: string) => {
     const newFilter = statusFilter.includes(status)
       ? statusFilter.filter(s => s !== status)
       : [...statusFilter, status];
     onStatusFilterChange(newFilter);
+  };
+
+  const handleViewPitchDeck = () => {
+    navigate('/pitch-deck');
   };
 
   return (
@@ -196,6 +202,11 @@ export const PresentationsHeader = ({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
+          
+          <Button variant="outline" size="sm" onClick={handleViewPitchDeck}>
+            <Play className="w-4 h-4 mr-2" />
+            View Pitch Deck
+          </Button>
           
           <Button variant="outline" size="sm" onClick={() => onBulkAction('import')}>
             <Upload className="w-4 h-4 mr-2" />
