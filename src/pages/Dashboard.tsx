@@ -1,14 +1,12 @@
 
 import { useState } from "react";
 import { StructuredLeftSidebar } from "@/components/navigation/StructuredLeftSidebar";
-import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { RealtimeNotifications } from "@/components/collaboration/RealtimeNotifications";
 import { ViewToggle } from "@/components/dashboard/ViewToggle";
 import { LoadingScreen } from "@/components/dashboard/LoadingScreen";
 import { SkipToContentLink } from "@/components/dashboard/SkipToContentLink";
 import { MainLayout } from "@/components/dashboard/MainLayout";
-import { UnifiedMainLayout } from "@/components/dashboard/layout/UnifiedMainLayout";
 import { FloatingActionButton } from "@/components/dashboard/FloatingActionButton";
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
@@ -99,40 +97,13 @@ const Dashboard = () => {
         totalAgents={agents?.length || 0}
       />
       
-      {/* Main Content Area - Adjusted for sidebar */}
+      {/* Main Content Area - Clean layout without redundant navigation */}
       <div className={cn(
-        "flex-1 flex flex-col transition-all duration-300 ease-in-out",
-        sidebarCollapsed ? "ml-16" : "ml-64"
+        "main-content-area",
+        sidebarCollapsed && "sidebar-collapsed"
       )}>
-        {/* Simplified Header - Remove overlapping navigation */}
-        <div className="relative border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
-          <div className="flex h-12 items-center justify-between px-6">
-            {/* Page Title */}
-            <div className="flex items-center space-x-4">
-              <h1 className="text-lg font-semibold">Dashboard</h1>
-              {/* Status Badge */}
-              <Badge variant="outline" className="text-xs">
-                {agents?.filter(a => a.status === 'working').length || 0} active agents
-              </Badge>
-            </div>
-            
-            {/* Quick Actions */}
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSampleProjects(true)}
-                className="text-muted-foreground hover:text-foreground"
-                title="Browse sample projects"
-              >
-                <Star className="w-4 h-4" />
-              </Button>
-              <ContextualHelp context="dashboard" />
-            </div>
-          </div>
-        </div>
         
-        {/* Real-time Notifications - Compact */}
+        {/* Compact Notifications - Only essential notifications */}
         <div className="px-6 py-2">
           <RealtimeNotifications />
         </div>

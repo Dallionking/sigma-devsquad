@@ -344,3 +344,61 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   }
 }
+
+/* Hide redundant top navigation elements */
+.breadcrumb-navigation,
+.top-tab-navigation,
+[class*="breadcrumb"],
+[class*="BreadcrumbNavigation"],
+[class*="EnhancedBreadcrumb"],
+[class*="HierarchicalBreadcrumb"],
+.main-layout-header,
+[class*="MainLayoutHeader"],
+[class*="ViewModeTabs"] {
+  display: none !important;
+}
+
+/* Main content area adjustments */
+.main-content-area {
+  padding-top: 24px;
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Adjust for collapsed sidebar */
+.main-content-area.sidebar-collapsed {
+  margin-left: 64px;
+  width: calc(100% - 64px);
+}
+
+/* Responsive adjustments for main content */
+@media (max-width: 768px) {
+  .main-content-area {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 16px;
+  }
+  
+  .main-content-area.sidebar-collapsed {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Override dashboard page specific styles to ensure clean layout */
+.dashboard-content {
+  padding-top: 0 !important;
+}
+
+.dashboard-header {
+  display: none !important;
+}
+
+/* Ensure smooth transitions for all layout changes */
+* {
+  transition: margin-left 0.3s ease, width 0.3s ease, padding 0.3s ease;
+}
