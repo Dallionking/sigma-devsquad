@@ -106,10 +106,10 @@ export const PlanningTourForm = ({ onComplete, onSkip }: PlanningTourFormProps) 
               trigger="hover"
               showIcon={false}
             >
-              <Card className={`planning-tour-card transition-all duration-200 ${
+              <Card className={`transition-all duration-200 ${
                 step.completed ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800' :
                 currentStep === step.id ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800' :
-                'hover:bg-card dark:hover:bg-card'
+                'hover:bg-gray-50 dark:hover:bg-gray-800/50'
               }`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">

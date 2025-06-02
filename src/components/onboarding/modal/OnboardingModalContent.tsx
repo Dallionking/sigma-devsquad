@@ -38,16 +38,10 @@ export const OnboardingModalContent = ({
   const showTeamCreation = currentStep === 'team-creation';
   const showFirstAgent = currentStep === 'first-agent';
   const showPlanningTour = currentStep === 'planning-tour';
-  const showCompletion = currentStep === 'completion';
 
   // Steps that should show video tutorials
-  const videoEnabledSteps = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour'];
+  const videoEnabledSteps = ['welcome', 'profile-setup', 'team-creation', 'first-agent', 'planning-tour', 'completion'];
   const shouldShowVideoOption = videoEnabledSteps.includes(currentStep);
-
-  // For completion step, render the content directly without video or padding
-  if (showCompletion) {
-    return stepContent;
-  }
 
   return (
     <div className="py-6 space-y-6">

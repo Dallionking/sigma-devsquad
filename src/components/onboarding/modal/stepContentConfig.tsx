@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Users, Bot, MapPin, Sparkles, CheckCircle } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
-import { CompletionDashboard } from '../completion/CompletionDashboard';
 
 export const stepOrder: OnboardingStep[] = [
   'welcome',
@@ -24,7 +22,7 @@ export const stepContent: Record<OnboardingStep, {
     description: 'Your AI-powered development team is ready to help you build amazing projects.',
     icon: Sparkles,
     content: (
-      <div className="text-center space-y-8" data-step="welcome">
+      <div className="text-center space-y-8">
         {/* Video Tutorial Section */}
         <div className="tutorial-section rounded-xl p-6 border">
           <div className="flex items-center justify-between mb-4">
@@ -39,10 +37,7 @@ export const stepContent: Record<OnboardingStep, {
                 <p className="text-sm text-blue-700 dark:text-blue-300">Get introduced to your AI-powered development team</p>
               </div>
             </div>
-            <button 
-              className="limitless-cta-secondary px-4 py-2 rounded-lg text-blue-600 dark:text-blue-400 text-sm font-medium"
-              style={{ backgroundColor: 'inherit' }}
-            >
+            <button className="limitless-cta-secondary px-4 py-2 rounded-lg text-blue-600 dark:text-blue-400 text-sm font-medium">
               Watch Tutorial
             </button>
           </div>
@@ -62,10 +57,7 @@ export const stepContent: Record<OnboardingStep, {
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div 
-              className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced"
-              style={{ backgroundColor: 'hsl(var(--card))' }}
-            >
+            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
@@ -73,10 +65,7 @@ export const stepContent: Record<OnboardingStep, {
               <p className="text-sm text-gray-600 dark:text-gray-400">Organize your AI agents</p>
             </div>
 
-            <div 
-              className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced"
-              style={{ backgroundColor: 'hsl(var(--card))' }}
-            >
+            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Bot className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
@@ -84,10 +73,7 @@ export const stepContent: Record<OnboardingStep, {
               <p className="text-sm text-gray-600 dark:text-gray-400">Specialized AI assistants</p>
             </div>
 
-            <div 
-              className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced"
-              style={{ backgroundColor: 'hsl(var(--card))' }}
-            >
+            <div className="feature-card p-6 rounded-xl border transition-all duration-200 hover:shadow-md btn-enhanced">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
                 <MapPin className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
@@ -127,6 +113,28 @@ export const stepContent: Record<OnboardingStep, {
     title: 'Setup Complete! 🎉',
     description: 'You\'re all set to start building with your AI development team.',
     icon: CheckCircle,
-    content: <CompletionDashboard />
+    content: (
+      <div className="text-center space-y-6">
+        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            Welcome to Vibe DevSquad!
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Your AI development team is ready. Start creating amazing projects with your new AI assistants.
+          </p>
+        </div>
+        <div className="tutorial-section rounded-lg p-6">
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Next Steps:</h4>
+          <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <li>• Explore your dashboard and agent overview</li>
+            <li>• Create your first project or task</li>
+            <li>• Start collaborating with your AI team</li>
+          </ul>
+        </div>
+      </div>
+    )
   }
 };

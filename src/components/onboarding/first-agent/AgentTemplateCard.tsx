@@ -25,9 +25,9 @@ const iconMap = {
 };
 
 const difficultyColors = {
-  Beginner: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
-  Intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
-  Advanced: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+  Beginner: 'bg-green-100 text-green-800',
+  Intermediate: 'bg-yellow-100 text-yellow-800',
+  Advanced: 'bg-red-100 text-red-800'
 };
 
 export const AgentTemplateCard = ({ template, isSelected, onSelect }: AgentTemplateCardProps) => {
@@ -36,20 +36,16 @@ export const AgentTemplateCard = ({ template, isSelected, onSelect }: AgentTempl
   return (
     <Card 
       className={cn(
-        "cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 agent-template-card",
-        isSelected && "ring-2 ring-primary border-primary shadow-lg"
+        "cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]",
+        isSelected && "ring-2 ring-primary border-primary"
       )}
       onClick={() => onSelect(template)}
-      style={{ backgroundColor: 'hsl(var(--card))' }}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <div className={cn(
-              "w-10 h-10 rounded-lg flex items-center justify-center",
-              isSelected ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
-            )}>
-              <Icon className="w-5 h-5" />
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Icon className="w-5 h-5 text-primary" />
             </div>
             <div>
               <CardTitle className="text-lg flex items-center space-x-2">
@@ -62,7 +58,7 @@ export const AgentTemplateCard = ({ template, isSelected, onSelect }: AgentTempl
           </div>
           <Badge 
             variant="outline" 
-            className={cn("text-xs", difficultyColors[template.difficulty])}
+            className={difficultyColors[template.difficulty]}
           >
             {template.difficulty}
           </Badge>
@@ -70,18 +66,27 @@ export const AgentTemplateCard = ({ template, isSelected, onSelect }: AgentTempl
       </CardHeader>
       
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground line-clamp-2">{template.description}</p>
+        <p className="text-sm text-muted-foreground">{template.description}</p>
         
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium mb-2">Specialization</h4>
-            <Badge variant="secondary" className="text-xs">
-              {template.specialization}
-            </Badge>
+            <h4 className="text-sm font-medium mb-2">Core Skills</h4>
+            <div className="flex flex-wrap gap-1">
+              {template.skills.slice(0, 4).map((skill) => (
+                <Badge key={skill} variant="secondary" className="text-xs">
+                  {skill}
+                </Badge>
+              ))}
+              {template.skills.length > 4 && (
+                <Badge variant="outline" className="text-xs">
+                  +{template.skills.length - 4} more
+                </Badge>
+              )}
+            </div>
           </div>
           
           <div>
-            <h4 className="text-sm font-medium mb-2">Key Capabilities</h4>
+            <h4 className="text-sm font-medium mb-2">Capabilities</h4>
             <div className="flex flex-wrap gap-1">
               {template.capabilities.slice(0, 3).map((capability) => (
                 <Badge key={capability} variant="outline" className="text-xs">
@@ -99,13 +104,13 @@ export const AgentTemplateCard = ({ template, isSelected, onSelect }: AgentTempl
         
         <Button 
           variant={isSelected ? "default" : "outline"} 
-          className="w-full mt-4"
+          className="w-full"
           onClick={(e) => {
             e.stopPropagation();
             onSelect(template);
           }}
         >
-          {isSelected ? '✓ Selected' : 'Select Template'}
+          {isSelected ? 'Selected' : 'Select Template'}
         </Button>
       </CardContent>
     </Card>
