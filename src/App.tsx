@@ -1,110 +1,164 @@
 
-import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { ThemeProvider } from './contexts/ThemeContext'
-import { TeamProvider } from './contexts/TeamContext'
-import { NavigationHierarchyProvider } from './contexts/NavigationHierarchyContext'
-import { Toaster } from './components/ui/toaster'
-import { LandingPage } from './pages/LandingPage'
-import { DashboardPage } from './pages/DashboardPage'
-import { PlanningAgentPage } from './pages/PlanningAgentPage'
-import { ProjectsPage } from './pages/ProjectsPage'
-import { AgentConfigurationPage } from './pages/AgentConfigurationPage'
-import { MCPManagementPage } from './pages/MCPManagementPage'
-import { LLMIntegrationPage } from './pages/LLMIntegrationPage'
-import { IDEIntegrationPage } from './pages/IDEIntegrationPage'
-import { ProfilePage } from './pages/ProfilePage'
-import { AccountPage } from './pages/AccountPage'
-import { TeamsPage } from './pages/TeamsPage'
-import { SettingsPage } from './pages/SettingsPage'
-import { UnifiedMainLayout } from './components/dashboard/layout/UnifiedMainLayout'
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { CurrentUserProvider } from "./contexts/CurrentUserContext";
+import { DataPersistenceProvider } from "./contexts/DataPersistenceContext";
+import { FilterProvider } from "./contexts/FilterContext";
+import { AgentProvider } from "./contexts/AgentContext";
+import { TaskProvider } from "./contexts/TaskContext";
+import { MessageProvider } from "./contexts/MessageContext";
+import { TeamProvider } from "./contexts/TeamContext";
+import { ProjectProvider } from "./contexts/ProjectContext";
+import { ProjectTemplateProvider } from "./contexts/ProjectTemplateContext";
+import { OnboardingProvider } from "./contexts/OnboardingContext";
+import { WebSocketProvider } from "./contexts/WebSocketContext";
+import { ContextualNavigationProvider } from "./components/navigation/ContextualNavigationProvider";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
+import LandingPage from "./pages/LandingPage";
+import AuthPage from "./pages/AuthPage";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
+import Account from "./pages/Account";
+import Projects from "./pages/Projects";
+import PlanningAgent from "./pages/PlanningAgent";
+import AgentCreation from "./pages/AgentCreation";
+import AgentConfiguration from "./pages/AgentConfiguration";
+import IDEIntegration from "./pages/IDEIntegration";
+import LLMIntegration from "./pages/LLMIntegration";
+import MCPManagement from "./pages/MCPManagement";
+import TeamSettings from "./pages/TeamSettings";
+import NotFound from "./pages/NotFound";
+import { useAuth } from "./contexts/AuthContext";
+
+const queryClient = new QueryClient();
+
+function AppContent() {
+  const { user } = useAuth();
+  
+  return (
+    <CurrentUserProvider>
+      <DataPersistenceProvider>
+        <WebSocketProvider 
+          userId={user?.id || 'anonymous'} 
+          userName={user?.user_metadata?.full_name || user?.email || 'Anonymous User'}
+        >
+          <FilterProvider>
+            <ProjectProvider>
+              <ProjectTemplateProvider>
+                <AgentProvider>
+                  <TaskProvider>
+                    <MessageProvider>
+                      <TeamProvider>
+                        <OnboardingProvider>
+                          <BrowserRouter>
+                            <ContextualNavigationProvider>
+                              <Routes>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route path="/auth" element={<AuthPage />} />
+                                <Route path="/index" element={
+                                  <ProtectedRoute>
+                                    <Index />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/dashboard" element={
+                                  <ProtectedRoute>
+                                    <Dashboard />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/projects" element={
+                                  <ProtectedRoute>
+                                    <Projects />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/settings" element={
+                                  <ProtectedRoute>
+                                    <Settings />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/profile" element={
+                                  <ProtectedRoute>
+                                    <Profile />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/account" element={
+                                  <ProtectedRoute>
+                                    <Account />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/planning-agent" element={
+                                  <ProtectedRoute>
+                                    <PlanningAgent />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/agent-creation" element={
+                                  <ProtectedRoute>
+                                    <AgentCreation />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/agent-configuration" element={
+                                  <ProtectedRoute>
+                                    <AgentConfiguration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/ide-integration" element={
+                                  <ProtectedRoute>
+                                    <IDEIntegration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/llm-integration" element={
+                                  <ProtectedRoute>
+                                    <LLMIntegration />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/mcp-management" element={
+                                  <ProtectedRoute>
+                                    <MCPManagement />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/team-settings" element={
+                                  <ProtectedRoute>
+                                    <TeamSettings />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="*" element={<NotFound />} />
+                              </Routes>
+                              <Toaster />
+                              <Sonner />
+                            </ContextualNavigationProvider>
+                          </BrowserRouter>
+                        </OnboardingProvider>
+                      </TeamProvider>
+                    </MessageProvider>
+                  </TaskProvider>
+                </AgentProvider>
+              </ProjectTemplateProvider>
+            </ProjectProvider>
+          </FilterProvider>
+        </WebSocketProvider>
+      </DataPersistenceProvider>
+    </CurrentUserProvider>
+  );
+}
 
 function App() {
   return (
-    <ThemeProvider>
-      <TeamProvider>
-        <Router>
-          <NavigationHierarchyProvider>
-            <Routes>
-              {/* Landing page route */}
-              <Route path="/" element={<LandingPage />} />
-              
-              {/* Main application routes with unified layout */}
-              <Route path="/dashboard" element={
-                <UnifiedMainLayout>
-                  <DashboardPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/planning-agent" element={
-                <UnifiedMainLayout>
-                  <PlanningAgentPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/projects" element={
-                <UnifiedMainLayout>
-                  <ProjectsPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/agent-configuration" element={
-                <UnifiedMainLayout>
-                  <AgentConfigurationPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/mcp-management" element={
-                <UnifiedMainLayout>
-                  <MCPManagementPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/llm-integration" element={
-                <UnifiedMainLayout>
-                  <LLMIntegrationPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/ide-integration" element={
-                <UnifiedMainLayout>
-                  <IDEIntegrationPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/profile" element={
-                <UnifiedMainLayout>
-                  <ProfilePage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/account" element={
-                <UnifiedMainLayout>
-                  <AccountPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/teams" element={
-                <UnifiedMainLayout>
-                  <TeamsPage />
-                </UnifiedMainLayout>
-              } />
-              
-              <Route path="/settings" element={
-                <UnifiedMainLayout>
-                  <SettingsPage />
-                </UnifiedMainLayout>
-              } />
-              
-              {/* Fallback route */}
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-            <Toaster />
-          </NavigationHierarchyProvider>
-        </Router>
-      </TeamProvider>
-    </ThemeProvider>
-  )
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <AuthProvider>
+            <AppContent />
+          </AuthProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
