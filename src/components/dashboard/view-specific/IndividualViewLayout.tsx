@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
@@ -12,7 +11,7 @@ import { WorkflowTemplateManager } from '@/components/workflow/templates/Workflo
 import { WorkflowAnalytics } from '@/components/workflow/analytics/WorkflowAnalytics';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Kanban, BarChart3, Activity, Users, FileText } from 'lucide-react';
+import { Kanban, BarChart3, Activity, Users, FileText, TrendingUp } from 'lucide-react';
 
 interface IndividualViewLayoutProps {
   viewMode: ViewMode;
@@ -70,7 +69,7 @@ export const IndividualViewLayout = ({
     return (
       <div className="space-y-6">
         <Tabs defaultValue="kanban" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="kanban" className="flex items-center gap-2">
               <Kanban className="w-4 h-4" />
               Kanban Board
@@ -82,6 +81,10 @@ export const IndividualViewLayout = ({
             <TabsTrigger value="templates" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
               Templates
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Analytics
             </TabsTrigger>
             <TabsTrigger value="metrics" className="flex items-center gap-2">
               <Activity className="w-4 h-4" />
@@ -119,6 +122,10 @@ export const IndividualViewLayout = ({
                 // TODO: Convert template to workflow and apply to current kanban board
               }}
             />
+          </TabsContent>
+
+          <TabsContent value="analytics" className="mt-6">
+            <WorkflowAnalytics />
           </TabsContent>
 
           <TabsContent value="metrics" className="mt-6">
