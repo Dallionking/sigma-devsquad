@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -105,70 +106,72 @@ export const TeamHierarchy = ({
 
           return (
             <div key={team.id} className="space-y-1">
-              {/* Team Card */}
+              {/* Team Card - Fixed layout to prevent button cutoff */}
               <div 
                 className={cn(
-                  "rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md",
+                  "rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md overflow-hidden",
                   getTeamColorClass(team),
                   isSelected && "ring-2 ring-primary"
                 )}
                 onClick={() => onTeamSelect(team)}
               >
                 <div className="p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 flex-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-5 w-5 p-0 hover:bg-white/20"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleTeamExpansion(team.id);
-                        }}
-                      >
-                        {isExpanded ? (
-                          <ChevronDown className="w-3 h-3" />
-                        ) : (
-                          <ChevronRight className="w-3 h-3" />
-                        )}
-                      </Button>
-                      
-                      <div className="text-lg">{getTeamTypeIcon(team.type)}</div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-sm truncate">{team.name}</h4>
-                          <TeamCompositionBadge 
-                            composition={team.composition} 
-                            size="sm"
-                          />
-                          <TeamTypeTooltip teamType={team.type} />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge 
-                            variant="secondary" 
-                            className={cn("text-xs", getStatusColor(team.status))}
-                          >
-                            {team.status}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {members.length} members
-                          </span>
-                        </div>
+                  {/* Main team info row - improved layout */}
+                  <div className="flex items-start gap-3 mb-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-5 w-5 p-0 hover:bg-white/20 flex-shrink-0 mt-0.5"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleTeamExpansion(team.id);
+                      }}
+                    >
+                      {isExpanded ? (
+                        <ChevronDown className="w-3 h-3" />
+                      ) : (
+                        <ChevronRight className="w-3 h-3" />
+                      )}
+                    </Button>
+                    
+                    <div className="text-lg flex-shrink-0">{getTeamTypeIcon(team.type)}</div>
+                    
+                    {/* Team info - takes available space */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <h4 className="font-medium text-sm truncate">{team.name}</h4>
+                        <TeamCompositionBadge 
+                          composition={team.composition} 
+                          size="sm"
+                        />
+                        <TeamTypeTooltip teamType={team.type} />
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge 
+                          variant="secondary" 
+                          className={cn("text-xs", getStatusColor(team.status))}
+                        >
+                          {team.status}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {members.length} members
+                        </span>
                       </div>
                     </div>
-                    
-                    {/* Manage Team Button - MORE VISIBLE */}
+                  </div>
+                  
+                  {/* Manage button - separate row to ensure visibility */}
+                  <div className="flex justify-end">
                     <TeamManagementModal team={team}>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-8 px-3 hover:bg-primary/10 border-primary/20"
+                        className="h-7 px-3 text-xs hover:bg-primary/10 border-primary/20"
                         onClick={(e) => e.stopPropagation()}
                         title="Manage Team"
                       >
-                        <Settings className="w-4 h-4 mr-1" />
-                        <span className="text-xs">Manage</span>
+                        <Settings className="w-3 h-3 mr-1" />
+                        Manage
                       </Button>
                     </TeamManagementModal>
                   </div>
