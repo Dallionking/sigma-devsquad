@@ -21,7 +21,8 @@ import {
   SortAsc,
   Grid,
   List,
-  MoreVertical
+  MoreVertical,
+  Share
 } from 'lucide-react';
 
 interface PresentationsHeaderProps {
