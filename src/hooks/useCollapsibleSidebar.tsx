@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useResponsiveNavigation } from './useResponsiveNavigation';
 
-interface UseCollapsibleSidebarOptions {
+export interface UseCollapsibleSidebarOptions {
   defaultCollapsed?: boolean;
   keyboardShortcut?: string;
   storageKey?: string;
