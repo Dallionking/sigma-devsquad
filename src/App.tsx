@@ -107,6 +107,11 @@ function AppContent() {
                                     <AgentConfiguration />
                                   </ProtectedRoute>
                                 } />
+                                <Route path="/agent-configuration/:section" element={
+                                  <ProtectedRoute>
+                                    <AgentConfiguration />
+                                  </ProtectedRoute>
+                                } />
                                 <Route path="/ide-integration" element={
                                   <ProtectedRoute>
                                     <IDEIntegration />
