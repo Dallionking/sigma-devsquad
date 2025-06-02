@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { X, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TourStep } from './ViewSpecificTourConfig';
 
@@ -51,21 +51,40 @@ export const ViewSpecificGuidedTour = ({
         
         switch (currentStepData.position) {
           case 'top':
-            top = rect.top + scrollTop - 10;
+            top = rect.top + scrollTop - 320; // Increased space for tooltip
             left = rect.left + scrollLeft + rect.width / 2;
             break;
           case 'bottom':
-            top = rect.bottom + scrollTop + 10;
+            top = rect.bottom + scrollTop + 20;
             left = rect.left + scrollLeft + rect.width / 2;
             break;
           case 'left':
             top = rect.top + scrollTop + rect.height / 2;
-            left = rect.left + scrollLeft - 10;
+            left = rect.left + scrollLeft - 340; // Increased space for tooltip
             break;
           case 'right':
             top = rect.top + scrollTop + rect.height / 2;
-            left = rect.right + scrollLeft + 10;
+            left = rect.right + scrollLeft + 20;
             break;
+        }
+        
+        // Ensure tooltip stays within viewport
+        const tooltipWidth = 320;
+        const tooltipHeight = 200;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        if (left + tooltipWidth > viewportWidth) {
+          left = viewportWidth - tooltipWidth - 20;
+        }
+        if (left < 20) {
+          left = 20;
+        }
+        if (top + tooltipHeight > viewportHeight + scrollTop) {
+          top = viewportHeight + scrollTop - tooltipHeight - 20;
+        }
+        if (top < scrollTop + 20) {
+          top = scrollTop + 20;
         }
         
         setTooltipPosition({ top, left });
@@ -76,6 +95,7 @@ export const ViewSpecificGuidedTour = ({
         element.style.outline = '2px solid #3b82f6';
         element.style.outlineOffset = '2px';
         element.style.borderRadius = '8px';
+        element.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
         
         // Scroll to target
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -96,6 +116,7 @@ export const ViewSpecificGuidedTour = ({
         targetElement.style.outline = '';
         targetElement.style.outlineOffset = '';
         targetElement.style.borderRadius = '';
+        targetElement.style.backgroundColor = '';
       }
     };
   }, [currentStep, isActive, currentStepData, targetElement]);
@@ -103,6 +124,14 @@ export const ViewSpecificGuidedTour = ({
   if (!isActive || !currentStepData) return null;
 
   const Icon = currentStepData.icon;
+
+  const handleNext = () => {
+    if (isLastStep) {
+      onComplete();
+    } else {
+      onNext();
+    }
+  };
 
   return (
     <>
@@ -114,63 +143,62 @@ export const ViewSpecificGuidedTour = ({
         className="fixed z-[1001] w-80 max-w-[90vw]"
         style={{
           top: tooltipPosition.top,
-          left: tooltipPosition.left,
+          left: currentStepData.position === 'left' || currentStepData.position === 'right' 
+            ? tooltipPosition.left
+            : tooltipPosition.left - 160, // Center horizontally
           transform: currentStepData.position === 'left' || currentStepData.position === 'right' 
             ? 'translateY(-50%)' 
-            : 'translateX(-50%)'
+            : 'none'
         }}
       >
-        <Card className="shadow-xl border-0 bg-gray-900 text-white">
-          <CardContent className="p-4">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Icon className="w-4 h-4" />
+        <Card className="shadow-xl border-0 bg-white dark:bg-gray-900 text-foreground">
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="font-semibold text-sm">{currentStepData.title}</h3>
+                <div>
+                  <h3 className="font-semibold text-base">{currentStepData.title}</h3>
+                  <Badge variant="outline" className="text-xs mt-1">
+                    Step {currentStep + 1} of {steps.length}
+                  </Badge>
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-0 text-gray-300 hover:text-white hover:bg-gray-800"
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                 onClick={onClose}
               >
-                <X className="w-3 h-3" />
+                <X className="w-4 h-4" />
               </Button>
             </div>
             
-            <p className="text-sm text-gray-200 mb-4">
+            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
               {currentStepData.description}
             </p>
             
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Badge variant="outline" className="text-xs border-gray-600 text-gray-300">
-                  {currentStep + 1} of {steps.length}
-                </Badge>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onPrevious}
+                disabled={isFirstStep}
+                className="flex items-center space-x-2"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Previous</span>
+              </Button>
               
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onPrevious}
-                  disabled={isFirstStep}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800 disabled:opacity-50"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={isLastStep ? onComplete : onNext}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800"
-                >
-                  {isLastStep ? 'Finish' : 'Next'}
-                  {!isLastStep && <ChevronRight className="w-4 h-4 ml-1" />}
-                </Button>
-              </div>
+              <Button
+                onClick={handleNext}
+                size="sm"
+                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700"
+              >
+                <span>{isLastStep ? 'Finish Tour' : 'Next'}</span>
+                {!isLastStep && <ChevronRight className="w-4 h-4" />}
+              </Button>
             </div>
           </CardContent>
         </Card>
