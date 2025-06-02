@@ -1,241 +1,237 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/contexts/AuthContext";
-import { useInputValidation } from "@/hooks/useInputValidation";
-import { Camera, Save, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { Camera, Save, X, Edit2 } from "lucide-react";
 
 export const PersonalInfoSection = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Form validation
-  const fullName = useInputValidation(user?.user_metadata?.full_name || "", {
-    rules: { required: true, minLength: 2 },
-    validateOnChange: true,
-    debounceMs: 300
+  const [formData, setFormData] = useState({
+    fullName: user?.user_metadata?.full_name || '',
+    email: user?.email || '',
+    bio: user?.user_metadata?.bio || '',
+    location: user?.user_metadata?.location || '',
+    website: user?.user_metadata?.website || '',
+    phone: user?.user_metadata?.phone || ''
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const email = useInputValidation(user?.email || "", {
-    rules: { 
-      required: true, 
-      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    },
-    validateOnChange: true,
-    debounceMs: 300
-  });
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (formData.website && !/^https?:\/\/.+/.test(formData.website)) {
+      newErrors.website = 'Please enter a valid website URL';
+    }
 
-  const bio = useInputValidation("", {
-    rules: { maxLength: 500 },
-    validateOnChange: true,
-    debounceMs: 300
-  });
-
-  const [selectedTimezone, setSelectedTimezone] = useState("America/New_York");
-  const [selectedRole, setSelectedRole] = useState("member");
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSave = async () => {
-    setIsSaving(true);
-    
-    // Validate all fields
-    const isValid = fullName.forceValidate() && email.forceValidate() && bio.forceValidate();
-    
-    if (!isValid) {
-      setIsSaving(false);
+    if (!validateForm()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fix the errors before saving.",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Here you would typically update the user profile in your backend
       toast({
         title: "Profile Updated",
-        description: "Your profile information has been saved successfully.",
+        description: "Your personal information has been saved successfully.",
       });
-      
       setIsEditing(false);
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update profile. Please try again.",
+        description: "Failed to update your profile. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSaving(false);
     }
   };
 
   const handleCancel = () => {
-    fullName.handleChange(user?.user_metadata?.full_name || "");
-    email.handleChange(user?.email || "");
-    bio.handleChange("");
+    setFormData({
+      fullName: user?.user_metadata?.full_name || '',
+      email: user?.email || '',
+      bio: user?.user_metadata?.bio || '',
+      location: user?.user_metadata?.location || '',
+      website: user?.user_metadata?.website || '',
+      phone: user?.user_metadata?.phone || ''
+    });
+    setErrors({});
     setIsEditing(false);
   };
 
-  const timezones = [
-    { value: "America/New_York", label: "Eastern Time (GMT-5)" },
-    { value: "America/Chicago", label: "Central Time (GMT-6)" },
-    { value: "America/Denver", label: "Mountain Time (GMT-7)" },
-    { value: "America/Los_Angeles", label: "Pacific Time (GMT-8)" },
-    { value: "UTC", label: "UTC (GMT+0)" },
-    { value: "Europe/London", label: "London (GMT+0)" },
-    { value: "Europe/Paris", label: "Paris (GMT+1)" },
-    { value: "Asia/Tokyo", label: "Tokyo (GMT+9)" },
-  ];
+  const getUserInitials = () => {
+    if (!formData.fullName) return "U";
+    const names = formData.fullName.split(" ");
+    return names.length > 1 
+      ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
+      : names[0][0].toUpperCase();
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Avatar Upload Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Profile Picture</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-4">
-            <Avatar className="h-20 w-20 border-2 border-border">
-              <AvatarImage 
-                src={user?.user_metadata?.avatar_url} 
-                alt={user?.user_metadata?.full_name || "User"}
-              />
-              <AvatarFallback className="bg-gradient-to-br from-vibe-primary to-vibe-secondary text-white font-bold text-xl">
-                {user?.user_metadata?.full_name?.[0]?.toUpperCase() || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="space-y-2">
-              <Button variant="outline" size="sm" className="flex items-center gap-2">
-                <Camera className="w-4 h-4" />
-                Upload Photo
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                JPG, PNG or GIF. Max file size 2MB.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Personal Information Form */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Personal Information</CardTitle>
-          {!isEditing && (
-            <Button variant="outline" onClick={() => setIsEditing(true)}>
-              Edit
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Personal Information</CardTitle>
+          <CardDescription>
+            Update your personal details and profile information
+          </CardDescription>
+        </div>
+        {!isEditing && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditing(true)}
+            className="flex items-center gap-2"
+          >
+            <Edit2 className="w-4 h-4" />
+            Edit
+          </Button>
+        )}
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Profile Picture */}
+        <div className="flex items-center gap-4">
+          <Avatar className="w-20 h-20">
+            <AvatarImage 
+              src={user?.user_metadata?.avatar_url} 
+              alt={formData.fullName || "User"}
+            />
+            <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white font-semibold text-lg">
+              {getUserInitials()}
+            </AvatarFallback>
+          </Avatar>
+          {isEditing && (
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Camera className="w-4 h-4" />
+              Change Photo
             </Button>
           )}
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                value={fullName.value}
-                onChange={(e) => fullName.handleChange(e.target.value)}
-                onBlur={fullName.handleBlur}
-                disabled={!isEditing}
-                className={fullName.error ? "border-red-500" : ""}
-              />
-              {fullName.error && (
-                <p className="text-sm text-red-500">{fullName.error}</p>
-              )}
-            </div>
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email.value}
-                onChange={(e) => email.handleChange(e.target.value)}
-                onBlur={email.handleBlur}
-                disabled={!isEditing}
-                className={email.error ? "border-red-500" : ""}
-              />
-              {email.error && (
-                <p className="text-sm text-red-500">{email.error}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Select value={selectedRole} onValueChange={setSelectedRole} disabled={!isEditing}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="member">Member</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="moderator">Moderator</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="timezone">Time Zone</Label>
-              <Select value={selectedTimezone} onValueChange={setSelectedTimezone} disabled={!isEditing}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {timezones.map((tz) => (
-                    <SelectItem key={tz.value} value={tz.value}>
-                      {tz.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="fullName">Full Name *</Label>
+            <Input
+              id="fullName"
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              disabled={!isEditing}
+              className={errors.fullName ? "border-red-500" : ""}
+            />
+            {errors.fullName && (
+              <p className="text-sm text-red-500">{errors.fullName}</p>
+            )}
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="email">Email Address *</Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              disabled={!isEditing}
+              className={errors.email ? "border-red-500" : ""}
+            />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              disabled={!isEditing}
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              disabled={!isEditing}
+              placeholder="City, Country"
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="website">Website</Label>
+            <Input
+              id="website"
+              value={formData.website}
+              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+              disabled={!isEditing}
+              placeholder="https://yourwebsite.com"
+              className={errors.website ? "border-red-500" : ""}
+            />
+            {errors.website && (
+              <p className="text-sm text-red-500">{errors.website}</p>
+            )}
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
             <Label htmlFor="bio">Bio</Label>
             <Textarea
               id="bio"
-              placeholder="Tell us about yourself..."
-              value={bio.value}
-              onChange={(e) => bio.handleChange(e.target.value)}
-              onBlur={bio.handleBlur}
+              value={formData.bio}
+              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               disabled={!isEditing}
+              placeholder="Tell us a bit about yourself..."
               rows={4}
-              className={bio.error ? "border-red-500" : ""}
             />
-            {bio.error && (
-              <p className="text-sm text-red-500">{bio.error}</p>
-            )}
-            <p className="text-xs text-muted-foreground">
-              {bio.value.length}/500 characters
-            </p>
           </div>
+        </div>
 
-          {isEditing && (
-            <div className="flex gap-2 pt-4">
-              <Button 
-                onClick={handleSave} 
-                disabled={isSaving}
-                className="flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                {isSaving ? "Saving..." : "Save Changes"}
-              </Button>
-              <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
-                <X className="w-4 h-4 mr-2" />
-                Cancel
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        {/* Action Buttons */}
+        {isEditing && (
+          <div className="flex gap-2 pt-4">
+            <Button onClick={handleSave} className="flex items-center gap-2">
+              <Save className="w-4 h-4" />
+              Save Changes
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleCancel}
+              className="flex items-center gap-2"
+            >
+              <X className="w-4 h-4" />
+              Cancel
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
