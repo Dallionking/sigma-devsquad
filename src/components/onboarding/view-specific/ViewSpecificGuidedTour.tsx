@@ -179,13 +179,17 @@ export const ViewSpecificGuidedTour = ({
               {currentStepData.description}
             </p>
             
-            <div className="flex items-center justify-between">
+            {/* Navigation Buttons - Fixed layout */}
+            <div className="flex items-center justify-between gap-3 mt-6">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={onPrevious}
                 disabled={isFirstStep}
-                className="flex items-center space-x-2"
+                className={cn(
+                  "flex items-center gap-2 min-w-[80px]",
+                  isFirstStep && "opacity-50 cursor-not-allowed"
+                )}
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Previous</span>
@@ -194,7 +198,7 @@ export const ViewSpecificGuidedTour = ({
               <Button
                 onClick={handleNext}
                 size="sm"
-                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white min-w-[80px]"
               >
                 <span>{isLastStep ? 'Finish Tour' : 'Next'}</span>
                 {!isLastStep && <ChevronRight className="w-4 h-4" />}
