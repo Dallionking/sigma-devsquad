@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { StructuredLeftSidebar } from "@/components/navigation/StructuredLeftSidebar";
 import { Header } from "@/components/dashboard/Header";
 import { SystemFooter } from "@/components/dashboard/SystemFooter";
 import { RealtimeNotifications } from "@/components/collaboration/RealtimeNotifications";
@@ -24,6 +25,7 @@ import { Team, AgentProfile } from "@/types/teams";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
+import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -84,39 +86,55 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Use Unified Layout with Sidebar */}
-      <UnifiedMainLayout>
-        {/* Optimized Header with Status Sub-Header - More compact */}
-        <div className="relative">
-          <Header 
-            viewMode={viewMode} 
-            onViewModeChange={setViewMode}
-            agents={agents || []}
-            sidebarCollapsed={sidebarCollapsed}
-            onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-            showTeamView={showTeamView}
-          />
-          
-          {/* Quick Actions Bar - Smaller */}
-          <div className="absolute top-1 right-3 flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSampleProjects(true)}
-              className="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
-              title="Browse sample projects"
-            >
-              <Star className="w-3 h-3" />
-            </Button>
-            <ContextualHelp context="dashboard" />
+      {/* Import the structured sidebar CSS */}
+      <link rel="stylesheet" href="/src/styles/structured-sidebar.css" />
+      
+      {/* Structured Left Sidebar */}
+      <StructuredLeftSidebar
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        activeAgents={agents?.filter(a => a.status === 'working').length || 0}
+        totalAgents={agents?.length || 0}
+      />
+      
+      {/* Main Content Area - Adjusted for sidebar */}
+      <div className={cn(
+        "flex-1 flex flex-col transition-all duration-300 ease-in-out",
+        sidebarCollapsed ? "ml-16" : "ml-64"
+      )}>
+        {/* Simplified Header - Remove overlapping navigation */}
+        <div className="relative border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
+          <div className="flex h-12 items-center justify-between px-6">
+            {/* Page Title */}
+            <div className="flex items-center space-x-4">
+              <h1 className="text-lg font-semibold">Dashboard</h1>
+              {/* Status Badge */}
+              <Badge variant="outline" className="text-xs">
+                {agents?.filter(a => a.status === 'working').length || 0} active agents
+              </Badge>
+            </div>
+            
+            {/* Quick Actions */}
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSampleProjects(true)}
+                className="text-muted-foreground hover:text-foreground"
+                title="Browse sample projects"
+              >
+                <Star className="w-4 h-4" />
+              </Button>
+              <ContextualHelp context="dashboard" />
+            </div>
           </div>
         </div>
         
-        {/* Real-time Notifications - More compact */}
-        <div className="px-3 py-1">
+        {/* Real-time Notifications - Compact */}
+        <div className="px-6 py-2">
           <RealtimeNotifications />
         </div>
         
@@ -128,13 +146,13 @@ const Dashboard = () => {
 
         {/* Onboarding Progress */}
         {!progress.isOnboardingComplete && (
-          <div className="px-4 py-2">
+          <div className="px-6 py-2">
             <OnboardingProgress />
           </div>
         )}
         
-        {/* Main Content - Keep existing layout structure but more compact */}
-        <div className="px-2">
+        {/* Main Content */}
+        <div className="flex-1 px-6 pb-6">
           <MainLayout
             showTeamView={showTeamView}
             sidebarCollapsed={sidebarCollapsed}
@@ -161,7 +179,7 @@ const Dashboard = () => {
           />
         </div>
         
-        {/* Enhanced footer with Vibe branding and smooth animations */}
+        {/* Enhanced footer */}
         {showFooter && (
           <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0">
             <SystemFooter 
@@ -170,9 +188,9 @@ const Dashboard = () => {
             />
           </div>
         )}
-      </UnifiedMainLayout>
+      </div>
       
-      {/* Enhanced floating action button with Vibe styling */}
+      {/* Enhanced floating action button */}
       <FloatingActionButton />
 
       {/* Sample Projects Modal */}
