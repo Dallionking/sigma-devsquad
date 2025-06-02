@@ -1,133 +1,7 @@
 
 /* Navigation Bar Optimization Styles */
 
-/* Left Navigation Container */
-.left-nav-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: hsl(var(--sidebar-background));
-  border-right: 1px solid hsl(var(--sidebar-border));
-  position: relative;
-  z-index: 10;
-  transition: width 0.3s ease;
-  flex-shrink: 0;
-}
-
-.left-nav-container.collapsed {
-  width: 64px;
-  overflow: hidden;
-}
-
-/* Navigation Toggle Button */
-.nav-collapse-toggle {
-  position: absolute;
-  top: 16px;
-  right: -12px;
-  width: 24px;
-  height: 24px;
-  background-color: hsl(var(--background));
-  border: 1px solid hsl(var(--border));
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 20;
-  transition: all 0.2s ease;
-}
-
-.nav-collapse-toggle:hover {
-  background-color: hsl(var(--accent));
-  border-color: hsl(var(--accent-foreground));
-}
-
-/* Logo Container */
-.logo-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-  position: relative;
-}
-
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-}
-
-.logo-text {
-  font-size: 16px;
-  font-weight: 600;
-  color: hsl(var(--foreground));
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Team Status Container */
-.team-status-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.team-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: hsl(var(--foreground));
-  margin-bottom: 4px;
-}
-
-.team-subtitle {
-  font-size: 12px;
-  color: hsl(var(--muted-foreground));
-  margin-bottom: 8px;
-}
-
-/* Status Indicators */
-.status-indicators {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  color: hsl(var(--muted-foreground));
-  position: relative;
-}
-
-.status-icon {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-
-/* Tooltips */
-.tooltip {
-  position: absolute;
-  left: 100%;
-  margin-left: 8px;
-  background-color: hsl(var(--popover));
-  color: hsl(var(--popover-foreground));
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 30;
-  border: 1px solid hsl(var(--border));
-}
-
-/* Main Header Container */
+/* Navigation Container Base Styles */
 .navigation-container {
   display: flex;
   align-items: center;
@@ -201,6 +75,11 @@
   height: 12px;
 }
 
+.nav-button.has-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
 /* Button Groups */
 .button-group {
   display: flex;
@@ -214,6 +93,26 @@
 .button-group .nav-button {
   margin: 0 1px;
   border-radius: 3px;
+}
+
+/* Action Button Styling */
+.action-button {
+  height: 24px;
+  padding: 0 6px;
+  margin: 0 1px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Visual Hierarchy */
@@ -254,11 +153,19 @@
   .nav-button-text {
     max-width: 60px;
   }
+  
+  .nav-section.left {
+    max-width: 240px;
+  }
 }
 
 @media (max-width: 992px) {
   .nav-button-text {
     max-width: 50px;
+  }
+  
+  .nav-section.left {
+    max-width: 200px;
   }
   
   .button-group {
@@ -282,32 +189,57 @@
     width: 20px;
   }
   
-  .left-nav-container {
-    width: 64px !important;
+  .action-button {
+    height: 20px;
+    padding: 0 4px;
+    font-size: 10px;
   }
   
-  .left-nav-container .logo-text,
-  .left-nav-container .team-name,
-  .left-nav-container .team-subtitle {
+  .nav-section.left {
+    max-width: 120px;
+  }
+  
+  .nav-section.right {
+    max-width: 80px;
+  }
+}
+
+/* Overflow handling */
+.overflow-menu {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .overflow-menu {
+    display: block;
+  }
+  
+  .secondary-button {
     display: none;
   }
-  
-  .left-nav-container .logo-container {
-    justify-content: center;
-  }
-  
-  .left-nav-container .status-indicators {
-    align-items: center;
-  }
 }
 
-/* Remove unnecessary elements */
-.breadcrumb-navigation {
-  display: none;
+/* Text Truncation Improvements */
+.project-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
 }
 
-.tab-navigation {
-  display: none;
+.dropdown-icon {
+  margin-left: 4px;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+/* Space Optimization */
+.flex-spacer {
+  flex: 1 1 auto;
+  min-width: 4px;
+  max-width: 16px;
 }
 
 /* Status Indicators */

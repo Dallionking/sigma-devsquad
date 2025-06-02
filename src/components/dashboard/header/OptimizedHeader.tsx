@@ -40,43 +40,41 @@ export const OptimizedHeader = ({
   };
 
   return (
-    <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      <div className="flex h-full">
-        {/* Left Navigation Section - Fixed Width */}
-        <HeaderLogo 
-          isDashboardPage={isDashboardPage}
-          sidebarCollapsed={sidebarCollapsed}
-          onSidebarToggle={onSidebarToggle}
-          activeAgents={activeAgents}
-          totalAgents={totalAgents}
-        />
-        
-        {/* Main Header Content - Flexible */}
-        <div className="flex-1 border-b">
-          <div className="flex h-9 items-center justify-between px-2 gap-1 max-w-full overflow-hidden">
-            {/* Mobile Project Switcher - Only visible on mobile */}
-            <div className="lg:hidden flex items-center gap-1 flex-shrink-0">
-              <MobileProjectSwitcher />
-            </div>
-            
-            {/* Center Section: Optimized Navigation */}
-            <div className="flex-1 flex justify-center min-w-0 max-w-full mx-1">
-              <OptimizedConsolidatedNavigation 
-                viewMode={viewMode}
-                onViewModeChange={onViewModeChange}
-                notificationCounts={notificationCounts}
-              />
-            </div>
-            
-            {/* Right Section: Optimized Actions */}
-            <div className="flex items-center gap-1 flex-shrink-0 max-w-20">
-              <OptimizedActionButtons />
-            </div>
+    <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      {/* Main Header - Optimized structure with reduced gaps */}
+      <div className="flex h-9 items-center justify-between px-1 lg:px-2 gap-1 max-w-full overflow-hidden">
+        {/* Left Section: Logo and Sidebar Toggle - Reduced max width */}
+        <div className="flex items-center gap-1 flex-shrink-0 min-w-0 max-w-48">
+          <HeaderLogo 
+            isDashboardPage={isDashboardPage}
+            sidebarCollapsed={sidebarCollapsed}
+            onSidebarToggle={onSidebarToggle}
+            activeAgents={activeAgents}
+            totalAgents={totalAgents}
+          />
+          
+          {/* Mobile Project Switcher */}
+          <div className="lg:hidden max-w-16">
+            <MobileProjectSwitcher />
           </div>
+        </div>
+        
+        {/* Center Section: Optimized Navigation - Reduced margins */}
+        <div className="flex-1 flex justify-center min-w-0 max-w-full mx-1">
+          <OptimizedConsolidatedNavigation 
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            notificationCounts={notificationCounts}
+          />
+        </div>
+        
+        {/* Right Section: Optimized Actions - Reduced max width */}
+        <div className="flex items-center gap-1 flex-shrink-0 max-w-20">
+          <OptimizedActionButtons />
         </div>
       </div>
       
-      {/* Status Sub-Header - Full Width */}
+      {/* Status Sub-Header */}
       <StatusSubHeader 
         agents={agents}
         showTeamView={showTeamView}

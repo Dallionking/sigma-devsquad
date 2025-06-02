@@ -24,6 +24,10 @@ import {
 } from "lucide-react";
 import { ViewMode } from "@/types";
 import { cn } from "@/lib/utils";
+import { ProjectSwitcher } from "@/components/projects/ProjectSwitcher";
+import { TeamSwitcher } from "@/components/navigation/TeamSwitcher";
+import { useTeams } from "@/contexts/TeamContext";
+import { useState } from "react";
 
 interface OptimizedConsolidatedNavigationProps {
   viewMode: ViewMode;
@@ -43,6 +47,8 @@ export const OptimizedConsolidatedNavigation = ({
 }: OptimizedConsolidatedNavigationProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { teams } = useTeams();
+  const [currentTeamId, setCurrentTeamId] = useState<string>(teams[0]?.id || "");
   
   const isLLMPage = location.pathname === "/llm-integration";
   const isAgentConfigPage = location.pathname === "/agent-configuration";
@@ -82,9 +88,23 @@ export const OptimizedConsolidatedNavigation = ({
   ];
 
   return (
-    <div className="flex items-center justify-center w-full max-w-full h-8 box-border overflow-hidden">
-      {/* Center Section: PRIMARY NAVIGATION - Full width centered */}
-      <div className="flex-1 flex justify-center items-center min-w-0 max-w-2xl">
+    <div className="flex items-center justify-between w-full max-w-full h-8 px-2 box-border overflow-hidden">
+      {/* Left Section: Context Switchers - Reduced max width */}
+      <div className="flex items-center gap-1 flex-shrink-0 min-w-0 max-w-64">
+        <div className="hidden lg:block max-w-36">
+          <ProjectSwitcher />
+        </div>
+        <div className="hidden lg:block max-w-28">
+          <TeamSwitcher 
+            currentTeamId={currentTeamId}
+            onTeamChange={setCurrentTeamId}
+            compact
+          />
+        </div>
+      </div>
+
+      {/* Center Section: PRIMARY NAVIGATION - Optimized spacing */}
+      <div className="flex-1 flex justify-center items-center min-w-0 max-w-md mx-1">
         <nav className="flex items-center gap-0.5 bg-muted/20 rounded-md p-0.5">
           {primaryNavItems.map((item) => {
             const Icon = item.icon;
@@ -110,7 +130,7 @@ export const OptimizedConsolidatedNavigation = ({
       </div>
 
       {/* Right Section: Secondary Actions - Compact */}
-      <div className="flex items-center gap-0.5 flex-shrink-0 ml-2">
+      <div className="flex items-center gap-0.5 flex-shrink-0">
         {/* Configuration Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
