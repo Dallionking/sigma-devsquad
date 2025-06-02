@@ -1,10 +1,6 @@
 
-import { CommunicationHub } from "./CommunicationHub";
+import { ComprehensiveCommunicationHub } from "./ComprehensiveCommunicationHub";
 
 export const ResponsiveUnifiedChatInterface = () => {
-  return (
-    <div className="h-full">
-      <CommunicationHub />
-    </div>
-  );
+  return <ComprehensiveCommunicationHub />;
 };
