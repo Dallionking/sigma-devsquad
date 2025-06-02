@@ -20,7 +20,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCollapsibleSidebar } from '@/hooks/useCollapsibleSidebar';
-import { SidebarItem } from './SidebarItem';
+import { useResponsiveNavigation } from '@/hooks/useResponsiveNavigation';
+import { TouchOptimizedNavItem } from './TouchOptimizedNavItem';
+import { MobileHamburgerMenu } from './MobileHamburgerMenu';
 import { RecentlyVisitedSection } from './RecentlyVisitedSection';
 import { FavoritesSection } from './FavoritesSection';
 import { RoleBasedNavigationPresets } from './RoleBasedNavigationPresets';
@@ -62,11 +64,13 @@ export const EnhancedUnifiedSidebar = ({ className }: EnhancedUnifiedSidebarProp
   const location = useLocation();
   const navigate = useNavigate();
   const { currentPreset, getFilteredNavigationItems } = useContextualNavigation();
+  const { showHamburger, isMobile } = useResponsiveNavigation();
   
   const { isCollapsed, toggleSidebar } = useCollapsibleSidebar({
     defaultCollapsed: false,
     keyboardShortcut: 'b',
-    storageKey: 'enhanced-unified-sidebar-collapsed'
+    storageKey: 'enhanced-unified-sidebar-collapsed',
+    autoCollapseOnMobile: true
   });
 
   // Get filtered items based on current preset
@@ -86,35 +90,39 @@ export const EnhancedUnifiedSidebar = ({ className }: EnhancedUnifiedSidebarProp
     navigate(path);
   };
 
-  return (
-    <TooltipProvider delayDuration={300}>
+  const sidebarContent = (
+    <div className={cn(
+      "bg-sidebar-background border-r border-sidebar-border transition-all duration-300 ease-in-out h-full flex flex-col shadow-sm",
+      !showHamburger && (isCollapsed ? "w-16" : "w-80"),
+      showHamburger && "w-full border-r-0"
+    )}>
+      {/* Header with toggle - hide toggle on mobile hamburger menu */}
       <div className={cn(
-        "bg-sidebar-background border-r border-sidebar-border transition-all duration-300 ease-in-out h-full flex flex-col shadow-sm",
-        isCollapsed ? "w-16" : "w-80",
-        className
+        "flex-shrink-0 p-3 border-b border-sidebar-border bg-sidebar-background/95 backdrop-blur-sm",
+        showHamburger && "border-b-0 p-4"
       )}>
-        {/* Header with toggle */}
-        <div className="flex-shrink-0 p-3 border-b border-sidebar-border bg-sidebar-background/95 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            {!isCollapsed && (
-              <div>
-                <h2 className="text-lg font-semibold text-sidebar-foreground animate-in fade-in-50 duration-200">
-                  Navigation
-                </h2>
-                {currentPreset && (
-                  <p className="text-xs text-muted-foreground">
-                    {currentPreset.name} preset
-                  </p>
-                )}
-              </div>
-            )}
+        <div className="flex items-center justify-between">
+          {!isCollapsed && (
+            <div>
+              <h2 className="text-lg font-semibold text-sidebar-foreground animate-in fade-in-50 duration-200">
+                Navigation
+              </h2>
+              {currentPreset && (
+                <p className="text-xs text-muted-foreground">
+                  {currentPreset.name} preset
+                </p>
+              )}
+            </div>
+          )}
+          
+          {!showHamburger && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm"
                   onClick={toggleSidebar}
-                  className="p-1.5 h-8 w-8 flex-shrink-0 hover:bg-sidebar-accent rounded-md transition-colors"
+                  className="touch-target min-h-[44px] min-w-[44px] p-1.5 flex-shrink-0 hover:bg-sidebar-accent rounded-md transition-colors"
                 >
                   {isCollapsed ? (
                     <PanelLeft className="w-4 h-4" />
@@ -129,73 +137,90 @@ export const EnhancedUnifiedSidebar = ({ className }: EnhancedUnifiedSidebarProp
                 </p>
               </TooltipContent>
             </Tooltip>
-          </div>
+          )}
+        </div>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto scroll-area-enhanced">
+        {/* Primary Navigation */}
+        <div className={cn("p-3 space-y-1", showHamburger && "px-4")}>
+          {!isCollapsed && (
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 animate-in fade-in-50 duration-200">
+              Main
+            </h3>
+          )}
+          {primaryItems.map((item) => (
+            <TouchOptimizedNavItem
+              key={item.id}
+              icon={item.icon}
+              label={item.label}
+              isActive={location.pathname === item.path}
+              isCollapsed={isCollapsed && !showHamburger}
+              onClick={() => handleNavigation(item.path)}
+              variant="primary"
+            />
+          ))}
         </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Primary Navigation */}
-          <div className="p-3 space-y-1">
+        {/* Favorites Section */}
+        <FavoritesSection isCollapsed={isCollapsed && !showHamburger} />
+
+        {/* Recently Visited Section */}
+        <RecentlyVisitedSection isCollapsed={isCollapsed && !showHamburger} />
+
+        {/* Secondary Navigation - Grouped by Category */}
+        {Object.entries(groupedSecondaryItems).map(([category, items]) => (
+          <div key={category} className={cn("p-3 border-t border-sidebar-border/50", showHamburger && "px-4")}>
             {!isCollapsed && (
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 animate-in fade-in-50 duration-200">
-                Main
+                {category}
               </h3>
             )}
-            {primaryItems.map((item) => (
-              <SidebarItem
-                key={item.id}
-                icon={item.icon}
-                label={item.label}
-                isActive={location.pathname === item.path}
-                isCollapsed={isCollapsed}
-                onClick={() => handleNavigation(item.path)}
-                variant="primary"
-              />
-            ))}
-          </div>
-
-          {/* Favorites Section */}
-          <FavoritesSection isCollapsed={isCollapsed} />
-
-          {/* Recently Visited Section */}
-          <RecentlyVisitedSection isCollapsed={isCollapsed} />
-
-          {/* Secondary Navigation - Grouped by Category */}
-          {Object.entries(groupedSecondaryItems).map(([category, items]) => (
-            <div key={category} className="p-3 border-t border-sidebar-border/50">
-              {!isCollapsed && (
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 animate-in fade-in-50 duration-200">
-                  {category}
-                </h3>
-              )}
-              <div className="space-y-1">
-                {items.map((item) => (
-                  <SidebarItem
-                    key={item.id}
-                    icon={item.icon}
-                    label={item.label}
-                    isActive={location.pathname === item.path}
-                    isCollapsed={isCollapsed}
-                    onClick={() => handleNavigation(item.path)}
-                    variant="secondary"
-                  />
-                ))}
-              </div>
+            <div className="space-y-1">
+              {items.map((item) => (
+                <TouchOptimizedNavItem
+                  key={item.id}
+                  icon={item.icon}
+                  label={item.label}
+                  isActive={location.pathname === item.path}
+                  isCollapsed={isCollapsed && !showHamburger}
+                  onClick={() => handleNavigation(item.path)}
+                  variant="secondary"
+                />
+              ))}
             </div>
-          ))}
+          </div>
+        ))}
 
-          {/* Role-based Navigation Presets */}
-          <RoleBasedNavigationPresets />
+        {/* Role-based Navigation Presets */}
+        <RoleBasedNavigationPresets />
+      </div>
+
+      {/* Footer - hide on mobile hamburger menu */}
+      {!isCollapsed && !showHamburger && (
+        <div className="flex-shrink-0 border-t border-sidebar-border p-3 animate-in fade-in-50 duration-200">
+          <div className="text-xs text-muted-foreground text-center">
+            <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs">Ctrl+B</kbd> to toggle
+          </div>
         </div>
+      )}
+    </div>
+  );
 
-        {/* Footer */}
-        {!isCollapsed && (
-          <div className="flex-shrink-0 border-t border-sidebar-border p-3 animate-in fade-in-50 duration-200">
-            <div className="text-xs text-muted-foreground text-center">
-              <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs">Ctrl+B</kbd> to toggle
-            </div>
-          </div>
-        )}
+  // Render mobile hamburger menu or desktop sidebar
+  if (showHamburger) {
+    return (
+      <MobileHamburgerMenu className={className}>
+        {sidebarContent}
+      </MobileHamburgerMenu>
+    );
+  }
+
+  return (
+    <TooltipProvider delayDuration={300}>
+      <div className={className}>
+        {sidebarContent}
       </div>
     </TooltipProvider>
   );
