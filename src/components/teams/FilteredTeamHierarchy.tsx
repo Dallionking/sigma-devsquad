@@ -6,7 +6,7 @@ import { useTeamFilters } from '@/hooks/useTeamFilters';
 import { useTeams } from '@/contexts/TeamContext';
 import { Team, AgentProfile } from '@/types/teams';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { Users, Filter, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
@@ -39,12 +39,13 @@ export const FilteredTeamHierarchy = ({
     applyPreset
   } = useTeamFilters(teams);
 
-  console.log('FilteredTeamHierarchy rendered:', {
+  console.log('FilteredTeamHierarchy Debug:', {
     showFilters,
     activeFilterCount,
-    teamsCount: teams.length,
+    totalTeams: teams.length,
     filteredTeamsCount: filteredTeams.length,
-    filtersExpanded
+    filtersExpanded,
+    teams: teams.map(t => ({ id: t.id, name: t.name, type: t.type, composition: t.composition }))
   });
 
   return (
@@ -140,6 +141,36 @@ export const FilteredTeamHierarchy = ({
           </CardTitle>
         </CardHeader>
       </Card>
+
+      {/* Debug Info - Show if no teams */}
+      {teams.length === 0 && (
+        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/50">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
+              <AlertCircle className="w-4 h-4" />
+              <span className="text-sm font-medium">No teams found in the system</span>
+            </div>
+            <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+              Teams need to be created first before they can be managed. Check the team creation functionality.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Show filtered results info */}
+      {teams.length > 0 && filteredTeams.length === 0 && activeFilterCount > 0 && (
+        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/50">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
+              <AlertCircle className="w-4 h-4" />
+              <span className="text-sm font-medium">No teams match the current filters</span>
+            </div>
+            <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+              Try clearing some filters or adjusting your selection criteria.
+            </p>
+          </CardContent>
+        </Card>
+      )}
       
       {/* Team Hierarchy */}
       <div className="flex-1 min-h-0 overflow-hidden">

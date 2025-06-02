@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,6 +32,12 @@ export const TeamHierarchy = ({
   const { teams: allTeams, getTeamMembers, getAgentProfileById } = useTeams();
   const teams = teamsOverride || allTeams;
   const [expandedTeams, setExpandedTeams] = useState<Set<string>>(new Set());
+
+  console.log('TeamHierarchy Debug:', {
+    teamsOverride: !!teamsOverride,
+    teamsCount: teams.length,
+    teams: teams.map(t => ({ id: t.id, name: t.name }))
+  });
 
   const toggleTeamExpansion = (teamId: string) => {
     const newExpanded = new Set(expandedTeams);
@@ -79,6 +84,17 @@ export const TeamHierarchy = ({
           <Plus className="w-4 h-4" />
         </Button>
       </div>
+      
+      {/* Debug: Show if no teams */}
+      {teams.length === 0 && (
+        <div className="text-center py-8">
+          <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground">No teams to display</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Create teams to see them here with management options
+          </p>
+        </div>
+      )}
       
       <div className="space-y-2">
         {teams.map((team) => {
@@ -142,15 +158,17 @@ export const TeamHierarchy = ({
                       </div>
                     </div>
                     
-                    {/* Manage Team Button */}
+                    {/* Manage Team Button - MORE VISIBLE */}
                     <TeamManagementModal team={team}>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
-                        className="h-6 w-6 p-0 hover:bg-white/20 opacity-70 hover:opacity-100"
+                        className="h-8 px-3 hover:bg-primary/10 border-primary/20"
                         onClick={(e) => e.stopPropagation()}
+                        title="Manage Team"
                       >
-                        <Settings className="w-3 h-3" />
+                        <Settings className="w-4 h-4 mr-1" />
+                        <span className="text-xs">Manage</span>
                       </Button>
                     </TeamManagementModal>
                   </div>
