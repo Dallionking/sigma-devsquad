@@ -16,7 +16,6 @@ import { SignOutConfirmationDialog } from "@/components/auth/SignOutConfirmation
 import { 
   User, 
   Settings, 
-  Users, 
   HelpCircle, 
   LogOut 
 } from "lucide-react";
@@ -45,7 +44,6 @@ export const UserProfileDropdown = () => {
           variant: "destructive",
         });
       } else {
-        // Clear authentication tokens and redirect
         toast({
           title: "Signed Out Successfully",
           description: "You have been signed out of your account.",
@@ -76,30 +74,21 @@ export const UserProfileDropdown = () => {
       : names[0][0].toUpperCase();
   };
 
-  const dropdownItems = [
+  const menuItems = [
     { 
       icon: User, 
       label: "Profile", 
-      onClick: () => handleNavigation("/profile"),
-      description: "Manage your profile settings"
+      onClick: () => handleNavigation("/profile")
     },
     { 
       icon: Settings, 
       label: "Settings", 
-      onClick: () => handleNavigation("/settings"),
-      description: "Account preferences"
-    },
-    { 
-      icon: Users, 
-      label: "Teams", 
-      onClick: () => handleNavigation("/teams"),
-      description: "Manage your teams"
+      onClick: () => handleNavigation("/settings")
     },
     { 
       icon: HelpCircle, 
-      label: "Help", 
-      onClick: () => handleNavigation("/help"),
-      description: "Get support and documentation"
+      label: "Help & Support", 
+      onClick: () => handleNavigation("/help")
     },
   ];
 
@@ -111,15 +100,22 @@ export const UserProfileDropdown = () => {
         <DropdownMenuTrigger asChild>
           <Button 
             variant="ghost" 
-            className="relative h-10 w-10 rounded-full transition-all duration-200 hover:scale-105 hover:bg-accent/80 focus:ring-2 focus:ring-vibe-primary focus:ring-offset-2"
+            className={cn(
+              "relative rounded-full p-0 transition-all duration-200",
+              "hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            )}
+            style={{ width: '40px', height: '40px' }}
           >
-            <Avatar className="h-9 w-9 border-2 border-transparent hover:border-vibe-primary/20 transition-all duration-200">
+            <Avatar 
+              className="border-2 border-transparent hover:border-primary/20 transition-all duration-200"
+              style={{ width: '40px', height: '40px' }}
+            >
               <AvatarImage 
                 src={user.user_metadata?.avatar_url} 
                 alt={user.user_metadata?.full_name || "User"}
                 className="object-cover"
               />
-              <AvatarFallback className="bg-gradient-to-br from-vibe-primary to-vibe-secondary text-white font-semibold text-sm">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white font-semibold text-sm">
                 {getUserInitials()}
               </AvatarFallback>
             </Avatar>
@@ -127,26 +123,34 @@ export const UserProfileDropdown = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent 
           align="end" 
-          className="w-64 bg-background/95 backdrop-blur-md border border-border/50 shadow-lg"
+          className={cn(
+            "w-56 bg-background/95 backdrop-blur-md shadow-lg",
+            "animate-in slide-in-from-top-2 duration-300",
+            "data-[state=closed]:animate-out data-[state=closed]:slide-out-to-top-2 data-[state=closed]:duration-300"
+          )}
+          style={{ 
+            borderRadius: '8px',
+            border: '2px solid hsl(var(--border))'
+          }}
           sideOffset={8}
         >
           {/* User Info Header */}
           <div className="px-3 py-3 border-b border-border/50">
             <div className="flex items-center space-x-3">
-              <Avatar className="h-10 w-10">
+              <Avatar style={{ width: '32px', height: '32px' }}>
                 <AvatarImage 
                   src={user.user_metadata?.avatar_url} 
                   alt={user.user_metadata?.full_name || "User"}
                 />
-                <AvatarFallback className="bg-gradient-to-br from-vibe-primary to-vibe-secondary text-white font-semibold">
+                <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white font-semibold text-xs">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
-              <div className="space-y-1">
-                <p className="text-sm font-medium leading-none">
+              <div className="space-y-1 min-w-0 flex-1">
+                <p className="text-sm font-medium leading-none truncate">
                   {user.user_metadata?.full_name || "User"}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground truncate">
                   {user.email}
                 </p>
               </div>
@@ -155,7 +159,7 @@ export const UserProfileDropdown = () => {
 
           {/* Menu Items */}
           <div className="py-2">
-            {dropdownItems.map((item, index) => {
+            {menuItems.map((item, index) => {
               const Icon = item.icon;
               return (
                 <DropdownMenuItem
@@ -168,11 +172,8 @@ export const UserProfileDropdown = () => {
                     "group"
                   )}
                 >
-                  <Icon className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-vibe-primary transition-colors duration-200" />
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{item.label}</div>
-                    <div className="text-xs text-muted-foreground">{item.description}</div>
-                  </div>
+                  <Icon className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
+                  <span className="text-sm font-medium">{item.label}</span>
                 </DropdownMenuItem>
               );
             })}
@@ -193,7 +194,7 @@ export const UserProfileDropdown = () => {
               )}
             >
               <LogOut className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-200" />
-              <div className="text-sm font-medium">Sign Out</div>
+              <span className="text-sm font-medium">Sign Out</span>
             </DropdownMenuItem>
           </div>
         </DropdownMenuContent>
