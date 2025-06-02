@@ -5,13 +5,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Team } from '@/types/teams';
-import { BarChart3, TrendingUp, Clock, Target, RefreshCw, AlertTriangle } from 'lucide-react';
+import { BarChart3, TrendingUp, Clock, Target, RefreshCw, AlertTriangle, Users, Brain, GitBranch, Bug } from 'lucide-react';
 import { TeamKPIOverview } from './TeamKPIOverview';
 import { TeamPerformanceFilters } from './TeamPerformanceFilters';
 import { TeamPerformanceCharts } from './TeamPerformanceCharts';
 import { TeamPerformanceComparison } from './TeamPerformanceComparison';
 import { TeamPerformanceExport } from './TeamPerformanceExport';
+import { IndividualContributionMetrics } from './analytics/IndividualContributionMetrics';
+import { ActivityHeatmap } from './analytics/ActivityHeatmap';
+import { SkillUtilizationTracking } from './analytics/SkillUtilizationTracking';
+import { CollaborationNetworkVisualization } from './analytics/CollaborationNetworkVisualization';
+import { MilestoneCompletionVisualization } from './progress/MilestoneCompletionVisualization';
+import { DeadlineAdherenceMetrics } from './progress/DeadlineAdherenceMetrics';
+import { ScopeChangeTracking } from './progress/ScopeChangeTracking';
+import { QualityMetricsDashboard } from './progress/QualityMetricsDashboard';
 import { useTeamPerformanceData } from '@/hooks/useTeamPerformanceData';
+import { useTeams } from '@/contexts/TeamContext';
 import { useToast } from '@/hooks/use-toast';
 
 export type TimeRange = 'today' | 'week' | 'month' | 'custom';
@@ -28,6 +37,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
   const [activeTab, setActiveTab] = useState('overview');
 
   const { toast } = useToast();
+  const { getTeamMembers } = useTeams();
 
   const { 
     metrics, 
@@ -40,6 +50,8 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
     timeRange, 
     customDateRange 
   });
+
+  const teamMembers = getTeamMembers(team.id);
 
   useEffect(() => {
     console.log('TeamPerformanceDashboard mounted for team:', team.name);
@@ -133,7 +145,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
 
       {/* Performance Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 max-w-md">
+        <TabsList className="grid w-full grid-cols-8 max-w-4xl">
           <TabsTrigger value="overview" className="flex items-center gap-1 text-xs">
             <TrendingUp className="w-3 h-3" />
             <span>Overview</span>
@@ -149,6 +161,22 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           <TabsTrigger value="comparison" className="flex items-center gap-1 text-xs">
             <BarChart3 className="w-3 h-3" />
             <span>Compare</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-1 text-xs">
+            <Users className="w-3 h-3" />
+            <span>Analytics</span>
+          </TabsTrigger>
+          <TabsTrigger value="skills" className="flex items-center gap-1 text-xs">
+            <Brain className="w-3 h-3" />
+            <span>Skills</span>
+          </TabsTrigger>
+          <TabsTrigger value="progress" className="flex items-center gap-1 text-xs">
+            <GitBranch className="w-3 h-3" />
+            <span>Progress</span>
+          </TabsTrigger>
+          <TabsTrigger value="quality" className="flex items-center gap-1 text-xs">
+            <Bug className="w-3 h-3" />
+            <span>Quality</span>
           </TabsTrigger>
         </TabsList>
 
@@ -192,6 +220,52 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
             comparisonType={comparisonType}
             customDateRange={customDateRange}
             metrics={metrics}
+          />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-4 space-y-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <IndividualContributionMetrics 
+              teamMembers={teamMembers}
+              timeRange={timeRange}
+            />
+            <ActivityHeatmap 
+              teamId={team.id}
+              timeRange={timeRange}
+            />
+          </div>
+          <CollaborationNetworkVisualization 
+            teamMembers={teamMembers}
+            timeRange={timeRange}
+          />
+        </TabsContent>
+
+        <TabsContent value="skills" className="mt-4">
+          <SkillUtilizationTracking 
+            teamMembers={teamMembers}
+            timeRange={timeRange}
+          />
+        </TabsContent>
+
+        <TabsContent value="progress" className="mt-4 space-y-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <MilestoneCompletionVisualization 
+              timeRange={timeRange}
+            />
+            <DeadlineAdherenceMetrics 
+              teamId={team.id}
+              timeRange={timeRange}
+            />
+          </div>
+          <ScopeChangeTracking 
+            timeRange={timeRange}
+          />
+        </TabsContent>
+
+        <TabsContent value="quality" className="mt-4">
+          <QualityMetricsDashboard 
+            teamId={team.id}
+            timeRange={timeRange}
           />
         </TabsContent>
       </Tabs>
