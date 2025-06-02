@@ -1,0 +1,261 @@
+
+/* Navigation Bar Optimization Styles */
+
+/* Navigation Container Base Styles */
+.navigation-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100vw;
+  height: 32px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Navigation Sections */
+.nav-section {
+  display: flex;
+  align-items: center;
+}
+
+.nav-section.left {
+  flex: 0 0 auto;
+  margin-right: 8px;
+  min-width: 0;
+}
+
+.nav-section.center {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.nav-section.right {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  min-width: 0;
+}
+
+/* Button Standardization */
+.nav-button {
+  height: 24px;
+  padding: 0 8px;
+  margin: 0 1px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: 11px;
+  transition: all 0.2s ease;
+}
+
+.nav-button.icon-only {
+  width: 24px;
+  padding: 0;
+}
+
+.nav-button-text {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.nav-button-icon {
+  margin-right: 4px;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.nav-button.has-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Button Groups */
+.button-group {
+  display: flex;
+  align-items: center;
+  margin: 0 4px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.button-group .nav-button {
+  margin: 0 1px;
+  border-radius: 3px;
+}
+
+/* Action Button Styling */
+.action-button {
+  height: 24px;
+  padding: 0 6px;
+  margin: 0 1px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Visual Hierarchy */
+.nav-button.primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 500;
+}
+
+.nav-button.primary:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.nav-button.secondary {
+  background-color: transparent;
+  color: hsl(var(--muted-foreground));
+}
+
+.nav-button.secondary:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nav-button.active {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  font-weight: 500;
+}
+
+/* Focus States */
+.nav-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .nav-button-text {
+    max-width: 60px;
+  }
+  
+  .nav-section.left {
+    max-width: 240px;
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-button-text {
+    max-width: 50px;
+  }
+  
+  .nav-section.left {
+    max-width: 200px;
+  }
+  
+  .button-group {
+    margin: 0 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navigation-container {
+    padding: 0 4px;
+    height: 28px;
+  }
+  
+  .nav-button {
+    height: 20px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+  
+  .nav-button.icon-only {
+    width: 20px;
+  }
+  
+  .action-button {
+    height: 20px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+  
+  .nav-section.left {
+    max-width: 120px;
+  }
+  
+  .nav-section.right {
+    max-width: 80px;
+  }
+}
+
+/* Overflow handling */
+.overflow-menu {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .overflow-menu {
+    display: block;
+  }
+  
+  .secondary-button {
+    display: none;
+  }
+}
+
+/* Text Truncation Improvements */
+.project-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.dropdown-icon {
+  margin-left: 4px;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+/* Space Optimization */
+.flex-spacer {
+  flex: 1 1 auto;
+  min-width: 4px;
+  max-width: 16px;
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin: 0 2px;
+}
+
+.status-indicator-icon {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 2px;
+}
