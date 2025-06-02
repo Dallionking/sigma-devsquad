@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
@@ -8,6 +9,7 @@ import { ActivityFeed } from '../activity-feed/ActivityFeed';
 import { KanbanBoard } from '@/components/workflow/kanban/KanbanBoard';
 import { useKanbanBoard } from '@/components/workflow/kanban/useKanbanBoard';
 import { WorkflowTemplateManager } from '@/components/workflow/templates/WorkflowTemplateManager';
+import { WorkflowAnalytics } from '@/components/workflow/analytics/WorkflowAnalytics';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Kanban, BarChart3, Activity, Users, FileText } from 'lucide-react';

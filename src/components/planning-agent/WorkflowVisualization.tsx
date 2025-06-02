@@ -17,10 +17,12 @@ import {
   Calendar,
   Target,
   Zap,
-  Kanban
+  Kanban,
+  Activity
 } from "lucide-react";
 import { KanbanBoard } from "@/components/workflow/kanban/KanbanBoard";
 import { useKanbanBoard } from "@/components/workflow/kanban/useKanbanBoard";
+import { WorkflowAnalytics } from "@/components/workflow/analytics/WorkflowAnalytics";
 
 interface WorkflowNode {
   id: string;
@@ -232,10 +234,14 @@ export const WorkflowVisualization = () => {
         </CardHeader>
         <CardContent>
           <Tabs value={activeView} onValueChange={setActiveView}>
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="kanban" className="flex items-center gap-2">
                 <Kanban className="w-4 h-4" />
                 Kanban Board
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="flex items-center gap-2">
+                <Activity className="w-4 h-4" />
+                Analytics
               </TabsTrigger>
               <TabsTrigger value="graph">Workflow Graph</TabsTrigger>
               <TabsTrigger value="timeline">Timeline View</TabsTrigger>
@@ -250,6 +256,10 @@ export const WorkflowVisualization = () => {
                 onAddCard={handleAddCard}
                 onAddColumn={handleAddColumn}
               />
+            </TabsContent>
+
+            <TabsContent value="analytics" className="mt-6">
+              <WorkflowAnalytics />
             </TabsContent>
 
             <TabsContent value="graph" className="mt-6">
