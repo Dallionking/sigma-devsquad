@@ -12,6 +12,7 @@ import { SidebarTeamSection } from './sidebar/SidebarTeamSection';
 import { SidebarNavigationSection } from './sidebar/SidebarNavigationSection';
 import { SidebarStatusSection } from './sidebar/SidebarStatusSection';
 import { SidebarCollapseSection } from './sidebar/SidebarCollapseSection';
+import { useSidebarState } from './sidebar/useSidebarState';
 
 interface StructuredLeftSidebarProps {
   collapsed: boolean;
@@ -27,24 +28,20 @@ export const StructuredLeftSidebar = ({
   totalAgents
 }: StructuredLeftSidebarProps) => {
   const { teams } = useTeams();
-  const [currentTeamId, setCurrentTeamId] = useState<string>(teams[0]?.id || "");
-  const [showProjectDropdown, setShowProjectDropdown] = useState(false);
-  const [showTeamDropdown, setShowTeamDropdown] = useState(false);
   
-  const projectDropdownRef = useRef<HTMLDivElement>(null);
-  const teamDropdownRef = useRef<HTMLDivElement>(null);
-
-  const toggleProjectDropdown = () => {
-    if (collapsed) return; // Don't open dropdowns when collapsed
-    setShowProjectDropdown(!showProjectDropdown);
-    setShowTeamDropdown(false);
-  };
-
-  const toggleTeamDropdown = () => {
-    if (collapsed) return; // Don't open dropdowns when collapsed
-    setShowTeamDropdown(!showTeamDropdown);
-    setShowProjectDropdown(false);
-  };
+  // Use custom hook for sidebar state management
+  const {
+    currentTeamId,
+    setCurrentTeamId,
+    showProjectDropdown,
+    setShowProjectDropdown,
+    showTeamDropdown,
+    setShowTeamDropdown,
+    projectDropdownRef,
+    teamDropdownRef,
+    toggleProjectDropdown,
+    toggleTeamDropdown
+  } = useSidebarState(collapsed);
 
   // Keyboard shortcut for sidebar toggle (Ctrl+B)
   useEffect(() => {
@@ -59,28 +56,12 @@ export const StructuredLeftSidebar = ({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onToggle]);
 
-  // Close dropdowns when clicking outside
+  // Initialize team ID
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (projectDropdownRef.current && !projectDropdownRef.current.contains(event.target as Node)) {
-        setShowProjectDropdown(false);
-      }
-      if (teamDropdownRef.current && !teamDropdownRef.current.contains(event.target as Node)) {
-        setShowTeamDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Close dropdowns when sidebar collapses
-  useEffect(() => {
-    if (collapsed) {
-      setShowProjectDropdown(false);
-      setShowTeamDropdown(false);
+    if (teams.length > 0 && !currentTeamId) {
+      setCurrentTeamId(teams[0].id);
     }
-  }, [collapsed]);
+  }, [teams, currentTeamId, setCurrentTeamId]);
 
   return (
     <div className={cn(
