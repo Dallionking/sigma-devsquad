@@ -1,6 +1,7 @@
 
+import { LucideIcon } from 'lucide-react';
+import { ComparisonType } from '../TeamPerformanceDashboard';
 import { Team } from '@/types/teams';
-import { TimeRange, ComparisonType } from '../TeamPerformanceDashboard';
 
 export interface TeamPerformanceMetrics {
   tasksCompleted: number;
@@ -15,14 +16,6 @@ export interface TeamPerformanceMetrics {
   lastUpdated: Date;
 }
 
-export interface TeamKPIOverviewProps {
-  team: Team;
-  timeRange: TimeRange;
-  comparisonType: ComparisonType;
-  customDateRange: { start: Date; end: Date } | null;
-  metrics: TeamPerformanceMetrics;
-}
-
 export interface KPIMetric {
   id: string;
   title: string;
@@ -31,7 +24,15 @@ export interface KPIMetric {
   unit: string;
   trend: 'up' | 'down' | 'stable';
   changePercent: number;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   color: string;
   description?: string;
+}
+
+export interface TeamKPIOverviewProps {
+  team: Team;
+  timeRange: string;
+  comparisonType: ComparisonType;
+  customDateRange: { start: Date; end: Date } | null;
+  metrics: TeamPerformanceMetrics;
 }
