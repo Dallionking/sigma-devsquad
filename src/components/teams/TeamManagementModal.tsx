@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { Team } from '@/types/teams';
 import { Settings, Users, Shield } from 'lucide-react';
 import { TeamMembersTab } from './team-management/TeamMembersTab';
@@ -23,7 +22,7 @@ export const TeamManagementModal = ({ team, children }: TeamManagementModalProps
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden">
+      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="w-5 h-5" />
@@ -47,7 +46,7 @@ export const TeamManagementModal = ({ team, children }: TeamManagementModalProps
             </TabsTrigger>
           </TabsList>
 
-          <div className="mt-4 max-h-[60vh] overflow-y-auto">
+          <div className="mt-4 max-h-[70vh] overflow-y-auto">
             <TabsContent value="members" className="mt-0">
               <TeamMembersTab team={team} />
             </TabsContent>

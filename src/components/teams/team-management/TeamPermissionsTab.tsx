@@ -3,206 +3,306 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import { Team, TeamRole } from '@/types/teams';
-import { Shield, Info, Save } from 'lucide-react';
+import { useTeams } from '@/contexts/TeamContext';
+import { Shield, Users, Settings, MessageSquare, FileText, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+interface TeamPermission {
+  id: string;
+  name: string;
+  description: string;
+  category: 'management' | 'communication' | 'content' | 'administration';
+  defaultRoles: TeamRole[];
+}
+
+const teamPermissions: TeamPermission[] = [
+  // Management permissions
+  {
+    id: 'invite_members',
+    name: 'Invite Members',
+    description: 'Can invite new members to the team',
+    category: 'management',
+    defaultRoles: ['lead', 'senior']
+  },
+  {
+    id: 'remove_members',
+    name: 'Remove Members',
+    description: 'Can remove members from the team',
+    category: 'management',
+    defaultRoles: ['lead']
+  },
+  {
+    id: 'manage_roles',
+    name: 'Manage Roles',
+    description: 'Can change member roles and permissions',
+    category: 'management',
+    defaultRoles: ['lead']
+  },
+  {
+    id: 'create_tasks',
+    name: 'Create Tasks',
+    description: 'Can create and assign tasks',
+    category: 'management',
+    defaultRoles: ['lead', 'senior', 'mid']
+  },
+  {
+    id: 'delete_tasks',
+    name: 'Delete Tasks',
+    description: 'Can delete tasks',
+    category: 'management',
+    defaultRoles: ['lead', 'senior']
+  },
+  
+  // Communication permissions
+  {
+    id: 'send_messages',
+    name: 'Send Messages',
+    description: 'Can send messages in team channels',
+    category: 'communication',
+    defaultRoles: ['lead', 'senior', 'mid', 'junior']
+  },
+  {
+    id: 'broadcast_messages',
+    name: 'Broadcast Messages',
+    description: 'Can send announcements to all team members',
+    category: 'communication',
+    defaultRoles: ['lead', 'senior']
+  },
+  {
+    id: 'manage_channels',
+    name: 'Manage Channels',
+    description: 'Can create and manage communication channels',
+    category: 'communication',
+    defaultRoles: ['lead']
+  },
+  
+  // Content permissions
+  {
+    id: 'edit_team_info',
+    name: 'Edit Team Info',
+    description: 'Can modify team name, description, and basic settings',
+    category: 'content',
+    defaultRoles: ['lead', 'senior']
+  },
+  {
+    id: 'manage_documents',
+    name: 'Manage Documents',
+    description: 'Can create, edit, and delete team documents',
+    category: 'content',
+    defaultRoles: ['lead', 'senior', 'mid']
+  },
+  {
+    id: 'view_analytics',
+    name: 'View Analytics',
+    description: 'Can access team performance analytics',
+    category: 'content',
+    defaultRoles: ['lead', 'senior']
+  },
+  
+  // Administration permissions
+  {
+    id: 'team_settings',
+    name: 'Team Settings',
+    description: 'Can access and modify team settings',
+    category: 'administration',
+    defaultRoles: ['lead']
+  },
+  {
+    id: 'manage_integrations',
+    name: 'Manage Integrations',
+    description: 'Can configure external tool integrations',
+    category: 'administration',
+    defaultRoles: ['lead']
+  },
+  {
+    id: 'archive_team',
+    name: 'Archive Team',
+    description: 'Can archive or delete the team',
+    category: 'administration',
+    defaultRoles: ['lead']
+  }
+];
 
 interface TeamPermissionsTabProps {
   team: Team;
 }
 
-interface TeamPermissions {
-  canAddMembers: boolean;
-  canRemoveMembers: boolean;
-  canEditTeamSettings: boolean;
-  canManageTasks: boolean;
-  canViewAnalytics: boolean;
-  canInviteExternal: boolean;
-  minimumRoleForManagement: TeamRole;
-}
-
 export const TeamPermissionsTab = ({ team }: TeamPermissionsTabProps) => {
+  const { updateTeam, getTeamMembers } = useTeams();
   const { toast } = useToast();
+  const members = getTeamMembers(team.id);
   
-  const [permissions, setPermissions] = useState<TeamPermissions>({
-    canAddMembers: true,
-    canRemoveMembers: false,
-    canEditTeamSettings: false,
-    canManageTasks: true,
-    canViewAnalytics: true,
-    canInviteExternal: false,
-    minimumRoleForManagement: 'lead'
+  const [permissions, setPermissions] = useState<Record<string, TeamRole[]>>(() => {
+    // Initialize with default permissions
+    const defaultPermissions: Record<string, TeamRole[]> = {};
+    teamPermissions.forEach(permission => {
+      defaultPermissions[permission.id] = permission.defaultRoles;
+    });
+    return defaultPermissions;
   });
 
-  const [hasChanges, setHasChanges] = useState(false);
-
-  const handlePermissionChange = (key: keyof TeamPermissions, value: boolean | TeamRole) => {
-    setPermissions(prev => ({ ...prev, [key]: value }));
-    setHasChanges(true);
+  const getCategoryIcon = (category: TeamPermission['category']) => {
+    switch (category) {
+      case 'management': return Users;
+      case 'communication': return MessageSquare;
+      case 'content': return FileText;
+      case 'administration': return Settings;
+    }
   };
 
-  const handleSave = () => {
-    // In a real app, this would save to the backend
-    setHasChanges(false);
+  const getCategoryColor = (category: TeamPermission['category']) => {
+    switch (category) {
+      case 'management': return 'text-blue-600';
+      case 'communication': return 'text-green-600';
+      case 'content': return 'text-purple-600';
+      case 'administration': return 'text-red-600';
+    }
+  };
+
+  const handlePermissionChange = (permissionId: string, roles: TeamRole[]) => {
+    setPermissions(prev => ({
+      ...prev,
+      [permissionId]: roles
+    }));
+  };
+
+  const handleSavePermissions = () => {
+    updateTeam(team.id, { permissions });
     toast({
       title: "Permissions Updated",
       description: "Team permissions have been saved successfully.",
     });
   };
 
-  const permissionSections = [
-    {
-      title: "Member Management",
-      permissions: [
-        {
-          key: "canAddMembers" as keyof TeamPermissions,
-          label: "Add New Members",
-          description: "Allow team members to invite new people to the team"
-        },
-        {
-          key: "canRemoveMembers" as keyof TeamPermissions,
-          label: "Remove Members",
-          description: "Allow team members to remove others from the team"
-        }
-      ]
-    },
-    {
-      title: "Team Administration",
-      permissions: [
-        {
-          key: "canEditTeamSettings" as keyof TeamPermissions,
-          label: "Edit Team Settings",
-          description: "Allow members to modify team name, description, and other settings"
-        },
-        {
-          key: "canInviteExternal" as keyof TeamPermissions,
-          label: "Invite External Users",
-          description: "Allow inviting users from outside the organization"
-        }
-      ]
-    },
-    {
-      title: "Project Management",
-      permissions: [
-        {
-          key: "canManageTasks" as keyof TeamPermissions,
-          label: "Manage Tasks",
-          description: "Create, assign, and modify team tasks and projects"
-        },
-        {
-          key: "canViewAnalytics" as keyof TeamPermissions,
-          label: "View Analytics",
-          description: "Access team performance metrics and analytics"
-        }
-      ]
+  const handleResetToDefaults = () => {
+    const defaultPermissions: Record<string, TeamRole[]> = {};
+    teamPermissions.forEach(permission => {
+      defaultPermissions[permission.id] = permission.defaultRoles;
+    });
+    setPermissions(defaultPermissions);
+    toast({
+      title: "Permissions Reset",
+      description: "All permissions have been reset to default values.",
+    });
+  };
+
+  const groupedPermissions = teamPermissions.reduce((acc, permission) => {
+    if (!acc[permission.category]) {
+      acc[permission.category] = [];
     }
-  ];
+    acc[permission.category].push(permission);
+    return acc;
+  }, {} as Record<string, TeamPermission[]>);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-medium">Team Permissions</h3>
+          <h3 className="text-lg font-medium flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            Team Permissions
+          </h3>
           <p className="text-sm text-muted-foreground">
-            Configure what team members can do within this team
+            Configure what each role can do within the team
           </p>
         </div>
-        <Button onClick={handleSave} disabled={!hasChanges}>
-          <Save className="w-4 h-4 mr-2" />
-          Save Changes
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleResetToDefaults}>
+            Reset to Defaults
+          </Button>
+          <Button onClick={handleSavePermissions}>
+            Save Permissions
+          </Button>
+        </div>
       </div>
 
-      {/* Minimum Role Requirement */}
+      {/* Role Overview */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="w-5 h-5" />
-            Management Role Requirement
-          </CardTitle>
+          <CardTitle className="text-base">Current Team Roles</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>Minimum Role for Team Management</Label>
-              <p className="text-sm text-muted-foreground">
-                The minimum role required to perform administrative actions
-              </p>
-            </div>
-            <Select
-              value={permissions.minimumRoleForManagement}
-              onValueChange={(value: TeamRole) => 
-                handlePermissionChange('minimumRoleForManagement', value)
-              }
-            >
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="junior">Junior</SelectItem>
-                <SelectItem value="mid">Mid</SelectItem>
-                <SelectItem value="senior">Senior</SelectItem>
-                <SelectItem value="lead">Lead</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Permission Sections */}
-      {permissionSections.map((section) => (
-        <Card key={section.title}>
-          <CardHeader>
-            <CardTitle>{section.title}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {section.permissions.map((permission) => (
-              <div key={permission.key} className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor={permission.key}>{permission.label}</Label>
-                    <Badge variant="outline" className="text-xs">
-                      {permissions.minimumRoleForManagement}+
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {permission.description}
-                  </p>
+          <div className="flex flex-wrap gap-4">
+            {['lead', 'senior', 'mid', 'junior'].map(role => {
+              const roleMembers = members.filter(member => member.role === role);
+              return (
+                <div key={role} className="flex items-center gap-2">
+                  <Badge variant="outline" className="capitalize">
+                    {role}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    {roleMembers.length} member{roleMembers.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
-                <Switch
-                  id={permission.key}
-                  checked={permissions[permission.key] as boolean}
-                  onCheckedChange={(checked) => 
-                    handlePermissionChange(permission.key, checked)
-                  }
-                />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      ))}
-
-      {/* Info Banner */}
-      <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
-            <div>
-              <h4 className="font-medium text-blue-900 dark:text-blue-100">
-                Permission Inheritance
-              </h4>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                Team leaders always have full permissions regardless of these settings. 
-                These permissions only apply to members with roles below the leader level.
-              </p>
-            </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
+
+      {/* Permissions by Category */}
+      {Object.entries(groupedPermissions).map(([category, categoryPermissions]) => {
+        const Icon = getCategoryIcon(category as TeamPermission['category']);
+        const colorClass = getCategoryColor(category as TeamPermission['category']);
+        
+        return (
+          <Card key={category}>
+            <CardHeader>
+              <CardTitle className={`text-base flex items-center gap-2 ${colorClass}`}>
+                <Icon className="w-5 h-5" />
+                {category.charAt(0).toUpperCase() + category.slice(1)} Permissions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {categoryPermissions.map((permission) => (
+                <div key={permission.id} className="space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <Label className="font-medium">{permission.name}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {permission.description}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-4 gap-2">
+                    {(['lead', 'senior', 'mid', 'junior'] as TeamRole[]).map(role => (
+                      <div key={role} className="flex items-center space-x-2">
+                        <Switch
+                          id={`${permission.id}-${role}`}
+                          checked={permissions[permission.id]?.includes(role) || false}
+                          onCheckedChange={(checked) => {
+                            const currentRoles = permissions[permission.id] || [];
+                            const updatedRoles = checked
+                              ? [...currentRoles, role]
+                              : currentRoles.filter(r => r !== role);
+                            handlePermissionChange(permission.id, updatedRoles);
+                          }}
+                        />
+                        <Label 
+                          htmlFor={`${permission.id}-${role}`}
+                          className="text-sm capitalize cursor-pointer"
+                        >
+                          {role}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {permission !== categoryPermissions[categoryPermissions.length - 1] && (
+                    <Separator />
+                  )}
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 };

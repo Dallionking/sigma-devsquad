@@ -2,17 +2,15 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useTeams } from '@/contexts/TeamContext';
 import { Team, TeamRole } from '@/types/teams';
-import { UserMinus, Crown, Plus, Mail } from 'lucide-react';
+import { useTeams } from '@/contexts/TeamContext';
+import { Users, Crown, UserMinus, UserPlus, Search, Mail, MoreHorizontal } from 'lucide-react';
+import { AgentAdditionDialog } from '../AgentAdditionDialog';
 import { useToast } from '@/hooks/use-toast';
-import { MemberInvitationDialog } from '../member-management/MemberInvitationDialog';
-import { BulkMemberActions } from '../member-management/BulkMemberActions';
-import { MemberRemovalDialog } from '../member-management/MemberRemovalDialog';
 
 interface TeamMembersTabProps {
   team: Team;
@@ -23,11 +21,24 @@ export const TeamMembersTab = ({ team }: TeamMembersTabProps) => {
   const { toast } = useToast();
   const members = getTeamMembers(team.id);
   
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
-  const [memberToRemove, setMemberToRemove] = useState<{ id: string; name: string } | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterRole, setFilterRole] = useState<TeamRole | 'all'>('all');
+
+  const filteredMembers = members.filter(member => {
+    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         member.specialization.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = filterRole === 'all' || member.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
 
   const handleRoleChange = (memberId: string, newRole: TeamRole) => {
     updateAgentProfile(memberId, { role: newRole });
+    
+    // If promoting to lead, update team leader
+    if (newRole === 'lead') {
+      updateTeam(team.id, { leaderId: memberId });
+    }
+    
     toast({
       title: "Role Updated",
       description: "Member role has been updated successfully.",
@@ -35,216 +46,182 @@ export const TeamMembersTab = ({ team }: TeamMembersTabProps) => {
   };
 
   const handleRemoveMember = (memberId: string) => {
-    // Remove from team member list
+    updateAgentProfile(memberId, { teamId: "" });
     updateTeam(team.id, {
       memberIds: team.memberIds.filter(id => id !== memberId)
     });
     
-    // Clear team assignment from agent profile
-    updateAgentProfile(memberId, { teamId: "" });
-    
-    setMemberToRemove(null);
     toast({
       title: "Member Removed",
       description: "Member has been removed from the team.",
     });
   };
 
-  const handlePromoteToLeader = (memberId: string) => {
-    updateTeam(team.id, { leaderId: memberId });
-    updateAgentProfile(memberId, { role: 'lead' });
-    toast({
-      title: "Leader Promoted",
-      description: "Member has been promoted to team leader.",
-    });
+  const getRoleColor = (role: TeamRole) => {
+    switch (role) {
+      case 'lead': return 'bg-yellow-100 text-yellow-800';
+      case 'senior': return 'bg-blue-100 text-blue-800';
+      case 'mid': return 'bg-green-100 text-green-800';
+      case 'junior': return 'bg-gray-100 text-gray-800';
+    }
   };
 
-  const handleSelectMember = (memberId: string, selected: boolean) => {
-    setSelectedMembers(prev => 
-      selected 
-        ? [...prev, memberId]
-        : prev.filter(id => id !== memberId)
-    );
-  };
-
-  const handleSelectAll = (selected: boolean) => {
-    setSelectedMembers(selected ? members.map(m => m.id) : []);
-  };
-
-  const handleBulkRoleChange = (memberIds: string[], newRole: TeamRole) => {
-    memberIds.forEach(memberId => {
-      updateAgentProfile(memberId, { role: newRole });
-    });
-    setSelectedMembers([]);
-  };
-
-  const handleBulkRemove = (memberIds: string[]) => {
-    // Remove from team member list
-    const updatedMemberIds = team.memberIds.filter(id => !memberIds.includes(id));
-    updateTeam(team.id, { memberIds: updatedMemberIds });
+  const getRoleStats = () => {
+    const stats = members.reduce((acc, member) => {
+      acc[member.role] = (acc[member.role] || 0) + 1;
+      return acc;
+    }, {} as Record<TeamRole, number>);
     
-    // Clear team assignment from agent profiles
-    memberIds.forEach(memberId => {
-      updateAgentProfile(memberId, { teamId: "" });
-    });
-    
-    setSelectedMembers([]);
+    return stats;
   };
 
-  const handleInviteMembers = (invitations: Array<{ email: string; role: TeamRole }>) => {
-    // In a real implementation, this would send invitations via email
-    console.log('Sending invitations:', invitations);
-    toast({
-      title: "Invitations Sent",
-      description: `${invitations.length} invitation${invitations.length > 1 ? 's' : ''} sent successfully.`,
-    });
-  };
+  const roleStats = getRoleStats();
 
   return (
-    <div className="space-y-4">
-      {/* Header with Add Member Button */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Team Members ({members.length})</h3>
-        <div className="flex gap-2">
-          <MemberInvitationDialog teamId={team.id} onInviteMembers={handleInviteMembers}>
-            <Button variant="outline" size="sm">
-              <Mail className="w-4 h-4 mr-2" />
-              Invite Members
-            </Button>
-          </MemberInvitationDialog>
-          <Button variant="outline" size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Existing Agent
-          </Button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-medium flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            Team Members ({members.length})
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Manage team members and their roles
+          </p>
         </div>
+        <AgentAdditionDialog teamId={team.id}>
+          <Button>
+            <UserPlus className="w-4 h-4 mr-2" />
+            Add Member
+          </Button>
+        </AgentAdditionDialog>
       </div>
 
-      {/* Bulk Actions */}
-      {members.length > 1 && (
-        <BulkMemberActions
-          members={members}
-          selectedMembers={selectedMembers}
-          onSelectMember={handleSelectMember}
-          onSelectAll={handleSelectAll}
-          onBulkRoleChange={handleBulkRoleChange}
-          onBulkRemove={handleBulkRemove}
-          teamLeaderId={team.leaderId}
-        />
-      )}
+      {/* Role Statistics */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Role Distribution</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-4 gap-4">
+            {(['lead', 'senior', 'mid', 'junior'] as TeamRole[]).map(role => (
+              <div key={role} className="text-center">
+                <div className="text-2xl font-bold">{roleStats[role] || 0}</div>
+                <div className={`text-sm capitalize px-2 py-1 rounded-full inline-block ${getRoleColor(role)}`}>
+                  {role}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Search and Filter */}
+      <div className="flex gap-4">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search members..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Select value={filterRole} onValueChange={(value: TeamRole | 'all') => setFilterRole(value)}>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Roles</SelectItem>
+            <SelectItem value="lead">Lead</SelectItem>
+            <SelectItem value="senior">Senior</SelectItem>
+            <SelectItem value="mid">Mid</SelectItem>
+            <SelectItem value="junior">Junior</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Members List */}
       <div className="space-y-3">
-        {members.map((member) => {
-          const isSelected = selectedMembers.includes(member.id);
-          const isLeader = member.id === team.leaderId;
-          
-          return (
-            <Card key={member.id}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {members.length > 1 && !isLeader && (
-                      <Checkbox
-                        checked={isSelected}
-                        onCheckedChange={(checked) => handleSelectMember(member.id, !!checked)}
-                      />
-                    )}
-                    
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={member.avatar} />
-                      <AvatarFallback>
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium">{member.name}</h4>
-                        {isLeader && (
-                          <Crown className="w-4 h-4 text-yellow-500" />
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {member.specialization.replace(/-/g, ' ')}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          {member.role}
-                        </Badge>
-                        <span className={`w-2 h-2 rounded-full ${
-                          member.availability === 'available' ? 'bg-green-500' :
-                          member.availability === 'busy' ? 'bg-yellow-500' : 'bg-gray-500'
-                        }`} />
-                        <span className="text-xs text-muted-foreground capitalize">
-                          {member.availability}
-                        </span>
-                      </div>
+        {filteredMembers.map((member) => (
+          <Card key={member.id}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={member.avatar} />
+                    <AvatarFallback>
+                      {member.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium">{member.name}</h4>
+                      {member.id === team.leaderId && (
+                        <Crown className="w-4 h-4 text-yellow-500" />
+                      )}
+                      <Badge variant="outline" className={getRoleColor(member.role)}>
+                        {member.role}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {member.specialization.replace(/-/g, ' ')}
+                    </p>
+                    <div className="flex items-center gap-4 mt-1">
+                      <span className="text-xs text-muted-foreground">
+                        {member.experience}+ years experience
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        Rating: {member.performanceRating}/5
+                      </span>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Select 
-                      value={member.role} 
-                      onValueChange={(value: TeamRole) => handleRoleChange(member.id, value)}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="lead">Lead</SelectItem>
-                        <SelectItem value="senior">Senior</SelectItem>
-                        <SelectItem value="mid">Mid</SelectItem>
-                        <SelectItem value="junior">Junior</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    {!isLeader && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePromoteToLeader(member.id)}
-                        title="Promote to Leader"
-                      >
-                        <Crown className="w-4 h-4" />
-                      </Button>
-                    )}
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setMemberToRemove({ id: member.id, name: member.name })}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <UserMinus className="w-4 h-4" />
-                    </Button>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                
+                <div className="flex items-center gap-2">
+                  <Select 
+                    value={member.role} 
+                    onValueChange={(value: TeamRole) => handleRoleChange(member.id, value)}
+                  >
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="lead">Lead</SelectItem>
+                      <SelectItem value="senior">Senior</SelectItem>
+                      <SelectItem value="mid">Mid</SelectItem>
+                      <SelectItem value="junior">Junior</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleRemoveMember(member.id)}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <UserMinus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
         
-        {members.length === 0 && (
+        {filteredMembers.length === 0 && (
           <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-muted-foreground">No team members yet.</p>
-              <MemberInvitationDialog teamId={team.id} onInviteMembers={handleInviteMembers}>
-                <Button variant="outline" className="mt-2">
-                  Invite First Member
-                </Button>
-              </MemberInvitationDialog>
+            <CardContent className="text-center py-8">
+              <p className="text-muted-foreground">
+                {searchTerm || filterRole !== 'all' 
+                  ? 'No members match your search criteria'
+                  : 'No team members yet. Add your first member to get started.'
+                }
+              </p>
             </CardContent>
           </Card>
         )}
       </div>
-
-      {/* Member Removal Dialog */}
-      <MemberRemovalDialog
-        open={!!memberToRemove}
-        onOpenChange={(open) => !open && setMemberToRemove(null)}
-        memberName={memberToRemove?.name}
-        onConfirm={() => memberToRemove && handleRemoveMember(memberToRemove.id)}
-      />
     </div>
   );
 };
