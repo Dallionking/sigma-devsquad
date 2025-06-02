@@ -83,7 +83,7 @@ export const EnhancedNavigationButtons = ({
 
   const renderNavigationItems = () => (
     <>
-      {/* History Controls - Smaller */}
+      {/* History Controls - Compact */}
       {showHistoryControls && !isMobile && (
         <div className="flex items-center space-x-1 mr-2 border-r border-border/30 pr-2">
           <Tooltip delayDuration={300}>
@@ -93,7 +93,7 @@ export const EnhancedNavigationButtons = ({
                 size="sm"
                 onClick={goBack}
                 disabled={!canGoBack}
-                className="h-7 w-7 p-0 hover:bg-accent/80 disabled:opacity-50"
+                className="h-6 w-6 p-0 hover:bg-accent/80 disabled:opacity-50"
               >
                 <ArrowLeft className="w-3 h-3" />
               </Button>
@@ -110,7 +110,7 @@ export const EnhancedNavigationButtons = ({
                 size="sm"
                 onClick={goForward}
                 disabled={!canGoForward}
-                className="h-7 w-7 p-0 hover:bg-accent/80 disabled:opacity-50"
+                className="h-6 w-6 p-0 hover:bg-accent/80 disabled:opacity-50"
               >
                 <ArrowRight className="w-3 h-3" />
               </Button>
@@ -122,7 +122,7 @@ export const EnhancedNavigationButtons = ({
         </div>
       )}
 
-      {/* Navigation Items - Much smaller and more compact */}
+      {/* Navigation Items - Compact and appropriately sized */}
       {items.map((item) => {
         const Icon = item.icon;
         const shortcutText = getShortcutText({
@@ -141,30 +141,22 @@ export const EnhancedNavigationButtons = ({
                 onClick={() => handleNavigation(item)}
                 disabled={isNavigating}
                 className={cn(
-                  "h-7 px-2 text-xs transition-all duration-200 relative min-w-0",
-                  // Active state with enhanced styling
+                  "h-8 px-3 text-sm transition-all duration-200 relative min-w-0",
+                  // Active state with clean styling
                   item.isActive && [
-                    "bg-primary text-primary-foreground shadow-sm",
-                    "after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2",
-                    "after:w-0.5 after:h-0.5 after:bg-primary-foreground after:rounded-full"
+                    "bg-primary text-primary-foreground shadow-sm"
                   ],
-                  // Enhanced hover states
+                  // Clean hover states
                   !item.isActive && [
                     "hover:bg-accent/80 hover:text-accent-foreground",
-                    "hover:scale-105",
                     "focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-1"
                   ],
                   // Mobile specific styles
-                  isMobile && "w-full justify-start h-10 text-left px-3"
+                  isMobile && "w-full justify-start h-9 text-left px-3"
                 )}
               >
-                <Icon className={cn("w-3 h-3", isMobile ? "mr-2" : "mr-1")} />
+                <Icon className={cn("w-4 h-4", isMobile ? "mr-2" : "mr-1.5")} />
                 <span className="font-medium truncate">{item.label}</span>
-                
-                {/* Active indicator dot */}
-                {item.isActive && !isMobile && (
-                  <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-primary-foreground rounded-full" />
-                )}
                 
                 {/* Keyboard shortcut badge for mobile */}
                 {isMobile && item.shortcut && (
@@ -195,7 +187,7 @@ export const EnhancedNavigationButtons = ({
       <ResponsiveNavigationWrapper
         triggerLabel="Open navigation menu"
         collapsible={false}
-        className="hidden lg:flex items-center space-x-0.5"
+        className="hidden lg:flex items-center space-x-1"
         mobileContent={
           <div className="space-y-2">
             <div className="text-sm text-muted-foreground mb-4">

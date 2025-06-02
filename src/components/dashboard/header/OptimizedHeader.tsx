@@ -41,8 +41,8 @@ export const OptimizedHeader = ({
 
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      {/* Main Header - Reduced height and improved spacing */}
-      <div className="flex h-12 items-center justify-between px-3 lg:px-4">
+      {/* Main Header - Compact height and improved spacing */}
+      <div className="flex h-10 items-center justify-between px-3 lg:px-4">
         {/* Left Section: Logo and Sidebar Toggle */}
         <div className="flex items-center space-x-2">
           <HeaderLogo 
@@ -54,13 +54,13 @@ export const OptimizedHeader = ({
           />
           
           {/* Mobile Project Switcher - Smaller on mobile */}
-          <div className="lg:hidden w-32">
+          <div className="lg:hidden w-28">
             <MobileProjectSwitcher />
           </div>
         </div>
         
-        {/* Center Section: Optimized Navigation - Constrained width */}
-        <div className="flex-1 flex justify-center max-w-2xl mx-auto">
+        {/* Center Section: Optimized Navigation - Compact width */}
+        <div className="flex-1 flex justify-center max-w-3xl mx-auto">
           <OptimizedConsolidatedNavigation 
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}
