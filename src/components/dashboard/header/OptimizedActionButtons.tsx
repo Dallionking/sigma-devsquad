@@ -15,31 +15,30 @@ export const OptimizedActionButtons = () => {
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      {/* Team Settings Test Button */}
+    <div className="flex items-center space-x-1">
+      {/* Team Settings - Gear icon only */}
       <Button 
         variant="ghost" 
         size="sm"
         onClick={handleOpenTeamSettings}
-        className="hidden sm:flex"
+        className="h-6 w-6 p-0"
       >
-        <Settings className="w-4 h-4" />
-        <span className="ml-2 hidden lg:inline">Team Settings</span>
+        <Settings className="w-3 h-3" />
       </Button>
       
       {/* Notifications */}
-      <Button variant="ghost" size="sm">
-        <Bell className="w-4 h-4" />
+      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+        <Bell className="w-3 h-3" />
       </Button>
       
       {/* Help */}
-      <Button variant="ghost" size="sm">
-        <HelpCircle className="w-4 h-4" />
+      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+        <HelpCircle className="w-3 h-3" />
       </Button>
       
       {/* Profile */}
-      <Button variant="ghost" size="sm">
-        <User className="w-4 h-4" />
+      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+        <User className="w-3 h-3" />
       </Button>
     </div>
   );

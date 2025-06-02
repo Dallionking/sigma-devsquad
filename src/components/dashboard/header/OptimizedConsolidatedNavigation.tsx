@@ -88,13 +88,13 @@ export const OptimizedConsolidatedNavigation = ({
   ];
 
   return (
-    <div className="navigation-container flex items-center justify-between w-full max-w-full h-8 px-2 box-border overflow-hidden">
-      {/* Left Section: Context Switchers */}
-      <div className="nav-section left flex items-center gap-2 flex-shrink-0 min-w-0 max-w-80">
-        <div className="hidden lg:block max-w-44">
+    <div className="flex items-center justify-between w-full max-w-full h-8 px-2 box-border overflow-hidden">
+      {/* Left Section: Context Switchers - Reduced max width */}
+      <div className="flex items-center gap-1 flex-shrink-0 min-w-0 max-w-64">
+        <div className="hidden lg:block max-w-36">
           <ProjectSwitcher />
         </div>
-        <div className="hidden lg:block max-w-32">
+        <div className="hidden lg:block max-w-28">
           <TeamSwitcher 
             currentTeamId={currentTeamId}
             onTeamChange={setCurrentTeamId}
@@ -103,9 +103,9 @@ export const OptimizedConsolidatedNavigation = ({
         </div>
       </div>
 
-      {/* Center Section: PRIMARY NAVIGATION */}
-      <div className="nav-section center flex-1 flex justify-center items-center min-w-0 max-w-2xl mx-2">
-        <nav className="button-group flex items-center gap-1 bg-muted/20 rounded-md p-1">
+      {/* Center Section: PRIMARY NAVIGATION - Optimized spacing */}
+      <div className="flex-1 flex justify-center items-center min-w-0 max-w-md mx-1">
+        <nav className="flex items-center gap-0.5 bg-muted/20 rounded-md p-0.5">
           {primaryNavItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -115,36 +115,39 @@ export const OptimizedConsolidatedNavigation = ({
                 size="sm"
                 onClick={() => handleNavigation(item.path)}
                 className={cn(
-                  "nav-button h-6 px-2 text-xs font-medium transition-all duration-200 min-w-0",
+                  "h-6 px-2 text-xs font-medium transition-all duration-200 min-w-0",
                   item.active 
                     ? "bg-primary text-primary-foreground shadow-sm" 
                     : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                 )}
               >
                 <Icon className="w-3 h-3 mr-1 flex-shrink-0" />
-                <span className="hidden sm:inline truncate nav-button-text max-w-20">{item.label}</span>
+                <span className="hidden sm:inline truncate max-w-16">{item.label}</span>
               </Button>
             );
           })}
         </nav>
       </div>
 
-      {/* Right Section: Secondary Actions */}
-      <div className="nav-section right flex items-center gap-1 flex-shrink-0">
+      {/* Right Section: Secondary Actions - Compact */}
+      <div className="flex items-center gap-0.5 flex-shrink-0">
         {/* Configuration Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
               size="sm" 
-              className="action-button h-6 px-2 text-xs font-medium border-border/50 hover:bg-accent/50 transition-all duration-200 min-w-0"
+              className="h-6 px-2 text-xs font-medium border-border/50 hover:bg-accent/50 transition-all duration-200 min-w-0"
             >
               <Bot className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="hidden md:inline nav-button-text max-w-16 truncate">Config</span>
+              <span className="hidden md:inline max-w-12 truncate">Config</span>
               <ChevronDown className="w-2 h-2 ml-1 flex-shrink-0" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" className="w-40 bg-background border shadow-lg z-50">
+          <DropdownMenuContent 
+            align="center" 
+            className="w-40 bg-background/95 backdrop-blur-sm border shadow-lg z-[100]"
+          >
             {configurationItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -170,14 +173,17 @@ export const OptimizedConsolidatedNavigation = ({
             <Button
               variant="outline"
               size="sm"
-              className="action-button h-6 px-2 text-xs font-medium border-border/50 hover:bg-accent/50 transition-all duration-200 min-w-0"
+              className="h-6 px-2 text-xs font-medium border-border/50 hover:bg-accent/50 transition-all duration-200 min-w-0"
             >
               <User className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="hidden md:inline nav-button-text max-w-16 truncate">Account</span>
+              <span className="hidden md:inline max-w-12 truncate">Account</span>
               <ChevronDown className="w-2 h-2 ml-1 flex-shrink-0" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40 bg-background border shadow-lg z-50">
+          <DropdownMenuContent 
+            align="end" 
+            className="w-40 bg-background/95 backdrop-blur-sm border shadow-lg z-[100]"
+          >
             {accountItems.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -211,7 +217,10 @@ export const OptimizedConsolidatedNavigation = ({
                 <MoreVertical className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-background border shadow-lg z-50">
+            <DropdownMenuContent 
+              align="end" 
+              className="w-48 bg-background/95 backdrop-blur-sm border shadow-lg z-[100]"
+            >
               <div className="py-1">
                 <div className="px-2 py-1 text-xs font-medium text-muted-foreground">Navigation</div>
                 {primaryNavItems.map((item) => {
