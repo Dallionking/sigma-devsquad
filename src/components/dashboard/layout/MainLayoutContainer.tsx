@@ -41,6 +41,14 @@ export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
     sidebarCollapsed,
     onSidebarToggle,
     onViewModeChange,
+    // Extract all the handler props that need to be passed to MainLayoutContent
+    onAgentSelect,
+    onTaskSelect,
+    onMessageSelect,
+    onTeamSelect,
+    onAgentProfileSelect,
+    onDismissSelection,
+    onSyncPanelToggle,
     ...restProps
   } = props;
 
@@ -87,11 +95,11 @@ export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
           selectedMessage={props.selectedMessage}
           selectedTeam={props.selectedTeam}
           selectedAgentProfile={props.selectedAgentProfile}
-          onAgentSelect={props.onAgentSelect}
-          onTaskSelect={props.onTaskSelect}
-          onMessageSelect={props.onMessageSelect}
-          onTeamSelect={props.onTeamSelect}
-          onAgentProfileSelect={props.onAgentProfileSelect}
+          onAgentSelect={onAgentSelect}
+          onTaskSelect={onTaskSelect}
+          onMessageSelect={onMessageSelect}
+          onTeamSelect={onTeamSelect}
+          onAgentProfileSelect={onAgentProfileSelect}
         />
 
         {/* Main Content */}
@@ -108,8 +116,14 @@ export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
           selectedAgentProfile={props.selectedAgentProfile}
           hasSelection={props.hasSelection}
           syncPanelCollapsed={props.syncPanelCollapsed}
-          onSyncPanelToggle={props.onSyncPanelToggle}
-          onDismissSelection={props.onDismissSelection}
+          onSyncPanelToggle={onSyncPanelToggle}
+          onDismissSelection={onDismissSelection}
+          onAgentSelect={onAgentSelect}
+          onTaskSelect={onTaskSelect}
+          onMessageSelect={onMessageSelect}
+          onTeamSelect={onTeamSelect}
+          onAgentProfileSelect={onAgentProfileSelect}
+          onViewModeChange={onViewModeChange}
         />
       </div>
     </ViewTransition>
