@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
@@ -8,9 +7,10 @@ import { MetricsGrid } from '../metrics-grid/MetricsGrid';
 import { ActivityFeed } from '../activity-feed/ActivityFeed';
 import { KanbanBoard } from '@/components/workflow/kanban/KanbanBoard';
 import { useKanbanBoard } from '@/components/workflow/kanban/useKanbanBoard';
+import { WorkflowTemplateManager } from '@/components/workflow/templates/WorkflowTemplateManager';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Kanban, BarChart3, Activity, Users } from 'lucide-react';
+import { Kanban, BarChart3, Activity, Users, FileTemplate } from 'lucide-react';
 
 interface IndividualViewLayoutProps {
   viewMode: ViewMode;
@@ -68,7 +68,7 @@ export const IndividualViewLayout = ({
     return (
       <div className="space-y-6">
         <Tabs defaultValue="kanban" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="kanban" className="flex items-center gap-2">
               <Kanban className="w-4 h-4" />
               Kanban Board
@@ -76,6 +76,10 @@ export const IndividualViewLayout = ({
             <TabsTrigger value="traditional" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               Traditional View
+            </TabsTrigger>
+            <TabsTrigger value="templates" className="flex items-center gap-2">
+              <FileTemplate className="w-4 h-4" />
+              Templates
             </TabsTrigger>
             <TabsTrigger value="metrics" className="flex items-center gap-2">
               <Activity className="w-4 h-4" />
@@ -103,6 +107,15 @@ export const IndividualViewLayout = ({
               tasks={tasks}
               selectedAgent={selectedAgent}
               onAgentSelect={onAgentSelect}
+            />
+          </TabsContent>
+
+          <TabsContent value="templates" className="mt-6">
+            <WorkflowTemplateManager
+              onApplyTemplate={(template) => {
+                console.log('Applying template:', template);
+                // TODO: Convert template to workflow and apply to current kanban board
+              }}
             />
           </TabsContent>
 
