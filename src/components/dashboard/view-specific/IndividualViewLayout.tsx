@@ -10,7 +10,7 @@ import { useKanbanBoard } from '@/components/workflow/kanban/useKanbanBoard';
 import { WorkflowTemplateManager } from '@/components/workflow/templates/WorkflowTemplateManager';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Kanban, BarChart3, Activity, Users, FileTemplate } from 'lucide-react';
+import { Kanban, BarChart3, Activity, Users, FileText } from 'lucide-react';
 
 interface IndividualViewLayoutProps {
   viewMode: ViewMode;
@@ -78,7 +78,7 @@ export const IndividualViewLayout = ({
               Traditional View
             </TabsTrigger>
             <TabsTrigger value="templates" className="flex items-center gap-2">
-              <FileTemplate className="w-4 h-4" />
+              <FileText className="w-4 h-4" />
               Templates
             </TabsTrigger>
             <TabsTrigger value="metrics" className="flex items-center gap-2">

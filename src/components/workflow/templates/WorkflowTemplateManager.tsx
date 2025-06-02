@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  FileTemplate, Plus, Download, Upload, Share, Search, 
+  FileText, Plus, Download, Upload, Share, Search, 
   Filter, Grid, List, Star, Clock, Users, Workflow
 } from 'lucide-react';
 import { WorkflowTemplate } from '@/types/workflow-templates';
@@ -82,7 +82,7 @@ export const WorkflowTemplateManager: React.FC<WorkflowTemplateManagerProps> = (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center space-x-2">
-          <FileTemplate className="w-5 h-5 text-primary" />
+          <FileText className="w-5 h-5 text-primary" />
           <h2 className="text-lg font-semibold">Workflow Templates</h2>
         </div>
         <div className="flex items-center space-x-2">
@@ -108,7 +108,7 @@ export const WorkflowTemplateManager: React.FC<WorkflowTemplateManagerProps> = (
             Editor
           </TabsTrigger>
           <TabsTrigger value="customize" className="flex items-center gap-2" disabled={!selectedTemplate}>
-            <FileTemplate className="w-4 h-4" />
+            <FileText className="w-4 h-4" />
             Customize
           </TabsTrigger>
           <TabsTrigger value="sharing" className="flex items-center gap-2">
