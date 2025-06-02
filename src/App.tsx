@@ -57,8 +57,8 @@ function AppContent() {
                     <MessageProvider>
                       <TeamProvider>
                         <OnboardingProvider>
-                          <ContextualNavigationProvider>
-                            <BrowserRouter>
+                          <BrowserRouter>
+                            <ContextualNavigationProvider>
                               <Routes>
                                 <Route path="/" element={<LandingPage />} />
                                 <Route path="/auth" element={<AuthPage />} />
@@ -129,10 +129,10 @@ function AppContent() {
                                 } />
                                 <Route path="*" element={<NotFound />} />
                               </Routes>
-                            </BrowserRouter>
-                            <Toaster />
-                            <Sonner />
-                          </ContextualNavigationProvider>
+                              <Toaster />
+                              <Sonner />
+                            </ContextualNavigationProvider>
+                          </BrowserRouter>
                         </OnboardingProvider>
                       </TeamProvider>
                     </MessageProvider>
