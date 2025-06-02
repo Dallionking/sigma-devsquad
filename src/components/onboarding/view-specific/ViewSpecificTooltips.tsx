@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { TooltipWrapper } from '../tooltips/TooltipWrapper';
 import { ViewMode } from '@/types';
 
@@ -104,29 +104,37 @@ export const ViewSpecificTooltips = ({
 
   const currentTooltips = tooltipConfigs[viewKey][viewMode] || [];
 
+  // Memoize the visibility check function to prevent unnecessary re-renders
+  const checkVisibleTooltips = useCallback(() => {
+    const visible: string[] = [];
+    
+    currentTooltips.forEach((tooltip) => {
+      if (isTooltipVisible(tooltip.id)) {
+        const targetElement = document.querySelector(tooltip.targetSelector);
+        if (targetElement) {
+          visible.push(tooltip.id);
+        }
+      }
+    });
+    
+    // Only update state if the visible tooltips have actually changed
+    setVisibleTooltips(prev => {
+      if (prev.length !== visible.length || !prev.every(id => visible.includes(id))) {
+        return visible;
+      }
+      return prev;
+    });
+  }, [currentTooltips, isTooltipVisible]);
+
   // Check which tooltips should be visible
   useEffect(() => {
-    const checkVisibleTooltips = () => {
-      const visible: string[] = [];
-      
-      currentTooltips.forEach((tooltip) => {
-        if (isTooltipVisible(tooltip.id)) {
-          const targetElement = document.querySelector(tooltip.targetSelector);
-          if (targetElement) {
-            visible.push(tooltip.id);
-          }
-        }
-      });
-      
-      setVisibleTooltips(visible);
-    };
-
-    // Check immediately and set up a timer to recheck
     checkVisibleTooltips();
-    const interval = setInterval(checkVisibleTooltips, 1000);
+    
+    // Set up a timer to recheck, but less frequently to avoid infinite loops
+    const interval = setInterval(checkVisibleTooltips, 2000);
 
     return () => clearInterval(interval);
-  }, [currentTooltips, isTooltipVisible]);
+  }, [checkVisibleTooltips]);
 
   // Only show tooltips if elements exist and tooltip should be visible
   return (

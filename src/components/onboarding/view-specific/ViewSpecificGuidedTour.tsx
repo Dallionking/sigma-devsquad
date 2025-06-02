@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,14 +28,24 @@ export const ViewSpecificGuidedTour = ({
 }: ViewSpecificGuidedTourProps) => {
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const [previousTargetElement, setPreviousTargetElement] = useState<HTMLElement | null>(null);
+  const previousTargetElementRef = useRef<HTMLElement | null>(null);
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
   const currentStepData = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
   const isFirstStep = currentStep === 0;
 
+  // Clear all timeouts on cleanup
+  const clearAllTimeouts = () => {
+    timeoutRefs.current.forEach(timeout => clearTimeout(timeout));
+    timeoutRefs.current = [];
+  };
+
   useEffect(() => {
-    if (!isActive || !currentStepData) return;
+    if (!isActive || !currentStepData) {
+      console.log('Tour not active or no step data');
+      return;
+    }
 
     console.log(`Finding target for step ${currentStep}:`, currentStepData.targetSelector);
 
@@ -45,17 +55,18 @@ export const ViewSpecificGuidedTour = ({
       
       if (element) {
         // Clear previous target highlighting
-        if (previousTargetElement && previousTargetElement !== element) {
-          previousTargetElement.style.position = '';
-          previousTargetElement.style.zIndex = '';
-          previousTargetElement.style.outline = '';
-          previousTargetElement.style.outlineOffset = '';
-          previousTargetElement.style.borderRadius = '';
-          previousTargetElement.style.backgroundColor = '';
+        if (previousTargetElementRef.current && previousTargetElementRef.current !== element) {
+          const prevElement = previousTargetElementRef.current;
+          prevElement.style.position = '';
+          prevElement.style.zIndex = '';
+          prevElement.style.outline = '';
+          prevElement.style.outlineOffset = '';
+          prevElement.style.borderRadius = '';
+          prevElement.style.backgroundColor = '';
         }
 
         setTargetElement(element);
-        setPreviousTargetElement(element);
+        previousTargetElementRef.current = element;
         
         // Calculate tooltip position with better viewport awareness
         const rect = element.getBoundingClientRect();
@@ -117,6 +128,7 @@ export const ViewSpecificGuidedTour = ({
         
         // Scroll to target
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return true;
       } else {
         console.warn(`Target element not found for selector: ${currentStepData.targetSelector}`);
         // If target not found, position tooltip in center of screen
@@ -124,25 +136,31 @@ export const ViewSpecificGuidedTour = ({
           top: window.innerHeight / 2 - 140,
           left: window.innerWidth / 2 - 160
         });
+        return false;
       }
     };
 
+    // Clear previous timeouts
+    clearAllTimeouts();
+
     // Try to find target immediately
-    findTarget();
+    if (!findTarget()) {
+      // Also try after delays to handle dynamic content
+      const timer1 = setTimeout(() => findTarget(), 100);
+      const timer2 = setTimeout(() => findTarget(), 500);
+      const timer3 = setTimeout(() => findTarget(), 1000);
+      
+      timeoutRefs.current = [timer1, timer2, timer3];
+    }
     
-    // Also try after delays to handle dynamic content
-    const timer1 = setTimeout(findTarget, 100);
-    const timer2 = setTimeout(findTarget, 500);
-    
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [currentStep, isActive, currentStepData, previousTargetElement]);
+    return clearAllTimeouts;
+  }, [currentStep, isActive, currentStepData]);
 
   // Cleanup when component unmounts or tour closes
   useEffect(() => {
     return () => {
+      clearAllTimeouts();
+      
       if (targetElement) {
         targetElement.style.position = '';
         targetElement.style.zIndex = '';
@@ -151,19 +169,19 @@ export const ViewSpecificGuidedTour = ({
         targetElement.style.borderRadius = '';
         targetElement.style.backgroundColor = '';
       }
-      if (previousTargetElement) {
-        previousTargetElement.style.position = '';
-        previousTargetElement.style.zIndex = '';
-        previousTargetElement.style.outline = '';
-        previousTargetElement.style.outlineOffset = '';
-        previousTargetElement.style.borderRadius = '';
-        previousTargetElement.style.backgroundColor = '';
+      if (previousTargetElementRef.current) {
+        const prevElement = previousTargetElementRef.current;
+        prevElement.style.position = '';
+        prevElement.style.zIndex = '';
+        prevElement.style.outline = '';
+        prevElement.style.outlineOffset = '';
+        prevElement.style.borderRadius = '';
+        prevElement.style.backgroundColor = '';
       }
     };
-  }, [targetElement, previousTargetElement]);
+  }, [targetElement]);
 
   if (!isActive || !currentStepData) {
-    console.log('Tour not active or no step data');
     return null;
   }
 
