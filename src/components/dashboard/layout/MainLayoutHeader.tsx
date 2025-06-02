@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ViewModeTabs } from '../ViewModeTabs';
+import { ViewIndicator } from '../ViewIndicator';
 import { ViewMode } from '@/types';
 
 interface MainLayoutHeaderProps {
@@ -21,15 +22,21 @@ export const MainLayoutHeader = ({
   onViewModeChange,
   notificationCounts
 }: MainLayoutHeaderProps) => {
-  if (showTeamView) return null;
-
   return (
     <div className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-      <ViewModeTabs
-        viewMode={viewMode}
-        onViewModeChange={onViewModeChange}
-        notificationCounts={notificationCounts}
-      />
+      {/* Persistent View Indicator */}
+      <div className="px-6 py-3 border-b border-border/30">
+        <ViewIndicator showTeamView={showTeamView} />
+      </div>
+      
+      {/* View Mode Tabs - Only for Individual View */}
+      {!showTeamView && (
+        <ViewModeTabs
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+          notificationCounts={notificationCounts}
+        />
+      )}
     </div>
   );
 };

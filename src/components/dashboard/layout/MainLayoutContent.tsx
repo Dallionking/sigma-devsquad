@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { MainContentRenderer } from '../MainContentRenderer';
 import { Agent, Task, Message, ViewMode } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
+import { TeamViewLayout } from '../view-specific/TeamViewLayout';
+import { IndividualViewLayout } from '../view-specific/IndividualViewLayout';
 import { cn } from '@/lib/utils';
 
 interface MainLayoutContentProps {
@@ -52,27 +53,49 @@ export const MainLayoutContent = ({
 }: MainLayoutContentProps) => {
   return (
     <div className={cn(
-      "flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background to-muted/10 transition-all duration-300 ease-in-out",
+      "flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out",
+      showTeamView 
+        ? "bg-gradient-to-br from-blue-50/30 via-background to-blue-50/10 dark:from-blue-950/20 dark:via-background dark:to-blue-950/5"
+        : "bg-gradient-to-br from-purple-50/30 via-background to-purple-50/10 dark:from-purple-950/20 dark:via-background dark:to-purple-950/5",
       !syncPanelCollapsed && hasSelection && "mr-96"
     )}>
-      <MainContentRenderer
-        viewMode={viewMode}
-        agents={agents}
-        tasks={tasks}
-        messages={messages}
-        selectedAgent={selectedAgent}
-        selectedTask={selectedTask}
-        selectedMessage={selectedMessage}
-        selectedTeam={selectedTeam}
-        selectedAgentProfile={selectedAgentProfile}
-        showTeamView={showTeamView}
-        onAgentSelect={onAgentSelect}
-        onTaskSelect={onTaskSelect}
-        onMessageSelect={onMessageSelect}
-        onTeamSelect={onTeamSelect}
-        onAgentProfileSelect={onAgentProfileSelect}
-        onViewModeChange={onViewModeChange}
-      />
+      {showTeamView ? (
+        <TeamViewLayout
+          viewMode={viewMode}
+          agents={agents}
+          tasks={tasks}
+          messages={messages}
+          selectedAgent={selectedAgent}
+          selectedTask={selectedTask}
+          selectedMessage={selectedMessage}
+          selectedTeam={selectedTeam}
+          selectedAgentProfile={selectedAgentProfile}
+          onAgentSelect={onAgentSelect}
+          onTaskSelect={onTaskSelect}
+          onMessageSelect={onMessageSelect}
+          onTeamSelect={onTeamSelect}
+          onAgentProfileSelect={onAgentProfileSelect}
+          onViewModeChange={onViewModeChange}
+        />
+      ) : (
+        <IndividualViewLayout
+          viewMode={viewMode}
+          agents={agents}
+          tasks={tasks}
+          messages={messages}
+          selectedAgent={selectedAgent}
+          selectedTask={selectedTask}
+          selectedMessage={selectedMessage}
+          selectedTeam={selectedTeam}
+          selectedAgentProfile={selectedAgentProfile}
+          onAgentSelect={onAgentSelect}
+          onTaskSelect={onTaskSelect}
+          onMessageSelect={onMessageSelect}
+          onTeamSelect={onTeamSelect}
+          onAgentProfileSelect={onAgentProfileSelect}
+          onViewModeChange={onViewModeChange}
+        />
+      )}
     </div>
   );
 };
