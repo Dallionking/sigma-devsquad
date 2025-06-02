@@ -1,20 +1,24 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Agent } from "@/types";
+import { Agent, Task } from "@/types";
 import { Activity, Users, CheckCircle, AlertTriangle } from "lucide-react";
 
 interface MetricsGridProps {
   agents: Agent[];
+  tasks?: Task[];
 }
 
-export const MetricsGrid = ({ agents }: MetricsGridProps) => {
+export const MetricsGrid = ({ agents, tasks = [] }: MetricsGridProps) => {
   const activeAgents = agents.filter(agent => agent.status === "working").length;
   const idleAgents = agents.filter(agent => agent.status === "idle").length;
   const errorAgents = agents.filter(agent => agent.status === "error").length;
   const avgProgress = agents.length > 0 
     ? agents.reduce((sum, agent) => sum + agent.progress, 0) / agents.length 
     : 0;
+
+  const completedTasks = tasks.filter(task => task.status === "completed").length;
+  const totalTasks = tasks.length;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

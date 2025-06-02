@@ -8,9 +8,10 @@ import { Bot, Activity, Clock } from "lucide-react";
 interface AgentGridProps {
   agents: Agent[];
   onAgentSelect: (agent: Agent | null) => void;
+  selectedAgent?: Agent | null;
 }
 
-export const AgentGrid = ({ agents, onAgentSelect }: AgentGridProps) => {
+export const AgentGrid = ({ agents, onAgentSelect, selectedAgent }: AgentGridProps) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "working": return "bg-green-500";
@@ -34,7 +35,9 @@ export const AgentGrid = ({ agents, onAgentSelect }: AgentGridProps) => {
           {agents.map((agent) => (
             <Card 
               key={agent.id} 
-              className="cursor-pointer hover:shadow-md transition-shadow"
+              className={`cursor-pointer hover:shadow-md transition-shadow ${
+                selectedAgent?.id === agent.id ? 'ring-2 ring-blue-500' : ''
+              }`}
               onClick={() => onAgentSelect(agent)}
             >
               <CardContent className="p-4">

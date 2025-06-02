@@ -206,7 +206,7 @@ export const IndividualViewLayout = ({
                     <p className="text-sm">{message.content}</p>
                     <div className="flex items-center mt-2">
                       <span className={`text-xs px-2 py-1 rounded ${
-                        message.type === 'urgent' ? 'bg-red-100 text-red-800' :
+                        message.type === 'task_assignment' ? 'bg-red-100 text-red-800' :
                         message.type === 'notification' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
                       }`}>
