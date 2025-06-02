@@ -1,250 +1,208 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useTeams } from '@/contexts/TeamContext';
-import { Team } from '@/types/teams';
-import { Save, Settings, Bell, Link, Archive } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
-import { TeamVisibilitySettings, TeamVisibility } from './TeamVisibilitySettings';
-import { TeamNotificationSettings, TeamNotificationPreferences } from './TeamNotificationSettings';
-import { TeamIntegrationSettings, TeamIntegration } from './TeamIntegrationSettings';
-import { TeamArchiveSettings } from './TeamArchiveSettings';
-
-// Import icons for integrations
-import { Github, MessageSquare, Calendar, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Settings, 
+  Shield, 
+  Bell, 
+  Plug, 
+  Archive, 
+  BarChart3,
+  ArrowLeft,
+  Users,
+  Eye
+} from 'lucide-react';
+import { TeamPerformanceDashboard } from '../performance/TeamPerformanceDashboard';
 
 interface EnhancedTeamSettingsPageProps {
   teamId: string;
 }
 
 export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPageProps) => {
-  const { getTeamById, updateTeam, deleteTeam } = useTeams();
-  const { toast } = useToast();
-  const team = getTeamById(teamId);
+  const { getTeamById } = useTeams();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('general');
   
-  const [activeTab, setActiveTab] = useState('visibility');
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  // Team settings state
-  const [visibility, setVisibility] = useState<TeamVisibility>('private');
-  const [notificationPreferences, setNotificationPreferences] = useState<TeamNotificationPreferences>({
-    memberJoined: true,
-    memberLeft: true,
-    taskAssigned: true,
-    taskCompleted: true,
-    taskOverdue: true,
-    newMessage: true,
-    mentionInMessage: true,
-    teamUpdates: true,
-    frequency: 'immediate',
-    channels: {
-      email: true,
-      inApp: true,
-      discord: false,
-      slack: false
-    }
-  });
-
-  const [integrations, setIntegrations] = useState<TeamIntegration[]>([
-    {
-      id: 'github',
-      name: 'GitHub',
-      description: 'Connect with GitHub repositories for issue tracking and code management',
-      icon: Github,
-      enabled: false,
-      configured: false
-    },
-    {
-      id: 'slack',
-      name: 'Slack',
-      description: 'Send notifications and updates to Slack channels',
-      icon: MessageSquare,
-      enabled: false,
-      configured: false
-    },
-    {
-      id: 'discord',
-      name: 'Discord',
-      description: 'Integrate with Discord for team communication',
-      icon: MessageSquare,
-      enabled: false,
-      configured: false
-    },
-    {
-      id: 'calendar',
-      name: 'Calendar',
-      description: 'Sync team events and deadlines with calendar applications',
-      icon: Calendar,
-      enabled: false,
-      configured: false
-    },
-    {
-      id: 'docs',
-      name: 'Documentation',
-      description: 'Connect with documentation platforms for knowledge sharing',
-      icon: FileText,
-      enabled: false,
-      configured: false
-    }
-  ]);
-
-  useEffect(() => {
-    if (team) {
-      // Load existing team settings
-      const teamExtended = team as any;
-      setVisibility(teamExtended.visibility || 'private');
-      if (teamExtended.notificationPreferences) {
-        setNotificationPreferences(teamExtended.notificationPreferences);
-      }
-      if (teamExtended.integrations) {
-        setIntegrations(teamExtended.integrations);
-      }
-    }
-  }, [team]);
+  const team = getTeamById(teamId);
 
   if (!team) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-muted-foreground">Team not found</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Team Not Found</h1>
+          <p className="text-muted-foreground mb-4">
+            The team you're looking for doesn't exist or has been removed.
+          </p>
+          <Button onClick={() => navigate('/dashboard')}>
+            Return to Dashboard
+          </Button>
+        </div>
       </div>
     );
   }
 
-  const handleSaveSettings = () => {
-    const updatedTeam = {
-      ...team,
-      visibility,
-      notificationPreferences,
-      integrations
-    };
-
-    updateTeam(teamId, updatedTeam);
-    setHasUnsavedChanges(false);
-    
-    toast({
-      title: "Settings Saved",
-      description: "Team settings have been updated successfully.",
-    });
-  };
-
-  const handleVisibilityChange = (newVisibility: TeamVisibility) => {
-    setVisibility(newVisibility);
-    setHasUnsavedChanges(true);
-  };
-
-  const handleNotificationChange = (newPreferences: TeamNotificationPreferences) => {
-    setNotificationPreferences(newPreferences);
-    setHasUnsavedChanges(true);
-  };
-
-  const handleIntegrationToggle = (integrationId: string, enabled: boolean) => {
-    setIntegrations(prev => prev.map(integration => 
-      integration.id === integrationId 
-        ? { ...integration, enabled }
-        : integration
-    ));
-    setHasUnsavedChanges(true);
-  };
-
-  const handleIntegrationConfigure = (integrationId: string, config: Record<string, any>) => {
-    setIntegrations(prev => prev.map(integration => 
-      integration.id === integrationId 
-        ? { ...integration, config, configured: true }
-        : integration
-    ));
-    setHasUnsavedChanges(true);
-  };
-
-  const handleArchiveTeam = (reason?: string) => {
-    updateTeam(teamId, { 
-      status: 'archived',
-      archiveReason: reason,
-      archivedAt: new Date().toISOString()
-    });
-  };
-
-  const handleDeleteTeam = (confirmationText: string, reason?: string) => {
-    deleteTeam(teamId);
-  };
-
-  const handleExportTeamData = () => {
-    // Implementation for exporting team data
-    console.log('Exporting team data for team:', teamId);
-  };
+  const settingsTabs = [
+    { id: 'general', label: 'General', icon: Settings },
+    { id: 'performance', label: 'Performance', icon: BarChart3 },
+    { id: 'members', label: 'Members', icon: Users },
+    { id: 'permissions', label: 'Permissions', icon: Shield },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'integrations', label: 'Integrations', icon: Plug },
+    { id: 'archive', label: 'Archive', icon: Archive }
+  ];
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Settings className="w-6 h-6" />
-            Team Settings
-          </h1>
-          <p className="text-muted-foreground">
-            Manage {team.name} settings and configuration
-          </p>
-        </div>
-        {hasUnsavedChanges && (
-          <Button onClick={handleSaveSettings}>
-            <Save className="w-4 h-4 mr-2" />
-            Save Changes
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <Button 
+            onClick={() => navigate('/dashboard')}
+            variant="ghost" 
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
           </Button>
-        )}
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold flex items-center gap-3">
+                <Settings className="w-8 h-8" />
+                Team Settings
+              </h1>
+              <div className="flex items-center gap-3 mt-2">
+                <h2 className="text-xl text-muted-foreground">{team.name}</h2>
+                <Badge variant="secondary" className="capitalize">
+                  {team.type}
+                </Badge>
+                <Badge variant="outline" className="capitalize">
+                  {team.composition}
+                </Badge>
+                <Badge variant={team.status === 'active' ? 'default' : 'secondary'}>
+                  {team.status}
+                </Badge>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Eye className="w-3 h-3" />
+                {team.visibility || 'Public'}
+              </Badge>
+              <Badge variant="outline">
+                {team.memberIds.length} members
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Settings Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-7 mb-8">
+            {settingsTabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <TabsTrigger 
+                  key={tab.id} 
+                  value={tab.id} 
+                  className="flex items-center gap-2"
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          <TabsContent value="general">
+            <Card>
+              <CardHeader>
+                <CardTitle>General Settings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  General team configuration and basic information settings will be implemented here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="performance">
+            <TeamPerformanceDashboard team={team} />
+          </TabsContent>
+
+          <TabsContent value="members">
+            <Card>
+              <CardHeader>
+                <CardTitle>Team Members</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Team member management and role assignment will be implemented here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="permissions">
+            <Card>
+              <CardHeader>
+                <CardTitle>Permissions & Access Control</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Team permissions and access control settings will be implemented here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <Card>
+              <CardHeader>
+                <CardTitle>Notification Preferences</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Team notification settings and preferences will be implemented here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="integrations">
+            <Card>
+              <CardHeader>
+                <CardTitle>Integrations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Team integration settings and external service connections will be implemented here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="archive">
+            <Card>
+              <CardHeader>
+                <CardTitle>Archive & Deletion</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Team archiving and deletion options will be implemented here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="visibility" className="flex items-center gap-2">
-            <Settings className="w-4 h-4" />
-            Visibility
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center gap-2">
-            <Bell className="w-4 h-4" />
-            Notifications
-          </TabsTrigger>
-          <TabsTrigger value="integrations" className="flex items-center gap-2">
-            <Link className="w-4 h-4" />
-            Integrations
-          </TabsTrigger>
-          <TabsTrigger value="archive" className="flex items-center gap-2">
-            <Archive className="w-4 h-4" />
-            Archive
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="visibility" className="mt-6">
-          <TeamVisibilitySettings
-            visibility={visibility}
-            onVisibilityChange={handleVisibilityChange}
-          />
-        </TabsContent>
-
-        <TabsContent value="notifications" className="mt-6">
-          <TeamNotificationSettings
-            preferences={notificationPreferences}
-            onPreferencesChange={handleNotificationChange}
-          />
-        </TabsContent>
-
-        <TabsContent value="integrations" className="mt-6">
-          <TeamIntegrationSettings
-            integrations={integrations}
-            onIntegrationToggle={handleIntegrationToggle}
-            onIntegrationConfigure={handleIntegrationConfigure}
-          />
-        </TabsContent>
-
-        <TabsContent value="archive" className="mt-6">
-          <TeamArchiveSettings
-            team={team}
-            onArchiveTeam={handleArchiveTeam}
-            onDeleteTeam={handleDeleteTeam}
-            onExportTeamData={handleExportTeamData}
-          />
-        </TabsContent>
-      </Tabs>
     </div>
   );
 };
