@@ -10,13 +10,16 @@ import { MainLayout } from "@/components/dashboard/MainLayout";
 import { FloatingActionButton } from "@/components/dashboard/FloatingActionButton";
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
+import { KeyboardShortcutsOverlay } from "@/components/dashboard/KeyboardShortcutsOverlay";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
 import { useTeams } from "@/contexts/TeamContext";
 import { useOnboarding } from "@/contexts/OnboardingContext";
+import { useViewSwitchingShortcuts } from "@/hooks/useViewSwitchingShortcuts";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
+import { Toaster } from "@/components/ui/toaster";
 
 const Index = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -66,6 +69,13 @@ const Index = () => {
       setSelectedAgent(null);
     }
   };
+
+  // Initialize keyboard shortcuts for view switching
+  useViewSwitchingShortcuts({
+    showTeamView,
+    onToggleView: handleToggleView,
+    enabled: true
+  });
 
   const { progress } = useOnboarding();
 
@@ -141,6 +151,12 @@ const Index = () => {
 
       {/* Onboarding Modal */}
       <OnboardingModal />
+      
+      {/* Keyboard Shortcuts Overlay */}
+      <KeyboardShortcutsOverlay />
+      
+      {/* Toast Notifications */}
+      <Toaster />
       
       {/* Vibe DevSquad subtle background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">

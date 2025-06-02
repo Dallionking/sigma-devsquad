@@ -21,10 +21,14 @@ export const ViewToggle = ({ showTeamView, onToggleView }: ViewToggleProps) => {
             className={cn(
               "relative h-12 px-4 rounded-md transition-all duration-300 font-medium",
               "flex items-center gap-3 min-w-[140px] justify-center",
+              "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800",
+              "focus-visible:outline-none",
               showTeamView 
                 ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm" 
                 : "bg-transparent text-gray-300 hover:bg-gray-700/50 hover:text-white"
             )}
+            aria-label="Switch to Team View (Alt+T)"
+            title="Switch to Team View (Alt+T)"
           >
             <Users className="w-4 h-4" />
             <span>Team View</span>
@@ -40,10 +44,14 @@ export const ViewToggle = ({ showTeamView, onToggleView }: ViewToggleProps) => {
             className={cn(
               "relative h-12 px-4 rounded-md transition-all duration-300 font-medium",
               "flex items-center gap-3 min-w-[140px] justify-center",
+              "focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800",
+              "focus-visible:outline-none",
               !showTeamView 
                 ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm" 
                 : "bg-transparent text-gray-300 hover:bg-gray-700/50 hover:text-white"
             )}
+            aria-label="Switch to Individual Agents View (Alt+I)"
+            title="Switch to Individual Agents View (Alt+I)"
           >
             <Bot className="w-4 h-4" />
             <span>Individual Agents</span>

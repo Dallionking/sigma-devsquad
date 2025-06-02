@@ -12,15 +12,18 @@ import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
 import { SampleProjectsModal } from "@/components/sample-projects/SampleProjectsModal";
 import { ContextualHelp } from "@/components/help/ContextualHelp";
+import { KeyboardShortcutsOverlay } from "@/components/dashboard/KeyboardShortcutsOverlay";
 import { useAgents } from "@/contexts/AgentContext";
 import { useTasks } from "@/contexts/TaskContext";
 import { useMessages } from "@/contexts/MessageContext";
 import { useTeams } from "@/contexts/TeamContext";
 import { useOnboarding } from "@/contexts/OnboardingContext";
+import { useViewSwitchingShortcuts } from "@/hooks/useViewSwitchingShortcuts";
 import { ViewMode, Agent, Task, Message } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 const Dashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -72,6 +75,13 @@ const Dashboard = () => {
       setSelectedAgent(null);
     }
   };
+
+  // Initialize keyboard shortcuts for view switching
+  useViewSwitchingShortcuts({
+    showTeamView,
+    onToggleView: handleToggleView,
+    enabled: true
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
@@ -166,6 +176,12 @@ const Dashboard = () => {
         open={showSampleProjects}
         onOpenChange={setShowSampleProjects}
       />
+      
+      {/* Keyboard Shortcuts Overlay */}
+      <KeyboardShortcutsOverlay />
+      
+      {/* Toast Notifications */}
+      <Toaster />
       
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
