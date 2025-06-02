@@ -89,7 +89,7 @@ const Dashboard = () => {
       
       {/* Use Unified Layout with Sidebar */}
       <UnifiedMainLayout>
-        {/* Optimized Header with Status Sub-Header */}
+        {/* Optimized Header with Status Sub-Header - More compact */}
         <div className="relative">
           <Header 
             viewMode={viewMode} 
@@ -100,23 +100,23 @@ const Dashboard = () => {
             showTeamView={showTeamView}
           />
           
-          {/* Quick Actions Bar */}
-          <div className="absolute top-2 right-4 flex items-center space-x-2">
+          {/* Quick Actions Bar - Smaller */}
+          <div className="absolute top-1 right-3 flex items-center space-x-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowSampleProjects(true)}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
               title="Browse sample projects"
             >
-              <Star className="w-4 h-4" />
+              <Star className="w-3 h-3" />
             </Button>
             <ContextualHelp context="dashboard" />
           </div>
         </div>
         
-        {/* Real-time Notifications */}
-        <div className="px-4 py-2">
+        {/* Real-time Notifications - More compact */}
+        <div className="px-3 py-1">
           <RealtimeNotifications />
         </div>
         
@@ -128,36 +128,38 @@ const Dashboard = () => {
 
         {/* Onboarding Progress */}
         {!progress.isOnboardingComplete && (
-          <div className="px-6 py-4">
+          <div className="px-4 py-2">
             <OnboardingProgress />
           </div>
         )}
         
-        {/* Main Content - Keep existing layout structure */}
-        <MainLayout
-          showTeamView={showTeamView}
-          sidebarCollapsed={sidebarCollapsed}
-          syncPanelCollapsed={syncPanelCollapsed}
-          agents={agents || []}
-          tasks={tasks || []}
-          messages={messages || []}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          selectedTeam={selectedTeam}
-          selectedAgentProfile={selectedAgentProfile}
-          viewMode={viewMode}
-          hasSelection={hasSelection}
-          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
-          onAgentSelect={setSelectedAgent}
-          onTaskSelect={setSelectedTask}
-          onMessageSelect={setSelectedMessage}
-          onTeamSelect={setSelectedTeam}
-          onAgentProfileSelect={setSelectedAgentProfile}
-          onDismissSelection={handleDismissSelection}
-          onViewModeChange={setViewMode}
-        />
+        {/* Main Content - Keep existing layout structure but more compact */}
+        <div className="px-2">
+          <MainLayout
+            showTeamView={showTeamView}
+            sidebarCollapsed={sidebarCollapsed}
+            syncPanelCollapsed={syncPanelCollapsed}
+            agents={agents || []}
+            tasks={tasks || []}
+            messages={messages || []}
+            selectedAgent={selectedAgent}
+            selectedTask={selectedTask}
+            selectedMessage={selectedMessage}
+            selectedTeam={selectedTeam}
+            selectedAgentProfile={selectedAgentProfile}
+            viewMode={viewMode}
+            hasSelection={hasSelection}
+            onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+            onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
+            onAgentSelect={setSelectedAgent}
+            onTaskSelect={setSelectedTask}
+            onMessageSelect={setSelectedMessage}
+            onTeamSelect={setSelectedTeam}
+            onAgentProfileSelect={setSelectedAgentProfile}
+            onDismissSelection={handleDismissSelection}
+            onViewModeChange={setViewMode}
+          />
+        </div>
         
         {/* Enhanced footer with Vibe branding and smooth animations */}
         {showFooter && (

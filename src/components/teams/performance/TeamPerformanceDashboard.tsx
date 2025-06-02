@@ -27,15 +27,15 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
   }, [team.name]);
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="w-full max-w-full px-3 py-4 space-y-4">
+      {/* Header - More compact */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-primary flex-shrink-0" />
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-primary flex-shrink-0" />
             <span className="truncate">Team Performance Dashboard</span>
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Monitor {team.name} productivity and performance metrics
           </p>
         </div>
@@ -66,27 +66,24 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
         customDateRange={customDateRange}
       />
 
-      {/* Performance Tabs */}
+      {/* Performance Tabs - More compact */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto sm:mx-0">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" />
-            <span className="hidden sm:inline">Overview</span>
-            <span className="sm:hidden">Overview</span>
+        <TabsList className="grid w-full grid-cols-3 max-w-sm">
+          <TabsTrigger value="overview" className="flex items-center gap-1 text-xs">
+            <TrendingUp className="w-3 h-3" />
+            <span>Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="productivity" className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span className="hidden sm:inline">Productivity</span>
-            <span className="sm:hidden">Productivity</span>
+          <TabsTrigger value="productivity" className="flex items-center gap-1 text-xs">
+            <Clock className="w-3 h-3" />
+            <span>Productivity</span>
           </TabsTrigger>
-          <TabsTrigger value="comparison" className="flex items-center gap-2">
-            <Target className="w-4 h-4" />
-            <span className="hidden sm:inline">Comparison</span>
-            <span className="sm:hidden">Comparison</span>
+          <TabsTrigger value="comparison" className="flex items-center gap-1 text-xs">
+            <Target className="w-3 h-3" />
+            <span>Comparison</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6">
+        <TabsContent value="overview" className="mt-4">
           <TeamPerformanceCharts
             team={team}
             timeRange={timeRange}
@@ -95,7 +92,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="productivity" className="mt-6">
+        <TabsContent value="productivity" className="mt-4">
           <TeamPerformanceCharts
             team={team}
             timeRange={timeRange}
@@ -104,7 +101,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="comparison" className="mt-6">
+        <TabsContent value="comparison" className="mt-4">
           <TeamPerformanceComparison
             team={team}
             timeRange={timeRange}

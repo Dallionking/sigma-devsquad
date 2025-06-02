@@ -56,30 +56,6 @@ export const EnhancedNavigationButtons = ({
       showOnMobile: true
     },
     {
-      path: "/mcp-management",
-      label: "MCP",
-      icon: Package,
-      description: "Model Context Protocol management",
-      shortcut: "m",
-      showOnMobile: false
-    },
-    {
-      path: "/llm-integration",
-      label: "LLM",
-      icon: Brain,
-      description: "Language model integration settings",
-      shortcut: "l",
-      showOnMobile: false
-    },
-    {
-      path: "/ide-integration",
-      label: "IDE",
-      icon: Monitor,
-      description: "Integrated development environment setup",
-      shortcut: "i",
-      showOnMobile: false
-    },
-    {
       path: "/settings",
       label: "Settings",
       icon: Cog,
@@ -107,7 +83,7 @@ export const EnhancedNavigationButtons = ({
 
   const renderNavigationItems = () => (
     <>
-      {/* History Controls */}
+      {/* History Controls - Smaller */}
       {showHistoryControls && !isMobile && (
         <div className="flex items-center space-x-1 mr-2 border-r border-border/30 pr-2">
           <Tooltip delayDuration={300}>
@@ -117,9 +93,9 @@ export const EnhancedNavigationButtons = ({
                 size="sm"
                 onClick={goBack}
                 disabled={!canGoBack}
-                className="h-8 w-8 p-0 hover:bg-accent/80 disabled:opacity-50"
+                className="h-7 w-7 p-0 hover:bg-accent/80 disabled:opacity-50"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-3 h-3" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -134,9 +110,9 @@ export const EnhancedNavigationButtons = ({
                 size="sm"
                 onClick={goForward}
                 disabled={!canGoForward}
-                className="h-8 w-8 p-0 hover:bg-accent/80 disabled:opacity-50"
+                className="h-7 w-7 p-0 hover:bg-accent/80 disabled:opacity-50"
               >
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3 h-3" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -146,7 +122,7 @@ export const EnhancedNavigationButtons = ({
         </div>
       )}
 
-      {/* Navigation Items */}
+      {/* Navigation Items - Much smaller and more compact */}
       {items.map((item) => {
         const Icon = item.icon;
         const shortcutText = getShortcutText({
@@ -165,29 +141,29 @@ export const EnhancedNavigationButtons = ({
                 onClick={() => handleNavigation(item)}
                 disabled={isNavigating}
                 className={cn(
-                  "h-9 px-3 transition-all duration-200 relative",
+                  "h-7 px-2 text-xs transition-all duration-200 relative min-w-0",
                   // Active state with enhanced styling
                   item.isActive && [
-                    "bg-primary text-primary-foreground shadow-md",
+                    "bg-primary text-primary-foreground shadow-sm",
                     "after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2",
-                    "after:w-1 after:h-1 after:bg-primary-foreground after:rounded-full"
+                    "after:w-0.5 after:h-0.5 after:bg-primary-foreground after:rounded-full"
                   ],
                   // Enhanced hover states
                   !item.isActive && [
                     "hover:bg-accent/80 hover:text-accent-foreground",
-                    "hover:scale-105 hover:shadow-sm",
-                    "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    "hover:scale-105",
+                    "focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-1"
                   ],
                   // Mobile specific styles
-                  isMobile && "w-full justify-start h-12 text-left"
+                  isMobile && "w-full justify-start h-10 text-left px-3"
                 )}
               >
-                <Icon className={cn("w-4 h-4", isMobile ? "mr-3" : "mr-2")} />
-                <span className="font-medium">{item.label}</span>
+                <Icon className={cn("w-3 h-3", isMobile ? "mr-2" : "mr-1")} />
+                <span className="font-medium truncate">{item.label}</span>
                 
                 {/* Active indicator dot */}
                 {item.isActive && !isMobile && (
-                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary-foreground rounded-full" />
+                  <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-primary-foreground rounded-full" />
                 )}
                 
                 {/* Keyboard shortcut badge for mobile */}
@@ -219,7 +195,7 @@ export const EnhancedNavigationButtons = ({
       <ResponsiveNavigationWrapper
         triggerLabel="Open navigation menu"
         collapsible={false}
-        className="hidden lg:flex items-center space-x-1"
+        className="hidden lg:flex items-center space-x-0.5"
         mobileContent={
           <div className="space-y-2">
             <div className="text-sm text-muted-foreground mb-4">

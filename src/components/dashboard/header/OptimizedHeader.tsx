@@ -41,10 +41,10 @@ export const OptimizedHeader = ({
 
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      {/* Main Header */}
-      <div className="flex h-14 items-center justify-between px-4 lg:px-6">
+      {/* Main Header - Reduced height and improved spacing */}
+      <div className="flex h-12 items-center justify-between px-3 lg:px-4">
         {/* Left Section: Logo and Sidebar Toggle */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <HeaderLogo 
             isDashboardPage={isDashboardPage}
             sidebarCollapsed={sidebarCollapsed}
@@ -53,14 +53,14 @@ export const OptimizedHeader = ({
             totalAgents={totalAgents}
           />
           
-          {/* Mobile Project Switcher */}
-          <div className="lg:hidden w-48">
+          {/* Mobile Project Switcher - Smaller on mobile */}
+          <div className="lg:hidden w-32">
             <MobileProjectSwitcher />
           </div>
         </div>
         
-        {/* Center Section: Optimized Navigation */}
-        <div className="flex-1 flex justify-center">
+        {/* Center Section: Optimized Navigation - Constrained width */}
+        <div className="flex-1 flex justify-center max-w-2xl mx-auto">
           <OptimizedConsolidatedNavigation 
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}
@@ -69,12 +69,12 @@ export const OptimizedHeader = ({
         </div>
         
         {/* Right Section: Optimized Actions */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
           <OptimizedActionButtons />
         </div>
       </div>
       
-      {/* Status Sub-Header */}
+      {/* Status Sub-Header - More compact */}
       <StatusSubHeader 
         agents={agents}
         showTeamView={showTeamView}

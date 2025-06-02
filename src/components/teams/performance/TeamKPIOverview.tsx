@@ -104,19 +104,19 @@ export const TeamKPIOverview = ({
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {kpiMetrics.map((metric) => {
         const Icon = metric.icon;
         const progressValue = metric.target ? (metric.value / metric.target) * 100 : 0;
         
         return (
           <Card key={metric.id} className="relative overflow-hidden">
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-1">
               <CardTitle className="text-xs font-medium text-muted-foreground truncate">
                 {metric.title}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-2 pt-0">
               <div className="flex items-center justify-between">
                 <div className="space-y-1 min-w-0 flex-1">
                   <div className="flex items-baseline gap-1">
@@ -138,8 +138,8 @@ export const TeamKPIOverview = ({
                   )}
                 </div>
                 
-                <div className={`p-2 rounded-lg bg-muted/50 flex-shrink-0`}>
-                  <Icon className={`w-4 h-4 ${metric.color}`} />
+                <div className={`p-1.5 rounded-lg bg-muted/50 flex-shrink-0`}>
+                  <Icon className={`w-3 h-3 ${metric.color}`} />
                 </div>
               </div>
               
@@ -151,7 +151,7 @@ export const TeamKPIOverview = ({
                       {metric.value}/{metric.target} {metric.unit}
                     </span>
                   </div>
-                  <Progress value={progressValue} className="h-1.5" />
+                  <Progress value={progressValue} className="h-1" />
                 </div>
               )}
             </CardContent>
