@@ -1,6 +1,5 @@
 
 import { OptimizedConsolidatedNavigation } from "./OptimizedConsolidatedNavigation";
-import { HeaderLogo } from "./HeaderLogo";
 import { OptimizedActionButtons } from "./OptimizedActionButtons";
 import { StatusSubHeader } from "./StatusSubHeader";
 import { MobileProjectSwitcher } from "@/components/projects/MobileProjectSwitcher";
@@ -41,26 +40,15 @@ export const OptimizedHeader = ({
 
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      {/* Main Header - Optimized structure with reduced gaps */}
-      <div className="flex h-9 items-center justify-between px-1 lg:px-2 gap-1 max-w-full overflow-hidden">
-        {/* Left Section: Logo and Sidebar Toggle - Reduced max width */}
-        <div className="flex items-center gap-1 flex-shrink-0 min-w-0 max-w-48">
-          <HeaderLogo 
-            isDashboardPage={isDashboardPage}
-            sidebarCollapsed={sidebarCollapsed}
-            onSidebarToggle={onSidebarToggle}
-            activeAgents={activeAgents}
-            totalAgents={totalAgents}
-          />
-          
-          {/* Mobile Project Switcher */}
-          <div className="lg:hidden max-w-16">
-            <MobileProjectSwitcher />
-          </div>
+      {/* Main Header - Simplified structure without logo overlap */}
+      <div className="flex h-9 items-center justify-between px-2 lg:px-4 gap-2 max-w-full overflow-hidden">
+        {/* Left Section: Mobile Project Switcher only */}
+        <div className="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-32 lg:hidden">
+          <MobileProjectSwitcher />
         </div>
         
-        {/* Center Section: Optimized Navigation - Reduced margins */}
-        <div className="flex-1 flex justify-center min-w-0 max-w-full mx-1">
+        {/* Center Section: Main Navigation */}
+        <div className="flex-1 flex justify-center min-w-0 max-w-full mx-2">
           <OptimizedConsolidatedNavigation 
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}
@@ -68,8 +56,8 @@ export const OptimizedHeader = ({
           />
         </div>
         
-        {/* Right Section: Optimized Actions - Reduced max width */}
-        <div className="flex items-center gap-1 flex-shrink-0 max-w-20">
+        {/* Right Section: Action Buttons */}
+        <div className="flex items-center gap-1 flex-shrink-0 max-w-24">
           <OptimizedActionButtons />
         </div>
       </div>
