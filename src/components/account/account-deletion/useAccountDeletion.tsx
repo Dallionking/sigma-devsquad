@@ -42,13 +42,17 @@ export const useAccountDeletion = () => {
       const deletionDate = new Date();
       deletionDate.setDate(deletionDate.getDate() + 7);
 
+      // Generate a confirmation token
+      const confirmationToken = crypto.randomUUID();
+
       const { error } = await supabase
         .from('account_deletion_requests')
         .insert({
           reason,
           feedback,
           scheduled_deletion_date: deletionDate.toISOString(),
-          status: 'pending'
+          status: 'pending',
+          confirmation_token: confirmationToken
         });
 
       if (error) throw error;
