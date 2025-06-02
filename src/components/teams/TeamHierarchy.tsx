@@ -1,16 +1,18 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTeams } from "@/contexts/TeamContext";
 import { Team, AgentProfile } from "@/types/teams";
-import { ChevronDown, ChevronRight, Users, Crown, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, Users, Crown, Plus, Settings } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { TeamCreationDialog } from "./TeamCreationDialog";
 import { AgentAdditionDialog } from "./AgentAdditionDialog";
 import { TeamCompositionBadge } from "./TeamCompositionBadge";
 import { TeamTypeTooltip } from "./TeamTypeTooltip";
+import { TeamManagementModal } from "./TeamManagementModal";
 import { getTeamCompositionColor, getTeamTypeIcon } from "@/utils/teamVisualUtils";
 
 interface TeamHierarchyProps {
