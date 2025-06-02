@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { TeamTypeFilters } from './TeamTypeFilters';
 import { FilterPresets } from './FilterPresets';
 import { TeamComposition, TeamType } from '@/types/teams';
-import { Filter, X } from 'lucide-react';
+import { Filter, X, Settings } from 'lucide-react';
 
 interface TeamFiltersPanelProps {
   selectedCompositions: TeamComposition[];
@@ -35,48 +35,60 @@ export const TeamFiltersPanel = ({
   });
 
   return (
-    <Card className="w-full border-2 border-primary/20 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-950/30 dark:to-indigo-950/30">
-      <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-secondary/5">
-        <CardTitle className="flex items-center justify-between text-base">
-          <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-primary" />
-            <span>Team Filters</span>
-            {activeFilterCount > 0 && (
-              <Badge variant="default" className="text-xs bg-primary">
-                {activeFilterCount} active
+    <div className="space-y-4">
+      {/* Quick Actions */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Settings className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium">Filter Options</span>
+        </div>
+        {activeFilterCount > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onClearFilters}
+            className="h-7 px-2 text-xs"
+          >
+            <X className="w-3 h-3 mr-1" />
+            Clear ({activeFilterCount})
+          </Button>
+        )}
+      </div>
+
+      {/* Active Filters Display */}
+      {activeFilterCount > 0 && (
+        <div className="p-2 bg-primary/10 rounded border border-primary/20">
+          <div className="text-xs font-medium text-primary mb-2">Active Filters:</div>
+          <div className="flex flex-wrap gap-1">
+            {selectedCompositions.map(comp => (
+              <Badge key={comp} variant="default" className="text-xs">
+                {comp}
               </Badge>
-            )}
+            ))}
+            {selectedTypes.map(type => (
+              <Badge key={type} variant="secondary" className="text-xs">
+                {type}
+              </Badge>
+            ))}
           </div>
-          {activeFilterCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClearFilters}
-              className="h-8 px-2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="w-4 h-4" />
-              Clear All
-            </Button>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <TeamTypeFilters
-          selectedCompositions={selectedCompositions}
-          selectedTypes={selectedTypes}
-          onCompositionChange={onCompositionChange}
-          onTypeChange={onTypeChange}
-          onClearFilters={onClearFilters}
-        />
-        
-        <Separator />
-        
-        <FilterPresets
-          currentCompositions={selectedCompositions}
-          currentTypes={selectedTypes}
-          onApplyPreset={onApplyPreset}
-        />
-      </CardContent>
-    </Card>
+        </div>
+      )}
+
+      <TeamTypeFilters
+        selectedCompositions={selectedCompositions}
+        selectedTypes={selectedTypes}
+        onCompositionChange={onCompositionChange}
+        onTypeChange={onTypeChange}
+        onClearFilters={onClearFilters}
+      />
+      
+      <Separator />
+      
+      <FilterPresets
+        currentCompositions={selectedCompositions}
+        currentTypes={selectedTypes}
+        onApplyPreset={onApplyPreset}
+      />
+    </div>
   );
 };

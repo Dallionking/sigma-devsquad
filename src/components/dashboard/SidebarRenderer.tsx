@@ -5,7 +5,7 @@ import { Team, AgentProfile } from "@/types/teams";
 import { FilteredTeamHierarchy } from "../teams/FilteredTeamHierarchy";
 import { AgentSidebar } from "./AgentSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail, Activity } from "lucide-react";
+import { Users, Bot, Workflow, MessageSquare, CheckSquare, Mail, Activity, Filter } from "lucide-react";
 
 interface SidebarRendererProps {
   viewMode: ViewMode;
@@ -73,8 +73,11 @@ export const SidebarRenderer = ({
     return (
       <div className="w-full h-full flex flex-col items-center py-4 space-y-4">
         {showTeamView ? (
-          <div className="p-2 rounded-lg bg-primary/10">
+          <div className="p-2 rounded-lg bg-primary/10 relative">
             <Users className="w-6 h-6 text-primary" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
+              <Filter className="w-2 h-2 text-white" />
+            </div>
           </div>
         ) : (
           <div className="p-2 rounded-lg bg-primary/10">
@@ -88,17 +91,18 @@ export const SidebarRenderer = ({
   if (showTeamView) {
     return (
       <div className="h-full flex flex-col bg-gradient-to-b from-background to-muted/30">
-        <div className="p-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <div className="p-4 border-b border-border/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-950/30 dark:to-indigo-950/30">
           <h2 className="font-semibold text-lg flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
             Team Management
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Filter and organize your teams
+          <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+            <Filter className="w-3 h-3" />
+            Use filters below to organize teams
           </p>
         </div>
         
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto p-4">
           <FilteredTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
