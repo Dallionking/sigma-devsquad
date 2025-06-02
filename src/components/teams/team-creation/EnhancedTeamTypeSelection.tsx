@@ -114,7 +114,7 @@ export const EnhancedTeamTypeSelection = ({
   const selectedOption = teamTypeOptions.find(option => option.type === selectedType);
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("space-y-6", className)}>
       <div className="text-center space-y-2">
         <h3 className="text-xl font-bold">Choose Your Team Type</h3>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">
@@ -122,57 +122,62 @@ export const EnhancedTeamTypeSelection = ({
         </p>
       </div>
 
-      {/* Compact Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {/* Improved Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {teamTypeOptions.map((option) => (
           <Card
             key={option.type}
             className={cn(
-              "cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] group relative overflow-hidden",
-              selectedType === option.type ? "ring-2 ring-primary bg-primary/5 shadow-md" : "hover:border-primary/50"
+              "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] group relative overflow-hidden border-2",
+              selectedType === option.type 
+                ? "ring-2 ring-primary bg-primary/5 shadow-lg border-primary" 
+                : "hover:border-primary/30 border-border"
             )}
             onClick={() => onTypeSelect(option.type)}
           >
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="text-2xl">{getTeamTypeIcon(option.type)}</div>
-                  <div>
-                    <CardTitle className="text-sm font-semibold leading-tight">{option.label}</CardTitle>
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="text-2xl flex-shrink-0">{getTeamTypeIcon(option.type)}</div>
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="text-base font-semibold leading-tight flex items-center gap-2">
+                      {option.label}
+                      <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{option.description}</p>
                   </div>
                 </div>
-                {selectedType === option.type ? (
-                  <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                ) : (
-                  <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                {selectedType === option.type && (
+                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
                 )}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">{option.description}</p>
             </CardHeader>
             
-            <CardContent className="pt-0 space-y-2">
+            <CardContent className="pt-0 space-y-4">
+              {/* Capabilities */}
               <div>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1.5">
                   {option.capabilities.slice(0, 2).map((capability) => (
-                    <Badge key={capability} variant="secondary" className="text-xs px-1.5 py-0.5">
+                    <Badge key={capability} variant="secondary" className="text-xs px-2 py-1 font-medium">
                       {capability}
                     </Badge>
                   ))}
                   {option.capabilities.length > 2 && (
-                    <Badge variant="outline" className="text-xs px-1.5 py-0.5">
+                    <Badge variant="outline" className="text-xs px-2 py-1">
                       +{option.capabilities.length - 2}
                     </Badge>
                   )}
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-1">
-                {option.recommendedComposition.slice(0, 2).map((comp) => {
+              {/* Team Composition */}
+              <div className="flex flex-wrap gap-2">
+                {option.recommendedComposition.map((comp) => {
                   const Icon = getCompositionIcon(comp);
                   return (
-                    <div key={comp} className="flex items-center gap-1 text-xs bg-muted/50 rounded px-1.5 py-0.5">
-                      <Icon className="w-3 h-3" />
-                      <span>{getCompositionLabel(comp)}</span>
+                    <div key={comp} className="flex items-center gap-1.5 text-xs bg-muted/60 rounded-md px-2 py-1.5">
+                      <Icon className="w-3.5 h-3.5" />
+                      <span className="font-medium">{getCompositionLabel(comp)}</span>
                     </div>
                   );
                 })}
@@ -184,8 +189,8 @@ export const EnhancedTeamTypeSelection = ({
 
       {/* Enhanced Selected Option Details */}
       {selectedOption && (
-        <Card className="bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-primary/20">
-          <CardHeader className="pb-3">
+        <Card className="bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-primary/20 mt-6">
+          <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
               <div className="text-3xl">{getTeamTypeIcon(selectedOption.type)}</div>
               <div>
@@ -198,17 +203,17 @@ export const EnhancedTeamTypeSelection = ({
             </div>
           </CardHeader>
           
-          <CardContent className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
+          <CardContent className="space-y-5">
+            <div className="grid sm:grid-cols-2 gap-5">
               <div>
-                <h4 className="font-medium mb-2 flex items-center gap-2 text-sm">
-                  <CheckCircle className="w-3 h-3 text-green-600" />
+                <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
                   Core Capabilities
                 </h4>
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {selectedOption.capabilities.map((capability) => (
-                    <div key={capability} className="flex items-center gap-2 text-xs">
-                      <div className="w-1 h-1 bg-primary rounded-full" />
+                    <div key={capability} className="flex items-center gap-2 text-sm">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
                       <span>{capability}</span>
                     </div>
                   ))}
@@ -216,8 +221,8 @@ export const EnhancedTeamTypeSelection = ({
               </div>
 
               <div>
-                <h4 className="font-medium mb-2 text-sm">Tools & Technologies</h4>
-                <div className="flex flex-wrap gap-1">
+                <h4 className="font-semibold mb-3 text-sm">Tools & Technologies</h4>
+                <div className="flex flex-wrap gap-1.5">
                   {selectedOption.toolsUsed.map((tool) => (
                     <Badge key={tool} variant="outline" className="text-xs">
                       {tool}
@@ -228,23 +233,23 @@ export const EnhancedTeamTypeSelection = ({
             </div>
 
             <div>
-              <h4 className="font-medium mb-1 text-sm">Example Use Cases</h4>
-              <p className="text-xs text-muted-foreground bg-muted/30 rounded p-2">
+              <h4 className="font-semibold mb-2 text-sm">Example Use Cases</h4>
+              <p className="text-sm text-muted-foreground bg-muted/40 rounded-lg p-3">
                 {selectedOption.example}
               </p>
             </div>
 
             <div>
-              <h4 className="font-medium mb-2 text-sm">Recommended Team Compositions</h4>
-              <div className="grid gap-2">
+              <h4 className="font-semibold mb-3 text-sm">Recommended Team Compositions</h4>
+              <div className="grid gap-3">
                 {selectedOption.recommendedComposition.map((comp) => {
                   const Icon = getCompositionIcon(comp);
                   return (
-                    <div key={comp} className="flex items-center gap-2 p-2 rounded bg-background/60 border">
-                      <Icon className="w-4 h-4 text-primary" />
+                    <div key={comp} className="flex items-center gap-3 p-3 rounded-lg bg-background/60 border">
+                      <Icon className="w-5 h-5 text-primary flex-shrink-0" />
                       <div>
-                        <span className="font-medium text-xs">{getCompositionLabel(comp)} Team</span>
-                        <p className="text-xs text-muted-foreground">
+                        <span className="font-medium text-sm">{getCompositionLabel(comp)} Team</span>
+                        <p className="text-xs text-muted-foreground mt-0.5">
                           {comp === 'human' && 'Best for creative problem-solving and complex decision-making'}
                           {comp === 'ai' && 'Ideal for automated tasks and consistent execution'}
                           {comp === 'hybrid' && 'Combines human creativity with AI efficiency'}
