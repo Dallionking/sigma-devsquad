@@ -39,6 +39,7 @@ export interface Message {
   content: string;
   timestamp: string;
   type: "request" | "response" | "notification" | "direct" | "file_share" | "task_assignment";
+  read?: boolean;
   metadata?: {
     fileName?: string;
     fileSize?: number;

@@ -3,8 +3,7 @@ import React from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ViewMode } from '@/types';
-import { Workflow, MessageSquare, CheckSquare, Mail, Bot } from 'lucide-react';
-import { BreadcrumbNavigation } from './BreadcrumbNavigation';
+import { Workflow, MessageSquare, CheckSquare, Mail } from 'lucide-react';
 
 interface ViewModeTabsProps {
   viewMode: ViewMode;
@@ -30,9 +29,7 @@ export const ViewModeTabs = ({
   ];
 
   return (
-    <div className="px-6 py-3 space-y-3">
-      <BreadcrumbNavigation viewMode={viewMode} />
-      
+    <div className="px-6 py-3">
       <Tabs value={viewMode} onValueChange={onViewModeChange}>
         <TabsList className="grid w-full grid-cols-4 bg-muted/30">
           {tabs.map((tab) => {

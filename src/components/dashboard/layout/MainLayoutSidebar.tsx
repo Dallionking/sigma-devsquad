@@ -8,7 +8,7 @@ import { Team, AgentProfile } from '@/types/teams';
 import { cn } from '@/lib/utils';
 
 interface MainLayoutSidebarProps {
-  isCollapsed: boolean;
+  sidebarCollapsed: boolean;
   showTeamView: boolean;
   viewMode: ViewMode;
   agents: Agent[];
@@ -19,7 +19,7 @@ interface MainLayoutSidebarProps {
   selectedMessage: Message | null;
   selectedTeam: Team | null;
   selectedAgentProfile: AgentProfile | null;
-  onToggleCollapse: () => void;
+  onSidebarToggle: () => void;
   onAgentSelect: (agent: Agent | null) => void;
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
@@ -28,7 +28,7 @@ interface MainLayoutSidebarProps {
 }
 
 export const MainLayoutSidebar = ({
-  isCollapsed,
+  sidebarCollapsed,
   showTeamView,
   viewMode,
   agents,
@@ -39,7 +39,7 @@ export const MainLayoutSidebar = ({
   selectedMessage,
   selectedTeam,
   selectedAgentProfile,
-  onToggleCollapse,
+  onSidebarToggle,
   onAgentSelect,
   onTaskSelect,
   onMessageSelect,
@@ -53,11 +53,11 @@ export const MainLayoutSidebar = ({
         <Button
           variant="ghost"
           size="sm"
-          onClick={onToggleCollapse}
+          onClick={onSidebarToggle}
           className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-all duration-200 hover:scale-105"
-          title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+          title={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
         >
-          {isCollapsed ? (
+          {sidebarCollapsed ? (
             <PanelLeft className="w-4 h-4" />
           ) : (
             <PanelLeftClose className="w-4 h-4" />
@@ -68,7 +68,7 @@ export const MainLayoutSidebar = ({
       {/* Enhanced Sidebar */}
       <div className={cn(
         "bg-background/95 backdrop-blur-sm border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 shadow-sm",
-        isCollapsed ? "w-16" : (showTeamView ? "w-80" : "w-96")
+        sidebarCollapsed ? "w-16" : (showTeamView ? "w-80" : "w-96")
       )}>
         <SidebarRenderer
           viewMode={viewMode}
@@ -81,8 +81,8 @@ export const MainLayoutSidebar = ({
           selectedTeam={selectedTeam}
           selectedAgentProfile={selectedAgentProfile}
           showTeamView={showTeamView}
-          collapsed={isCollapsed}
-          onToggleCollapse={onToggleCollapse}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={onSidebarToggle}
           onAgentSelect={onAgentSelect}
           onTaskSelect={onTaskSelect}
           onMessageSelect={onMessageSelect}

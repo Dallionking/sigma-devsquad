@@ -6,7 +6,7 @@ import { Team, AgentProfile } from '@/types/teams';
 import { cn } from '@/lib/utils';
 
 interface MainLayoutContentProps {
-  showContextPanel: boolean;
+  showTeamView: boolean;
   viewMode: ViewMode;
   agents: Agent[];
   tasks: Task[];
@@ -16,7 +16,10 @@ interface MainLayoutContentProps {
   selectedMessage: Message | null;
   selectedTeam: Team | null;
   selectedAgentProfile: AgentProfile | null;
-  showTeamView: boolean;
+  hasSelection: boolean;
+  syncPanelCollapsed: boolean;
+  onSyncPanelToggle: () => void;
+  onDismissSelection: () => void;
   onAgentSelect: (agent: Agent | null) => void;
   onTaskSelect: (task: Task | null) => void;
   onMessageSelect: (message: Message | null) => void;
@@ -26,7 +29,7 @@ interface MainLayoutContentProps {
 }
 
 export const MainLayoutContent = ({
-  showContextPanel,
+  showTeamView,
   viewMode,
   agents,
   tasks,
@@ -36,7 +39,10 @@ export const MainLayoutContent = ({
   selectedMessage,
   selectedTeam,
   selectedAgentProfile,
-  showTeamView,
+  hasSelection,
+  syncPanelCollapsed,
+  onSyncPanelToggle,
+  onDismissSelection,
   onAgentSelect,
   onTaskSelect,
   onMessageSelect,
@@ -47,7 +53,7 @@ export const MainLayoutContent = ({
   return (
     <div className={cn(
       "flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-background to-muted/10 transition-all duration-300 ease-in-out",
-      showContextPanel && "mr-96"
+      !syncPanelCollapsed && hasSelection && "mr-96"
     )}>
       <MainContentRenderer
         viewMode={viewMode}
