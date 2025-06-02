@@ -14,7 +14,8 @@ import {
   Zap,
   Clock,
   Webhook,
-  GitBranch
+  GitBranch,
+  History
 } from 'lucide-react';
 import { WorkflowRule, AutomationExecution } from '@/types/workflow-automation';
 import { KanbanBoardConfig } from '@/components/workflow/kanban/types';
@@ -23,6 +24,7 @@ import { AutomationRuleBuilder } from './AutomationRuleBuilder';
 import { AutomationRulesList } from './AutomationRulesList';
 import { AutomationExecutionLog } from './AutomationExecutionLog';
 import { AutomationStats } from './AutomationStats';
+import { WorkflowHistoryPanel } from './WorkflowHistoryPanel';
 
 interface WorkflowAutomationPanelProps {
   config: KanbanBoardConfig;
@@ -161,7 +163,7 @@ export const WorkflowAutomationPanel: React.FC<WorkflowAutomationPanelProps> = (
 
       {/* Main Content */}
       <Tabs defaultValue="rules" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="rules" className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
             Rules
@@ -173,6 +175,10 @@ export const WorkflowAutomationPanel: React.FC<WorkflowAutomationPanelProps> = (
           <TabsTrigger value="stats" className="flex items-center gap-2">
             <GitBranch className="w-4 h-4" />
             Statistics
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-2">
+            <History className="w-4 h-4" />
+            History
           </TabsTrigger>
           <TabsTrigger value="webhooks" className="flex items-center gap-2">
             <Webhook className="w-4 h-4" />
@@ -215,6 +221,10 @@ export const WorkflowAutomationPanel: React.FC<WorkflowAutomationPanelProps> = (
             rules={rules}
             executions={executions}
           />
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-6">
+          <WorkflowHistoryPanel />
         </TabsContent>
 
         <TabsContent value="webhooks" className="mt-6">
