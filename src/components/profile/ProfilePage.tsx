@@ -2,22 +2,45 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { PersonalInfoSection } from "./PersonalInfoSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { SecuritySection } from "./SecuritySection";
 import { NotificationPreferencesSection } from "./NotificationPreferencesSection";
 import { PresenceControlsSection } from "./PresenceControlsSection";
 import { ProfileHeader } from "./ProfileHeader";
-import { User, Settings, Shield, Bell, Circle } from "lucide-react";
+import { User, Settings, Shield, Bell, Circle, CreditCard, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("personal");
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 p-4 sm:p-6 lg:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Profile Header */}
         <ProfileHeader />
+
+        {/* Quick Access to Account & Billing */}
+        <Card className="shadow-lg border-border/50">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Account & Billing</h3>
+                <p className="text-muted-foreground">Manage your subscription, payment methods, and billing history</p>
+              </div>
+              <Button
+                onClick={() => navigate("/account")}
+                className="flex items-center gap-2"
+              >
+                <CreditCard className="w-4 h-4" />
+                Go to Billing
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Profile Management Tabs */}
         <Card className="shadow-lg border-border/50">
