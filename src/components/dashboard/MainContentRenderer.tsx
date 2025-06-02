@@ -1,13 +1,12 @@
-
 import React from 'react';
 import { Agent, Task, Message, ViewMode } from "@/types";
 import { Team, AgentProfile } from "@/types/teams";
 import { AgentGrid } from "./agent-grid/AgentGrid";
-import { TaskManagement } from "./TaskManagement";
 import { CommunicationHistory } from "../communication/CommunicationHistory";
 import { WorkflowCanvas } from "../workflow/WorkflowCanvas";
 import { TeamDashboard } from "../teams/TeamDashboard";
 import { CommunicationHub } from "../communication/CommunicationHub";
+import { EnhancedTaskManagement } from "../tasks/EnhancedTaskManagement";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Users, MessageSquare, Workflow } from "lucide-react";
 
@@ -145,17 +144,15 @@ export const MainContentRenderer = ({
       );
 
     case 'tasks':
-      console.log('✅ SWITCH: Rendering tasks view');
+      console.log('✅ SWITCH: Rendering enhanced tasks view');
       return (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 p-6">
-            <TaskManagement
-              tasks={tasks}
-              agents={agents}
-              selectedTask={selectedTask}
-              onTaskSelect={onTaskSelect}
-            />
-          </div>
+          <EnhancedTaskManagement
+            tasks={tasks}
+            agents={agents}
+            selectedTask={selectedTask}
+            onTaskSelect={onTaskSelect}
+          />
         </div>
       );
 
