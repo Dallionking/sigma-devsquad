@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { UserProfileDropdown } from "./UserProfileDropdown";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Menu, X, ChevronDown, Zap, Users, Target, TrendingUp, Shield, Star } from "lucide-react";
+import { Menu, X, ChevronDown, Zap, Users, Target, TrendingUp, Shield, Star, Presentation } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -38,6 +38,14 @@ export const Header = () => {
 
   const handleSignIn = () => {
     navigate("/auth?tab=signin");
+  };
+
+  const handlePresentations = () => {
+    if (user) {
+      navigate("/presentations");
+    } else {
+      navigate("/auth?tab=signup");
+    }
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -175,6 +183,17 @@ export const Header = () => {
                   <Badge variant="secondary" className="ml-2 text-xs">New</Badge>
                 </button>
               </NavigationMenuItem>
+
+              {/* Presentations */}
+              <NavigationMenuItem>
+                <button
+                  onClick={handlePresentations}
+                  className="h-10 px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-accent/50 rounded-md flex items-center"
+                >
+                  <Presentation className="w-4 h-4 mr-2" />
+                  Presentations
+                </button>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
@@ -201,6 +220,10 @@ export const Header = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => scrollToSection("pricing")} className="cursor-pointer">
                   Pricing
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePresentations} className="cursor-pointer">
+                  <Presentation className="w-4 h-4 mr-2" />
+                  Presentations
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {!user ? (
