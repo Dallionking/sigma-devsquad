@@ -81,9 +81,11 @@ export const TeamHierarchy = ({
         <h3 className="text-sm font-medium text-muted-foreground">
           Teams {teamsOverride && `(${teams.length})`}
         </h3>
-        <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-          <Plus className="w-4 h-4" />
-        </Button>
+        <TeamCreationDialog>
+          <Button size="sm" variant="ghost" className="h-6 w-6 p-0" title="Create New Team">
+            <Plus className="w-4 h-4" />
+          </Button>
+        </TeamCreationDialog>
       </div>
       
       {/* Debug: Show if no teams */}

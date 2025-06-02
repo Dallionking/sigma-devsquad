@@ -5,13 +5,23 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { TeamType, TeamComposition } from '@/types/teams';
 import { DEFAULT_TEAM_COLORS } from './constants';
 import { EnhancedTeamTypeSelection } from './EnhancedTeamTypeSelection';
 import { TeamTemplateSelector } from './TeamTemplateSelector';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { TeamAvatarSelector } from './TeamAvatarSelector';
+import { TeamGoalsStep } from './TeamGoalsStep';
+
+interface TeamGoal {
+  id: string;
+  title: string;
+  description: string;
+  category: 'performance' | 'delivery' | 'quality' | 'growth' | 'collaboration';
+  priority: 'high' | 'medium' | 'low';
+  timeline: string;
+}
 
 interface TeamFormData {
   name: string;
@@ -20,6 +30,8 @@ interface TeamFormData {
   description: string;
   color: string;
   objectives: string[];
+  avatar: string;
+  goals: TeamGoal[];
 }
 
 interface TeamFormProps {
@@ -36,7 +48,9 @@ export const TeamForm = ({ data, onChange, onSubmit, onCancel }: TeamFormProps) 
   const steps = [
     { id: 'type', label: 'Team Type', title: 'Select Team Type' },
     { id: 'template', label: 'Template', title: 'Choose Template' },
-    { id: 'details', label: 'Details', title: 'Team Details' }
+    { id: 'details', label: 'Details', title: 'Team Details' },
+    { id: 'goals', label: 'Goals', title: 'Set Goals & Objectives' },
+    { id: 'avatar', label: 'Avatar', title: 'Customize Avatar' }
   ];
 
   const compositionTypes: { value: TeamComposition; label: string; description: string }[] = [
@@ -58,6 +72,8 @@ export const TeamForm = ({ data, onChange, onSubmit, onCancel }: TeamFormProps) 
     switch (step) {
       case 1: return data.type !== "";
       case 2: return true; // Template selection is optional
+      case 3: return data.name.trim() !== "" && data.description.trim() !== "";
+      case 4: return true; // Goals are optional but recommended
       default: return true;
     }
   };
@@ -165,6 +181,25 @@ export const TeamForm = ({ data, onChange, onSubmit, onCancel }: TeamFormProps) 
               </CardContent>
             </Card>
           </div>
+        );
+      
+      case 3:
+        return (
+          <TeamGoalsStep
+            goals={data.goals || []}
+            onGoalsChange={(goals) => onChange('goals', goals)}
+            teamType={data.type as string}
+          />
+        );
+      
+      case 4:
+        return (
+          <TeamAvatarSelector
+            selectedAvatar={data.avatar || ''}
+            teamName={data.name}
+            teamType={data.type as string}
+            onAvatarSelect={(avatar) => onChange('avatar', avatar)}
+          />
         );
       
       default:

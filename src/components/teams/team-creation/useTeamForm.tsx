@@ -5,6 +5,15 @@ import { useTeams } from "@/contexts/TeamContext";
 import { useToast } from "@/hooks/use-toast";
 import { DEFAULT_TEAM_COLORS } from "./constants";
 
+interface TeamGoal {
+  id: string;
+  title: string;
+  description: string;
+  category: 'performance' | 'delivery' | 'quality' | 'growth' | 'collaboration';
+  priority: 'high' | 'medium' | 'low';
+  timeline: string;
+}
+
 interface TeamFormData {
   name: string;
   type: TeamType | "";
@@ -12,6 +21,8 @@ interface TeamFormData {
   description: string;
   color: string;
   objectives: string[];
+  avatar: string;
+  goals: TeamGoal[];
 }
 
 export const useTeamForm = (onSuccess: () => void) => {
@@ -25,6 +36,8 @@ export const useTeamForm = (onSuccess: () => void) => {
     description: "",
     color: DEFAULT_TEAM_COLORS[0],
     objectives: [],
+    avatar: "",
+    goals: [],
   });
 
   const updateField = (field: keyof TeamFormData, value: any) => {
@@ -39,6 +52,8 @@ export const useTeamForm = (onSuccess: () => void) => {
       description: "",
       color: DEFAULT_TEAM_COLORS[0],
       objectives: [],
+      avatar: "",
+      goals: [],
     });
   };
 
@@ -79,24 +94,31 @@ export const useTeamForm = (onSuccess: () => void) => {
     if (!validateForm()) return;
 
     try {
+      // Convert goals to objectives format for backward compatibility
+      const goalObjectives = formData.goals.map(goal => goal.title);
+      const allObjectives = [...formData.objectives, ...goalObjectives];
+
       const newTeam = createTeam({
         name: formData.name.trim(),
         type: formData.type as TeamType,
         composition: formData.composition,
         description: formData.description.trim(),
         color: formData.color,
-        objectives: formData.objectives,
+        objectives: allObjectives,
         memberIds: [],
         status: "active",
         kpis: [],
+        // Store additional wizard data in metadata (if your Team type supports it)
+        ...(formData.avatar && { avatar: formData.avatar }),
+        ...(formData.goals.length > 0 && { goals: formData.goals }),
       });
 
       toast({
         title: "Team Created Successfully!",
-        description: `${formData.name} has been created and is ready for team members.`,
+        description: `${formData.name} has been created with ${formData.goals.length} goals and is ready for team members.`,
       });
 
-      console.log('New team created:', newTeam);
+      console.log('New team created with wizard data:', newTeam);
       resetForm();
       onSuccess();
     } catch (error) {
