@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -28,16 +28,29 @@ export const UserProfileDropdown = () => {
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
+  // Check if user has set preference to skip confirmation
+  const shouldSkipConfirmation = localStorage.getItem('skipSignOutConfirmation') === 'true';
+
   const handleSignOutClick = () => {
-    setShowSignOutDialog(true);
+    // If user has chosen to skip confirmation, sign out immediately
+    if (shouldSkipConfirmation) {
+      handleConfirmSignOut();
+    } else {
+      setShowSignOutDialog(true);
+    }
   };
 
   const handleConfirmSignOut = async () => {
     setIsSigningOut(true);
     try {
+      // Clear any stored preferences on sign out for security
+      localStorage.removeItem('skipSignOutConfirmation');
+      localStorage.removeItem('alwaysConfirmSignOut');
+      
       const { error } = await signOut();
       
       if (error) {
+        console.error('Sign out error:', error);
         toast({
           title: "Sign Out Failed",
           description: "There was an error signing you out. Please try again.",
@@ -46,11 +59,17 @@ export const UserProfileDropdown = () => {
       } else {
         toast({
           title: "Signed Out Successfully",
-          description: "You have been signed out of your account.",
+          description: "You have been securely signed out. All active sessions have been invalidated.",
         });
-        navigate("/");
+        
+        // Clear any additional local storage items for security
+        localStorage.clear();
+        
+        // Redirect to home page after successful sign out
+        navigate("/", { replace: true });
       }
     } catch (error) {
+      console.error('Unexpected sign out error:', error);
       toast({
         title: "Sign Out Failed",
         description: "An unexpected error occurred. Please try again.",
@@ -185,16 +204,20 @@ export const UserProfileDropdown = () => {
           <div className="py-2">
             <DropdownMenuItem
               onClick={handleSignOutClick}
+              disabled={isSigningOut}
               className={cn(
                 "flex items-center px-3 py-2.5 cursor-pointer",
                 "transition-all duration-200",
                 "hover:bg-red-50 dark:hover:bg-red-950/20 focus:bg-red-50 dark:focus:bg-red-950/20",
                 "text-red-600 dark:text-red-400",
-                "group"
+                "group",
+                isSigningOut && "opacity-50 cursor-not-allowed"
               )}
             >
               <LogOut className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-200" />
-              <span className="text-sm font-medium">Sign Out</span>
+              <span className="text-sm font-medium">
+                {isSigningOut ? "Signing out..." : "Sign Out"}
+              </span>
             </DropdownMenuItem>
           </div>
         </DropdownMenuContent>

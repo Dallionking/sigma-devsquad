@@ -93,22 +93,51 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('Attempting to sign out');
     
     try {
-      // Clear any local storage items related to authentication
-      localStorage.removeItem('supabase.auth.token');
+      // Clear any local storage items related to authentication and app state
+      const keysToRemove = [
+        'supabase.auth.token',
+        'skipSignOutConfirmation',
+        'alwaysConfirmSignOut'
+      ];
       
-      // Sign out from Supabase
-      const { error } = await supabase.auth.signOut();
+      keysToRemove.forEach(key => {
+        localStorage.removeItem(key);
+      });
+      
+      // Sign out from Supabase with global scope to invalidate all sessions
+      const { error } = await supabase.auth.signOut({
+        scope: 'global' // This invalidates all sessions across all devices
+      });
       
       if (error) {
         console.error('Sign out error:', error);
         return { error };
       }
       
-      // Clear local state
+      // Clear local state immediately for better UX
       setSession(null);
       setUser(null);
       
-      console.log('Sign out successful');
+      // Additional cleanup: clear any remaining auth-related items
+      try {
+        // Clear any cached data that might contain sensitive information
+        sessionStorage.clear();
+        
+        // Clear specific localStorage keys that might contain user data
+        const userDataKeys = Object.keys(localStorage).filter(key => 
+          key.includes('user') || 
+          key.includes('auth') || 
+          key.includes('token') ||
+          key.includes('session')
+        );
+        
+        userDataKeys.forEach(key => localStorage.removeItem(key));
+      } catch (storageError) {
+        console.warn('Error clearing storage:', storageError);
+        // Continue with sign out even if storage clearing fails
+      }
+      
+      console.log('Sign out successful - all sessions invalidated');
       return { error: null };
     } catch (error) {
       console.error('Unexpected sign out error:', error);
