@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,8 +9,8 @@ import {
   GitBranch, 
   Download,
   RefreshCw,
-  Compare,
-  Timeline,
+  GitCompare,
+  Clock,
   Activity
 } from 'lucide-react';
 import { useWorkflowHistory } from '@/hooks/useWorkflowHistory';
@@ -123,7 +122,7 @@ export const WorkflowHistoryPanel: React.FC<WorkflowHistoryPanelProps> = ({
             Audit Trail
           </TabsTrigger>
           <TabsTrigger value="timeline" className="flex items-center gap-2">
-            <Timeline className="w-4 h-4" />
+            <Clock className="w-4 h-4" />
             Timeline
           </TabsTrigger>
           <TabsTrigger value="versions" className="flex items-center gap-2">
@@ -131,7 +130,7 @@ export const WorkflowHistoryPanel: React.FC<WorkflowHistoryPanelProps> = ({
             Versions
           </TabsTrigger>
           <TabsTrigger value="comparison" className="flex items-center gap-2">
-            <Compare className="w-4 h-4" />
+            <GitCompare className="w-4 h-4" />
             Compare
           </TabsTrigger>
         </TabsList>

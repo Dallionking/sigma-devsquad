@@ -1,11 +1,10 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
-  Timeline, 
+  Clock, 
   Calendar, 
   TrendingUp, 
   Activity,
@@ -105,7 +104,7 @@ export const WorkflowTimeline: React.FC<WorkflowTimelineProps> = ({
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <Timeline className="w-5 h-5" />
+              <Clock className="w-5 h-5" />
               Timeline Visualization
             </CardTitle>
             <div className="flex items-center gap-2">

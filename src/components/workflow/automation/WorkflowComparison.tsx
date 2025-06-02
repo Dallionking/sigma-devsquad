@@ -1,19 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Compare, 
+  GitCompare, 
+  ArrowLeftRight, 
   TrendingUp, 
-  TrendingDown, 
+  TrendingDown,
   Minus,
-  BarChart3,
-  Activity,
+  Plus,
   Clock,
   CheckCircle,
-  AlertTriangle
+  XCircle
 } from 'lucide-react';
 import { WorkflowVersion, WorkflowComparison as WorkflowComparisonType } from '@/types/workflow-history';
 import { useWorkflowHistory } from '@/hooks/useWorkflowHistory';
@@ -29,75 +30,68 @@ export const WorkflowComparison: React.FC<WorkflowComparisonProps> = ({
 }) => {
   const [baseVersionId, setBaseVersionId] = useState<string>('');
   const [compareVersionId, setCompareVersionId] = useState<string>('');
-  const [comparison, setComparison] = useState<WorkflowComparisonType | null>(null);
+  const [activeTab, setActiveTab] = useState('differences');
   
   const { compareVersions } = useWorkflowHistory();
 
-  const handleCompare = () => {
-    if (baseVersionId && compareVersionId) {
-      const result = compareVersions(baseVersionId, compareVersionId);
-      setComparison(result);
-    }
+  const comparison = useMemo(() => {
+    if (!baseVersionId || !compareVersionId) return null;
+    return compareVersions(baseVersionId, compareVersionId);
+  }, [baseVersionId, compareVersionId, compareVersions]);
+
+  const handleSwapVersions = () => {
+    const temp = baseVersionId;
+    setBaseVersionId(compareVersionId);
+    setCompareVersionId(temp);
   };
 
-  const getChangeIcon = (oldValue: any, newValue: any) => {
-    if (oldValue === newValue) return <Minus className="w-4 h-4 text-gray-500" />;
-    
-    // For boolean values
-    if (typeof oldValue === 'boolean' && typeof newValue === 'boolean') {
-      return newValue ? 
-        <TrendingUp className="w-4 h-4 text-green-500" /> : 
-        <TrendingDown className="w-4 h-4 text-red-500" />;
-    }
-    
-    // For numeric values
-    if (typeof oldValue === 'number' && typeof newValue === 'number') {
-      return newValue > oldValue ? 
-        <TrendingUp className="w-4 h-4 text-green-500" /> : 
-        <TrendingDown className="w-4 h-4 text-red-500" />;
-    }
-    
-    // For arrays (conditions, actions)
-    if (Array.isArray(oldValue) && Array.isArray(newValue)) {
-      return newValue.length > oldValue.length ? 
-        <TrendingUp className="w-4 h-4 text-blue-500" /> : 
-        newValue.length < oldValue.length ?
-        <TrendingDown className="w-4 h-4 text-orange-500" /> :
-        <Minus className="w-4 h-4 text-gray-500" />;
-    }
-    
-    return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
-  };
-
-  const getMetricIcon = (value: number) => {
-    if (value > 0) return <TrendingUp className="w-4 h-4 text-green-500" />;
-    if (value < 0) return <TrendingDown className="w-4 h-4 text-red-500" />;
-    return <Minus className="w-4 h-4 text-gray-500" />;
-  };
-
-  const formatMetricValue = (value: number, type: string) => {
+  const renderDifferenceIcon = (type: 'added' | 'removed' | 'modified') => {
     switch (type) {
-      case 'successRate':
-        return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
-      case 'averageExecutionTime':
-        return `${value > 0 ? '+' : ''}${value.toFixed(0)}ms`;
-      default:
-        return `${value > 0 ? '+' : ''}${value}`;
+      case 'added': return <Plus className="w-4 h-4 text-green-500" />;
+      case 'removed': return <Minus className="w-4 h-4 text-red-500" />;
+      case 'modified': return <ArrowLeftRight className="w-4 h-4 text-blue-500" />;
+      default: return <ArrowLeftRight className="w-4 h-4 text-gray-500" />;
     }
+  };
+
+  const renderMetricComparison = (base: number, compare: number, label: string, unit: string = '') => {
+    const difference = compare - base;
+    const isImprovement = difference > 0;
+    const icon = isImprovement ? <TrendingUp className="w-4 h-4 text-green-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />;
+    
+    return (
+      <div className="p-4 border rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-medium">{label}</span>
+          {icon}
+        </div>
+        <div className="space-y-1">
+          <div className="text-sm text-muted-foreground">
+            Base: {base.toFixed(1)}{unit}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Compare: {compare.toFixed(1)}{unit}
+          </div>
+          <div className={`text-sm font-medium ${isImprovement ? 'text-green-600' : 'text-red-600'}`}>
+            {isImprovement ? '+' : ''}{difference.toFixed(1)}{unit}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="space-y-6">
-      {/* Comparison Setup */}
+      {/* Version Selection */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Compare className="w-5 h-5" />
+            <GitCompare className="w-5 h-5" />
             Version Comparison
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div className="space-y-1">
               <label className="text-sm font-medium">Base Version</label>
               <Select value={baseVersionId} onValueChange={setBaseVersionId}>
@@ -114,14 +108,20 @@ export const WorkflowComparison: React.FC<WorkflowComparisonProps> = ({
               </Select>
             </div>
 
+            <div className="flex justify-center">
+              <Button variant="outline" size="sm" onClick={handleSwapVersions}>
+                <ArrowLeftRight className="w-4 h-4" />
+              </Button>
+            </div>
+
             <div className="space-y-1">
               <label className="text-sm font-medium">Compare Version</label>
               <Select value={compareVersionId} onValueChange={setCompareVersionId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select version to compare" />
+                  <SelectValue placeholder="Select compare version" />
                 </SelectTrigger>
                 <SelectContent>
-                  {versions.filter(v => v.id !== baseVersionId).map(version => (
+                  {versions.map(version => (
                     <SelectItem key={version.id} value={version.id}>
                       v{version.version} - {version.name}
                     </SelectItem>
@@ -129,245 +129,148 @@ export const WorkflowComparison: React.FC<WorkflowComparisonProps> = ({
                 </SelectContent>
               </Select>
             </div>
-
-            <div className="flex items-end">
-              <Button 
-                onClick={handleCompare} 
-                disabled={!baseVersionId || !compareVersionId}
-                className="w-full"
-              >
-                <Compare className="w-4 h-4 mr-2" />
-                Compare Versions
-              </Button>
-            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Comparison Results */}
       {comparison && (
-        <div className="space-y-6">
-          {/* Performance Metrics Comparison */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5" />
-                Performance Comparison
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Base Version Metrics */}
-                <div>
-                  <h4 className="font-medium mb-4">
-                    {comparison.baseVersion.name} (v{comparison.baseVersion.version})
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-blue-500" />
-                        <span>Executions</span>
-                      </div>
-                      <span className="font-medium">{comparison.metricsComparison.base.executionCount}</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span>Success Rate</span>
-                      </div>
-                      <span className="font-medium">{comparison.metricsComparison.base.successRate.toFixed(1)}%</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-purple-500" />
-                        <span>Avg Execution Time</span>
-                      </div>
-                      <span className="font-medium">{comparison.metricsComparison.base.averageExecutionTime.toFixed(0)}ms</span>
-                    </div>
-                  </div>
-                </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="differences">Differences</TabsTrigger>
+            <TabsTrigger value="metrics">Metrics</TabsTrigger>
+            <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          </TabsList>
 
-                {/* Compare Version Metrics */}
-                <div>
-                  <h4 className="font-medium mb-4">
-                    {comparison.compareVersion.name} (v{comparison.compareVersion.version})
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-blue-500" />
-                        <span>Executions</span>
-                        {getMetricIcon(comparison.metricsComparison.improvement.executionCount)}
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium">{comparison.metricsComparison.compare.executionCount}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {formatMetricValue(comparison.metricsComparison.improvement.executionCount, 'executionCount')}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span>Success Rate</span>
-                        {getMetricIcon(comparison.metricsComparison.improvement.successRate)}
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium">{comparison.metricsComparison.compare.successRate.toFixed(1)}%</div>
-                        <div className="text-sm text-muted-foreground">
-                          {formatMetricValue(comparison.metricsComparison.improvement.successRate, 'successRate')}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-purple-500" />
-                        <span>Avg Execution Time</span>
-                        {getMetricIcon(-comparison.metricsComparison.improvement.averageExecutionTime)}
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium">{comparison.metricsComparison.compare.averageExecutionTime.toFixed(0)}ms</div>
-                        <div className="text-sm text-muted-foreground">
-                          {formatMetricValue(-comparison.metricsComparison.improvement.averageExecutionTime, 'averageExecutionTime')}
-                        </div>
-                      </div>
-                    </div>
+          <TabsContent value="differences" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuration Differences</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {comparison.differences.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <CheckCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <h3 className="text-lg font-medium mb-2">No Differences Found</h3>
+                    <p>These versions have identical configurations.</p>
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Configuration Differences */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Compare className="w-5 h-5" />
-                Configuration Differences ({comparison.differences.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {comparison.differences.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <CheckCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <h3 className="text-lg font-medium mb-2">No Differences Found</h3>
-                  <p>The selected versions have identical configurations.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {comparison.differences.map((diff, index) => (
-                    <div key={index} className="border rounded-lg p-4">
-                      <div className="flex items-center gap-2 mb-3">
-                        {getChangeIcon(diff.oldValue, diff.newValue)}
-                        <h4 className="font-medium capitalize">{diff.field}</h4>
-                        <Badge variant="outline" className="text-xs">
-                          {diff.changeDescription}
-                        </Badge>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h5 className="text-sm font-medium mb-2 text-red-700">
-                            Before (v{comparison.baseVersion.version})
-                          </h5>
-                          <pre className="bg-red-50 p-3 rounded text-xs overflow-auto max-h-32">
-                            {JSON.stringify(diff.oldValue, null, 2)}
-                          </pre>
+                ) : (
+                  <div className="space-y-4">
+                    {comparison.differences.map((change, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-3">
+                          {renderDifferenceIcon('modified')}
+                          <div>
+                            <h4 className="font-medium capitalize">{change.field}</h4>
+                            <p className="text-sm text-muted-foreground">{change.changeDescription}</p>
+                          </div>
                         </div>
                         
-                        <div>
-                          <h5 className="text-sm font-medium mb-2 text-green-700">
-                            After (v{comparison.compareVersion.version})
-                          </h5>
-                          <pre className="bg-green-50 p-3 rounded text-xs overflow-auto max-h-32">
-                            {JSON.stringify(diff.newValue, null, 2)}
-                          </pre>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <strong>Base Version:</strong>
+                            <pre className="mt-1 p-2 bg-red-50 rounded text-xs overflow-auto">
+                              {JSON.stringify(change.oldValue, null, 2)}
+                            </pre>
+                          </div>
+                          <div>
+                            <strong>Compare Version:</strong>
+                            <pre className="mt-1 p-2 bg-green-50 rounded text-xs overflow-auto">
+                              {JSON.stringify(change.newValue, null, 2)}
+                            </pre>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          {/* Summary and Recommendations */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Comparison Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center p-4 border rounded">
-                    <div className="text-2xl font-bold text-blue-600">{comparison.differences.length}</div>
-                    <div className="text-sm text-muted-foreground">Configuration Changes</div>
-                  </div>
-                  
-                  <div className="text-center p-4 border rounded">
-                    <div className="text-2xl font-bold text-green-600">
-                      {comparison.metricsComparison.improvement.successRate > 0 ? '+' : ''}
-                      {comparison.metricsComparison.improvement.successRate.toFixed(1)}%
-                    </div>
-                    <div className="text-sm text-muted-foreground">Success Rate Change</div>
-                  </div>
-                  
-                  <div className="text-center p-4 border rounded">
-                    <div className="text-2xl font-bold text-purple-600">
-                      {-comparison.metricsComparison.improvement.averageExecutionTime > 0 ? '-' : '+'}
-                      {Math.abs(comparison.metricsComparison.improvement.averageExecutionTime).toFixed(0)}ms
-                    </div>
-                    <div className="text-sm text-muted-foreground">Execution Time Change</div>
-                  </div>
+          <TabsContent value="metrics" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Metrics Comparison</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {renderMetricComparison(
+                    comparison.metricsComparison.base.executionCount,
+                    comparison.metricsComparison.compare.executionCount,
+                    'Execution Count'
+                  )}
+                  {renderMetricComparison(
+                    comparison.metricsComparison.base.successRate,
+                    comparison.metricsComparison.compare.successRate,
+                    'Success Rate',
+                    '%'
+                  )}
+                  {renderMetricComparison(
+                    comparison.metricsComparison.base.averageExecutionTime,
+                    comparison.metricsComparison.compare.averageExecutionTime,
+                    'Avg Execution Time',
+                    'ms'
+                  )}
+                  {renderMetricComparison(
+                    comparison.metricsComparison.base.errorCount,
+                    comparison.metricsComparison.compare.errorCount,
+                    'Error Count'
+                  )}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium mb-2">Recommendations</h4>
-                  <ul className="text-sm space-y-1">
-                    {comparison.metricsComparison.improvement.successRate > 5 && (
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        Great improvement in success rate! Consider keeping these changes.
-                      </li>
-                    )}
-                    {comparison.metricsComparison.improvement.averageExecutionTime < -100 && (
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        Significant performance improvement detected.
-                      </li>
-                    )}
-                    {comparison.differences.length > 5 && (
-                      <li className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-yellow-500" />
-                        Many changes detected. Consider testing thoroughly before deployment.
-                      </li>
-                    )}
-                    {comparison.metricsComparison.improvement.successRate < -10 && (
-                      <li className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-red-500" />
-                        Success rate decreased significantly. Review changes carefully.
-                      </li>
-                    )}
-                  </ul>
+          <TabsContent value="timeline" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Version Timeline</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="border-l-2 border-blue-500 pl-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-4 h-4" />
+                      <h4 className="font-medium">{comparison.compareVersion.name}</h4>
+                      <Badge>v{comparison.compareVersion.version}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {comparison.compareVersion.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Created {new Date(comparison.compareVersion.createdAt).toLocaleString()} by {comparison.compareVersion.createdBy}
+                    </p>
+                  </div>
+
+                  <div className="border-l-2 border-gray-300 pl-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-4 h-4" />
+                      <h4 className="font-medium">{comparison.baseVersion.name}</h4>
+                      <Badge variant="outline">v{comparison.baseVersion.version}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {comparison.baseVersion.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Created {new Date(comparison.baseVersion.createdAt).toLocaleString()} by {comparison.baseVersion.createdBy}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       )}
 
-      {/* No Versions Message */}
-      {versions.length < 2 && (
+      {/* Empty State */}
+      {!comparison && (
         <Card>
           <CardContent className="text-center py-12">
-            <Compare className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-            <h3 className="text-lg font-semibold mb-2">Not Enough Versions</h3>
+            <GitCompare className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+            <h3 className="text-lg font-medium mb-2">Select Versions to Compare</h3>
             <p className="text-muted-foreground">
-              You need at least 2 versions to perform a comparison.
+              Choose two workflow versions to see their differences and performance metrics.
             </p>
           </CardContent>
         </Card>
