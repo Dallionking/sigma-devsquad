@@ -87,7 +87,7 @@ export const TaskCalendarView = ({ tasks, onTaskSelect, onCreateTask }: TaskCale
             const dayTasks = getTasksForDate(date);
             return (
               <div className="relative w-full h-full">
-                <button {...buttonProps} className={cn(buttonProps.className, "w-full h-full")}>
+                <button {...buttonProps} className={cn((buttonProps as any).className, "w-full h-full")}>
                   {date.getDate()}
                   {dayTasks.length > 0 && (
                     <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex gap-0.5">
