@@ -8,6 +8,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
 import { 
   Presentation, 
@@ -18,12 +20,45 @@ import {
   Upload,
   SortAsc,
   Grid,
-  List
+  List,
+  MoreVertical
 } from 'lucide-react';
 
-export const PresentationsHeader = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+interface PresentationsHeaderProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  viewMode: 'grid' | 'list';
+  onViewModeChange: (mode: 'grid' | 'list') => void;
+  selectedPresentations: string[];
+  onCreatePresentation: () => void;
+  onBulkAction: (action: string) => void;
+  statusFilter: string[];
+  onStatusFilterChange: (status: string[]) => void;
+  sortBy: string;
+  onSortChange: (sort: string) => void;
+}
+
+export const PresentationsHeader = ({
+  searchQuery,
+  onSearchChange,
+  viewMode,
+  onViewModeChange,
+  selectedPresentations,
+  onCreatePresentation,
+  onBulkAction,
+  statusFilter,
+  onStatusFilterChange,
+  sortBy,
+  onSortChange
+}: PresentationsHeaderProps) => {
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  const handleStatusToggle = (status: string) => {
+    const newFilter = statusFilter.includes(status)
+      ? statusFilter.filter(s => s !== status)
+      : [...statusFilter, status];
+    onStatusFilterChange(newFilter);
+  };
 
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,26 +77,47 @@ export const PresentationsHeader = () => {
           <div className="relative max-w-sm flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="Search presentations..."
+              placeholder="Search pitch decks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => onSearchChange(e.target.value)}
               className="pl-10"
             />
           </div>
 
-          {/* Filters */}
-          <DropdownMenu>
+          {/* Status Filter */}
+          <DropdownMenu open={filterOpen} onOpenChange={setFilterOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <Filter className="w-4 h-4 mr-2" />
                 Filter
+                {statusFilter.length > 0 && (
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {statusFilter.length}
+                  </Badge>
+                )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Recent</DropdownMenuItem>
-              <DropdownMenuItem>Created by me</DropdownMenuItem>
-              <DropdownMenuItem>Shared with me</DropdownMenuItem>
-              <DropdownMenuItem>Favorites</DropdownMenuItem>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5 text-sm font-medium">Status</div>
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem
+                checked={statusFilter.includes('draft')}
+                onCheckedChange={() => handleStatusToggle('draft')}
+              >
+                Draft
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={statusFilter.includes('published')}
+                onCheckedChange={() => handleStatusToggle('published')}
+              >
+                Published
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={statusFilter.includes('archived')}
+                onCheckedChange={() => handleStatusToggle('archived')}
+              >
+                Archived
+              </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -74,10 +130,18 @@ export const PresentationsHeader = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Name</DropdownMenuItem>
-              <DropdownMenuItem>Date Modified</DropdownMenuItem>
-              <DropdownMenuItem>Date Created</DropdownMenuItem>
-              <DropdownMenuItem>Size</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onSortChange('name')}>
+                Name
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onSortChange('modified')}>
+                Date Modified
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onSortChange('created')}>
+                Date Created
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onSortChange('slides')}>
+                Slide Count
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -86,7 +150,7 @@ export const PresentationsHeader = () => {
             <Button
               variant={viewMode === 'grid' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setViewMode('grid')}
+              onClick={() => onViewModeChange('grid')}
               className="rounded-r-none"
             >
               <Grid className="w-4 h-4" />
@@ -94,7 +158,7 @@ export const PresentationsHeader = () => {
             <Button
               variant={viewMode === 'list' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setViewMode('list')}
+              onClick={() => onViewModeChange('list')}
               className="rounded-l-none"
             >
               <List className="w-4 h-4" />
@@ -104,19 +168,47 @@ export const PresentationsHeader = () => {
 
         {/* Actions */}
         <div className="flex items-center space-x-2 ml-4">
-          <Button variant="outline" size="sm">
+          {/* Bulk Actions */}
+          {selectedPresentations.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <MoreVertical className="w-4 h-4 mr-2" />
+                  Actions ({selectedPresentations.length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onBulkAction('export')}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Selected
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onBulkAction('duplicate')}>
+                  Duplicate Selected
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => onBulkAction('delete')}
+                  className="text-destructive"
+                >
+                  Delete Selected
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          
+          <Button variant="outline" size="sm" onClick={() => onBulkAction('import')}>
             <Upload className="w-4 h-4 mr-2" />
             Import
           </Button>
           
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => onBulkAction('export')}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
 
-          <Button>
+          <Button onClick={onCreatePresentation}>
             <Plus className="w-4 h-4 mr-2" />
-            New Presentation
+            New Pitch Deck
           </Button>
         </div>
       </div>
