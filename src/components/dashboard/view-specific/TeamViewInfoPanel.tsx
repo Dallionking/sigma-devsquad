@@ -2,84 +2,118 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Users, Target, TrendingUp, Plus, HelpCircle } from 'lucide-react';
+import { Users, UserCheck, Calendar, MessageSquare } from 'lucide-react';
 
 export const TeamViewInfoPanel = () => {
   return (
-    <div className="space-y-4">
-      {/* Welcome Card */}
-      <Card className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/30 border-blue-200 dark:border-blue-800">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
+    <div className="space-y-6">
+      {/* Team Overview */}
+      <Card data-tour="team-overview">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
             <Users className="w-5 h-5" />
-            Team Collaboration Hub
+            <span>Team Overview</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-blue-700 dark:text-blue-200 mb-3">
-            Manage your AI teams, track collaborative progress, and optimize team workflows. 
-            Teams enable multiple agents to work together on complex projects.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" className="text-blue-700 border-blue-300 hover:bg-blue-100">
-              <Plus className="w-4 h-4 mr-1" />
-              Create Team
-            </Button>
-            <Button size="sm" variant="ghost" className="text-blue-600">
-              <HelpCircle className="w-4 h-4 mr-1" />
-              Team Guide
-            </Button>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary">3</div>
+              <div className="text-sm text-muted-foreground">Active Teams</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">12</div>
+              <div className="text-sm text-muted-foreground">Total Members</div>
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Frontend Team</span>
+              <Badge variant="secondary">5 members</Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Backend Team</span>
+              <Badge variant="secondary">4 members</Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">DevOps Team</span>
+              <Badge variant="secondary">3 members</Badge>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 gap-3">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-blue-600">4</p>
-                <p className="text-xs text-muted-foreground">Active Teams</p>
-              </div>
-              <Users className="w-5 h-5 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-green-600">12</p>
-                <p className="text-xs text-muted-foreground">Team Members</p>
-              </div>
-              <Target className="w-5 h-5 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Team Benefits */}
-      <Card>
+      {/* Real-time Collaboration */}
+      <Card data-tour="team-collaboration">
         <CardHeader>
-          <CardTitle className="text-sm">Why Use Teams?</CardTitle>
+          <CardTitle className="flex items-center space-x-2">
+            <UserCheck className="w-5 h-5" />
+            <span>Active Collaboration</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Online Members</span>
+            <Badge variant="default">8 of 12</Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Active Projects</span>
+            <Badge variant="secondary">4</Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Live Sessions</span>
+            <Badge variant="outline">2</Badge>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Team Projects */}
+      <Card data-tour="team-projects">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Calendar className="w-5 h-5" />
+            <span>Team Projects</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="w-2 h-2 p-0 rounded-full bg-blue-500" />
-              <span className="text-xs">Collaborative problem solving</span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">E-commerce Platform</span>
+              <Badge variant="default">In Progress</Badge>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="w-2 h-2 p-0 rounded-full bg-green-500" />
-              <span className="text-xs">Shared knowledge base</span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Mobile App Redesign</span>
+              <Badge variant="secondary">Planning</Badge>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="w-2 h-2 p-0 rounded-full bg-purple-500" />
-              <span className="text-xs">Coordinated workflows</span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">API Migration</span>
+              <Badge variant="outline">Review</Badge>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Team Communication Hub */}
+      <Card data-tour="team-communication">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <MessageSquare className="w-5 h-5" />
+            <span>Communication Hub</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Active Channels</span>
+            <Badge variant="secondary">6</Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Unread Messages</span>
+            <Badge variant="destructive">12</Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Recent Discussions</span>
+            <Badge variant="outline">8</Badge>
           </div>
         </CardContent>
       </Card>

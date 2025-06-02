@@ -1,13 +1,12 @@
 
 import React from 'react';
-import { Agent, Task, Message, ViewMode } from "@/types";
-import { Team, AgentProfile } from "@/types/teams";
-import { ViewContextHeader } from "../ViewContextHeader";
-import { BreadcrumbNavigation } from "../BreadcrumbNavigation";
-import { ViewTransition } from "../ViewTransition";
-import { MainLayoutContent } from "./MainLayoutContent";
-import { MainLayoutSidebar } from "./MainLayoutSidebar";
-import { MainLayoutHeader } from "./MainLayoutHeader";
+import { Agent, Task, Message, ViewMode } from '@/types';
+import { Team, AgentProfile } from '@/types/teams';
+import { MainLayoutHeader } from './MainLayoutHeader';
+import { MainLayoutContent } from './MainLayoutContent';
+import { MainLayoutSidebar } from './MainLayoutSidebar';
+import { ViewSpecificOnboardingManager } from '@/components/onboarding/view-specific/ViewSpecificOnboardingManager';
+import { cn } from '@/lib/utils';
 
 interface MainLayoutContainerProps {
   showTeamView: boolean;
@@ -34,42 +33,46 @@ interface MainLayoutContainerProps {
   onViewModeChange: (mode: ViewMode) => void;
 }
 
-export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
-  const {
-    showTeamView,
-    viewMode,
-    sidebarCollapsed,
-    onSidebarToggle,
-    onViewModeChange,
-    // Extract all the handler props that need to be passed to MainLayoutContent
-    onAgentSelect,
-    onTaskSelect,
-    onMessageSelect,
-    onTeamSelect,
-    onAgentProfileSelect,
-    onDismissSelection,
-    onSyncPanelToggle,
-    ...restProps
-  } = props;
-
-  // Calculate notification counts
+export const MainLayoutContainer = ({
+  showTeamView,
+  sidebarCollapsed,
+  syncPanelCollapsed,
+  agents,
+  tasks,
+  messages,
+  selectedAgent,
+  selectedTask,
+  selectedMessage,
+  selectedTeam,
+  selectedAgentProfile,
+  viewMode,
+  hasSelection,
+  onSidebarToggle,
+  onSyncPanelToggle,
+  onAgentSelect,
+  onTaskSelect,
+  onMessageSelect,
+  onTeamSelect,
+  onAgentProfileSelect,
+  onDismissSelection,
+  onViewModeChange
+}: MainLayoutContainerProps) => {
+  
+  // Calculate notification counts for tabs
   const notificationCounts = {
-    workflow: 0,
-    communication: 0,
-    tasks: props.tasks.filter(task => task.status === 'pending').length,
-    messages: props.messages.filter(message => !message.read).length
+    workflow: agents.filter(a => a.status === 'active').length,
+    communication: messages.filter(m => !m.read).length,
+    tasks: tasks.filter(t => t.status === 'pending').length,
+    messages: messages.filter(m => !m.read).length,
   };
 
   return (
-    <ViewTransition viewKey={showTeamView ? 'team' : 'individual'} className="flex-1 flex flex-col">
-      {/* Persistent Breadcrumb */}
-      <BreadcrumbNavigation 
-        viewMode={viewMode}
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* View-Specific Onboarding Manager */}
+      <ViewSpecificOnboardingManager
         showTeamView={showTeamView}
+        viewMode={viewMode}
       />
-      
-      {/* Color-coded Context Header */}
-      <ViewContextHeader showTeamView={showTeamView} />
       
       {/* Main Layout Header */}
       <MainLayoutHeader
@@ -78,44 +81,44 @@ export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
         onViewModeChange={onViewModeChange}
         notificationCounts={notificationCounts}
       />
-
+      
       {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
         <MainLayoutSidebar
-          sidebarCollapsed={sidebarCollapsed}
-          onSidebarToggle={onSidebarToggle}
           showTeamView={showTeamView}
+          collapsed={sidebarCollapsed}
+          agents={agents}
+          tasks={tasks}
+          messages={messages}
+          selectedAgent={selectedAgent}
+          selectedTask={selectedTask}
+          selectedMessage={selectedMessage}
+          selectedTeam={selectedTeam}
+          selectedAgentProfile={selectedAgentProfile}
           viewMode={viewMode}
-          agents={props.agents}
-          tasks={props.tasks}
-          messages={props.messages}
-          selectedAgent={props.selectedAgent}
-          selectedTask={props.selectedTask}
-          selectedMessage={props.selectedMessage}
-          selectedTeam={props.selectedTeam}
-          selectedAgentProfile={props.selectedAgentProfile}
           onAgentSelect={onAgentSelect}
           onTaskSelect={onTaskSelect}
           onMessageSelect={onMessageSelect}
           onTeamSelect={onTeamSelect}
           onAgentProfileSelect={onAgentProfileSelect}
+          onToggle={onSidebarToggle}
         />
-
+        
         {/* Main Content */}
         <MainLayoutContent
           showTeamView={showTeamView}
           viewMode={viewMode}
-          agents={props.agents}
-          tasks={props.tasks}
-          messages={props.messages}
-          selectedAgent={props.selectedAgent}
-          selectedTask={props.selectedTask}
-          selectedMessage={props.selectedMessage}
-          selectedTeam={props.selectedTeam}
-          selectedAgentProfile={props.selectedAgentProfile}
-          hasSelection={props.hasSelection}
-          syncPanelCollapsed={props.syncPanelCollapsed}
+          agents={agents}
+          tasks={tasks}
+          messages={messages}
+          selectedAgent={selectedAgent}
+          selectedTask={selectedTask}
+          selectedMessage={selectedMessage}
+          selectedTeam={selectedTeam}
+          selectedAgentProfile={selectedAgentProfile}
+          hasSelection={hasSelection}
+          syncPanelCollapsed={syncPanelCollapsed}
           onSyncPanelToggle={onSyncPanelToggle}
           onDismissSelection={onDismissSelection}
           onAgentSelect={onAgentSelect}
@@ -126,6 +129,6 @@ export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
           onViewModeChange={onViewModeChange}
         />
       </div>
-    </ViewTransition>
+    </div>
   );
 };
