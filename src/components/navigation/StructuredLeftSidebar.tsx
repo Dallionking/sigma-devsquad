@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,7 +29,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTeams } from '@/contexts/TeamContext';
 import { useProjects } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
-import '@/styles/structured-sidebar.css';
+import '@/styles/sidebar/index.css';
 
 interface StructuredLeftSidebarProps {
   collapsed: boolean;

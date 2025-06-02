@@ -1,0 +1,166 @@
+
+/* Navigation Link Styles */
+
+.main-nav-section .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.main-nav-section .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.main-nav-section .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.nav-link-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.nav-link-text {
+  font-size: 14px;
+}
+
+/* Dropdown Trigger Styles */
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: hsl(var(--sidebar-accent) / 0.1);
+  border: 1px solid hsl(var(--sidebar-border));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+}
+
+.dropdown-trigger:hover {
+  background-color: hsl(var(--sidebar-accent) / 0.2);
+  border-color: hsl(var(--sidebar-accent));
+}
+
+.dropdown-trigger-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--sidebar-foreground));
+}
+
+.dropdown-trigger-text {
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: hsl(var(--sidebar-foreground));
+}
+
+.dropdown-trigger-arrow {
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--sidebar-foreground) / 0.7);
+  transition: transform 0.2s ease;
+}
+
+.dropdown-trigger[aria-expanded="true"] .dropdown-trigger-arrow {
+  transform: rotate(180deg);
+}
+
+/* Enhanced dropdown positioning for panels */
+.dropdown-panel {
+  position: fixed;
+  z-index: 1100;
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  backdrop-filter: blur(8px);
+  background-color: hsl(var(--background) / 0.95);
+}
+
+/* Ensure dropdown content has proper styling */
+.dropdown-panel > * {
+  background-color: transparent;
+}
+
+/* Dark mode adjustments for dropdowns */
+@media (prefers-color-scheme: dark) {
+  .dropdown-panel {
+    background-color: hsl(var(--background) / 0.98);
+    border-color: hsl(var(--border));
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Navigation item hover effects */
+.sidebar-section nav button {
+  transition: all 0.2s ease;
+}
+
+.sidebar-section nav button:hover {
+  background-color: hsl(var(--sidebar-accent));
+}
+
+/* Toggle Button Styles */
+.sidebar-collapse-toggle {
+  background: none;
+  border: 1px solid hsl(var(--sidebar-border));
+  color: hsl(var(--sidebar-foreground) / 0.7);
+  width: 100%;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.sidebar-collapse-toggle:hover {
+  background-color: hsl(var(--sidebar-accent) / 0.1);
+  border-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-foreground));
+}
+
+.toggle-icon {
+  transition: transform 0.2s ease;
+}

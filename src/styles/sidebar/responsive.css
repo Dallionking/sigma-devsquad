@@ -1,0 +1,62 @@
+
+/* Responsive Styles */
+
+@media (max-width: 768px) {
+  .left-sidebar-container {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .left-sidebar-container.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-section.logo-section {
+    height: 56px;
+    padding: 8px 12px;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+  }
+
+  .sidebar-section.project-section,
+  .sidebar-section.team-section {
+    padding: 8px 12px;
+  }
+
+  .dropdown-trigger {
+    padding: 6px 8px;
+    min-height: 36px;
+  }
+
+  .dropdown-trigger-text {
+    font-size: 13px;
+  }
+
+  .main-nav-section .nav-link {
+    padding: 8px 10px;
+  }
+
+  .nav-link-text {
+    font-size: 13px;
+  }
+
+  /* Mobile adjustments for main content */
+  .main-content-area {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 16px;
+  }
+  
+  .main-content-area.sidebar-collapsed {
+    margin-left: 0;
+    width: 100%;
+  }
+}
