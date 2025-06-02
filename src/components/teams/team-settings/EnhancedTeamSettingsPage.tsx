@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,11 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
   
   const team = getTeamById(teamId);
 
+  useEffect(() => {
+    console.log('EnhancedTeamSettingsPage mounted with teamId:', teamId);
+    console.log('Found team:', team);
+  }, [teamId, team]);
+
   if (!team) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -57,7 +62,7 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background">
       <div className="container max-w-7xl mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
@@ -72,12 +77,12 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
           
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="text-2xl font-bold flex items-center gap-3">
-                <Settings className="w-6 h-6 flex-shrink-0" />
+              <h1 className="text-3xl font-bold flex items-center gap-3">
+                <Settings className="w-8 h-8 flex-shrink-0" />
                 <span className="truncate">Team Settings</span>
               </h1>
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                <h2 className="text-lg text-muted-foreground truncate">{team.name}</h2>
+                <h2 className="text-xl text-muted-foreground truncate">{team.name}</h2>
                 <Badge variant="secondary" className="capitalize">
                   {team.type}
                 </Badge>
@@ -104,17 +109,17 @@ export const EnhancedTeamSettingsPage = ({ teamId }: EnhancedTeamSettingsPagePro
 
         {/* Settings Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 mb-6 h-auto">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 mb-6 h-auto p-1">
             {settingsTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger 
                   key={tab.id} 
                   value={tab.id} 
-                  className="flex flex-col lg:flex-row items-center gap-1 lg:gap-2 p-2 text-xs lg:text-sm"
+                  className="flex flex-col lg:flex-row items-center gap-1 lg:gap-2 p-3 text-xs lg:text-sm min-h-[60px] lg:min-h-[40px]"
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline lg:inline">{tab.label}</span>
+                  <span className="text-center">{tab.label}</span>
                 </TabsTrigger>
               );
             })}
