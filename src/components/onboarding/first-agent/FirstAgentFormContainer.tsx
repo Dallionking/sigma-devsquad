@@ -80,10 +80,10 @@ export const FirstAgentFormContainer = ({ onComplete, onSkip, initialData }: Fir
     onComplete(data);
   };
 
-  const hasValidConfiguration = () => {
+  const hasValidConfiguration = (): boolean => {
     const formData = form.watch();
-    return formData.name?.trim() && 
-           (selectedTemplate || (showCustomBuilder && formData.capabilities.length > 0));
+    return Boolean(formData.name?.trim() && 
+           (selectedTemplate || (showCustomBuilder && formData.capabilities.length > 0)));
   };
 
   return (
