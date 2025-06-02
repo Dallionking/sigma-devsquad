@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,8 +16,11 @@ import {
   TrendingUp,
   Calendar,
   Target,
-  Zap
+  Zap,
+  Kanban
 } from "lucide-react";
+import { KanbanBoard } from "@/components/workflow/kanban/KanbanBoard";
+import { useKanbanBoard } from "@/components/workflow/kanban/useKanbanBoard";
 
 interface WorkflowNode {
   id: string;
@@ -41,7 +43,8 @@ interface WorkflowTemplate {
 
 export const WorkflowVisualization = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("agile-sprint");
-  const [activeView, setActiveView] = useState("graph");
+  const [activeView, setActiveView] = useState("kanban");
+  const { config, updateConfig, addCard } = useKanbanBoard();
 
   const workflowTemplates: WorkflowTemplate[] = [
     {
@@ -123,6 +126,21 @@ export const WorkflowVisualization = () => {
 
   const metrics = getWorkflowMetrics();
   const criticalPath = calculateCriticalPath();
+
+  const handleCardClick = (card: any) => {
+    console.log('Card clicked:', card);
+    // TODO: Open card details modal
+  };
+
+  const handleAddCard = (columnId: string) => {
+    console.log('Add card to column:', columnId);
+    // TODO: Open add card modal
+  };
+
+  const handleAddColumn = () => {
+    console.log('Add new column');
+    // TODO: Open add column modal
+  };
 
   return (
     <div className="space-y-6">
@@ -214,11 +232,25 @@ export const WorkflowVisualization = () => {
         </CardHeader>
         <CardContent>
           <Tabs value={activeView} onValueChange={setActiveView}>
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="kanban" className="flex items-center gap-2">
+                <Kanban className="w-4 h-4" />
+                Kanban Board
+              </TabsTrigger>
               <TabsTrigger value="graph">Workflow Graph</TabsTrigger>
               <TabsTrigger value="timeline">Timeline View</TabsTrigger>
               <TabsTrigger value="analysis">Critical Path</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="kanban" className="mt-6">
+              <KanbanBoard
+                config={config}
+                onConfigChange={updateConfig}
+                onCardClick={handleCardClick}
+                onAddCard={handleAddCard}
+                onAddColumn={handleAddColumn}
+              />
+            </TabsContent>
 
             <TabsContent value="graph" className="mt-6">
               <div className="space-y-4">
