@@ -64,7 +64,7 @@ export const OptimizedConsolidatedNavigation = ({
     navigate(path);
   };
 
-  // PRIMARY LEVEL - Compact, appropriately sized
+  // PRIMARY LEVEL - Main navigation items
   const primaryNavItems = [
     { path: "/dashboard", label: "Dashboard", icon: Home, active: isDashboardPage },
     { path: "/planning-agent", label: "Planning", icon: Layers, active: isPlanningAgentPage },
@@ -87,13 +87,13 @@ export const OptimizedConsolidatedNavigation = ({
   ];
 
   return (
-    <div className="flex items-center justify-between w-full">
-      {/* Left: Project and Team Context - Smaller */}
-      <div className="flex items-center space-x-2">
-        <div className="hidden lg:block">
+    <div className="flex items-center justify-between w-full gap-2 px-1">
+      {/* Left: Project and Team Context - More compact */}
+      <div className="flex items-center gap-1 flex-shrink-0 min-w-0">
+        <div className="hidden lg:block max-w-32">
           <ProjectSwitcher />
         </div>
-        <div className="hidden lg:block">
+        <div className="hidden lg:block max-w-28">
           <TeamSwitcher 
             currentTeamId={currentTeamId}
             onTeamChange={setCurrentTeamId}
@@ -102,8 +102,8 @@ export const OptimizedConsolidatedNavigation = ({
         </div>
       </div>
 
-      {/* Center: PRIMARY NAVIGATION - Compact and balanced */}
-      <nav className="flex items-center space-x-3">
+      {/* Center: PRIMARY NAVIGATION - Tighter spacing */}
+      <nav className="flex items-center gap-1 flex-shrink-0">
         {primaryNavItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -113,32 +113,32 @@ export const OptimizedConsolidatedNavigation = ({
               size="sm"
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "h-8 px-3 text-sm font-medium transition-all duration-200",
+                "h-7 px-2 text-xs font-medium transition-all duration-200 min-w-0",
                 item.active 
                   ? "bg-primary text-primary-foreground shadow-sm" 
                   : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
               )}
             >
-              <Icon className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">{item.label}</span>
+              <Icon className="w-3 h-3 mr-1.5 flex-shrink-0" />
+              <span className="hidden sm:inline truncate">{item.label}</span>
             </Button>
           );
         })}
 
-        {/* SECONDARY LEVEL - Configuration Dropdown - Compact */}
+        {/* Configuration Dropdown - More compact */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-8 px-3 text-sm font-medium border-border/50 hover:bg-accent/50 transition-all duration-200"
+              className="h-7 px-2 text-xs font-medium border-border/50 hover:bg-accent/50 transition-all duration-200 min-w-0"
             >
-              <Bot className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Configure</span>
-              <ChevronDown className="w-3 h-3 ml-1" />
+              <Bot className="w-3 h-3 mr-1.5 flex-shrink-0" />
+              <span className="hidden sm:inline">Config</span>
+              <ChevronDown className="w-2.5 h-2.5 ml-1 flex-shrink-0" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
+          <DropdownMenuContent align="center" className="w-48 bg-background border shadow-lg z-50">
             {configurationItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -146,12 +146,12 @@ export const OptimizedConsolidatedNavigation = ({
                   key={item.path}
                   onClick={() => handleNavigation(item.path)}
                   className={cn(
-                    "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 text-sm",
+                    "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 text-xs",
                     item.active && "bg-accent text-accent-foreground"
                   )}
                 >
-                  <Icon className="w-4 h-4 mr-3" />
-                  <span>{item.label}</span>
+                  <Icon className="w-3 h-3 mr-2 flex-shrink-0" />
+                  <span className="truncate">{item.label}</span>
                 </DropdownMenuItem>
               );
             })}
@@ -159,21 +159,21 @@ export const OptimizedConsolidatedNavigation = ({
         </DropdownMenu>
       </nav>
 
-      {/* Right: SECONDARY LEVEL - Account & Settings Dropdown - Compact */}
-      <div className="flex items-center">
+      {/* Right: Account & Settings Dropdown - More compact */}
+      <div className="flex items-center flex-shrink-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-3 text-sm font-medium border-border/50 hover:bg-accent/50 transition-all duration-200"
+              className="h-7 px-2 text-xs font-medium border-border/50 hover:bg-accent/50 transition-all duration-200 min-w-0"
             >
-              <User className="w-4 h-4 mr-2" />
+              <User className="w-3 h-3 mr-1.5 flex-shrink-0" />
               <span className="hidden sm:inline">Account</span>
-              <ChevronDown className="w-3 h-3 ml-1" />
+              <ChevronDown className="w-2.5 h-2.5 ml-1 flex-shrink-0" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
+          <DropdownMenuContent align="end" className="w-48 bg-background border shadow-lg z-50">
             {accountItems.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -181,12 +181,12 @@ export const OptimizedConsolidatedNavigation = ({
                   <DropdownMenuItem
                     onClick={() => handleNavigation(item.path)}
                     className={cn(
-                      "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 text-sm",
+                      "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 text-xs",
                       item.active && "bg-accent text-accent-foreground"
                     )}
                   >
-                    <Icon className="w-4 h-4 mr-3" />
-                    <span>{item.label}</span>
+                    <Icon className="w-3 h-3 mr-2 flex-shrink-0" />
+                    <span className="truncate">{item.label}</span>
                   </DropdownMenuItem>
                   {index === 0 && <DropdownMenuSeparator />}
                 </div>
