@@ -7,9 +7,11 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { AgentProvider } from '@/contexts/AgentContext';
 import { TeamProvider } from '@/contexts/TeamContext';
 import { ProjectProvider } from '@/contexts/ProjectContext';
+import { ProjectTemplateProvider } from '@/contexts/ProjectTemplateContext';
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import { TaskProvider } from '@/contexts/TaskContext';
 import { MessageProvider } from '@/contexts/MessageContext';
+import { WebSocketProvider } from '@/contexts/WebSocketContext';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 
 // Pages - using default imports
@@ -44,102 +46,106 @@ function App() {
   return (
     <TooltipProvider>
       <AuthProvider>
-        <AgentProvider>
-          <TaskProvider>
-            <MessageProvider>
-              <TeamProvider>
-                <ProjectProvider>
-                  <OnboardingProvider>
-                    <Router>
-                      <div className="min-h-screen bg-background">
-                        <Routes>
-                          {/* Main Routes with Unified Layout */}
-                          <Route path="/dashboard" element={
-                            <UnifiedLayout>
-                              <Dashboard />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/planning-agent" element={
-                            <UnifiedLayout>
-                              <PlanningAgent />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/projects" element={
-                            <UnifiedLayout>
-                              <Projects />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/presentations" element={
-                            <UnifiedLayout>
-                              <Presentations />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/agent-configuration" element={
-                            <UnifiedLayout>
-                              <AgentConfiguration />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/mcp-management" element={
-                            <UnifiedLayout>
-                              <MCPManagement />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/llm-integration" element={
-                            <UnifiedLayout>
-                              <LLMIntegration />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/ide-integration" element={
-                            <UnifiedLayout>
-                              <IDEIntegration />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/profile" element={
-                            <UnifiedLayout>
-                              <Profile />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/account" element={
-                            <UnifiedLayout>
-                              <Account />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/teams" element={
-                            <UnifiedLayout>
-                              <Teams />
-                            </UnifiedLayout>
-                          } />
-                          
-                          <Route path="/settings" element={
-                            <UnifiedLayout>
-                              <Settings />
-                            </UnifiedLayout>
-                          } />
+        <WebSocketProvider userId="user-123" userName="Current User">
+          <AgentProvider>
+            <TaskProvider>
+              <MessageProvider>
+                <TeamProvider>
+                  <ProjectProvider>
+                    <ProjectTemplateProvider>
+                      <OnboardingProvider>
+                        <Router>
+                          <div className="min-h-screen bg-background">
+                            <Routes>
+                              {/* Main Routes with Unified Layout */}
+                              <Route path="/dashboard" element={
+                                <UnifiedLayout>
+                                  <Dashboard />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/planning-agent" element={
+                                <UnifiedLayout>
+                                  <PlanningAgent />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/projects" element={
+                                <UnifiedLayout>
+                                  <Projects />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/presentations" element={
+                                <UnifiedLayout>
+                                  <Presentations />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/agent-configuration" element={
+                                <UnifiedLayout>
+                                  <AgentConfiguration />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/mcp-management" element={
+                                <UnifiedLayout>
+                                  <MCPManagement />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/llm-integration" element={
+                                <UnifiedLayout>
+                                  <LLMIntegration />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/ide-integration" element={
+                                <UnifiedLayout>
+                                  <IDEIntegration />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/profile" element={
+                                <UnifiedLayout>
+                                  <Profile />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/account" element={
+                                <UnifiedLayout>
+                                  <Account />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/teams" element={
+                                <UnifiedLayout>
+                                  <Teams />
+                                </UnifiedLayout>
+                              } />
+                              
+                              <Route path="/settings" element={
+                                <UnifiedLayout>
+                                  <Settings />
+                                </UnifiedLayout>
+                              } />
 
-                          {/* Default redirect */}
-                          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                        </Routes>
-                        
-                        <Toaster />
-                      </div>
-                    </Router>
-                  </OnboardingProvider>
-                </ProjectProvider>
-              </TeamProvider>
-            </MessageProvider>
-          </TaskProvider>
-        </AgentProvider>
+                              {/* Default redirect */}
+                              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                            </Routes>
+                            
+                            <Toaster />
+                          </div>
+                        </Router>
+                      </OnboardingProvider>
+                    </ProjectTemplateProvider>
+                  </ProjectProvider>
+                </TeamProvider>
+              </MessageProvider>
+            </TaskProvider>
+          </AgentProvider>
+        </WebSocketProvider>
       </AuthProvider>
     </TooltipProvider>
   );
