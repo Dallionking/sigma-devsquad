@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -15,103 +16,138 @@ const AuthPage = () => {
   const [searchParams] = useSearchParams();
   const { signIn, signUp, user, loading } = useAuth();
   
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // Separate form states for each tab
+  const [signInForm, setSignInForm] = useState({
+    email: '',
+    password: '',
+    showPassword: false,
+    error: '',
+    success: '',
+    isLoading: false
+  });
+
+  const [signUpForm, setSignUpForm] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    confirmPassword: '',
+    showPassword: false,
+    error: '',
+    success: '',
+    isLoading: false
+  });
+
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'login');
 
   // Redirect authenticated users to dashboard, but only if they just signed in
   useEffect(() => {
-    if (!loading && user && (error === '' || success.includes('Successfully signed in'))) {
+    if (!loading && user && (signInForm.error === '' || signInForm.success.includes('Successfully signed in'))) {
       navigate('/dashboard');
     }
-  }, [user, loading, navigate, error, success]);
+  }, [user, loading, navigate, signInForm.error, signInForm.success]);
+
+  // Handle tab changes with proper state management
+  const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab);
+    
+    // Clear any existing errors/success messages when switching tabs
+    if (newTab === 'login') {
+      setSignInForm(prev => ({ ...prev, error: '', success: '' }));
+    } else {
+      setSignUpForm(prev => ({ ...prev, error: '', success: '' }));
+    }
+  };
+
+  const updateSignInForm = (updates: Partial<typeof signInForm>) => {
+    setSignInForm(prev => ({ ...prev, ...updates }));
+  };
+
+  const updateSignUpForm = (updates: Partial<typeof signUpForm>) => {
+    setSignUpForm(prev => ({ ...prev, ...updates }));
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
-    setSuccess('');
+    updateSignInForm({ isLoading: true, error: '', success: '' });
 
-    if (!email || !password) {
-      setError('Please fill in all fields');
-      setIsLoading(false);
+    if (!signInForm.email || !signInForm.password) {
+      updateSignInForm({ error: 'Please fill in all fields', isLoading: false });
       return;
     }
 
-    const { error } = await signIn(email, password);
+    const { error } = await signIn(signInForm.email, signInForm.password);
     
     if (error) {
       console.log('Sign in error details:', error);
       if (error.message.includes('Email not confirmed')) {
-        setError('Please check your email and click the confirmation link before signing in.');
+        updateSignInForm({ 
+          error: 'Please check your email and click the confirmation link before signing in.',
+          isLoading: false 
+        });
       } else if (error.message.includes('Invalid login credentials')) {
-        setError('Invalid email or password. Please check your credentials.');
+        updateSignInForm({ 
+          error: 'Invalid email or password. Please check your credentials.',
+          isLoading: false 
+        });
       } else {
-        setError(error.message);
+        updateSignInForm({ error: error.message, isLoading: false });
       }
     } else {
-      setSuccess('Successfully signed in!');
+      updateSignInForm({ success: 'Successfully signed in!', isLoading: false });
       // Navigation will happen automatically via useEffect
     }
-    
-    setIsLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
-    setSuccess('');
+    updateSignUpForm({ isLoading: true, error: '', success: '' });
 
-    if (!email || !password || !fullName || !confirmPassword) {
-      setError('Please fill in all fields');
-      setIsLoading(false);
+    if (!signUpForm.email || !signUpForm.password || !signUpForm.fullName || !signUpForm.confirmPassword) {
+      updateSignUpForm({ error: 'Please fill in all fields', isLoading: false });
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      setIsLoading(false);
+    if (signUpForm.password !== signUpForm.confirmPassword) {
+      updateSignUpForm({ error: 'Passwords do not match', isLoading: false });
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      setIsLoading(false);
+    if (signUpForm.password.length < 6) {
+      updateSignUpForm({ error: 'Password must be at least 6 characters long', isLoading: false });
       return;
     }
 
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(signUpForm.email, signUpForm.password, signUpForm.fullName);
     
     if (error) {
       console.log('Sign up error details:', error);
       if (error.message.includes('User already registered')) {
-        setError('An account with this email already exists. Please sign in instead.');
+        updateSignUpForm({ error: 'An account with this email already exists. Please sign in instead.', isLoading: false });
       } else {
-        setError(error.message);
+        updateSignUpForm({ error: error.message, isLoading: false });
       }
     } else {
-      setError('');
-      setSuccess('Account created successfully! Please check your email for a confirmation link.');
-      // Clear form
-      setEmail('');
-      setPassword('');
-      setFullName('');
-      setConfirmPassword('');
-      // Switch to login tab after successful signup
+      updateSignUpForm({ 
+        error: '', 
+        success: 'Account created successfully! Please check your email for a confirmation link.',
+        isLoading: false 
+      });
+      
+      // Clear form and switch to login tab after successful signup
       setTimeout(() => {
+        setSignUpForm({
+          email: '',
+          password: '',
+          fullName: '',
+          confirmPassword: '',
+          showPassword: false,
+          error: '',
+          success: '',
+          isLoading: false
+        });
         setActiveTab('login');
-        setSuccess('');
       }, 3000);
     }
-    
-    setIsLoading(false);
   };
 
   const handleBackToHome = () => {
@@ -152,154 +188,158 @@ const AuthPage = () => {
         </CardHeader>
 
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="login" className="transition-all duration-200">Sign In</TabsTrigger>
+              <TabsTrigger value="signup" className="transition-all duration-200">Sign Up</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="login" className="mt-6">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
+            <TabsContent value="login" className="mt-6 space-y-1">
+              <div className="transition-all duration-300 ease-in-out">
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-email">Email</Label>
                     <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      id="signin-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={signInForm.email}
+                      onChange={(e) => updateSignInForm({ email: e.target.value })}
                       required
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </Button>
                   </div>
-                </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="signin-password"
+                        type={signInForm.showPassword ? 'text' : 'password'}
+                        placeholder="Enter your password"
+                        value={signInForm.password}
+                        onChange={(e) => updateSignInForm({ password: e.target.value })}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => updateSignInForm({ showPassword: !signInForm.showPassword })}
+                      >
+                        {signInForm.showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
 
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
+                  {signInForm.error && (
+                    <Alert variant="destructive" className="transition-all duration-200">
+                      <AlertDescription>{signInForm.error}</AlertDescription>
+                    </Alert>
+                  )}
 
-                {success && (
-                  <Alert>
-                    <CheckCircle className="w-4 h-4" />
-                    <AlertDescription>{success}</AlertDescription>
-                  </Alert>
-                )}
+                  {signInForm.success && (
+                    <Alert className="transition-all duration-200">
+                      <CheckCircle className="w-4 h-4" />
+                      <AlertDescription>{signInForm.success}</AlertDescription>
+                    </Alert>
+                  )}
 
-                <Button
-                  type="submit"
-                  className="w-full bg-vibe-primary hover:bg-vibe-primary/90"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Signing In...' : 'Sign In'}
-                </Button>
-              </form>
+                  <Button
+                    type="submit"
+                    className="w-full bg-vibe-primary hover:bg-vibe-primary/90 transition-all duration-200"
+                    disabled={signInForm.isLoading}
+                  >
+                    {signInForm.isLoading ? 'Signing In...' : 'Sign In'}
+                  </Button>
+                </form>
+              </div>
             </TabsContent>
 
-            <TabsContent value="signup" className="mt-6">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signupEmail">Email</Label>
-                  <Input
-                    id="signupEmail"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="signupPassword">Password</Label>
-                  <div className="relative">
+            <TabsContent value="signup" className="mt-6 space-y-1">
+              <div className="transition-all duration-300 ease-in-out">
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-fullName">Full Name</Label>
                     <Input
-                      id="signupPassword"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      id="signup-fullName"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={signUpForm.fullName}
+                      onChange={(e) => updateSignUpForm({ fullName: e.target.value })}
                       required
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </Button>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={signUpForm.email}
+                      onChange={(e) => updateSignUpForm({ email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="signup-password"
+                        type={signUpForm.showPassword ? 'text' : 'password'}
+                        placeholder="Enter your password"
+                        value={signUpForm.password}
+                        onChange={(e) => updateSignUpForm({ password: e.target.value })}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => updateSignUpForm({ showPassword: !signUpForm.showPassword })}
+                      >
+                        {signUpForm.showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
 
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-confirmPassword">Confirm Password</Label>
+                    <Input
+                      id="signup-confirmPassword"
+                      type={signUpForm.showPassword ? 'text' : 'password'}
+                      placeholder="Confirm your password"
+                      value={signUpForm.confirmPassword}
+                      onChange={(e) => updateSignUpForm({ confirmPassword: e.target.value })}
+                      required
+                    />
+                  </div>
 
-                {success && (
-                  <Alert>
-                    <Mail className="w-4 h-4" />
-                    <AlertDescription>{success}</AlertDescription>
-                  </Alert>
-                )}
+                  {signUpForm.error && (
+                    <Alert variant="destructive" className="transition-all duration-200">
+                      <AlertDescription>{signUpForm.error}</AlertDescription>
+                    </Alert>
+                  )}
 
-                <Button
-                  type="submit"
-                  className="w-full bg-vibe-primary hover:bg-vibe-primary/90"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Creating Account...' : 'Create Account'}
-                </Button>
-              </form>
+                  {signUpForm.success && (
+                    <Alert className="transition-all duration-200">
+                      <Mail className="w-4 h-4" />
+                      <AlertDescription>{signUpForm.success}</AlertDescription>
+                    </Alert>
+                  )}
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-vibe-primary hover:bg-vibe-primary/90 transition-all duration-200"
+                    disabled={signUpForm.isLoading}
+                  >
+                    {signUpForm.isLoading ? 'Creating Account...' : 'Create Account'}
+                  </Button>
+                </form>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>
