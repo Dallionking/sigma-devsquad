@@ -7,6 +7,7 @@ import { Play, SkipForward, Volume2, VolumeX } from 'lucide-react';
 import { OnboardingStep } from '@/contexts/OnboardingContext';
 import { VideoPlayer } from './VideoPlayer';
 import { getVideoTutorial } from './videoTutorialConfig';
+import { AnimatedActionButton } from '../visual-cues/AnimatedActionButton';
 
 interface OnboardingVideoTutorialProps {
   currentStep: OnboardingStep;
@@ -46,12 +47,12 @@ export const OnboardingVideoTutorial = ({
     return (
       <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center space-x-4 flex-1">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                 <Play className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
                   {tutorial.title}
                 </h3>
@@ -63,18 +64,22 @@ export const OnboardingVideoTutorial = ({
                 </Badge>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-3">
               <Button
                 variant="outline"
                 onClick={onToggleVideo}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 h-9 px-4"
               >
                 <Play className="w-4 h-4" />
                 Watch Tutorial
               </Button>
-              <Button onClick={onContinue}>
+              <AnimatedActionButton 
+                onClick={onContinue}
+                isPrimary={true}
+                className="h-9 px-6"
+              >
                 Continue Without Video
-              </Button>
+              </AnimatedActionButton>
             </div>
           </div>
         </CardContent>
@@ -83,7 +88,7 @@ export const OnboardingVideoTutorial = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <VideoPlayer
         videoUrl={tutorial.videoUrl}
         title={tutorial.title}
@@ -94,8 +99,8 @@ export const OnboardingVideoTutorial = ({
         autoPlay={true}
       />
       
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
+      <div className="flex justify-between items-center gap-4">
+        <div className="flex items-center space-x-3">
           {hasWatchedVideo && (
             <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
               Video Complete
@@ -106,13 +111,14 @@ export const OnboardingVideoTutorial = ({
           </span>
         </div>
         
-        <Button 
+        <AnimatedActionButton 
           onClick={onContinue}
-          className="flex items-center gap-2"
+          isPrimary={true}
+          className="flex items-center gap-2 h-10 px-6"
         >
           Continue
           <SkipForward className="w-4 h-4" />
-        </Button>
+        </AnimatedActionButton>
       </div>
     </div>
   );

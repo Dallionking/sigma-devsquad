@@ -1,7 +1,7 @@
 
 /* Button-specific animations and effects */
 @layer utilities {
-  /* Enhanced CTA buttons with stronger Limitless styling */
+  /* Enhanced CTA buttons with stronger Limitless styling - improved hierarchy */
   .limitless-cta-primary {
     background: linear-gradient(135deg, #6366F1, #8B5CF6, #06B6D4);
     background-size: 200% 200%;
@@ -12,6 +12,7 @@
     box-shadow: 0 10px 40px -8px rgba(108, 92, 231, 0.4);
     transform: translateZ(0);
     transition: all 0.2s ease;
+    font-weight: 600;
   }
 
   .limitless-cta-primary::before {
@@ -43,14 +44,22 @@
     transform: translateY(0) scale(1);
   }
 
+  .limitless-cta-primary:disabled {
+    opacity: 0.5;
+    transform: none;
+    box-shadow: 0 5px 20px -8px rgba(108, 92, 231, 0.2);
+    cursor: not-allowed;
+  }
+
   .limitless-cta-secondary {
     border: 2px solid transparent;
     background: linear-gradient(var(--background), var(--background)) padding-box,
                 linear-gradient(135deg, #6C5CE7, #00B8D9) border-box;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 6px 25px -4px rgba(0, 184, 217, 0.3);
+    box-shadow: 0 4px 15px -4px rgba(0, 184, 217, 0.25);
     transition: all 0.2s ease;
+    font-weight: 500;
   }
 
   .limitless-cta-secondary::before {
@@ -90,12 +99,44 @@
   }
 
   .limitless-cta-secondary:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 15px 35px -5px rgba(0, 184, 217, 0.4);
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 8px 25px -5px rgba(0, 184, 217, 0.3);
   }
 
   .limitless-cta-secondary:active {
     transform: translateY(0) scale(1);
+  }
+
+  .limitless-cta-secondary:disabled {
+    opacity: 0.5;
+    transform: none;
+    box-shadow: 0 2px 10px -4px rgba(0, 184, 217, 0.15);
+    cursor: not-allowed;
+  }
+
+  /* Button hierarchy utilities */
+  .btn-hierarchy-primary {
+    @apply h-11 px-6 text-base font-semibold;
+    @apply bg-primary text-primary-foreground;
+    @apply hover:bg-primary/90 focus:bg-primary/90;
+    @apply shadow-lg hover:shadow-xl;
+    @apply transition-all duration-200;
+  }
+
+  .btn-hierarchy-secondary {
+    @apply h-10 px-5 text-sm font-medium;
+    @apply bg-secondary text-secondary-foreground;
+    @apply hover:bg-secondary/80 focus:bg-secondary/80;
+    @apply border border-border/50 hover:border-border;
+    @apply shadow-sm hover:shadow-md;
+    @apply transition-all duration-200;
+  }
+
+  .btn-hierarchy-tertiary {
+    @apply h-9 px-4 text-sm font-normal;
+    @apply text-muted-foreground hover:text-foreground;
+    @apply hover:bg-muted/50 focus:bg-muted/50;
+    @apply transition-all duration-200;
   }
 }
 
@@ -136,6 +177,53 @@
 
 .btn-enhanced:active {
   transform: translateY(0);
+}
+
+/* Pulse animation for call-to-action buttons */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gentle bounce for interactive elements */
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+/* Button states consistency */
+.btn-primary-state {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
+  @apply active:scale-95 active:shadow-sm;
+}
+
+.btn-secondary-state {
+  @apply focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:ring-offset-2;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
+  @apply active:scale-95 active:shadow-sm;
 }
 
 /* Fixed hover states - maintain solid backgrounds */
@@ -255,7 +343,9 @@ button:hover,
   .limitless-cta-secondary,
   .btn-enhanced,
   .feature-card,
-  .tutorial-section {
+  .tutorial-section,
+  .animate-pulse-ring,
+  .animate-bounce-gentle {
     animation: none !important;
     transition: none !important;
   }
