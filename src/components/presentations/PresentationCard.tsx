@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,21 +8,21 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { 
-  MoreVertical, 
-  Play, 
-  Edit, 
+  Eye, 
   Download, 
-  Share, 
+  Share2, 
+  Edit, 
   Copy, 
-  Trash2,
+  Trash2, 
+  MoreVertical,
   Calendar,
   User,
-  FileSliders,
-  Eye
+  FileText,
+  Presentation
 } from 'lucide-react';
 
 interface Presentation {
@@ -33,140 +33,97 @@ interface Presentation {
   lastModified: string;
   createdBy: string;
   thumbnail: string;
-  status: 'draft' | 'published';
+  status: 'draft' | 'published' | 'archived';
   tags: string[];
 }
 
 interface PresentationCardProps {
   presentation: Presentation;
-  isSelected?: boolean;
-  onSelect?: () => void;
-  onPreview?: () => void;
-  viewMode?: 'grid' | 'list';
+  isSelected: boolean;
+  onSelect: () => void;
+  onPreview: () => void;
+  viewMode: 'grid' | 'list';
 }
 
-export const PresentationCard = ({ 
-  presentation, 
-  isSelected = false,
+export const PresentationCard = ({
+  presentation,
+  isSelected,
   onSelect,
   onPreview,
-  viewMode = 'grid'
+  viewMode
 }: PresentationCardProps) => {
-  const handlePlay = () => {
-    console.log('Presenting pitch deck:', presentation.id);
-  };
-
-  const handleEdit = () => {
-    console.log('Editing pitch deck:', presentation.id);
-  };
-
-  const handleDownload = () => {
-    console.log('Downloading pitch deck:', presentation.id);
-  };
-
   if (viewMode === 'list') {
     return (
-      <Card className="group hover:shadow-md transition-all duration-200">
+      <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
           <div className="flex items-center space-x-4">
-            {/* Selection Checkbox */}
-            {onSelect && (
-              <Checkbox
-                checked={isSelected}
-                onCheckedChange={onSelect}
-                aria-label={`Select ${presentation.title}`}
-              />
-            )}
-
-            {/* Thumbnail */}
-            <div className="w-20 h-14 bg-gradient-to-br from-primary/20 to-primary/5 rounded flex items-center justify-center flex-shrink-0">
-              <FileSliders className="w-6 h-6 text-primary/40" />
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={onSelect}
+            />
+            <div className="w-20 h-14 bg-gradient-to-br from-primary/20 to-primary/5 rounded flex items-center justify-center">
+              <Presentation className="w-6 h-6 text-primary" />
             </div>
-
-            {/* Content */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm truncate">{presentation.title}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
-                    {presentation.description}
-                  </p>
-                  
-                  {/* Tags */}
-                  <div className="flex items-center space-x-2 mt-2">
-                    <Badge 
-                      variant={presentation.status === 'published' ? 'default' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {presentation.status}
-                    </Badge>
-                    {presentation.tags.slice(0, 1).map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Meta Info */}
-                <div className="text-right text-xs text-muted-foreground ml-4 flex-shrink-0">
-                  <div className="flex items-center space-x-1 mb-1">
-                    <FileSliders className="w-3 h-3" />
-                    <span>{presentation.slideCount} slides</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="w-3 h-3" />
-                    <span>{new Date(presentation.lastModified).toLocaleDateString()}</span>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center space-x-1 ml-4">
-                  {onPreview && (
-                    <Button size="sm" variant="outline" onClick={onPreview}>
-                      <Eye className="w-4 h-4 mr-1" />
-                      Preview
-                    </Button>
-                  )}
-                  
-                  <Button size="sm" onClick={handlePlay}>
-                    <Play className="w-4 h-4 mr-1" />
-                    Present
-                  </Button>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={handleEdit}>
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Share className="w-4 h-4 mr-2" />
-                        Share
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Copy className="w-4 h-4 mr-2" />
-                        Duplicate
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleDownload}>
-                        <Download className="w-4 h-4 mr-2" />
-                        Download
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-destructive">
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+              <h3 className="font-semibold truncate">{presentation.title}</h3>
+              <p className="text-sm text-muted-foreground truncate">
+                {presentation.description}
+              </p>
+              <div className="flex items-center space-x-4 mt-2 text-xs text-muted-foreground">
+                <span className="flex items-center">
+                  <FileText className="w-3 h-3 mr-1" />
+                  {presentation.slideCount} slides
+                </span>
+                <span className="flex items-center">
+                  <Calendar className="w-3 h-3 mr-1" />
+                  {new Date(presentation.lastModified).toLocaleDateString()}
+                </span>
+                <span className="flex items-center">
+                  <User className="w-3 h-3 mr-1" />
+                  {presentation.createdBy}
+                </span>
               </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Badge 
+                variant={presentation.status === 'published' ? 'default' : 'secondary'}
+              >
+                {presentation.status}
+              </Badge>
+              <Button variant="outline" size="sm" onClick={onPreview}>
+                <Eye className="w-4 h-4 mr-2" />
+                Preview
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Duplicate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Share
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Download className="w-4 h-4 mr-2" />
+                    Export
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-destructive">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </CardContent>
@@ -175,98 +132,52 @@ export const PresentationCard = ({
   }
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] relative">
+    <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer">
       <CardHeader className="p-0">
-        {/* Selection Checkbox */}
-        {onSelect && (
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={onSelect}
-            className="absolute top-3 left-3 z-10 bg-background"
-            aria-label={`Select ${presentation.title}`}
-          />
-        )}
-
-        {/* Thumbnail */}
-        <div className="relative aspect-video bg-muted rounded-t-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-            <FileSliders className="w-12 h-12 text-primary/40" />
+        <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-lg overflow-hidden">
+          {/* Presentation Preview */}
+          <div className="w-full h-full flex items-center justify-center">
+            <Presentation className="w-12 h-12 text-primary/60" />
+          </div>
+          
+          {/* Selection Checkbox */}
+          <div className="absolute top-3 left-3">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={onSelect}
+              className="bg-white/90 border-white/50"
+            />
           </div>
           
           {/* Status Badge */}
           <Badge 
+            className="absolute top-3 right-3"
             variant={presentation.status === 'published' ? 'default' : 'secondary'}
-            className="absolute top-2 right-2"
           >
             {presentation.status}
           </Badge>
-
-          {/* Quick Actions Overlay */}
+          
+          {/* Hover Actions */}
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center space-x-2">
-            {onPreview && (
-              <Button size="sm" variant="outline" onClick={onPreview}>
-                <Eye className="w-4 h-4 mr-1" />
-                Preview
-              </Button>
-            )}
-            <Button size="sm" onClick={handlePlay}>
-              <Play className="w-4 h-4 mr-1" />
-              Present
+            <Button size="sm" variant="outline" onClick={onPreview}>
+              <Eye className="w-4 h-4 mr-1" />
+              Preview
             </Button>
-            <Button size="sm" variant="outline" onClick={handleEdit}>
-              <Edit className="w-4 h-4" />
+            <Button size="sm" variant="outline">
+              <Edit className="w-4 h-4 mr-1" />
+              Edit
             </Button>
           </div>
         </div>
       </CardHeader>
 
       <CardContent className="p-4 space-y-3">
-        {/* Title and Actions */}
-        <div className="flex items-start justify-between">
-          <h3 className="font-semibold text-sm line-clamp-2 flex-1">
-            {presentation.title}
-          </h3>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handlePlay}>
-                <Play className="w-4 h-4 mr-2" />
-                Present
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleEdit}>
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Share className="w-4 h-4 mr-2" />
-                Share
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Copy className="w-4 h-4 mr-2" />
-                Duplicate
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleDownload}>
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="space-y-2">
+          <CardTitle className="text-base line-clamp-1">{presentation.title}</CardTitle>
+          <CardDescription className="text-sm line-clamp-2">
+            {presentation.description}
+          </CardDescription>
         </div>
-
-        {/* Description */}
-        <p className="text-xs text-muted-foreground line-clamp-2">
-          {presentation.description}
-        </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
@@ -281,26 +192,56 @@ export const PresentationCard = ({
             </Badge>
           )}
         </div>
-      </CardContent>
 
-      <CardFooter className="p-4 pt-0 space-y-2">
-        {/* Meta Information */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground w-full">
-          <div className="flex items-center space-x-1">
-            <FileSliders className="w-3 h-3" />
-            <span>{presentation.slideCount} slides</span>
+        {/* Metadata */}
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center space-x-3">
+            <span className="flex items-center">
+              <FileText className="w-3 h-3 mr-1" />
+              {presentation.slideCount}
+            </span>
+            <span className="flex items-center">
+              <Calendar className="w-3 h-3 mr-1" />
+              {new Date(presentation.lastModified).toLocaleDateString()}
+            </span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Calendar className="w-3 h-3" />
-            <span>{new Date(presentation.lastModified).toLocaleDateString()}</span>
-          </div>
+          <span className="flex items-center">
+            <User className="w-3 h-3 mr-1" />
+            {presentation.createdBy}
+          </span>
         </div>
-        
-        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-          <User className="w-3 h-3" />
-          <span>by {presentation.createdBy}</span>
+
+        {/* Actions */}
+        <div className="flex space-x-2 pt-2">
+          <Button variant="outline" size="sm" className="flex-1">
+            <Share2 className="w-4 h-4 mr-1" />
+            Share
+          </Button>
+          
+          <Button variant="outline" size="sm">
+            <Download className="w-4 h-4" />
+          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>
+                <Copy className="w-4 h-4 mr-2" />
+                Duplicate
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive">
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 };

@@ -70,7 +70,7 @@ export const PresentationsHeader = ({
             <Presentation className="w-6 h-6 text-primary" />
             <h1 className="text-2xl font-semibold">Presentations</h1>
             <Badge variant="secondary" className="ml-2">
-              12 Total
+              7 Total
             </Badge>
           </div>
 

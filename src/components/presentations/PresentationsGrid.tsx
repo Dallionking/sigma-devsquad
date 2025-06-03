@@ -1,13 +1,24 @@
-
 import React, { useState } from 'react';
 import { PresentationCard } from './PresentationCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { CreatePresentationModal } from './CreatePresentationModal';
 import { SlidePreviewModal } from './SlidePreviewModal';
+import { SlidePresentationModal } from './SlidePresentationModal';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock data for demo purposes with pitch deck focus
+// Mock data for demo purposes with pitch deck focus, including Vibe Dev Squad
 const mockPresentations = [
+  {
+    id: 'vibe-dev-squad-pitch',
+    title: 'Vibe Dev Squad - Investor Pitch',
+    description: 'Comprehensive investor presentation showcasing our AI-powered development platform and market opportunity',
+    slideCount: 8,
+    lastModified: '2024-01-16',
+    createdBy: 'Vibe Dev Squad',
+    thumbnail: '/api/placeholder/300/200',
+    status: 'published' as const,
+    tags: ['investor-pitch', 'ai-development', 'funding', 'saas']
+  },
   {
     id: '1',
     title: 'Q4 Investor Pitch',
@@ -96,6 +107,7 @@ export const PresentationsGrid = ({
   const [isLoading, setIsLoading] = useState(true);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [slidePresentationModalOpen, setSlidePresentationModalOpen] = useState(false);
   const [selectedPresentation, setSelectedPresentation] = useState<any>(null);
   const { toast } = useToast();
 
@@ -152,7 +164,13 @@ export const PresentationsGrid = ({
 
   const handlePreviewPresentation = (presentation: any) => {
     setSelectedPresentation(presentation);
-    setPreviewModalOpen(true);
+    
+    // If it's the Vibe Dev Squad pitch, open the slide presentation modal
+    if (presentation.id === 'vibe-dev-squad-pitch') {
+      setSlidePresentationModalOpen(true);
+    } else {
+      setPreviewModalOpen(true);
+    }
   };
 
   const handlePresentationSelect = (presentationId: string) => {
@@ -243,6 +261,12 @@ export const PresentationsGrid = ({
       <SlidePreviewModal
         open={previewModalOpen}
         onOpenChange={setPreviewModalOpen}
+        presentation={selectedPresentation}
+      />
+
+      <SlidePresentationModal
+        open={slidePresentationModalOpen}
+        onOpenChange={setSlidePresentationModalOpen}
         presentation={selectedPresentation}
       />
     </div>
