@@ -1,291 +1,120 @@
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import {
-  ChevronLeft,
-  ChevronRight,
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Share2, 
+  Download, 
   Play,
   Pause,
-  Share2,
-  Download,
-  Maximize2,
-  Users,
-  DollarSign,
-  Target,
-  Lightbulb,
-  TrendingUp,
-  Monitor,
-  Settings,
-  Globe,
-  BarChart3,
-  Calendar,
-  Rocket,
-  Award,
-  ArrowRight
+  RotateCcw,
+  Maximize2
 } from 'lucide-react';
+import { Logo } from '@/components/branding/Logo';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 
 interface SlidePresentationProps {
   presentationId: string;
   onShare: () => void;
 }
 
-// Comprehensive slide data for Vibe DevSquad pitch deck
+// Enhanced slide data with images
 const slideData = [
   {
     id: 1,
     title: "Vibe DevSquad",
-    subtitle: "The AI Development Workforce Platform",
-    type: "cover" as const,
-    icon: Rocket,
-    content: {
-      tagline: "Replace your $20,000/month dev team with AI agents for just $49/month",
-      company: "Vibe DevSquad",
-      website: "vibedevsquad.com",
-      contact: "founder@vibedevsquad.com"
-    }
+    subtitle: "AI-Powered Development Platform",
+    content: "Revolutionizing software development through intelligent collaboration",
+    type: "title",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 2,
-    title: "Founder's Story",
-    subtitle: "Why I Built This",
-    type: "story" as const,
-    icon: Users,
-    content: {
-      painPoint: "Frustration with $20,000/month development team that delivered slower results than AI tools",
-      insight: "AI tools like Cursor, Windsurf, and advanced IDEs were faster but fragmented",
-      vision: "Create an orchestrated AI development workforce at a fraction of the cost",
-      mission: "Make professional development teams accessible to everyone, from solo developers to enterprises"
-    }
+    title: "The Problem",
+    content: [
+      "• Development teams are fragmented and inefficient",
+      "• 67% of software projects fail due to poor coordination",
+      "• Developers spend 40% of time on non-coding activities",
+      "• Communication gaps lead to $62B in annual losses"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 3,
-    title: "The Problem",
-    subtitle: "Development is prohibitively expensive and AI tools are fragmented",
-    type: "problem" as const,
-    icon: Target,
-    content: {
-      coreProblems: [
-        "Traditional dev teams cost $20,000+/month with 60% time spent on coordination",
-        "AI tools are powerful but fragmented and difficult to orchestrate",
-        "Individual developers can't afford professional teams",
-        "Enterprises struggle with development costs and efficiency"
-      ],
-      costOfInaction: "High costs, fragmented workflows, coordination overhead"
-    }
+    title: "Our Solution",
+    content: [
+      "• AI-powered development orchestration platform",
+      "• Intelligent task assignment and workflow optimization",
+      "• Real-time collaboration with contextual assistance",
+      "• Seamless integration with existing development tools"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 4,
-    title: "Our Solution",
-    subtitle: "Affordable AI development workforce that replaces expensive human teams",
-    type: "solution" as const,
-    icon: Lightbulb,
-    content: {
-      coreSolution: "Hierarchical AI agent team structure with specialized expertise",
-      differentiator: "Orchestrated AI workforce vs. fragmented individual tools",
-      foundation: "Modern React/TypeScript architecture with strong component modularity",
-      valueProposition: "Transform a $20,000/month expense into a $49/month subscription"
-    }
+    title: "Market Opportunity",
+    content: [
+      "• $750B global software development market",
+      "• 28M developers worldwide (growing 25% annually)",
+      "• $180B DevOps tools market by 2026",
+      "• Early stage with massive growth potential"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 5,
-    title: "Market Opportunity",
-    subtitle: "Dual market with massive growth potential",
-    type: "market" as const,
-    icon: TrendingUp,
-    content: {
-      individualMarket: "$2B in AI tool spending by 2026",
-      enterpriseMarket: "$30B DevOps market by 2028",
-      growth: "24.8% CAGR in AI software development market",
-      validation: "Strong demand from both individual developers and enterprises"
-    }
+    title: "Product Demo",
+    content: [
+      "• Live AI agent collaboration",
+      "• Intelligent code review and suggestions",
+      "• Automated workflow orchestration",
+      "• Real-time performance analytics"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 6,
-    title: "Product Demo",
-    subtitle: "See the platform in action",
-    type: "demo" as const,
-    icon: Monitor,
-    content: {
-      features: [
-        "Dashboard with hierarchical agent team visualization",
-        "Real-time communication flow between agents",
-        "Intelligent task breakdown and assignment",
-        "Integration with existing development workflows"
-      ],
-      comparison: "Traditional team vs. Vibe DevSquad (time and cost)"
-    }
+    title: "Business Model",
+    content: [
+      "• SaaS subscription model",
+      "• Tiered pricing: Starter ($29/mo), Pro ($99/mo), Enterprise (Custom)",
+      "• Revenue streams: Subscriptions, Marketplace, Professional Services",
+      "• Target: 40% gross margins by Year 2"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 7,
-    title: "Key Features",
-    subtitle: "Value-driving capabilities",
-    type: "features" as const,
-    icon: Settings,
-    content: {
-      features: [
-        "Hierarchical Agent Team: Planning Agent orchestrating specialized teams",
-        "Advanced Communication Hub: Real-time visualization of agent interactions",
-        "Intelligent Task Management: Automated breakdown and assignment",
-        "Development Tool Integration: Seamless connection with existing workflows",
-        "Deployment Flexibility: Local installation or cloud-based access"
-      ]
-    }
+    title: "Go-to-Market Strategy",
+    content: [
+      "• Developer-first growth strategy",
+      "• Open source community engagement",
+      "• Strategic partnerships with major cloud providers",
+      "• Enterprise sales for large organizations"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop&crop=center"
   },
   {
     id: 8,
-    title: "Technical Architecture",
-    subtitle: "Built on solid foundations",
-    type: "technical" as const,
-    icon: Globe,
-    content: {
-      architecture: [
-        "Modern Frontend: React/TypeScript with component-based architecture",
-        "Integration Capabilities: Supabase, Discord, and Telegram integrations",
-        "Extensible Design: API-first approach for third-party tool connections",
-        "Security Roadmap: Planned enhancements for enterprise-grade security",
-        "Performance Focus: Optimized state management and responsive design"
-      ]
-    }
-  },
-  {
-    id: 9,
-    title: "User Personas",
-    subtitle: "Serving dual markets effectively",
-    type: "personas" as const,
-    icon: Users,
-    content: {
-      personas: [
-        {
-          type: "Individual Developer",
-          description: "Solo developer or freelancer seeking to multiply capabilities"
-        },
-        {
-          type: "Small Business", 
-          description: "Startup or agency that can't afford a full development team"
-        },
-        {
-          type: "Enterprise",
-          description: "Organization looking to reduce development costs while maintaining quality"
-        }
-      ]
-    }
-  },
-  {
-    id: 10,
-    title: "Competitive Landscape",
-    subtitle: "Strategic positioning for market leadership",
-    type: "competitive" as const,
-    icon: Award,
-    content: {
-      advantages: [
-        "Cost savings: 99% reduction vs traditional teams",
-        "Specialized expertise: Purpose-built AI agents",
-        "Team orchestration: Coordinated vs fragmented tools"
-      ],
-      positioning: "Unique position between individual AI tools and traditional teams"
-    }
-  },
-  {
-    id: 11,
-    title: "Business Model",
-    subtitle: "Accessible pricing with massive value",
-    type: "business" as const,
-    icon: DollarSign,
-    content: {
-      pricing: [
-        { tier: "Individual", price: "$49/month", target: "Solo developers" },
-        { tier: "Professional", price: "$99/month", target: "Small teams" },
-        { tier: "Team", price: "$249/month", target: "Growing companies" },
-        { tier: "Enterprise", price: "Custom from $999/month", target: "Large organizations" }
-      ],
-      comparison: "Traditional dev team: $20,000/month vs Vibe DevSquad: $49-249/month"
-    }
-  },
-  {
-    id: 12,
-    title: "Development Roadmap",
-    subtitle: "Progress and future vision",
-    type: "roadmap" as const,
-    icon: Calendar,
-    content: {
-      current: "Modern codebase with strong architecture in place",
-      immediate: "Security enhancements and UI/UX improvements",
-      shortTerm: "Expanded integrations and performance optimization",
-      longTerm: "Advanced AI specialization and enterprise features"
-    }
-  },
-  {
-    id: 13,
-    title: "Funding Ask",
-    subtitle: "$1.5-2.5M Seed Round",
-    type: "funding" as const,
-    icon: TrendingUp,
-    content: {
-      amount: "$1.5-2.5 million seed round",
-      allocation: [
-        { category: "Engineering", percentage: 60, description: "Security, features, technical debt" },
-        { category: "Sales & Marketing", percentage: 25, description: "GTM strategy, customer acquisition" },
-        { category: "Operations", percentage: 15, description: "Team growth, legal, admin" }
-      ],
-      runway: "18-24 months to achieve key milestones",
-      valuation: "10-15x multiple on ARR projections"
-    }
-  },
-  {
-    id: 14,
-    title: "Milestones & Metrics",
-    subtitle: "Clear path to success",
-    type: "milestones" as const,
-    icon: BarChart3,
-    content: {
-      sixMonth: [
-        "Complete security enhancements",
-        "Launch enhanced UI/UX with presentations feature", 
-        "Acquire first 100 paying customers"
-      ],
-      twelveMonth: [
-        "Reach $500K ARR",
-        "Expand enterprise integrations",
-        "Achieve 30% month-over-month growth"
-      ],
-      eighteenMonth: [
-        "Reach $2M ARR",
-        "Launch enterprise-grade features",
-        "Position for Series A fundraising"
-      ]
-    }
-  },
-  {
-    id: 15,
-    title: "The Team",
-    subtitle: "Why us?",
-    type: "team" as const,
-    icon: Users,
-    content: {
-      positioning: "Uniquely qualified team with relevant experience",
-      strengths: [
-        "Deep understanding of development pain points",
-        "Technical expertise in AI and modern development",
-        "Experience with both individual and enterprise markets",
-        "Proven ability to build scalable platforms"
-      ]
-    }
-  },
-  {
-    id: 16,
-    title: "Call to Action",
-    subtitle: "Join us in democratizing development",
-    type: "cta" as const,
-    icon: ArrowRight,
-    content: {
-      vision: "Transform how the world builds software",
-      opportunity: "Be part of the AI development revolution",
-      contact: "Let's discuss how Vibe DevSquad can change everything",
-      nextSteps: "Ready to move forward with due diligence and investment"
-    }
+    title: "Funding & Use of Funds",
+    content: [
+      "• Seeking $5M Series A funding",
+      "• 40% Product Development & AI Research",
+      "• 30% Marketing & Customer Acquisition",
+      "• 20% Team Expansion & Talent",
+      "• 10% Operations & Infrastructure"
+    ],
+    type: "content",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop&crop=center"
   }
 ];
 
@@ -294,436 +123,228 @@ export const SlidePresentation = ({ presentationId, onShare }: SlidePresentation
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Auto-advance slides when playing
-  useEffect(() => {
-    if (!isPlaying) return;
-    
-    const timer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slideData.length);
-    }, 10000); // 10 seconds per slide
-
-    return () => clearInterval(timer);
-  }, [isPlaying]);
-
   const nextSlide = () => {
-    setCurrentSlide(prev => (prev + 1) % slideData.length);
+    setCurrentSlide((prev) => (prev + 1) % slideData.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide(prev => (prev - 1 + slideData.length) % slideData.length);
+    setCurrentSlide((prev) => (prev - 1 + slideData.length) % slideData.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
-  const togglePlay = () => {
+  const togglePlayback = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const resetPresentation = () => {
+    setCurrentSlide(0);
+    setIsPlaying(false);
   };
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
-    if (!isFullscreen) {
-      document.documentElement.requestFullscreen?.();
-    } else {
-      document.exitFullscreen?.();
-    }
   };
 
-  const slide = slideData[currentSlide];
-  const progress = ((currentSlide + 1) / slideData.length) * 100;
-
-  const renderSlideContent = () => {
-    switch (slide.type) {
-      case 'cover':
-        return (
-          <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-6xl font-bold text-primary">{slide.content.company}</h1>
-              <h2 className="text-2xl font-semibold text-muted-foreground">{slide.subtitle}</h2>
-              <p className="text-xl text-orange-600 font-medium max-w-4xl mx-auto">
-                {slide.content.tagline}
-              </p>
-            </div>
-            <div className="space-y-2 text-lg text-muted-foreground">
-              <p>{slide.content.website}</p>
-              <p>{slide.content.contact}</p>
-            </div>
-          </div>
-        );
-
-      case 'story':
-        return (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold mb-3 text-red-600">The Pain Point</h3>
-                  <p className="text-lg">{slide.content.painPoint}</p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3 text-blue-600">The Insight</h3>
-                  <p className="text-lg">{slide.content.insight}</p>
-                </div>
-              </div>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold mb-3 text-green-600">The Vision</h3>
-                  <p className="text-lg">{slide.content.vision}</p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3 text-purple-600">The Mission</h3>
-                  <p className="text-lg">{slide.content.mission}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'problem':
-        return (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-2xl font-semibold mb-6 text-red-600">Core Problems</h3>
-                <ul className="space-y-4">
-                  {slide.content.coreProblems.map((problem: string, index: number) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mt-3 flex-shrink-0" />
-                      <p className="text-lg">{problem}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-red-50 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-4 text-red-700">Cost of Inaction</h3>
-                <p className="text-lg text-red-600">{slide.content.costOfInaction}</p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'solution':
-        return (
-          <div className="space-y-8">
-            <div className="text-center mb-8">
-              <div className="inline-block bg-green-100 text-green-800 px-6 py-3 rounded-full text-xl font-semibold">
-                {slide.content.valueProposition}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold mb-3 text-green-600">Core Solution</h3>
-                  <p className="text-lg">{slide.content.coreSolution}</p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3 text-blue-600">Key Differentiator</h3>
-                  <p className="text-lg">{slide.content.differentiator}</p>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-3 text-purple-600">Technical Foundation</h3>
-                <p className="text-lg">{slide.content.foundation}</p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'market':
-        return (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div className="bg-blue-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-blue-700">Individual Developer Market</h3>
-                  <p className="text-2xl font-bold text-blue-600">{slide.content.individualMarket}</p>
-                </div>
-                <div className="bg-purple-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-purple-700">Enterprise Market</h3>
-                  <p className="text-2xl font-bold text-purple-600">{slide.content.enterpriseMarket}</p>
-                </div>
-              </div>
-              <div className="space-y-6">
-                <div className="bg-green-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-green-700">Growth Rate</h3>
-                  <p className="text-2xl font-bold text-green-600">{slide.content.growth}</p>
-                </div>
-                <div className="bg-orange-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-orange-700">Market Validation</h3>
-                  <p className="text-lg text-orange-600">{slide.content.validation}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'business':
-        return (
-          <div className="space-y-8">
-            <div className="text-center mb-8">
-              <div className="bg-green-100 text-green-800 px-6 py-3 rounded-full text-lg font-semibold inline-block">
-                {slide.content.comparison}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {slide.content.pricing.map((tier: any, index: number) => (
-                <Card key={index} className="text-center">
-                  <CardContent className="p-6">
-                    <h3 className="font-semibold text-lg mb-2">{tier.tier}</h3>
-                    <p className="text-2xl font-bold text-primary mb-2">{tier.price}</p>
-                    <p className="text-sm text-muted-foreground">{tier.target}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'funding':
-        return (
-          <div className="space-y-8">
-            <div className="text-center mb-8">
-              <h2 className="text-4xl font-bold text-primary mb-4">{slide.content.amount}</h2>
-              <p className="text-xl text-muted-foreground">{slide.content.runway}</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {slide.content.allocation.map((item: any, index: number) => (
-                <Card key={index} className="text-center">
-                  <CardContent className="p-6">
-                    <h3 className="font-semibold text-lg mb-2">{item.category}</h3>
-                    <p className="text-3xl font-bold text-primary mb-2">{item.percentage}%</p>
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="text-center">
-              <p className="text-lg text-muted-foreground">{slide.content.valuation}</p>
-            </div>
-          </div>
-        );
-
-      case 'cta':
-        return (
-          <div className="text-center space-y-8">
-            <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-primary">{slide.content.vision}</h2>
-              <p className="text-2xl text-muted-foreground">{slide.content.opportunity}</p>
-              <p className="text-xl text-orange-600">{slide.content.contact}</p>
-            </div>
-            <div className="bg-primary/10 p-8 rounded-lg">
-              <p className="text-lg font-medium">{slide.content.nextSteps}</p>
-            </div>
-          </div>
-        );
-
-      default:
-        return (
-          <div className="space-y-6">
-            {slide.content.features && (
-              <ul className="space-y-4">
-                {slide.content.features.map((feature: string, index: number) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0" />
-                    <p className="text-lg">{feature}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-            
-            {slide.content.sixMonth && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-4 text-blue-600">6 Months</h3>
-                  <ul className="space-y-2">
-                    {slide.content.sixMonth.map((item: string, index: number) => (
-                      <li key={index} className="text-sm">• {item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-4 text-green-600">12 Months</h3>
-                  <ul className="space-y-2">
-                    {slide.content.twelveMonth.map((item: string, index: number) => (
-                      <li key={index} className="text-sm">• {item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-4 text-purple-600">18 Months</h3>
-                  <ul className="space-y-2">
-                    {slide.content.eighteenMonth.map((item: string, index: number) => (
-                      <li key={index} className="text-sm">• {item}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-
-            {slide.content.personas && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {slide.content.personas.map((persona: any, index: number) => (
-                  <Card key={index}>
-                    <CardContent className="p-6">
-                      <h3 className="font-semibold text-lg mb-2">{persona.type}</h3>
-                      <p className="text-sm text-muted-foreground">{persona.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {slide.content.advantages && (
-              <ul className="space-y-4">
-                {slide.content.advantages.map((advantage: string, index: number) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-3 flex-shrink-0" />
-                    <p className="text-lg">{advantage}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {slide.content.strengths && (
-              <ul className="space-y-4">
-                {slide.content.strengths.map((strength: string, index: number) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-3 flex-shrink-0" />
-                    <p className="text-lg">{strength}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        );
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentSlide((prev) => {
+          if (prev === slideData.length - 1) {
+            setIsPlaying(false);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 3000);
     }
-  };
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const currentSlideData = slideData[currentSlide];
 
   return (
-    <div className={`h-full flex flex-col bg-background ${isFullscreen ? 'fixed inset-0 z-50' : ''}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur">
+    <div className={`space-y-6 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : ''}`}>
+      {/* Header with Logo and Controls */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Badge variant="outline" className="text-xs">
-            Slide {currentSlide + 1} of {slideData.length}
-          </Badge>
-          <Progress value={progress} className="w-32 h-2" />
+          <Logo size="md" variant="full" />
+          <div>
+            <h2 className="text-2xl font-bold text-vibe-primary">Investor Pitch Deck</h2>
+            <p className="text-sm text-muted-foreground">
+              Slide {currentSlide + 1} of {slideData.length}
+            </p>
+          </div>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={togglePlay}
-          >
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+          <Button variant="outline" size="sm" onClick={resetPresentation}>
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Reset
           </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleFullscreen}
-          >
-            <Maximize2 className="w-4 h-4" />
+          <Button variant="outline" size="sm" onClick={togglePlayback}>
+            {isPlaying ? (
+              <Pause className="w-4 h-4 mr-2" />
+            ) : (
+              <Play className="w-4 h-4 mr-2" />
+            )}
+            {isPlaying ? 'Pause' : 'Play'}
           </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onShare}
-          >
-            <Share2 className="w-4 h-4" />
+          <Button variant="outline" size="sm" onClick={toggleFullscreen}>
+            <Maximize2 className="w-4 h-4 mr-2" />
+            {isFullscreen ? 'Exit' : 'Fullscreen'}
           </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <Download className="w-4 h-4" />
+          <Button variant="outline" size="sm" onClick={onShare}>
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+          <Button variant="outline" size="sm">
+            <Download className="w-4 h-4 mr-2" />
+            Export
           </Button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        {/* Slide Content */}
-        <div className="flex-1 p-8 overflow-auto">
-          <div className="max-w-6xl mx-auto h-full flex flex-col">
-            {/* Slide Header */}
-            <div className="flex items-center space-x-4 mb-8">
-              <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-                <slide.icon className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold">{slide.title}</h1>
-                <p className="text-xl text-muted-foreground">{slide.subtitle}</p>
-              </div>
-            </div>
-
+      {/* Main Slide Display */}
+      <Card className="relative overflow-hidden border-2 border-vibe-primary/20">
+        <CardContent className="p-0">
+          <div className="relative aspect-video bg-gradient-to-br from-vibe-primary/5 via-background to-vibe-secondary/5">
             {/* Slide Content */}
-            <div className="flex-1 flex items-center">
-              <div className="w-full">
-                {renderSlideContent()}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar Navigation */}
-        <div className="w-80 border-l bg-muted/50 p-4 overflow-auto">
-          <h3 className="font-semibold mb-4">Slides Overview</h3>
-          <div className="space-y-2">
-            {slideData.map((slideItem, index) => (
-              <button
-                key={slideItem.id}
-                onClick={() => goToSlide(index)}
-                className={`w-full text-left p-3 rounded-lg transition-colors ${
-                  index === currentSlide
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-background hover:bg-accent'
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <slideItem.icon className="w-4 h-4 text-primary" />
+            <div className="absolute inset-0 flex">
+              {/* Left side - Content */}
+              <div className="flex-1 p-12 flex flex-col justify-center space-y-6">
+                {currentSlideData.type === 'title' ? (
+                  <div className="text-center space-y-4">
+                    <div className="mb-8">
+                      <Logo size="xl" variant="full" />
+                    </div>
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-vibe-primary via-vibe-energy to-vibe-accent bg-clip-text text-transparent">
+                      {currentSlideData.title}
+                    </h1>
+                    <p className="text-2xl text-vibe-secondary font-semibold">
+                      {currentSlideData.subtitle}
+                    </p>
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                      {currentSlideData.content}
+                    </p>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-medium text-sm truncate">{slideItem.title}</p>
-                    <p className="text-xs text-muted-foreground truncate">{slideItem.subtitle}</p>
+                ) : (
+                  <div className="space-y-6">
+                    <h2 className="text-4xl font-bold text-vibe-primary">
+                      {currentSlideData.title}
+                    </h2>
+                    <div className="space-y-3">
+                      {Array.isArray(currentSlideData.content) 
+                        ? currentSlideData.content.map((item, index) => (
+                            <p key={index} className="text-lg text-foreground leading-relaxed">
+                              {item}
+                            </p>
+                          ))
+                        : <p className="text-lg text-foreground leading-relaxed">
+                            {currentSlideData.content}
+                          </p>
+                      }
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Right side - Image */}
+              {currentSlideData.type !== 'title' && (
+                <div className="w-1/2 p-6 flex items-center justify-center">
+                  <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-vibe-primary/20">
+                    <EnhancedImage
+                      src={currentSlideData.image}
+                      alt={`Slide ${currentSlide + 1} illustration`}
+                      className="w-full h-full object-cover"
+                      aspectRatio="landscape"
+                      showLoadingState={true}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   </div>
                 </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+              )}
 
-      {/* Footer Controls */}
-      <div className="flex items-center justify-between p-4 border-t bg-background/95 backdrop-blur">
-        <Button
-          variant="outline"
+              {/* Full width image for title slide */}
+              {currentSlideData.type === 'title' && (
+                <div className="absolute inset-0 opacity-10">
+                  <EnhancedImage
+                    src={currentSlideData.image}
+                    alt="Background"
+                    className="w-full h-full object-cover"
+                    showLoadingState={false}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Slide Progress Bar */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10">
+              <div 
+                className="h-full bg-gradient-to-r from-vibe-primary to-vibe-energy transition-all duration-300"
+                style={{ width: `${((currentSlide + 1) / slideData.length) * 100}%` }}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Navigation Controls */}
+      <div className="flex items-center justify-between">
+        <Button 
+          variant="outline" 
           onClick={prevSlide}
           disabled={currentSlide === 0}
         >
           <ChevronLeft className="w-4 h-4 mr-2" />
           Previous
         </Button>
-        
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-muted-foreground">
-            {currentSlide + 1} / {slideData.length}
-          </span>
+
+        {/* Slide Thumbnails */}
+        <div className="flex space-x-2 max-w-2xl overflow-x-auto">
+          {slideData.map((slide, index) => (
+            <button
+              key={slide.id}
+              onClick={() => goToSlide(index)}
+              className={`
+                flex-shrink-0 w-16 h-12 rounded border-2 transition-all duration-200
+                ${currentSlide === index 
+                  ? 'border-vibe-primary bg-vibe-primary/10' 
+                  : 'border-border bg-muted hover:border-vibe-primary/50'
+                }
+              `}
+            >
+              <div className="w-full h-full rounded bg-gradient-to-br from-vibe-primary/20 to-vibe-secondary/20 flex items-center justify-center">
+                <span className="text-xs font-medium">{index + 1}</span>
+              </div>
+            </button>
+          ))}
         </div>
-        
-        <Button
-          variant="outline"
+
+        <Button 
+          variant="outline" 
           onClick={nextSlide}
           disabled={currentSlide === slideData.length - 1}
         >
           Next
           <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
+      </div>
+
+      {/* Slide Information */}
+      <div className="flex items-center justify-center space-x-4">
+        <Badge variant="outline" className="bg-vibe-primary/10 text-vibe-primary border-vibe-primary/30">
+          Vibe DevSquad Pitch Deck
+        </Badge>
+        <Badge variant="outline">
+          {slideData.length} slides
+        </Badge>
+        <Badge variant="outline">
+          AI Development Platform
+        </Badge>
       </div>
     </div>
   );
