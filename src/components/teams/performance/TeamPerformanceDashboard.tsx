@@ -74,29 +74,29 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
   };
 
   return (
-    <div className="w-full max-w-full px-3 py-4 space-y-4">
+    <div className="w-full max-w-none px-4 py-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-primary flex-shrink-0" />
+          <h2 className="text-2xl font-bold flex items-center gap-3">
+            <BarChart3 className="w-6 h-6 text-primary flex-shrink-0" />
             <span className="truncate">Team Performance Dashboard</span>
           </h2>
-          <div className="flex items-center gap-3 mt-1">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 mt-2">
+            <p className="text-base text-muted-foreground">
               Monitor {team.name} productivity and performance metrics
             </p>
             {metrics.lastUpdated && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-sm">
                 Updated {metrics.lastUpdated.toLocaleTimeString()}
               </Badge>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-3 flex-shrink-0">
           <Button
             variant="outline"
-            size="sm"
+            size="default"
             onClick={handleRefresh}
             disabled={isLoading}
             className="gap-2"
@@ -145,42 +145,42 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
 
       {/* Performance Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-8 max-w-4xl">
-          <TabsTrigger value="overview" className="flex items-center gap-1 text-xs">
-            <TrendingUp className="w-3 h-3" />
+        <TabsList className="grid w-full grid-cols-8 max-w-none h-12">
+          <TabsTrigger value="overview" className="flex items-center gap-2 text-sm px-3">
+            <TrendingUp className="w-4 h-4" />
             <span>Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="productivity" className="flex items-center gap-1 text-xs">
-            <Clock className="w-3 h-3" />
+          <TabsTrigger value="productivity" className="flex items-center gap-2 text-sm px-3">
+            <Clock className="w-4 h-4" />
             <span>Tasks</span>
           </TabsTrigger>
-          <TabsTrigger value="velocity" className="flex items-center gap-1 text-xs">
-            <Target className="w-3 h-3" />
+          <TabsTrigger value="velocity" className="flex items-center gap-2 text-sm px-3">
+            <Target className="w-4 h-4" />
             <span>Velocity</span>
           </TabsTrigger>
-          <TabsTrigger value="comparison" className="flex items-center gap-1 text-xs">
-            <BarChart3 className="w-3 h-3" />
+          <TabsTrigger value="comparison" className="flex items-center gap-2 text-sm px-3">
+            <BarChart3 className="w-4 h-4" />
             <span>Compare</span>
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-1 text-xs">
-            <Users className="w-3 h-3" />
+          <TabsTrigger value="analytics" className="flex items-center gap-2 text-sm px-3">
+            <Users className="w-4 h-4" />
             <span>Analytics</span>
           </TabsTrigger>
-          <TabsTrigger value="skills" className="flex items-center gap-1 text-xs">
-            <Brain className="w-3 h-3" />
+          <TabsTrigger value="skills" className="flex items-center gap-2 text-sm px-3">
+            <Brain className="w-4 h-4" />
             <span>Skills</span>
           </TabsTrigger>
-          <TabsTrigger value="progress" className="flex items-center gap-1 text-xs">
-            <GitBranch className="w-3 h-3" />
+          <TabsTrigger value="progress" className="flex items-center gap-2 text-sm px-3">
+            <GitBranch className="w-4 h-4" />
             <span>Progress</span>
           </TabsTrigger>
-          <TabsTrigger value="quality" className="flex items-center gap-1 text-xs">
-            <Bug className="w-3 h-3" />
+          <TabsTrigger value="quality" className="flex items-center gap-2 text-sm px-3">
+            <Bug className="w-4 h-4" />
             <span>Quality</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-4">
+        <TabsContent value="overview" className="mt-6">
           <TeamPerformanceCharts
             team={team}
             timeRange={timeRange}
@@ -191,7 +191,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="productivity" className="mt-4">
+        <TabsContent value="productivity" className="mt-6">
           <TeamPerformanceCharts
             team={team}
             timeRange={timeRange}
@@ -202,7 +202,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="velocity" className="mt-4">
+        <TabsContent value="velocity" className="mt-6">
           <TeamPerformanceCharts
             team={team}
             timeRange={timeRange}
@@ -213,7 +213,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="comparison" className="mt-4">
+        <TabsContent value="comparison" className="mt-6">
           <TeamPerformanceComparison
             team={team}
             timeRange={timeRange}
@@ -223,8 +223,8 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="analytics" className="mt-4 space-y-6">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <TabsContent value="analytics" className="mt-6 space-y-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             <IndividualContributionMetrics 
               teamMembers={teamMembers}
               timeRange={timeRange}
@@ -240,15 +240,15 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="skills" className="mt-4">
+        <TabsContent value="skills" className="mt-6">
           <SkillUtilizationTracking 
             teamMembers={teamMembers}
             timeRange={timeRange}
           />
         </TabsContent>
 
-        <TabsContent value="progress" className="mt-4 space-y-6">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <TabsContent value="progress" className="mt-6 space-y-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             <MilestoneCompletionVisualization 
               timeRange={timeRange}
             />
@@ -262,7 +262,7 @@ export const TeamPerformanceDashboard = ({ team }: TeamPerformanceDashboardProps
           />
         </TabsContent>
 
-        <TabsContent value="quality" className="mt-4">
+        <TabsContent value="quality" className="mt-6">
           <QualityMetricsDashboard 
             teamId={team.id}
             timeRange={timeRange}

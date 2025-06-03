@@ -50,21 +50,21 @@ export const FilteredTeamHierarchy = ({
   });
 
   return (
-    <div className="h-full flex flex-col space-y-4">
+    <div className="h-full flex flex-col space-y-6 w-full max-w-none">
       {/* Team Filters Collapsible Section */}
       {showFilters && (
         <div className="flex-shrink-0">
           <Collapsible open={filtersExpanded} onOpenChange={setFiltersExpanded}>
             <CollapsibleTrigger asChild>
-              <div className="w-full bg-gradient-to-r from-blue-600/10 to-blue-700/10 border border-blue-300/30 rounded-lg p-4 cursor-pointer hover:from-blue-600/20 hover:to-blue-700/20 transition-all duration-200">
+              <div className="w-full bg-gradient-to-r from-blue-600/10 to-blue-700/10 border border-blue-300/30 rounded-lg p-5 cursor-pointer hover:from-blue-600/20 hover:to-blue-700/20 transition-all duration-200">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <Filter className="w-5 h-5 text-blue-600" />
                     <span className="text-lg font-semibold text-blue-900 dark:text-blue-100">
                       Team Filters
                     </span>
                     {activeFilterCount > 0 && (
-                      <Badge variant="default" className="bg-blue-600 text-white text-xs">
+                      <Badge variant="default" className="bg-blue-600 text-white text-sm">
                         {activeFilterCount}
                       </Badge>
                     )}
@@ -74,8 +74,8 @@ export const FilteredTeamHierarchy = ({
               </div>
             </CollapsibleTrigger>
 
-            <CollapsibleContent className="mt-3">
-              <div className="bg-card border rounded-lg p-4 shadow-sm">
+            <CollapsibleContent className="mt-4">
+              <div className="bg-card border rounded-lg p-5 shadow-sm">
                 <TeamFiltersPanel
                   selectedCompositions={selectedCompositions}
                   selectedTypes={selectedTypes}
@@ -93,16 +93,16 @@ export const FilteredTeamHierarchy = ({
       
       {/* Team Results Summary */}
       <Card className="flex-shrink-0 border-muted">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <Users className="w-4 h-4" />
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3 text-base">
+            <Users className="w-5 h-5" />
             <span>Teams</span>
             {activeFilterCount > 0 ? (
-              <span className="text-muted-foreground font-normal">
+              <span className="text-muted-foreground font-normal text-sm">
                 ({filteredTeams.length} of {teams.length} shown)
               </span>
             ) : (
-              <span className="text-muted-foreground font-normal">
+              <span className="text-muted-foreground font-normal text-sm">
                 ({teams.length} total)
               </span>
             )}
@@ -113,12 +113,12 @@ export const FilteredTeamHierarchy = ({
       {/* Debug Info - Show if no teams */}
       {teams.length === 0 && (
         <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm font-medium">No teams found in the system</span>
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3 text-amber-800 dark:text-amber-200">
+              <AlertCircle className="w-5 h-5" />
+              <span className="text-base font-medium">No teams found in the system</span>
             </div>
-            <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+            <p className="text-sm text-amber-700 dark:text-amber-300 mt-2">
               Teams need to be created first before they can be managed. Check the team creation functionality.
             </p>
           </CardContent>
@@ -128,12 +128,12 @@ export const FilteredTeamHierarchy = ({
       {/* Show filtered results info */}
       {teams.length > 0 && filteredTeams.length === 0 && activeFilterCount > 0 && (
         <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm font-medium">No teams match the current filters</span>
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3 text-amber-800 dark:text-amber-200">
+              <AlertCircle className="w-5 h-5" />
+              <span className="text-base font-medium">No teams match the current filters</span>
             </div>
-            <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+            <p className="text-sm text-amber-700 dark:text-amber-300 mt-2">
               Try clearing some filters or adjusting your selection criteria.
             </p>
           </CardContent>
@@ -141,7 +141,7 @@ export const FilteredTeamHierarchy = ({
       )}
       
       {/* Team Hierarchy */}
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden w-full">
         <TeamHierarchy
           onTeamSelect={onTeamSelect}
           onAgentSelect={onAgentSelect}
