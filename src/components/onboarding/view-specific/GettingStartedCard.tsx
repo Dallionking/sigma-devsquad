@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X, Play, BookOpen, Users, Bot, CheckCircle } from 'lucide-react';
 import { ViewMode } from '@/types';
-import { cn } from '@/lib/utils';
 
 interface GettingStartedCardProps {
   showTeamView: boolean;
@@ -148,26 +147,20 @@ export const GettingStartedCard = ({
   const content = getGettingStartedContent();
 
   return (
-    <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <CardHeader className="space-y-4 pb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-4 flex-1">
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
-              <Icon className="w-6 h-6 text-primary" />
+    <Card className="mb-6 border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
+      <CardHeader className="pb-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+              <Icon className="w-5 h-5 text-primary" />
             </div>
-            <div className="space-y-3 flex-1">
-              <CardTitle className="text-xl font-semibold leading-tight text-foreground">
-                {content.title}
-              </CardTitle>
-              <div className="flex items-center gap-2 flex-wrap">
-                <Badge variant="outline" className="bg-background/80 text-foreground border-border">
-                  {viewName}
-                </Badge>
-                <Badge variant="secondary" className="bg-muted text-muted-foreground">
-                  {getViewModeLabel(viewMode)}
-                </Badge>
+            <div>
+              <CardTitle className="text-lg">{content.title}</CardTitle>
+              <div className="flex items-center space-x-2 mt-1">
+                <Badge variant="outline">{viewName}</Badge>
+                <Badge variant="secondary">{getViewModeLabel(viewMode)}</Badge>
                 {isTourCompleted && (
-                  <Badge variant="default" className="bg-green-100 text-green-800 border-green-200">
+                  <Badge variant="default" className="bg-green-600">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Completed
                   </Badge>
@@ -179,7 +172,7 @@ export const GettingStartedCard = ({
             variant="ghost"
             size="sm"
             onClick={onDismiss}
-            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground shrink-0"
+            className="h-8 w-8 p-0"
             title="Dismiss getting started card"
           >
             <X className="w-4 h-4" />
@@ -187,33 +180,30 @@ export const GettingStartedCard = ({
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-6">
-        <p className="text-muted-foreground leading-relaxed">
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">
           {content.description}
         </p>
         
-        <div className="space-y-4">
-          <h4 className="font-medium text-foreground">What you'll learn:</h4>
-          <ul className="space-y-2">
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm">What you'll learn:</h4>
+          <ul className="text-sm text-muted-foreground space-y-1">
             {content.features.map((feature, index) => (
-              <li key={index} className="flex items-start gap-3 text-sm text-muted-foreground">
-                <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0" />
-                <span className="leading-relaxed">{feature}</span>
+              <li key={index} className="flex items-center space-x-2">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                <span>{feature}</span>
               </li>
             ))}
           </ul>
         </div>
         
-        <div className="flex items-center gap-3 pt-2 border-t border-border/50">
-          <Button 
-            onClick={onStartTour} 
-            className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
-          >
+        <div className="flex items-center space-x-3 pt-2">
+          <Button onClick={onStartTour} className="flex items-center space-x-2">
             <Play className="w-4 h-4" />
             <span>{isTourCompleted ? 'Retake Tour' : 'Start Guided Tour'}</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex items-center gap-2 shadow-sm">
-            <BookOpen className="w-4 h-4" />
+          <Button variant="outline" size="sm">
+            <BookOpen className="w-4 h-4 mr-2" />
             View Docs
           </Button>
         </div>

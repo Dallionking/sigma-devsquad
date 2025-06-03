@@ -48,7 +48,7 @@ const Index = () => {
   const { tasks } = taskContext;
   const { messages } = messageContext;
 
-  // Check if there's any selection to show the detail panel
+  // Check if there's any selection to show the detail panel - properly convert to boolean
   const hasSelection = Boolean(selectedAgent || selectedTask || selectedMessage || selectedTeam || selectedAgentProfile);
 
   const handleDismissSelection = () => {
@@ -83,64 +83,60 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Fixed Header with consistent height and positioning */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <Header 
-          viewMode={viewMode} 
-          onViewModeChange={setViewMode}
-          agents={agents || []}
-          sidebarCollapsed={sidebarCollapsed}
-          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-        
-        {/* Real-time Notifications - Compact */}
-        <div className="px-4 py-1 border-b border-border/50">
-          <RealtimeNotifications />
-        </div>
-        
-        {/* View Toggle - Simplified */}
-        <ViewToggle 
-          showTeamView={showTeamView}
-          onToggleView={handleToggleView}
-        />
+      {/* Vibe DevSquad Enhanced Header */}
+      <Header 
+        viewMode={viewMode} 
+        onViewModeChange={setViewMode}
+        agents={agents || []}
+        sidebarCollapsed={sidebarCollapsed}
+        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
+      
+      {/* Real-time Notifications with Vibe styling */}
+      <div className="px-4 py-2">
+        <RealtimeNotifications />
+      </div>
+      
+      {/* Enhanced View Toggle with Vibe branding */}
+      <ViewToggle 
+        showTeamView={showTeamView}
+        onToggleView={handleToggleView}
+      />
 
-        {/* Onboarding Progress - Show if not complete */}
-        {!progress.isOnboardingComplete && (
-          <div className="px-4 py-2 border-b border-border/50">
-            <OnboardingProgress />
-          </div>
-        )}
-      </div>
+      {/* Onboarding Progress - Show if not complete */}
+      {!progress.isOnboardingComplete && (
+        <div className="px-6 py-4">
+          <OnboardingProgress />
+        </div>
+      )}
       
-      {/* Main layout with consistent 48px top offset */}
-      <div style={{ paddingTop: '48px' }} className="flex-1">
-        <MainLayout
-          showTeamView={showTeamView}
-          sidebarCollapsed={sidebarCollapsed}
-          syncPanelCollapsed={syncPanelCollapsed}
-          agents={agents || []}
-          tasks={tasks || []}
-          messages={messages || []}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          selectedTeam={selectedTeam}
-          selectedAgentProfile={selectedAgentProfile}
-          viewMode={viewMode}
-          hasSelection={hasSelection}
-          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
-          onAgentSelect={setSelectedAgent}
-          onTaskSelect={setSelectedTask}
-          onMessageSelect={setSelectedMessage}
-          onTeamSelect={setSelectedTeam}
-          onAgentProfileSelect={setSelectedAgentProfile}
-          onDismissSelection={handleDismissSelection}
-          onViewModeChange={setViewMode}
-        />
-      </div>
+      {/* Main layout with integrated User Presence Panel */}
+      <MainLayout
+        showTeamView={showTeamView}
+        sidebarCollapsed={sidebarCollapsed}
+        syncPanelCollapsed={syncPanelCollapsed}
+        agents={agents || []}
+        tasks={tasks || []}
+        messages={messages || []}
+        selectedAgent={selectedAgent}
+        selectedTask={selectedTask}
+        selectedMessage={selectedMessage}
+        selectedTeam={selectedTeam}
+        selectedAgentProfile={selectedAgentProfile}
+        viewMode={viewMode}
+        hasSelection={hasSelection}
+        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
+        onAgentSelect={setSelectedAgent}
+        onTaskSelect={setSelectedTask}
+        onMessageSelect={setSelectedMessage}
+        onTeamSelect={setSelectedTeam}
+        onAgentProfileSelect={setSelectedAgentProfile}
+        onDismissSelection={handleDismissSelection}
+        onViewModeChange={setViewMode}
+      />
       
-      {/* Footer - Only show when needed */}
+      {/* Enhanced footer with Vibe branding and smooth animations */}
       {showFooter && (
         <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0">
           <SystemFooter 
@@ -150,15 +146,19 @@ const Index = () => {
         </div>
       )}
       
-      {/* Floating action button */}
+      {/* Enhanced floating action button with Vibe styling */}
       <FloatingActionButton />
 
-      {/* Modal overlays */}
+      {/* Onboarding Modal */}
       <OnboardingModal />
+      
+      {/* Keyboard Shortcuts Overlay */}
       <KeyboardShortcutsOverlay />
+      
+      {/* Toast Notifications */}
       <Toaster />
       
-      {/* Background effects */}
+      {/* Vibe DevSquad subtle background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-vibe-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-vibe-secondary/5 rounded-full blur-3xl" />

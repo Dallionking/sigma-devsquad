@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { AnimatedActionButton } from '../visual-cues/AnimatedActionButton';
 import { cn } from '@/lib/utils';
 
 interface TourNavigationControlsProps {
@@ -32,31 +31,29 @@ export const TourNavigationControls = ({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 mt-auto pt-6 border-t border-border/20">
+    <div className="flex items-center justify-between gap-3 mt-auto pt-4 border-t border-border">
       <Button
         variant="outline"
         size="sm"
         onClick={handlePrevious}
         disabled={isFirstStep}
         className={cn(
-          "flex items-center gap-2 h-9 px-4 text-sm",
+          "flex items-center gap-2 min-w-[80px] h-9",
           isFirstStep && "opacity-50 cursor-not-allowed"
         )}
       >
         <ChevronLeft className="w-4 h-4" />
-        <span>Previous</span>
+        <span className="text-sm">Previous</span>
       </Button>
       
-      <AnimatedActionButton
+      <Button
         onClick={handleNext}
-        isPrimary={true}
-        className="flex items-center gap-2 h-10 px-6"
+        size="sm"
+        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white min-w-[80px] h-9"
       >
-        <span className="text-sm font-medium">
-          {isLastStep ? 'Finish Tour' : 'Next'}
-        </span>
+        <span className="text-sm">{isLastStep ? 'Finish Tour' : 'Next'}</span>
         {!isLastStep && <ChevronRight className="w-4 h-4" />}
-      </AnimatedActionButton>
+      </Button>
     </div>
   );
 };

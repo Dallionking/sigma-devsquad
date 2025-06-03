@@ -27,21 +27,21 @@ export const EnhancedAgentCard = ({
 
   const getStatusColor = () => {
     switch (agent.status) {
-      case "working": return "border-l-green-500 bg-green-50/50";
-      case "idle": return "border-l-slate-300 bg-slate-50/50";
-      case "waiting": return "border-l-yellow-500 bg-yellow-50/50";
-      case "error": return "border-l-red-500 bg-red-50/50";
-      default: return "border-l-border bg-background";
+      case "working": return "border-green-500 bg-green-50";
+      case "idle": return "border-slate-300 bg-slate-50";
+      case "waiting": return "border-yellow-500 bg-yellow-50";
+      case "error": return "border-red-500 bg-red-50";
+      default: return "border-border bg-background";
     }
   };
 
   return (
     <Card className={cn(
-      "transition-all duration-200 hover:shadow-md cursor-pointer border-l-4 shadow-sm",
+      "transition-all duration-200 hover:shadow-lg cursor-pointer",
       getStatusColor(),
       compact ? "p-3" : "p-4"
     )}>
-      <CardHeader className={cn("pb-3 space-y-2", compact && "pb-2")}>
+      <CardHeader className={cn("pb-3", compact && "pb-2")}>
         <AgentCardHeader
           agent={agent}
           onConfigure={onConfigure}

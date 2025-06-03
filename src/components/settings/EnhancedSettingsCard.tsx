@@ -35,7 +35,7 @@ export const EnhancedSettingsCard = ({
 
   return (
     <Card className={cn(
-      "relative transition-all duration-200 hover:shadow-md border-l-4 shadow-sm",
+      "relative transition-all duration-200 hover:shadow-md hover:scale-[1.01] border-l-4",
       status === "active" && "border-l-green-500",
       status === "warning" && "border-l-yellow-500",
       status === "error" && "border-l-red-500",
@@ -43,13 +43,13 @@ export const EnhancedSettingsCard = ({
       !status && "border-l-blue-500",
       className
     )}>
-      <CardHeader className="space-y-3 pb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2 flex-1">
-            <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
+      <CardHeader className="space-y-3">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1 flex-1">
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
               {title}
               {isNew && (
-                <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 border-blue-200">
+                <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
                   New
                 </Badge>
               )}
@@ -61,9 +61,9 @@ export const EnhancedSettingsCard = ({
             )}
           </div>
           
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2">
             {category && (
-              <Badge variant="outline" className="text-xs bg-background text-muted-foreground">
+              <Badge variant="outline" className="text-xs">
                 {category}
               </Badge>
             )}

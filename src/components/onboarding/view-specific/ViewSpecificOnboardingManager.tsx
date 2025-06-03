@@ -42,9 +42,9 @@ export const ViewSpecificOnboardingManager = ({
 
   return (
     <>
-      {/* Getting Started Card with consistent spacing */}
+      {/* Getting Started Card */}
       {state.showGettingStarted && (
-        <div className="container-spacing-tight section-spacing-tight">
+        <div className="px-6 py-4">
           <GettingStartedCard
             showTeamView={showTeamView}
             viewMode={viewMode}
