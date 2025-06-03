@@ -71,16 +71,16 @@ export const SidebarRenderer = ({
 
   if (collapsed) {
     return (
-      <div className="w-full h-full flex flex-col items-center py-4 space-y-4 bg-sidebar-background">
+      <div className="w-full h-full flex flex-col items-center py-4 gap-consistent-md bg-sidebar-background">
         {showTeamView ? (
-          <div className="p-2 rounded-lg bg-sidebar-primary/20 relative">
+          <div className="card-padding-sm rounded-lg bg-sidebar-primary/20 relative">
             <Users className="w-6 h-6 text-sidebar-primary" />
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-sidebar-primary rounded-full flex items-center justify-center">
               <Filter className="w-2 h-2 text-sidebar-primary-foreground" />
             </div>
           </div>
         ) : (
-          <div className="p-2 rounded-lg bg-sidebar-primary/20">
+          <div className="card-padding-sm rounded-lg bg-sidebar-primary/20">
             <Activity className="w-6 h-6 text-sidebar-primary" />
           </div>
         )}
@@ -91,18 +91,18 @@ export const SidebarRenderer = ({
   if (showTeamView) {
     return (
       <div className="h-full flex flex-col bg-sidebar-background">
-        <div className="p-4 border-b border-sidebar-border bg-sidebar-background">
-          <h2 className="font-semibold text-lg flex items-center gap-2">
+        <div className="card-padding-md border-b border-sidebar-border bg-sidebar-background">
+          <h2 className="font-semibold text-lg flex items-center gap-consistent-sm">
             <Users className="w-5 h-5 text-sidebar-foreground" />
             <span className="text-sidebar-foreground">Team Management</span>
           </h2>
-          <p className="text-sm text-sidebar-foreground/70 mt-1 flex items-center gap-1">
+          <p className="text-sm text-sidebar-foreground/70 mt-2 flex items-center gap-1">
             <Filter className="w-3 h-3" />
             Filter and organize your teams below
           </p>
         </div>
         
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-auto container-padding-sm">
           <FilteredTeamHierarchy
             onTeamSelect={onTeamSelect}
             onAgentSelect={onAgentProfileSelect}
@@ -120,14 +120,14 @@ export const SidebarRenderer = ({
   
   return (
     <div className="h-full flex flex-col bg-sidebar-background">
-      <div className="p-4 border-b border-sidebar-border bg-sidebar-background">
-        <h2 className="font-semibold text-lg flex items-center gap-2">
+      <div className="card-padding-md border-b border-sidebar-border bg-sidebar-background">
+        <h2 className="font-semibold text-lg flex items-center gap-consistent-sm">
           <ViewIcon className="w-5 h-5 text-sidebar-foreground" />
           <span className="text-sidebar-foreground">
             {viewMode === 'workflow' ? 'Workflow Status' : 'Agent Overview'}
           </span>
         </h2>
-        <p className="text-sm text-sidebar-foreground/70 mt-1">
+        <p className="text-sm text-sidebar-foreground/70 mt-2">
           {getViewModeDescription(viewMode)}
         </p>
       </div>
@@ -141,8 +141,8 @@ export const SidebarRenderer = ({
         />
       </div>
       
-      {/* Activity Summary - No duplicate navigation */}
-      <div className="p-4 border-t border-sidebar-border bg-sidebar-background">
+      {/* Activity Summary with consistent spacing */}
+      <div className="card-padding-md border-t border-sidebar-border bg-sidebar-background">
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-sidebar-foreground/70">Active Agents</span>

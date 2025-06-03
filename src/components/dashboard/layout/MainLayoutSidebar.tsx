@@ -47,14 +47,14 @@ export const MainLayoutSidebar = ({
   onAgentProfileSelect
 }: MainLayoutSidebarProps) => {
   return (
-    <>
-      {/* Sidebar Toggle */}
-      <div className="flex-shrink-0 border-r border-border/60 bg-card/50 backdrop-blur-sm">
+    <div className="h-full flex flex-col bg-background/95 backdrop-blur-sm">
+      {/* Sidebar Toggle Button */}
+      <div className="flex-shrink-0 p-3 border-b border-border/60">
         <Button
           variant="ghost"
           size="sm"
           onClick={onSidebarToggle}
-          className="m-2 h-8 w-8 p-0 hover:bg-primary/10 transition-all duration-200 hover:scale-105"
+          className="h-8 w-8 p-0 hover:bg-primary/10 transition-all duration-200"
           title={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
         >
           {sidebarCollapsed ? (
@@ -65,11 +65,8 @@ export const MainLayoutSidebar = ({
         </Button>
       </div>
 
-      {/* Enhanced Sidebar - Focused on contextual content, not navigation */}
-      <div className={cn(
-        "bg-background/95 backdrop-blur-sm border-r border-border/60 transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 shadow-sm",
-        sidebarCollapsed ? "w-16" : (showTeamView ? "w-80" : "w-96")
-      )}>
+      {/* Sidebar Content */}
+      <div className="flex-1 overflow-hidden">
         <SidebarRenderer
           viewMode={viewMode}
           agents={agents}
@@ -90,6 +87,6 @@ export const MainLayoutSidebar = ({
           onAgentProfileSelect={onAgentProfileSelect}
         />
       </div>
-    </>
+    </div>
   );
 };
