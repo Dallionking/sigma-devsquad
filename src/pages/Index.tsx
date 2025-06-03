@@ -80,71 +80,65 @@ const Index = () => {
   const { progress } = useOnboarding();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out prevent-overlap">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-vibe-primary/5 flex flex-col transition-all duration-300 ease-in-out">
       <SkipToContentLink />
       
-      {/* Vibe DevSquad Enhanced Header - Fixed positioning */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/60">
-        <Header 
-          viewMode={viewMode} 
-          onViewModeChange={setViewMode}
-          agents={agents || []}
-          sidebarCollapsed={sidebarCollapsed}
-          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-      </div>
+      {/* Vibe DevSquad Enhanced Header */}
+      <Header 
+        viewMode={viewMode} 
+        onViewModeChange={setViewMode}
+        agents={agents || []}
+        sidebarCollapsed={sidebarCollapsed}
+        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
       
-      {/* Real-time Notifications with consistent spacing */}
-      <div className="container-padding-responsive section-spacing-xs">
+      {/* Real-time Notifications with Vibe styling */}
+      <div className="px-4 py-2">
         <RealtimeNotifications />
       </div>
       
-      {/* Enhanced View Toggle with consistent spacing */}
-      <div className="container-padding-responsive">
-        <ViewToggle 
-          showTeamView={showTeamView}
-          onToggleView={handleToggleView}
-        />
-      </div>
+      {/* Enhanced View Toggle with Vibe branding */}
+      <ViewToggle 
+        showTeamView={showTeamView}
+        onToggleView={handleToggleView}
+      />
 
-      {/* Onboarding Progress with consistent spacing */}
+      {/* Onboarding Progress - Show if not complete */}
       {!progress.isOnboardingComplete && (
-        <div className="container-padding-responsive section-spacing-xs">
+        <div className="px-6 py-4">
           <OnboardingProgress />
         </div>
       )}
       
-      {/* Main layout with proper spacing to prevent overlap */}
-      <div className="flex-1 layout-no-overlap">
-        <MainLayout
-          showTeamView={showTeamView}
-          sidebarCollapsed={sidebarCollapsed}
-          syncPanelCollapsed={syncPanelCollapsed}
-          agents={agents || []}
-          tasks={tasks || []}
-          messages={messages || []}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          selectedTeam={selectedTeam}
-          selectedAgentProfile={selectedAgentProfile}
-          viewMode={viewMode}
-          hasSelection={hasSelection}
-          onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
-          onAgentSelect={setSelectedAgent}
-          onTaskSelect={setSelectedTask}
-          onMessageSelect={setSelectedMessage}
-          onTeamSelect={setSelectedTeam}
-          onAgentProfileSelect={setSelectedAgentProfile}
-          onDismissSelection={handleDismissSelection}
-          onViewModeChange={setViewMode}
-        />
-      </div>
+      {/* Main layout with integrated User Presence Panel */}
+      <MainLayout
+        showTeamView={showTeamView}
+        sidebarCollapsed={sidebarCollapsed}
+        syncPanelCollapsed={syncPanelCollapsed}
+        agents={agents || []}
+        tasks={tasks || []}
+        messages={messages || []}
+        selectedAgent={selectedAgent}
+        selectedTask={selectedTask}
+        selectedMessage={selectedMessage}
+        selectedTeam={selectedTeam}
+        selectedAgentProfile={selectedAgentProfile}
+        viewMode={viewMode}
+        hasSelection={hasSelection}
+        onSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onSyncPanelToggle={() => setSyncPanelCollapsed(!syncPanelCollapsed)}
+        onAgentSelect={setSelectedAgent}
+        onTaskSelect={setSelectedTask}
+        onMessageSelect={setSelectedMessage}
+        onTeamSelect={setSelectedTeam}
+        onAgentProfileSelect={setSelectedAgentProfile}
+        onDismissSelection={handleDismissSelection}
+        onViewModeChange={setViewMode}
+      />
       
-      {/* Enhanced footer with consistent spacing */}
+      {/* Enhanced footer with Vibe branding and smooth animations */}
       {showFooter && (
-        <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0 layout-no-overlap">
+        <div className="animate-in slide-in-from-bottom duration-300 flex-shrink-0">
           <SystemFooter 
             onToggle={() => setShowFooter(!showFooter)}
             messages={messages || []}
@@ -152,7 +146,7 @@ const Index = () => {
         </div>
       )}
       
-      {/* Enhanced floating action button with proper positioning */}
+      {/* Enhanced floating action button with Vibe styling */}
       <FloatingActionButton />
 
       {/* Onboarding Modal */}
