@@ -45,9 +45,9 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
     messages: props.messages.filter(m => !m.read).length,
   };
 
-  // Calculate sidebar widths to prevent overlap
-  const contextualSidebarWidth = props.sidebarCollapsed ? 16 : (props.showTeamView ? 80 : 96); // 4rem, 20rem, 24rem
-  const syncPanelWidth = props.syncPanelCollapsed || !props.hasSelection ? 0 : 96; // 24rem
+  // Standardized layout calculations
+  const sidebarWidth = props.sidebarCollapsed ? 64 : (props.showTeamView ? 320 : 384); // 4rem, 20rem, 24rem
+  const syncPanelWidth = props.syncPanelCollapsed || !props.hasSelection ? 0 : 384; // 24rem
 
   return (
     <div className="min-h-screen bg-background flex overflow-hidden relative">
@@ -85,16 +85,18 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
         />
       </div>
 
-      {/* Main Content Area - Properly offset from contextual sidebar */}
+      {/* Main Content Area - Properly offset with consistent 48px top padding */}
       <div 
         className="flex flex-col flex-1 overflow-hidden bg-background transition-all duration-300 ease-in-out"
         style={{
-          marginLeft: `${contextualSidebarWidth * 0.25}rem`, // Convert to rem units
-          marginRight: `${syncPanelWidth * 0.25}rem`
+          marginLeft: `${sidebarWidth}px`,
+          marginRight: `${syncPanelWidth}px`,
+          paddingTop: '48px' // Consistent 48px padding-top as required
         }}
       >
-        {/* Main Layout Header */}
-        <div className="flex-shrink-0 border-b border-border bg-background/95 backdrop-blur-sm">
+        {/* Consolidated Header - No duplicate navigation */}
+        <div className="fixed top-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border"
+             style={{ marginLeft: `${sidebarWidth}px`, marginRight: `${syncPanelWidth}px` }}>
           <MainLayoutHeader
             showTeamView={props.showTeamView}
             viewMode={props.viewMode}
@@ -103,8 +105,8 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
           />
         </div>
         
-        {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
+        {/* Main Content - Consistent spacing */}
+        <div className="flex-1 overflow-hidden container-spacing-tight">
           <MainLayoutContent
             showTeamView={props.showTeamView}
             viewMode={props.viewMode}
@@ -132,9 +134,11 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
 
       {/* Sync Panel - Fixed positioning on the right */}
       {!props.syncPanelCollapsed && props.hasSelection && (
-        <div className="fixed top-0 right-0 h-full w-96 bg-background border-l border-border z-30 transition-all duration-300 ease-in-out">
-          {/* Sync panel content would go here */}
-          <div className="p-4">
+        <div 
+          className="fixed top-0 right-0 h-full w-96 bg-background border-l border-border z-30 transition-all duration-300 ease-in-out"
+          style={{ paddingTop: '48px' }} // Consistent 48px padding-top
+        >
+          <div className="p-4 h-full overflow-auto">
             <h3 className="text-lg font-semibold mb-4">Details Panel</h3>
             <p className="text-sm text-muted-foreground">
               Selected item details would appear here.

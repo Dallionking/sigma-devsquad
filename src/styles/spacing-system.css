@@ -49,7 +49,20 @@
     @apply p-6 sm:p-8;
   }
 
-  /* Layout utilities to prevent overlap */
+  /* STANDARDIZED LAYOUT POSITIONING - 48px consistency */
+  .layout-content-standard {
+    padding-top: 48px; /* Required 48px top padding */
+    min-height: calc(100vh - 48px);
+  }
+
+  .layout-content-fixed-header {
+    margin-top: 48px; /* For fixed header scenarios */
+  }
+
+  .layout-header-height {
+    height: 48px; /* Standard header height */
+  }
+
   .layout-sidebar-offset {
     @apply ml-0 md:ml-16 lg:ml-64 transition-all duration-300;
   }
@@ -68,10 +81,10 @@
 
   /* Z-index scale for preventing overlap */
   .z-sidebar { z-index: 40; }
-  .z-header { z-index: 30; }
-  .z-modal { z-index: 50; }
-  .z-dropdown { z-index: 50; }
-  .z-tooltip { z-index: 60; }
+  .z-header { z-index: 50; } /* Increased for consistent layering */
+  .z-modal { z-index: 60; }   /* Increased for proper stacking */
+  .z-dropdown { z-index: 55; }
+  .z-tooltip { z-index: 65; }
   .z-overlay { z-index: 45; }
 
   /* Touch-friendly spacing */
@@ -94,6 +107,31 @@
 
   .gap-responsive-loose {
     @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  /* Navigation consolidation utilities */
+  .nav-primary {
+    @apply bg-background border-b border-border z-header;
+  }
+
+  .nav-secondary {
+    @apply bg-muted/30 border-b border-border/50 z-40;
+  }
+
+  .nav-contextual {
+    @apply bg-sidebar border-r border-sidebar-border z-sidebar;
+  }
+
+  /* Content positioning utilities */
+  .content-main {
+    padding-top: 48px; /* Consistent main content positioning */
+    min-height: calc(100vh - 48px);
+  }
+
+  .content-panel {
+    padding-top: 48px; /* Consistent panel positioning */
+    height: calc(100vh - 48px);
+    overflow-y: auto;
   }
 
   /* Consistent border radius scale */
@@ -147,13 +185,14 @@
   
   --layout-sidebar-width: 16rem;
   --layout-sidebar-collapsed-width: 4rem;
-  --layout-header-height: 4rem;
+  --layout-header-height: 48px; /* Standardized to 48px */
+  --layout-content-offset: 48px; /* Consistent content offset */
   
   --z-sidebar: 40;
-  --z-header: 30;
-  --z-modal: 50;
-  --z-dropdown: 50;
-  --z-tooltip: 60;
+  --z-header: 50;
+  --z-modal: 60;
+  --z-dropdown: 55;
+  --z-tooltip: 65;
 }
 
 /* Responsive adjustments for smaller screens */
@@ -165,6 +204,23 @@
     --spacing-lg: 1rem;
     --spacing-xl: 1.5rem;
     --spacing-2xl: 2rem;
+    --layout-header-height: 44px; /* Slightly smaller on mobile */
+    --layout-content-offset: 44px;
+  }
+  
+  .layout-content-standard {
+    padding-top: 44px;
+    min-height: calc(100vh - 44px);
+  }
+  
+  .content-main {
+    padding-top: 44px;
+    min-height: calc(100vh - 44px);
+  }
+  
+  .content-panel {
+    padding-top: 44px;
+    height: calc(100vh - 44px);
   }
 }
 
@@ -173,11 +229,13 @@
   margin-left: var(--layout-sidebar-width);
   width: calc(100% - var(--layout-sidebar-width));
   transition: margin-left 0.3s ease, width 0.3s ease;
+  padding-top: var(--layout-content-offset);
 }
 
 .sidebar.collapsed + .main-content {
   margin-left: var(--layout-sidebar-collapsed-width);
   width: calc(100% - var(--layout-sidebar-collapsed-width));
+  padding-top: var(--layout-content-offset);
 }
 
 @media (max-width: 768px) {
@@ -185,6 +243,7 @@
   .sidebar.collapsed + .main-content {
     margin-left: 0;
     width: 100%;
+    padding-top: var(--layout-content-offset);
   }
 }
 
@@ -197,4 +256,24 @@
 .focus-consistent:focus {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
+}
+
+/* Navigation hierarchy fixes */
+.nav-hierarchy-1 { z-index: 50; } /* Main header */
+.nav-hierarchy-2 { z-index: 45; } /* Secondary navigation */
+.nav-hierarchy-3 { z-index: 40; } /* Contextual sidebar */
+
+/* Layout positioning consistency */
+.fixed-header-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--layout-header-height);
+  z-index: var(--z-header);
+}
+
+.content-with-fixed-header {
+  padding-top: var(--layout-content-offset);
+  min-height: calc(100vh - var(--layout-content-offset));
 }
