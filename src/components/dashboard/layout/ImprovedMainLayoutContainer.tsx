@@ -6,7 +6,6 @@ import { MainLayoutHeader } from './MainLayoutHeader';
 import { MainLayoutContent } from './MainLayoutContent';
 import { MainLayoutSidebar } from './MainLayoutSidebar';
 import { ViewSpecificOnboardingManager } from '@/components/onboarding/view-specific/ViewSpecificOnboardingManager';
-import { ConsistentLayout } from '@/components/layout/ConsistentLayout';
 import { useLayoutConsistency } from '@/hooks/useLayoutConsistency';
 import { cn } from '@/lib/utils';
 
@@ -36,8 +35,7 @@ interface ImprovedMainLayoutContainerProps {
 }
 
 export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerProps) => {
-  const { getLayoutClasses, preventOverlap } = useLayoutConsistency(props.sidebarCollapsed);
-  const layoutClasses = getLayoutClasses();
+  const { preventOverlap } = useLayoutConsistency(props.sidebarCollapsed);
   
   // Calculate notification counts for tabs
   const notificationCounts = {
@@ -47,23 +45,25 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
     messages: props.messages.filter(m => !m.read).length,
   };
 
+  // Calculate sidebar widths to prevent overlap
+  const contextualSidebarWidth = props.sidebarCollapsed ? 16 : (props.showTeamView ? 80 : 96); // 4rem, 20rem, 24rem
+  const syncPanelWidth = props.syncPanelCollapsed || !props.hasSelection ? 0 : 96; // 24rem
+
   return (
-    <div className={cn(
-      "min-h-screen bg-background flex overflow-hidden",
-      preventOverlap.ensureZIndex('sidebar')
-    )}>
+    <div className="min-h-screen bg-background flex overflow-hidden relative">
       {/* View-Specific Onboarding Manager */}
       <ViewSpecificOnboardingManager
         showTeamView={props.showTeamView}
         viewMode={props.viewMode}
       />
       
-      {/* Sidebar - Fixed positioning to prevent overlap */}
-      <div className={cn(
-        layoutClasses.sidebar,
-        "bg-sidebar border-r border-sidebar-border",
-        preventOverlap.ensureZIndex('sidebar')
-      )}>
+      {/* Contextual Sidebar - Fixed positioning */}
+      <div 
+        className={cn(
+          "fixed top-0 left-0 h-full transition-all duration-300 ease-in-out z-40 bg-sidebar border-r border-sidebar-border",
+          props.sidebarCollapsed ? "w-16" : (props.showTeamView ? "w-80" : "w-96")
+        )}
+      >
         <MainLayoutSidebar
           showTeamView={props.showTeamView}
           sidebarCollapsed={props.sidebarCollapsed}
@@ -85,11 +85,14 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
         />
       </div>
 
-      {/* Main Content Area - Properly offset from sidebar */}
-      <div className={cn(
-        layoutClasses.mainContent,
-        "flex flex-col overflow-hidden bg-background"
-      )}>
+      {/* Main Content Area - Properly offset from contextual sidebar */}
+      <div 
+        className="flex flex-col flex-1 overflow-hidden bg-background transition-all duration-300 ease-in-out"
+        style={{
+          marginLeft: `${contextualSidebarWidth * 0.25}rem`, // Convert to rem units
+          marginRight: `${syncPanelWidth * 0.25}rem`
+        }}
+      >
         {/* Main Layout Header */}
         <div className="flex-shrink-0 border-b border-border bg-background/95 backdrop-blur-sm">
           <MainLayoutHeader
@@ -126,6 +129,19 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
           />
         </div>
       </div>
+
+      {/* Sync Panel - Fixed positioning on the right */}
+      {!props.syncPanelCollapsed && props.hasSelection && (
+        <div className="fixed top-0 right-0 h-full w-96 bg-background border-l border-border z-30 transition-all duration-300 ease-in-out">
+          {/* Sync panel content would go here */}
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-4">Details Panel</h3>
+            <p className="text-sm text-muted-foreground">
+              Selected item details would appear here.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
