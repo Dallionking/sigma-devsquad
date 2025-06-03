@@ -78,12 +78,16 @@ export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
           selectedTeam={props.selectedTeam}
           selectedAgentProfile={props.selectedAgentProfile}
           showTeamView={props.showTeamView}
+          hasSelection={props.hasSelection}
+          syncPanelCollapsed={props.syncPanelCollapsed}
           onViewModeChange={props.onViewModeChange}
           onAgentSelect={props.onAgentSelect}
           onTaskSelect={props.onTaskSelect}
           onMessageSelect={props.onMessageSelect}
           onTeamSelect={props.onTeamSelect}
           onAgentProfileSelect={props.onAgentProfileSelect}
+          onSyncPanelToggle={props.onSyncPanelToggle}
+          onDismissSelection={props.onDismissSelection}
         />
 
         {/* Sync Panel */}
