@@ -41,9 +41,9 @@ export const EmptyStateCard = ({
   tips
 }: EmptyStateCardProps) => {
   const sizeClasses = {
-    sm: 'py-8 px-6',
-    md: 'py-12 px-8',
-    lg: 'py-16 px-10'
+    sm: 'py-6 px-6',
+    md: 'py-8 px-8',
+    lg: 'py-12 px-10'
   };
 
   const iconSizes = {
@@ -53,7 +53,10 @@ export const EmptyStateCard = ({
   };
 
   return (
-    <Card className={cn("border-dashed border-2 border-muted-foreground/20 bg-gradient-to-br from-background to-muted/20", className)}>
+    <Card className={cn(
+      "border-2 border-dashed border-muted-foreground/20 bg-gradient-to-br from-background to-muted/20 shadow-sm hover:shadow-md transition-shadow duration-200",
+      className
+    )}>
       <CardContent className={cn("text-center", sizeClasses[size])}>
         {/* Illustration or Icon */}
         {illustration ? (
@@ -62,7 +65,7 @@ export const EmptyStateCard = ({
               src={illustration} 
               alt=""
               className={cn(
-                "mx-auto rounded-lg opacity-80",
+                "mx-auto rounded-lg opacity-80 shadow-sm",
                 size === 'sm' ? 'w-32 h-24' : size === 'md' ? 'w-48 h-36' : 'w-64 h-48'
               )}
             />
@@ -80,8 +83,8 @@ export const EmptyStateCard = ({
         )}
         
         <h3 className={cn(
-          "font-semibold text-card-foreground mb-3",
-          size === 'sm' ? 'text-base' : size === 'md' ? 'text-lg' : 'text-xl'
+          "font-semibold text-card-foreground mb-4",
+          size === 'sm' ? 'text-lg' : size === 'md' ? 'text-xl' : 'text-2xl'
         )}>
           {title}
         </h3>
@@ -95,13 +98,13 @@ export const EmptyStateCard = ({
 
         {/* Quick Tips */}
         {tips && tips.length > 0 && (
-          <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-            <h4 className="text-sm font-medium text-foreground mb-2">Quick Tips:</h4>
-            <ul className="text-sm text-muted-foreground space-y-1">
+          <div className="mb-6 p-4 bg-muted/30 rounded-lg border border-border/50">
+            <h4 className="text-sm font-medium text-foreground mb-3">Quick Tips:</h4>
+            <ul className="text-sm text-muted-foreground space-y-2">
               {tips.map((tip, index) => (
-                <li key={index} className="flex items-start space-x-2">
-                  <span className="text-primary mt-0.5">•</span>
-                  <span>{tip}</span>
+                <li key={index} className="flex items-start gap-3 text-left">
+                  <span className="text-primary mt-0.5 shrink-0">•</span>
+                  <span className="leading-relaxed">{tip}</span>
                 </li>
               ))}
             </ul>
@@ -110,39 +113,41 @@ export const EmptyStateCard = ({
         
         {/* Action Buttons */}
         {action && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <Button
               onClick={action.onClick}
               variant={action.variant || 'default'}
               size={size === 'sm' ? 'sm' : 'default'}
-              className="min-w-[140px]"
+              className="min-w-[140px] shadow-sm hover:shadow-md transition-shadow"
             >
               {action.label}
             </Button>
             
-            <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              {secondaryAction && (
-                <Button
-                  onClick={secondaryAction.onClick}
-                  variant="outline"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  {secondaryAction.label}
-                </Button>
-              )}
-              
-              {tertiaryAction && (
-                <Button
-                  onClick={tertiaryAction.onClick}
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  {tertiaryAction.label}
-                </Button>
-              )}
-            </div>
+            {(secondaryAction || tertiaryAction) && (
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                {secondaryAction && (
+                  <Button
+                    onClick={secondaryAction.onClick}
+                    variant="outline"
+                    size="sm"
+                    className="text-muted-foreground hover:text-foreground shadow-sm"
+                  >
+                    {secondaryAction.label}
+                  </Button>
+                )}
+                
+                {tertiaryAction && (
+                  <Button
+                    onClick={tertiaryAction.onClick}
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    {tertiaryAction.label}
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </CardContent>
