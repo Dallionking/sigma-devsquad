@@ -28,7 +28,7 @@ export const FilteredTeamHierarchy = ({
   showFilters = true
 }: FilteredTeamHierarchyProps) => {
   const { teams } = useTeams();
-  const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false); // Closed by default
   const {
     selectedCompositions,
     selectedTypes,
@@ -51,25 +51,25 @@ export const FilteredTeamHierarchy = ({
 
   return (
     <div className="h-full flex flex-col space-y-6 w-full max-w-none">
-      {/* Team Filters Collapsible Section - Standardized Colors */}
+      {/* Team Filters Collapsible Section */}
       {showFilters && (
         <div className="flex-shrink-0">
           <Collapsible open={filtersExpanded} onOpenChange={setFiltersExpanded}>
             <CollapsibleTrigger asChild>
-              <div className="w-full bg-sidebar-accent border border-sidebar-border rounded-lg p-5 cursor-pointer hover:bg-sidebar-accent/80 transition-all duration-200">
+              <div className="w-full bg-gradient-to-r from-blue-600/10 to-blue-700/10 border border-blue-300/30 rounded-lg p-5 cursor-pointer hover:from-blue-600/20 hover:to-blue-700/20 transition-all duration-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <Filter className="w-5 h-5 text-sidebar-foreground" />
-                    <span className="text-lg font-semibold text-sidebar-foreground">
+                    <Filter className="w-5 h-5 text-blue-600" />
+                    <span className="text-lg font-semibold text-blue-900 dark:text-blue-100">
                       Team Filters
                     </span>
                     {activeFilterCount > 0 && (
-                      <Badge variant="default" className="bg-sidebar-primary text-sidebar-primary-foreground text-sm">
+                      <Badge variant="default" className="bg-blue-600 text-white text-sm">
                         {activeFilterCount}
                       </Badge>
                     )}
                   </div>
-                  <ChevronDown className={`w-5 h-5 text-sidebar-foreground transition-transform duration-200 ${filtersExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 text-blue-600 transition-transform duration-200 ${filtersExpanded ? 'rotate-180' : ''}`} />
                 </div>
               </div>
             </CollapsibleTrigger>

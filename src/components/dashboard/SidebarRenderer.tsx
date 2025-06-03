@@ -71,17 +71,17 @@ export const SidebarRenderer = ({
 
   if (collapsed) {
     return (
-      <div className="w-full h-full flex flex-col items-center py-4 space-y-4 bg-sidebar-background">
+      <div className="w-full h-full flex flex-col items-center py-4 space-y-4">
         {showTeamView ? (
-          <div className="p-2 rounded-lg bg-sidebar-primary/20 relative">
-            <Users className="w-6 h-6 text-sidebar-primary" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-sidebar-primary rounded-full flex items-center justify-center">
-              <Filter className="w-2 h-2 text-sidebar-primary-foreground" />
+          <div className="p-2 rounded-lg bg-blue-500/10 relative">
+            <Users className="w-6 h-6 text-blue-600" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
+              <Filter className="w-2 h-2 text-white" />
             </div>
           </div>
         ) : (
-          <div className="p-2 rounded-lg bg-sidebar-primary/20">
-            <Activity className="w-6 h-6 text-sidebar-primary" />
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Activity className="w-6 h-6 text-primary" />
           </div>
         )}
       </div>
@@ -90,13 +90,13 @@ export const SidebarRenderer = ({
 
   if (showTeamView) {
     return (
-      <div className="h-full flex flex-col bg-sidebar-background">
-        <div className="p-4 border-b border-sidebar-border bg-sidebar-background">
+      <div className="h-full flex flex-col bg-gradient-to-b from-background to-blue-50/20 dark:to-blue-950/20">
+        <div className="p-4 border-b border-border/50 bg-gradient-to-r from-blue-50/80 to-blue-100/50 dark:from-blue-950/50 dark:to-blue-900/30">
           <h2 className="font-semibold text-lg flex items-center gap-2">
-            <Users className="w-5 h-5 text-sidebar-foreground" />
-            <span className="text-sidebar-foreground">Team Management</span>
+            <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <span className="text-blue-900 dark:text-blue-100">Team Management</span>
           </h2>
-          <p className="text-sm text-sidebar-foreground/70 mt-1 flex items-center gap-1">
+          <p className="text-sm text-blue-700 dark:text-blue-300 mt-1 flex items-center gap-1">
             <Filter className="w-3 h-3" />
             Filter and organize your teams below
           </p>
@@ -119,15 +119,13 @@ export const SidebarRenderer = ({
   const ViewIcon = getViewModeIcon(viewMode);
   
   return (
-    <div className="h-full flex flex-col bg-sidebar-background">
-      <div className="p-4 border-b border-sidebar-border bg-sidebar-background">
+    <div className="h-full flex flex-col bg-gradient-to-b from-background to-muted/30">
+      <div className="p-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5">
         <h2 className="font-semibold text-lg flex items-center gap-2">
-          <ViewIcon className="w-5 h-5 text-sidebar-foreground" />
-          <span className="text-sidebar-foreground">
-            {viewMode === 'workflow' ? 'Workflow Status' : 'Agent Overview'}
-          </span>
+          <ViewIcon className="w-5 h-5 text-primary" />
+          {viewMode === 'workflow' ? 'Workflow Status' : 'Agent Overview'}
         </h2>
-        <p className="text-sm text-sidebar-foreground/70 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           {getViewModeDescription(viewMode)}
         </p>
       </div>
@@ -142,20 +140,20 @@ export const SidebarRenderer = ({
       </div>
       
       {/* Activity Summary - No duplicate navigation */}
-      <div className="p-4 border-t border-sidebar-border bg-sidebar-background">
+      <div className="p-4 border-t border-border/50 bg-muted/30">
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-sidebar-foreground/70">Active Agents</span>
+            <span className="text-muted-foreground">Active Agents</span>
             <span className="font-medium text-green-600">
               {agents.filter(a => a.status === 'working').length}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-sidebar-foreground/70">Total Agents</span>
-            <span className="font-medium text-sidebar-foreground">{agents.length}</span>
+            <span className="text-muted-foreground">Total Agents</span>
+            <span className="font-medium">{agents.length}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-sidebar-foreground/70">System Status</span>
+            <span className="text-muted-foreground">System Status</span>
             <span className="font-medium text-green-600 flex items-center gap-1">
               <Activity className="w-3 h-3" />
               Optimal

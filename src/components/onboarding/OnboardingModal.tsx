@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -131,19 +132,18 @@ export const OnboardingModal = () => {
         />
       )}
 
-      {/* Enhanced Modal with Proper Positioning and Backdrop */}
       <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-        <DialogContent className="max-w-7xl w-[95vw] max-h-[95vh] h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row gap-0 border-0 bg-background/95 backdrop-blur-md shadow-2xl rounded-xl z-[100]">
-          {/* Progress Sidebar */}
+        <DialogContent className={`max-w-6xl max-h-[90vh] p-0 overflow-hidden flex flex-col sm:flex-row ${isHelpCollapsed ? '' : 'mr-96'}`}>
+          {/* Progress Sidebar (collapsible on mobile) */}
           {showProgressSidebar && (
-            <div className="hidden lg:block w-80 border-r border-border/20 bg-card/50 backdrop-blur-sm">
+            <div className="hidden sm:block">
               <OnboardingProgressSidebar />
             </div>
           )}
           
-          {/* Main Content Container */}
-          <div className="flex-1 h-full overflow-hidden relative">
-            {/* Visual Cues */}
+          {/* Main content */}
+          <div className="flex-1 h-[90vh] overflow-y-auto relative">
+            {/* Render visual cues */}
             {activeCues.map((cue) => (
               <OnboardingVisualCues
                 key={cue.id}
@@ -153,61 +153,67 @@ export const OnboardingModal = () => {
                 message={cue.message}
                 isComplete={cue.isComplete}
                 progress={cue.progress}
-                className="absolute z-20"
+                className={cue.targetId ? `absolute z-10` : ''}
               />
             ))}
             
-            {/* Scrollable Content */}
-            <div className="h-full overflow-y-auto custom-scrollbar">
-              <div className="p-6 lg:p-8 space-y-6">
-                <OnboardingModalHeader
-                  currentStep={progress.currentStep}
-                  title={currentContent.title}
-                  description={currentContent.description}
-                  icon={Icon}
-                  showProgressSidebar={showProgressSidebar}
-                  percentage={percentage}
-                  stepOrder={stepOrder}
-                  onToggleProgressSidebar={toggleProgressSidebar}
-                  onSkip={skipOnboarding}
-                  showSkipButton={progress.currentStep !== 'completion'}
-                  onToggleHelp={toggleHelpPanel}
-                  isHelpCollapsed={isHelpCollapsed}
-                />
+            <div className="p-6 space-y-6">
+              <OnboardingModalHeader
+                currentStep={progress.currentStep}
+                title={currentContent.title}
+                description={currentContent.description}
+                icon={Icon}
+                showProgressSidebar={showProgressSidebar}
+                percentage={percentage}
+                stepOrder={stepOrder}
+                onToggleProgressSidebar={() => setShowProgressSidebar(prev => !prev)}
+                onSkip={() => skipOnboarding()}
+                showSkipButton={progress.currentStep !== 'completion'}
+                onToggleHelp={toggleHelpPanel}
+                isHelpCollapsed={isHelpCollapsed}
+              />
 
-                <OnboardingModalContent
-                  currentStep={progress.currentStep}
-                  stepContent={currentContent.content}
-                  onProfileSetupComplete={handleProfileSetupComplete}
-                  onProfileSetupSkip={handleProfileSetupSkip}
-                  onTeamCreationComplete={handleTeamCreationComplete}
-                  onTeamCreationSkip={handleTeamCreationSkip}
-                  onFirstAgentComplete={handleFirstAgentComplete}
-                  onFirstAgentSkip={handleFirstAgentSkip}
-                  onPlanningTourComplete={handlePlanningTourComplete}
-                  onPlanningTourSkip={handlePlanningTourSkip}
-                  getStepData={getStepData}
-                />
+              <OnboardingModalContent
+                currentStep={progress.currentStep}
+                stepContent={currentContent.content}
+                onProfileSetupComplete={(data) => {
+                  saveStepData('profile-setup', data);
+                  completeStep('profile-setup');
+                }}
+                onProfileSetupSkip={() => completeStep('profile-setup')}
+                onTeamCreationComplete={(data) => {
+                  saveStepData('team-creation', data);
+                  completeStep('team-creation');
+                }}
+                onTeamCreationSkip={() => completeStep('team-creation')}
+                onFirstAgentComplete={(data) => {
+                  saveStepData('first-agent', data);
+                  completeStep('first-agent');
+                }}
+                onFirstAgentSkip={() => completeStep('first-agent')}
+                onPlanningTourComplete={() => completeStep('planning-tour')}
+                onPlanningTourSkip={() => completeStep('planning-tour')}
+                getStepData={getStepData}
+              />
 
-                <OnboardingModalActions
-                  currentStep={progress.currentStep}
-                  showActions={showActions}
-                  onNext={handleNext}
-                  onSkip={skipOnboarding}
-                  onFinish={() => setShowOnboarding(false)}
-                />
+              <OnboardingModalActions
+                currentStep={progress.currentStep}
+                showActions={showActions}
+                onNext={handleNext}
+                onSkip={() => skipOnboarding()}
+                onFinish={() => setShowOnboarding(false)}
+              />
 
-                <OnboardingStepIndicators
-                  stepOrder={stepOrder}
-                  currentStep={progress.currentStep}
-                />
-              </div>
+              <OnboardingStepIndicators
+                stepOrder={stepOrder}
+                currentStep={progress.currentStep}
+              />
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Help Panel - Positioned outside modal */}
+      {/* Help Panel - Outside dialog to avoid z-index issues */}
       {showOnboarding && (
         <OnboardingHelpPanel
           currentStep={progress.currentStep}
