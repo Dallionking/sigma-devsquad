@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { Agent, Task, Message, ViewMode } from '@/types';
-import { Team, AgentProfile } from '@/types/teams';
-import { MainLayoutHeader } from './MainLayoutHeader';
-import { MainLayoutContent } from './MainLayoutContent';
+import { Agent, Task, Message, ViewMode } from "@/types";
+import { Team, AgentProfile } from "@/types/teams";
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { SimplifiedHeader } from '../header/SimplifiedHeader';
 import { MainLayoutSidebar } from './MainLayoutSidebar';
-import { ViewSpecificOnboardingManager } from '@/components/onboarding/view-specific/ViewSpecificOnboardingManager';
-import { cn } from '@/lib/utils';
+import { MainLayoutContent } from './MainLayoutContent';
+import { MainLayoutSyncPanel } from './MainLayoutSyncPanel';
 
 interface MainLayoutContainerProps {
   showTeamView: boolean;
@@ -33,102 +33,70 @@ interface MainLayoutContainerProps {
   onViewModeChange: (mode: ViewMode) => void;
 }
 
-export const MainLayoutContainer = ({
-  showTeamView,
-  sidebarCollapsed,
-  syncPanelCollapsed,
-  agents,
-  tasks,
-  messages,
-  selectedAgent,
-  selectedTask,
-  selectedMessage,
-  selectedTeam,
-  selectedAgentProfile,
-  viewMode,
-  hasSelection,
-  onSidebarToggle,
-  onSyncPanelToggle,
-  onAgentSelect,
-  onTaskSelect,
-  onMessageSelect,
-  onTeamSelect,
-  onAgentProfileSelect,
-  onDismissSelection,
-  onViewModeChange
-}: MainLayoutContainerProps) => {
-  
-  // Calculate notification counts for tabs
-  const notificationCounts = {
-    workflow: agents.filter(a => a.status === 'active').length,
-    communication: messages.filter(m => !m.read).length,
-    tasks: tasks.filter(t => t.status === 'pending').length,
-    messages: messages.filter(m => !m.read).length,
-  };
-
+export const MainLayoutContainer = (props: MainLayoutContainerProps) => {
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      {/* View-Specific Onboarding Manager */}
-      <ViewSpecificOnboardingManager
-        showTeamView={showTeamView}
-        viewMode={viewMode}
+    <UnifiedLayout showBreadcrumbs={true}>
+      {/* Simplified Header - No redundant navigation */}
+      <SimplifiedHeader 
+        viewMode={props.viewMode}
+        agents={props.agents}
+        showTeamView={props.showTeamView}
       />
       
-      {/* Main Layout Header */}
-      <MainLayoutHeader
-        showTeamView={showTeamView}
-        viewMode={viewMode}
-        onViewModeChange={onViewModeChange}
-        notificationCounts={notificationCounts}
-      />
-      
-      {/* Main Content Area */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
+      {/* Main Dashboard Content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Context Sidebar (for agents/teams/etc) */}
         <MainLayoutSidebar
-          showTeamView={showTeamView}
-          sidebarCollapsed={sidebarCollapsed}
-          agents={agents}
-          tasks={tasks}
-          messages={messages}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          selectedTeam={selectedTeam}
-          selectedAgentProfile={selectedAgentProfile}
-          viewMode={viewMode}
-          onAgentSelect={onAgentSelect}
-          onTaskSelect={onTaskSelect}
-          onMessageSelect={onMessageSelect}
-          onTeamSelect={onTeamSelect}
-          onAgentProfileSelect={onAgentProfileSelect}
-          onSidebarToggle={onSidebarToggle}
+          sidebarCollapsed={props.sidebarCollapsed}
+          showTeamView={props.showTeamView}
+          viewMode={props.viewMode}
+          agents={props.agents}
+          tasks={props.tasks}
+          messages={props.messages}
+          selectedAgent={props.selectedAgent}
+          selectedTask={props.selectedTask}
+          selectedMessage={props.selectedMessage}
+          selectedTeam={props.selectedTeam}
+          selectedAgentProfile={props.selectedAgentProfile}
+          onSidebarToggle={props.onSidebarToggle}
+          onAgentSelect={props.onAgentSelect}
+          onTaskSelect={props.onTaskSelect}
+          onMessageSelect={props.onMessageSelect}
+          onTeamSelect={props.onTeamSelect}
+          onAgentProfileSelect={props.onAgentProfileSelect}
         />
-        
+
         {/* Main Content */}
         <MainLayoutContent
-          showTeamView={showTeamView}
-          viewMode={viewMode}
-          agents={agents}
-          tasks={tasks}
-          messages={messages}
-          selectedAgent={selectedAgent}
-          selectedTask={selectedTask}
-          selectedMessage={selectedMessage}
-          selectedTeam={selectedTeam}
-          selectedAgentProfile={selectedAgentProfile}
-          hasSelection={hasSelection}
-          syncPanelCollapsed={syncPanelCollapsed}
-          onSyncPanelToggle={onSyncPanelToggle}
-          onDismissSelection={onDismissSelection}
-          onAgentSelect={onAgentSelect}
-          onTaskSelect={onTaskSelect}
-          onMessageSelect={onMessageSelect}
-          onTeamSelect={onTeamSelect}
-          onAgentProfileSelect={onAgentProfileSelect}
-          onViewModeChange={onViewModeChange}
+          viewMode={props.viewMode}
+          agents={props.agents}
+          tasks={props.tasks}
+          messages={props.messages}
+          selectedAgent={props.selectedAgent}
+          selectedTask={props.selectedTask}
+          selectedMessage={props.selectedMessage}
+          selectedTeam={props.selectedTeam}
+          selectedAgentProfile={props.selectedAgentProfile}
+          showTeamView={props.showTeamView}
+          onViewModeChange={props.onViewModeChange}
+          onAgentSelect={props.onAgentSelect}
+          onTaskSelect={props.onTaskSelect}
+          onMessageSelect={props.onMessageSelect}
+          onTeamSelect={props.onTeamSelect}
+          onAgentProfileSelect={props.onAgentProfileSelect}
+        />
+
+        {/* Sync Panel */}
+        <MainLayoutSyncPanel
+          syncPanelCollapsed={props.syncPanelCollapsed}
+          hasSelection={props.hasSelection}
+          selectedAgent={props.selectedAgent}
+          selectedTask={props.selectedTask}
+          selectedMessage={props.selectedMessage}
+          onSyncPanelToggle={props.onSyncPanelToggle}
+          onDismissSelection={props.onDismissSelection}
         />
       </div>
-    </div>
+    </UnifiedLayout>
   );
 };
