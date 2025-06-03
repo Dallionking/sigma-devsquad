@@ -8,33 +8,19 @@ import { ProjectProvider } from '@/contexts/ProjectContext';
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 
-// Pages - using default imports
-import Dashboard from '@/pages/Dashboard';
-import PlanningAgent from '@/pages/PlanningAgent';
-import Projects from '@/pages/Projects';
-import Presentations from '@/pages/Presentations';
-import AgentConfiguration from '@/pages/AgentConfiguration';
-import MCPManagement from '@/pages/MCPManagement';
-import LLMIntegration from '@/pages/LLMIntegration';
-import IDEIntegration from '@/pages/IDEIntegration';
-import Profile from '@/pages/Profile';
-import Account from '@/pages/Account';
-import Settings from '@/pages/Settings';
-
-// Create the Teams page
-const Teams = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
-      <div className="container mx-auto px-6 py-8">
-        <div className="text-center space-y-6">
-          <h1 className="text-3xl font-bold text-foreground">Teams</h1>
-          <p className="text-muted-foreground">Manage your teams and collaborate with others.</p>
-          <div className="text-sm text-muted-foreground">Teams functionality coming soon...</div>
-        </div>
-      </div>
-    </div>
-  );
-};
+// Pages
+import { Dashboard } from '@/pages/Dashboard';
+import { PlanningAgent } from '@/pages/PlanningAgent';
+import { Projects } from '@/pages/Projects';
+import { Presentations } from '@/pages/Presentations';
+import { AgentConfiguration } from '@/pages/AgentConfiguration';
+import { MCPManagement } from '@/pages/MCPManagement';
+import { LLMIntegration } from '@/pages/LLMIntegration';
+import { IDEIntegration } from '@/pages/IDEIntegration';
+import { Profile } from '@/pages/Profile';
+import { Account } from '@/pages/Account';
+import { Teams } from '@/pages/Teams';
+import { Settings } from '@/pages/Settings';
 
 function App() {
   return (
