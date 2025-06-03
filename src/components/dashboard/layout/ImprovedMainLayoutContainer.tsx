@@ -4,10 +4,10 @@ import { Agent, Task, Message, ViewMode } from '@/types';
 import { Team, AgentProfile } from '@/types/teams';
 import { MainLayoutHeader } from './MainLayoutHeader';
 import { MainLayoutContent } from './MainLayoutContent';
-import { MainLayoutSidebar } from './MainLayoutSidebar';
 import { ViewSpecificOnboardingManager } from '@/components/onboarding/view-specific/ViewSpecificOnboardingManager';
 import { useLayoutConsistency } from '@/hooks/useLayoutConsistency';
 import { cn } from '@/lib/utils';
+import { SidebarRenderer } from '../SidebarRenderer';
 
 interface ImprovedMainLayoutContainerProps {
   showTeamView: boolean;
@@ -45,9 +45,9 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
     messages: props.messages.filter(m => !m.read).length,
   };
 
-  // Calculate sidebar widths to prevent overlap
-  const contextualSidebarWidth = props.sidebarCollapsed ? 16 : (props.showTeamView ? 80 : 96); // 4rem, 20rem, 24rem
-  const syncPanelWidth = props.syncPanelCollapsed || !props.hasSelection ? 0 : 96; // 24rem
+  // Calculate sidebar width based on collapsed state and view
+  const sidebarWidth = props.sidebarCollapsed ? 64 : (props.showTeamView ? 320 : 384); // 4rem, 20rem, 24rem
+  const syncPanelWidth = props.syncPanelCollapsed || !props.hasSelection ? 0 : 384; // 24rem
 
   return (
     <div className="min-h-screen bg-background flex overflow-hidden relative">
@@ -57,40 +57,42 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
         viewMode={props.viewMode}
       />
       
-      {/* Contextual Sidebar - Fixed positioning */}
+      {/* Single Unified Sidebar - Fixed positioning */}
       <div 
         className={cn(
           "fixed top-0 left-0 h-full transition-all duration-300 ease-in-out z-40 bg-sidebar border-r border-sidebar-border",
           props.sidebarCollapsed ? "w-16" : (props.showTeamView ? "w-80" : "w-96")
         )}
       >
-        <MainLayoutSidebar
-          showTeamView={props.showTeamView}
-          sidebarCollapsed={props.sidebarCollapsed}
-          agents={props.agents}
-          tasks={props.tasks}
-          messages={props.messages}
-          selectedAgent={props.selectedAgent}
-          selectedTask={props.selectedTask}
-          selectedMessage={props.selectedMessage}
-          selectedTeam={props.selectedTeam}
-          selectedAgentProfile={props.selectedAgentProfile}
-          viewMode={props.viewMode}
-          onAgentSelect={props.onAgentSelect}
-          onTaskSelect={props.onTaskSelect}
-          onMessageSelect={props.onMessageSelect}
-          onTeamSelect={props.onTeamSelect}
-          onAgentProfileSelect={props.onAgentProfileSelect}
-          onSidebarToggle={props.onSidebarToggle}
-        />
+        <div className="h-full bg-background/95 backdrop-blur-sm flex flex-col">
+          <SidebarRenderer
+            viewMode={props.viewMode}
+            agents={props.agents}
+            tasks={props.tasks}
+            messages={props.messages}
+            selectedAgent={props.selectedAgent}
+            selectedTask={props.selectedTask}
+            selectedMessage={props.selectedMessage}
+            selectedTeam={props.selectedTeam}
+            selectedAgentProfile={props.selectedAgentProfile}
+            showTeamView={props.showTeamView}
+            collapsed={props.sidebarCollapsed}
+            onToggleCollapse={props.onSidebarToggle}
+            onAgentSelect={props.onAgentSelect}
+            onTaskSelect={props.onTaskSelect}
+            onMessageSelect={props.onMessageSelect}
+            onTeamSelect={props.onTeamSelect}
+            onAgentProfileSelect={props.onAgentProfileSelect}
+          />
+        </div>
       </div>
 
-      {/* Main Content Area - Properly offset from contextual sidebar */}
+      {/* Main Content Area - Properly offset from sidebar */}
       <div 
         className="flex flex-col flex-1 overflow-hidden bg-background transition-all duration-300 ease-in-out"
         style={{
-          marginLeft: `${contextualSidebarWidth * 0.25}rem`, // Convert to rem units
-          marginRight: `${syncPanelWidth * 0.25}rem`
+          marginLeft: `${sidebarWidth}px`,
+          marginRight: `${syncPanelWidth}px`
         }}
       >
         {/* Main Layout Header */}
@@ -133,7 +135,6 @@ export const ImprovedMainLayoutContainer = (props: ImprovedMainLayoutContainerPr
       {/* Sync Panel - Fixed positioning on the right */}
       {!props.syncPanelCollapsed && props.hasSelection && (
         <div className="fixed top-0 right-0 h-full w-96 bg-background border-l border-border z-30 transition-all duration-300 ease-in-out">
-          {/* Sync panel content would go here */}
           <div className="p-4">
             <h3 className="text-lg font-semibold mb-4">Details Panel</h3>
             <p className="text-sm text-muted-foreground">
