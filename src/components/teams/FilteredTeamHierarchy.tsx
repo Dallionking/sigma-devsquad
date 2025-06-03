@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Filter, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useState } from 'react';
 
 interface FilteredTeamHierarchyProps {
@@ -27,7 +28,7 @@ export const FilteredTeamHierarchy = ({
   showFilters = true
 }: FilteredTeamHierarchyProps) => {
   const { teams } = useTeams();
-  const [filtersExpanded, setFiltersExpanded] = useState(true);
+  const [filtersExpanded, setFiltersExpanded] = useState(false); // Closed by default
   const {
     selectedCompositions,
     selectedTypes,
@@ -50,76 +51,43 @@ export const FilteredTeamHierarchy = ({
 
   return (
     <div className="h-full flex flex-col space-y-4">
-      {/* Always Visible Filter Header */}
+      {/* Team Filters Collapsible Section */}
       {showFilters && (
         <div className="flex-shrink-0">
-          {/* Filter Status Bar - Always Visible */}
-          <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                  Team Filters
-                </span>
-                {activeFilterCount > 0 && (
-                  <Badge variant="default" className="bg-blue-600 text-white">
-                    {activeFilterCount} active
-                  </Badge>
-                )}
+          <Collapsible open={filtersExpanded} onOpenChange={setFiltersExpanded}>
+            <CollapsibleTrigger asChild>
+              <div className="w-full bg-gradient-to-r from-blue-600/10 to-blue-700/10 border border-blue-300/30 rounded-lg p-4 cursor-pointer hover:from-blue-600/20 hover:to-blue-700/20 transition-all duration-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Filter className="w-5 h-5 text-blue-600" />
+                    <span className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+                      Team Filters
+                    </span>
+                    {activeFilterCount > 0 && (
+                      <Badge variant="default" className="bg-blue-600 text-white text-xs">
+                        {activeFilterCount}
+                      </Badge>
+                    )}
+                  </div>
+                  <ChevronDown className={`w-5 h-5 text-blue-600 transition-transform duration-200 ${filtersExpanded ? 'rotate-180' : ''}`} />
+                </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setFiltersExpanded(!filtersExpanded)}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-              >
-                {filtersExpanded ? (
-                  <ChevronUp className="w-4 h-4" />
-                ) : (
-                  <ChevronDown className="w-4 h-4" />
-                )}
-              </Button>
-            </div>
-            
-            {/* Quick Filter Status */}
-            {activeFilterCount > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1">
-                {selectedCompositions.length > 0 && (
-                  <Badge variant="outline" className="text-xs">
-                    {selectedCompositions.length} composition{selectedCompositions.length > 1 ? 's' : ''}
-                  </Badge>
-                )}
-                {selectedTypes.length > 0 && (
-                  <Badge variant="outline" className="text-xs">
-                    {selectedTypes.length} type{selectedTypes.length > 1 ? 's' : ''}
-                  </Badge>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearAllFilters}
-                  className="h-6 px-2 text-xs text-muted-foreground hover:text-destructive"
-                >
-                  Clear all
-                </Button>
-              </div>
-            )}
-          </div>
+            </CollapsibleTrigger>
 
-          {/* Expandable Filter Panel */}
-          {filtersExpanded && (
-            <div className="bg-card border rounded-lg p-4 shadow-sm">
-              <TeamFiltersPanel
-                selectedCompositions={selectedCompositions}
-                selectedTypes={selectedTypes}
-                activeFilterCount={activeFilterCount}
-                onCompositionChange={setCompositions}
-                onTypeChange={setTypes}
-                onClearFilters={clearAllFilters}
-                onApplyPreset={applyPreset}
-              />
-            </div>
-          )}
+            <CollapsibleContent className="mt-3">
+              <div className="bg-card border rounded-lg p-4 shadow-sm">
+                <TeamFiltersPanel
+                  selectedCompositions={selectedCompositions}
+                  selectedTypes={selectedTypes}
+                  activeFilterCount={activeFilterCount}
+                  onCompositionChange={setCompositions}
+                  onTypeChange={setTypes}
+                  onClearFilters={clearAllFilters}
+                  onApplyPreset={applyPreset}
+                />
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       )}
       
