@@ -25,7 +25,7 @@ export const MainLayoutHeader = ({
   return (
     <div className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
       {/* Persistent View Indicator */}
-      <div className="px-6 py-3 border-b border-border/30">
+      <div className="px-6 py-3 border-b border-border/20 bg-muted/20">
         <ViewIndicator showTeamView={showTeamView} />
       </div>
       
