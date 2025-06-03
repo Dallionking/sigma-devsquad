@@ -128,7 +128,7 @@ export const MainLayoutSyncPanel = ({
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <div className="text-sm font-medium">{selectedMessage.sender}</div>
+                  <div className="text-sm font-medium">{selectedMessage.from}</div>
                   <div className="text-xs text-muted-foreground">{selectedMessage.content}</div>
                 </div>
                 <div className="text-xs text-muted-foreground">
