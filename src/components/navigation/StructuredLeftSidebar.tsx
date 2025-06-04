@@ -65,7 +65,7 @@ export const StructuredLeftSidebar = ({
 
   return (
     <div className={cn(
-      "left-sidebar-container bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out flex flex-col h-screen fixed top-0 left-0 z-50",
+      "left-sidebar-container bg-sidebar-background border-r border-sidebar-border transition-all duration-300 ease-in-out flex flex-col h-screen fixed top-0 left-0 z-50",
       collapsed ? "collapsed w-16" : "w-64"
     )}>
       {/* Logo Section */}
@@ -88,8 +88,6 @@ export const StructuredLeftSidebar = ({
         currentTeamId={currentTeamId}
         onTeamChange={setCurrentTeamId}
       />
-
-      <Separator className="mx-3" />
 
       {/* Main Navigation Section */}
       <SidebarNavigationSection collapsed={collapsed} />

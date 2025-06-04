@@ -50,9 +50,10 @@ export const SidebarNavigationSection = ({ collapsed }: SidebarNavigationSection
   };
 
   return (
-    <div className="sidebar-section main-nav-section px-3 py-2 overflow-y-auto">
-      {!collapsed && <div className="sidebar-section-label px-1">MAIN</div>}
-      <div className="space-y-1">
+    <div className="sidebar-section main-nav-section px-3 py-2 overflow-y-auto flex-1">
+      {/* MAIN Section */}
+      {!collapsed && <div className="sidebar-section-label px-1 mb-3">MAIN</div>}
+      <div className="space-y-1 mb-6">
         {mainNavItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
@@ -77,20 +78,20 @@ export const SidebarNavigationSection = ({ collapsed }: SidebarNavigationSection
         })}
       </div>
 
-      {/* Favorites Section */}
+      {/* FAVORITES Section */}
       {!collapsed && (
-        <div className="mt-6">
-          <div className="sidebar-section-label px-1">FAVORITES</div>
-          <div className="text-sm text-sidebar-foreground/50 px-1">
+        <div className="mb-6">
+          <div className="sidebar-section-label px-1 mb-3">FAVORITES</div>
+          <div className="text-sm text-sidebar-foreground/50 px-1 flex items-center">
             <Star className="w-4 h-4 inline mr-2" />
             No favorites yet
           </div>
         </div>
       )}
 
-      {/* Configuration Section */}
-      <div className="mt-6">
-        {!collapsed && <div className="sidebar-section-label px-1">CONFIG</div>}
+      {/* CONFIG Section */}
+      <div className="mb-6">
+        {!collapsed && <div className="sidebar-section-label px-1 mb-3">CONFIG</div>}
         <div className="space-y-1">
           {configItems.map((item) => {
             const Icon = item.icon;
@@ -100,11 +101,10 @@ export const SidebarNavigationSection = ({ collapsed }: SidebarNavigationSection
                 key={item.path}
                 onClick={() => handleNavigation(item.path)}
                 className={cn("nav-link", active && "active")}
-                style={{ padding: collapsed ? '8px' : '8px 12px', fontSize: '12px' }}
                 title={collapsed ? item.label : undefined}
               >
                 <span className="nav-link-icon">
-                  <Icon className="w-3 h-3" />
+                  <Icon className="w-4 h-4" />
                 </span>
                 {!collapsed && <span className="nav-link-text">{item.label}</span>}
                 {collapsed && (
@@ -118,9 +118,9 @@ export const SidebarNavigationSection = ({ collapsed }: SidebarNavigationSection
         </div>
       </div>
 
-      {/* Account Section */}
-      <div className="mt-6">
-        {!collapsed && <div className="sidebar-section-label px-1">ACCOUNT</div>}
+      {/* ACCOUNT Section */}
+      <div>
+        {!collapsed && <div className="sidebar-section-label px-1 mb-3">ACCOUNT</div>}
         <div className="space-y-1">
           {accountItems.map((item) => {
             const Icon = item.icon;
@@ -130,11 +130,10 @@ export const SidebarNavigationSection = ({ collapsed }: SidebarNavigationSection
                 key={item.path}
                 onClick={() => handleNavigation(item.path)}
                 className={cn("nav-link", active && "active")}
-                style={{ padding: collapsed ? '8px' : '8px 12px', fontSize: '12px' }}
                 title={collapsed ? item.label : undefined}
               >
                 <span className="nav-link-icon">
-                  <Icon className="w-3 h-3" />
+                  <Icon className="w-4 h-4" />
                 </span>
                 {!collapsed && <span className="nav-link-text">{item.label}</span>}
                 {collapsed && (

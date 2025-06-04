@@ -16,7 +16,7 @@ export const SidebarStatusSection = ({
 }: SidebarStatusSectionProps) => {
   if (collapsed) {
     return (
-      <div className="sidebar-section status-section px-3 py-2 mt-auto">
+      <div className="sidebar-section status-section px-3 py-2 mt-auto border-t border-sidebar-border">
         <div className="flex justify-center" title="System Status: Online">
           <div className="w-8 h-8 bg-sidebar-accent/30 rounded-lg flex items-center justify-center">
             <Activity className="w-4 h-4 text-green-500" />
@@ -27,23 +27,24 @@ export const SidebarStatusSection = ({
   }
 
   return (
-    <div className="sidebar-section status-section px-3 py-2 mt-auto">
-      <div className="bg-sidebar-accent/30 rounded-lg p-3">
-        <div className="text-xs font-medium text-sidebar-foreground mb-2 flex items-center gap-2">
-          <Activity className="w-3 h-3" />
-          System Status
+    <div className="sidebar-section status-section px-3 py-4 mt-auto border-t border-sidebar-border">
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 mb-3">
+          <Activity className="w-4 h-4 text-green-500" />
+          <span className="text-sm font-semibold text-sidebar-foreground">System Status</span>
         </div>
-        <div className="space-y-2 text-xs">
-          <div className="flex justify-between">
+        
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between items-center">
             <span className="text-sidebar-foreground/70">Active Agents</span>
-            <Badge variant="secondary" className="text-xs px-1">
+            <span className="font-medium text-sidebar-foreground">
               {activeAgents}/{totalAgents}
-            </Badge>
+            </span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <span className="text-sidebar-foreground/70">Status</span>
-            <span className="text-green-500 flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-green-500 flex items-center gap-1 font-medium">
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
               Online
             </span>
           </div>

@@ -1,5 +1,5 @@
 
-/* Responsive Styles */
+/* Responsive Sidebar Styles */
 
 @media (max-width: 768px) {
   .left-sidebar-container {
@@ -10,53 +10,44 @@
   .left-sidebar-container.mobile-open {
     transform: translateX(0);
   }
-
-  .sidebar-section.logo-section {
-    height: 56px;
-    padding: 8px 12px;
-  }
-
-  .logo-icon {
-    width: 28px;
-    height: 28px;
-    margin-right: 8px;
-  }
-
-  .logo-text {
-    font-size: 16px;
-  }
-
-  .sidebar-section.project-section,
-  .sidebar-section.team-section {
-    padding: 8px 12px;
-  }
-
-  .dropdown-trigger {
-    padding: 6px 8px;
-    min-height: 36px;
-  }
-
-  .dropdown-trigger-text {
-    font-size: 13px;
-  }
-
-  .main-nav-section .nav-link {
-    padding: 8px 10px;
-  }
-
-  .nav-link-text {
-    font-size: 13px;
-  }
-
-  /* Mobile adjustments for main content */
+  
   .main-content-area {
-    margin-left: 0;
-    width: 100%;
-    padding-top: 16px;
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .left-sidebar-container {
+    width: 100vw !important;
+    max-width: 280px;
   }
   
-  .main-content-area.sidebar-collapsed {
-    margin-left: 0;
-    width: 100%;
+  .left-sidebar-container.collapsed {
+    width: 64px !important;
+  }
+}
+
+/* Ensure smooth transitions on all breakpoints */
+@media (prefers-reduced-motion: reduce) {
+  .left-sidebar-container,
+  .main-content-area,
+  .nav-link,
+  .dropdown-trigger,
+  .sidebar-collapse-toggle {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .nav-link,
+  .dropdown-trigger,
+  .sidebar-collapse-toggle {
+    border: 1px solid currentColor;
+  }
+  
+  .nav-link.active {
+    border: 2px solid currentColor;
   }
 }

@@ -1,27 +1,13 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { useTeams } from '@/contexts/TeamContext';
 
 export const useSidebarState = (collapsed: boolean) => {
-  const { teams } = useTeams();
-  const [currentTeamId, setCurrentTeamId] = useState<string>(teams[0]?.id || "");
+  const [currentTeamId, setCurrentTeamId] = useState<string>('');
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [showTeamDropdown, setShowTeamDropdown] = useState(false);
   
   const projectDropdownRef = useRef<HTMLDivElement>(null);
   const teamDropdownRef = useRef<HTMLDivElement>(null);
-
-  const toggleProjectDropdown = () => {
-    if (collapsed) return; // Don't open dropdowns when collapsed
-    setShowProjectDropdown(!showProjectDropdown);
-    setShowTeamDropdown(false);
-  };
-
-  const toggleTeamDropdown = () => {
-    if (collapsed) return; // Don't open dropdowns when collapsed
-    setShowTeamDropdown(!showTeamDropdown);
-    setShowProjectDropdown(false);
-  };
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -45,6 +31,20 @@ export const useSidebarState = (collapsed: boolean) => {
       setShowTeamDropdown(false);
     }
   }, [collapsed]);
+
+  const toggleProjectDropdown = () => {
+    if (!collapsed) {
+      setShowProjectDropdown(!showProjectDropdown);
+      setShowTeamDropdown(false);
+    }
+  };
+
+  const toggleTeamDropdown = () => {
+    if (!collapsed) {
+      setShowTeamDropdown(!showTeamDropdown);
+      setShowProjectDropdown(false);
+    }
+  };
 
   return {
     currentTeamId,
