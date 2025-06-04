@@ -9,7 +9,7 @@
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: hsl(var(--sidebar-foreground) / 0.8);
+  color: hsl(var(--foreground) / 0.8);
   text-decoration: none;
   transition: all 0.2s ease;
   position: relative;
@@ -21,13 +21,13 @@
 }
 
 .nav-link:hover {
-  background-color: hsl(var(--sidebar-accent));
-  color: hsl(var(--sidebar-foreground));
+  background-color: hsl(var(--accent));
+  color: hsl(var(--foreground));
 }
 
 .nav-link.active {
-  background-color: hsl(var(--sidebar-primary));
-  color: hsl(var(--sidebar-primary-foreground));
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
   font-weight: 600;
 }
 
@@ -58,11 +58,11 @@
   cursor: pointer;
   border-radius: 6px;
   transition: background-color 0.2s ease;
-  color: hsl(var(--sidebar-foreground));
+  color: hsl(var(--foreground));
 }
 
 .dropdown-trigger:hover {
-  background-color: hsl(var(--sidebar-accent));
+  background-color: hsl(var(--accent));
 }
 
 .dropdown-trigger-icon {
@@ -93,8 +93,8 @@
 
 /* Dropdown Panel */
 .dropdown-panel {
-  background: hsl(var(--sidebar-background));
-  border: 1px solid hsl(var(--sidebar-border));
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
   border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   min-width: 200px;
@@ -113,14 +113,14 @@
   cursor: pointer;
   border-radius: 6px;
   transition: background-color 0.2s ease;
-  color: hsl(var(--sidebar-foreground) / 0.7);
+  color: hsl(var(--muted-foreground));
   font-size: 12px;
   font-weight: 500;
 }
 
 .sidebar-collapse-toggle:hover {
-  background-color: hsl(var(--sidebar-accent));
-  color: hsl(var(--sidebar-foreground));
+  background-color: hsl(var(--accent));
+  color: hsl(var(--foreground));
 }
 
 .toggle-icon {

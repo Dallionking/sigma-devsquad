@@ -7,10 +7,10 @@
   height: 60px;
   padding: 12px 16px;
   margin-bottom: 0;
-  border-bottom: 1px solid hsl(var(--sidebar-border));
+  border-bottom: 1px solid hsl(var(--border));
   position: relative;
   z-index: 10;
-  background-color: hsl(var(--sidebar-background));
+  background-color: hsl(var(--background));
 }
 
 .logo-icon {
@@ -26,7 +26,7 @@
 .logo-text {
   font-size: 18px;
   font-weight: 600;
-  color: hsl(var(--sidebar-foreground));
+  color: hsl(var(--foreground));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -35,7 +35,7 @@
 
 .sidebar-section.project-section,
 .sidebar-section.team-section {
-  border-bottom: 1px solid hsl(var(--sidebar-border));
+  border-bottom: 1px solid hsl(var(--border));
   padding: 12px 16px;
   position: relative;
 }
@@ -48,11 +48,11 @@
 
 .sidebar-section.status-section {
   margin-top: auto;
-  border-top: 1px solid hsl(var(--sidebar-border));
+  border-top: 1px solid hsl(var(--border));
 }
 
 .sidebar-section.collapse-section {
-  border-top: 1px solid hsl(var(--sidebar-border));
+  border-top: 1px solid hsl(var(--border));
 }
 
 /* Section Labels */
@@ -61,7 +61,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: hsl(var(--sidebar-foreground) / 0.6);
+  color: hsl(var(--muted-foreground));
   margin-bottom: 8px;
   padding: 0 4px;
 }
@@ -76,12 +76,12 @@
 }
 
 .sidebar-section.main-nav-section::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--sidebar-border));
+  background-color: hsl(var(--border));
   border-radius: 2px;
 }
 
 .sidebar-section.main-nav-section::-webkit-scrollbar-thumb:hover {
-  background-color: hsl(var(--sidebar-accent));
+  background-color: hsl(var(--accent));
 }
 
 /* Ensure proper spacing between sections */

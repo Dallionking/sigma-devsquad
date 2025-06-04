@@ -12,8 +12,8 @@
   left: 0;
   z-index: 1000;
   transition: width 0.3s ease;
-  background-color: hsl(var(--sidebar-background));
-  border-right: 1px solid hsl(var(--sidebar-border));
+  background-color: hsl(var(--background));
+  border-right: 1px solid hsl(var(--border));
 }
 
 .sidebar-section {
