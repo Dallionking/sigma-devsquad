@@ -1,0 +1,182 @@
+# Core Operational Rules v1.0 (Vibe DevSquad Project)
+
+**Version**: 1.0
+**Status**: Canonical
+**Last Reviewed**: 2025-06-04
+**Primary Author**: Vibe DevSquad Project
+
+## SECTION 1: MANDATORY PRE-TASK PROTOCOL (NON-NEGOTIABLE)
+
+**BEFORE STARTING *ANY* TASK (Initial task, or after completing a prior one): EXECUTE THESE STEPS IN ORDER:**
+
+1.  **CONSULT PHASE:** Open and review the current phase checklist from the `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Phases/` directory. Identify the *next specific task* within the current phase. UPDATE if outdated due to project development. And after every completed task Update checklist in real time.
+2.  **VERIFY & UPDATE STATUS:** Open `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/current_status.md`.
+    *   **Action:** If it does NOT accurately reflect the *next specific task* identified in Step 1, UPDATE `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/current_status.md` immediately.
+3.  **VERIFY & UPDATE CHANGELOG:** Open `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/CHANGELOG.md`.
+    *   **Action:** If the last entry does NOT correspond to the *most recently completed task*, ADD a new entry. Format:
+        ```markdown
+        ### YYYY-MM-DD
+        - **Completed:** [Task Description of JUST FINISHED task]
+        - **Summary:** [Brief of changes for JUST FINISHED task (files created/modified, key features)]
+        ```
+4.  **REVIEW & UPDATE PROJECT BIO:** Open and review `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/project_bio.md` (if it exists, or general project understanding).
+    *   **Action:** Ensure understanding reflects the current project state, scope, and objectives. UPDATE if `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/project_bio.md` exists and is outdated.
+5.  **ENGAGE TASKMASTER MCP:** Utilize the `taskmaster-ai` MCP for task-specific guidance and to ensure alignment with the overall project plan and objectives for the *next specific task*.
+6.  **CHECK FOR EXISTING DOCUMENTATION:** Before planning to create any new documentation for the task:
+    *   **Action:** Search for existing documentation files related to the task.
+    *   **Action:** If existing documentation is found, plan to update it rather than create new files.
+    *   **Action:** If the task involves specifications or requirements covered by a source of truth document, verify that document is up-to-date.
+   
+** DO NOT MAKE ANY ASSUMPTIONS WHEN CREATING THE .MD FILES - YOU MUST ADHERE TO EXACTLY WHAT YOU FIND INSIDE CONTEXT7 - COMMANDS, VERSIONS, ETC ARE VITAL TO THIS - DO NOT GO OFF YOUR OWN KNOWLEDGE AT ANY POINT AND FOLLOW EXACTLY WHAT IS FOUND INSIDE CONTEXT7 WITH GREAT LEVELS OF ACCURACY
+
+
+**DO NOT PROCEED WITH THE TASK UNTIL ALL 6 STEPS ABOVE ARE VERIFIED AND COMPLETED.**
+
+# Vibe Dev Squad Project Rules
+
+## Code Style
+- Use TypeScript for all new code files
+- Follow consistent indentation (2 spaces for JS/TS, 4 spaces for Python)
+- Use meaningful variable and function names
+- Add JSDoc comments for complex functions
+
+## Project Structure
+- Keep components modular and reusable
+- Organize files by feature/domain
+- Place shared utilities in a common folder
+- Keep test files alongside their source files
+
+## Best Practices
+- Always handle errors appropriately
+- Write unit tests for critical functionality
+- Use environment variables for configuration
+- Never commit sensitive data or credentials
+- Follow the DRY (Don't Repeat Yourself) principle
+
+## Git Workflow
+- Write clear, descriptive commit messages
+- Create feature branches for new work
+- Keep commits focused and atomic
+- Review code before merging
+
+## Dependencies
+- Document why each dependency is needed
+- Keep dependencies up to date
+- Prefer well-maintained packages
+- Minimize bundle size when possible
+
+## Performance
+- Optimize images and assets
+- Implement lazy loading where appropriate
+- Monitor and improve load times
+- Use caching strategies effectively
+
+# File Management
+RULE_FM_001: ALWAYS create new files in designated project subdirectories.
+RULE_FM_002: NEVER modify files outside the current project scope unless explicitly instructed for integration.
+RULE_FM_003: ALWAYS use lowercase_snake_case for new Python filenames and directory names.
+RULE_FM_004: ALWAYS use kebab-case for new JavaScript/TypeScript filenames and directory names (unless framework dictates otherwise, e.g., Next.js pages).
+RULE_FM_005: AVOID creating duplicate documentation files; search thoroughly before creating new ones.
+RULE_FM_006: WHEN working with documentation files, CONSULT the Sources of Truth index at `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/sources_of_truth.md` to identify authoritative files.
+RULE_FM_007: MAINTAIN a consistent structure and format within documentation files of the same type.
+
+# Coding Standards
+RULE_CS_010: ALWAYS adhere to PEP 8 for Python code.
+RULE_CS_011: ALWAYS adhere to Prettier (or project-defined linter/formatter) for frontend code (JS/TS/CSS/HTML).
+RULE_CS_012: ALWAYS write clear, concise comments for complex logic and public APIs.
+RULE_CS_013: ALWAYS ensure all new functions/methods have docstrings explaining purpose, arguments, and return values.
+RULE_CS_014: AVOID hardcoding sensitive information (API keys, secrets); use environment variables or configuration files as per project setup.
+
+# Design System & UI Development
+RULE_UI_001: FOR ALL UI development, STRICTLY adhere to `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/design/vibe_devsquad_design_system.md`. This document is the canonical source and mandates the use of Magic UI MCP for component generation, leveraging guidelines from magicui.design/docs and pro.magicui.design/docs as specified therein. REFERENCE purchased Magic UI templates from `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Magic Ui templates/` for consistent styling and components. Do not invent new styles or deviate without updating the design system document.
+RULE_UI_002: VERIFY generated Magic UI components against project requirements and customize as needed, ensuring consistency with `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/design/vibe_devsquad_design_system.md`, relevant Magic UI documentation, and purchased templates for all states.
+RULE_UI_003: WHEN implementing landing page components, REFERENCE the landing page templates in `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Magic Ui templates/` to maintain design consistency.
+
+# Task Execution
+RULE_TE_020: ALWAYS review the full granulated task list for the current high-level sub-task before starting implementation.
+RULE_TE_021: ALWAYS complete tasks in the specified sequence unless a dependency requires a change (notify Manus if so).
+RULE_TE_022: FOR EACH granulated task, perform necessary pre-coding checks as outlined in this document and relevant guidelines in `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/workflows_and_protocols/`.
+RULE_TE_023: WHEN a task requires documentation, FIRST check for existing files that should be updated rather than creating new ones.
+RULE_TE_024: ENSURE that phases reference specific existing documentation files that should be edited, rather than implying new document creation.
+RULE_TE_025: AFTER completing a task that involves documentation, VERIFY that no duplicate or conflicting information has been created.
+
+# Testing
+RULE_TS_030: ALWAYS write unit tests for new backend logic (Python functions, classes).
+RULE_TS_031: AIM for reasonable test coverage for critical components.
+RULE_TS_032: ENSURE all tests pass before marking a development task as complete.
+
+# Communication & Reporting
+RULE_CR_040: IF a task is unclear or blocked, NOTIFY Manus immediately with specific questions.
+RULE_CR_041: AFTER completing all granulated tasks for a high-level sub-task, REPORT completion to Manus with a summary of work and links to key deliverables/commits.
+RULE_CR_042: REGULARLY update `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/CHANGELOG.md` with significant changes made.
+RULE_CR_043: MAINTAIN a `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/current_status.md` file with ongoing task and any blockers.
+RULE_CR_044: WHEN updating documentation, ENSURE changes are consistent with designated sources of truth and PROPAGATE changes to any dependent documents.
+
+# Context7 MCP Usage
+RULE_C7_001: ALWAYS use Context7 before using a new library/API or when verifying potentially outdated information. Create a task-specific research summary, e.g., `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/[technology]_research_summary.md`. If a specific prefix isn't obvious, a general `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/research_summary.md` can be used initially.
+RULE_C7_002: IF a command/API usage results in a version-related or deprecation error, IMMEDIATELY use Context7 to verify correct usage before retrying.
+RULE_C7_003: STRICTLY implement solutions based on the content of the task-specific research summary created from Context7 output.
+RULE_C7_004: ENSURE the research summary includes exact commands, versions, and key code snippets from Context7.
+
+# Magic UI MCP Usage (Refer to Design System & UI Development section)
+RULE_MU_001: WHEN using Magic UI MCP (e.g., via /ui command), clearly describe the desired component and its context, referencing `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/design/vibe_devsquad_design_system.md`.
+RULE_MU_002: ALWAYS reference purchased Magic UI templates from `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Magic Ui templates/` when implementing UI components to ensure consistency with the established design language.
+RULE_MU_003: FOR landing page development, PRIORITIZE using the landing page templates from the purchased Magic UI templates folder.
+
+# Task Master MCP Usage
+RULE_TM_001: IF a task from Task Master is ambiguous or lacks detail, ALWAYS request clarification from Manus before proceeding.
+RULE_TM_002: ALWAYS decompose tasks aligning with `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/Vibe DevSquad Project Checklist.md` and embed relevant operational reminders (e.g., Context7 research, Magic UI consultation).
+RULE_TM_003: STRICTLY execute granulated tasks as defined, including directives for other MCP usage (Context7, Magic UI).
+RULE_TM_004: IMMEDIATELY report any task blockers or necessary deviations to Manus via Task Master MCP.
+RULE_TM_005: ENSURE updates to `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/Vibe DevSquad Project Checklist.md`, `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/current_status.md`, and `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/CHANGELOG.md` (as outlined in the Pre-Task Protocol) are consistent with Task Master guidelines and task progression.
+RULE_TM_006: PERIODICALLY request a document consolidation task to identify and merge duplicate or overlapping information across the codebase.
+
+## SECTION 7: TECHNOLOGY STACK (REFERENCE)
+
+*   **Backend:** Node.js 20+, Next.js API Routes
+*   **Database:** Supabase (PostgreSQL)
+*   **Frontend:** TypeScript, Next.js 14+, React 18+, Tailwind CSS, Magic UI
+*   **AI Integration:** Google A2A Protocol, Claude Task Master, Mem0.ai
+*   **Infrastructure:** Vercel, Supabase
+*   **External Communication:** Telegram Bot API, Discord.js
+
+## SECTION 8: PROJECT STRUCTURE (REFERENCE)
+
+*   `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/`: Contains key project management, configuration, tracking, and some specification files. Canonical design system and core rule/workflow documents reside here.
+*   `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Phases/`: Contains phase files (Phase 0.md through Phase 10.md) that define the specific tasks to be completed in order.
+*   `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Magic Ui templates/`: Contains purchased Magic UI templates including landing page templates to be referenced for consistent styling.
+*   `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Main/`: Contains general project documentation and resources.
+*   `src/`: Contains the Next.js application code including components, pages, and API routes.
+*   `.env.local`: Local environment variables (NEVER commit).
+
+## SECTION 9: DOCUMENT MANAGEMENT AND SOURCES OF TRUTH
+
+### Document Creation and Management
+RULE_DM_001: BEFORE creating ANY new documentation file, THOROUGHLY search the codebase for existing files that serve a similar purpose.
+RULE_DM_002: PRIORITIZE editing and updating existing files with placeholder content rather than creating new ones.
+RULE_DM_003: ONLY create a new documentation file when absolutely necessary and no suitable existing file can be found.
+RULE_DM_004: DOCUMENT the rationale in the commit message when a new file must be created.
+RULE_DM_005: REGULARLY review documentation files to identify and consolidate duplicate or overlapping content.
+
+### Sources of Truth
+RULE_ST_001: FOR EACH category of information (layouts, color schemes, component schemes, etc.), DESIGNATE ONE file as the authoritative source of truth.
+RULE_ST_002: MAINTAIN a master "Sources of Truth" index document at `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/sources_of_truth.md` that lists all authoritative files and their domains.
+RULE_ST_003: ENSURE all other documents reference the authoritative source rather than duplicating information.
+RULE_ST_004: WHEN conflicts are found between documents, EXPLICITLY choose one as authoritative, UPDATE all references, and DOCUMENT the decision.
+RULE_ST_005: VERIFY that any changes to specifications or requirements are made FIRST in the designated source of truth file before being propagated elsewhere.
+
+## SECTION 10: PHASE MANAGEMENT
+
+RULE_PH_001: ALWAYS refer to implementation stages as "Phases" (not "Slices") in all documentation and communication.
+RULE_PH_002: ENSURE all work aligns with the current phase as defined in the `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Phases/` directory.
+RULE_PH_003: FOLLOW the phase numbering convention from Phase 0 through Phase 10 as shown in the project structure.
+RULE_PH_004: BEFORE starting work on a new phase, ensure all tasks from the previous phase are completed and properly documented.
+RULE_PH_005: AFTER completing all tasks in a phase, update the phase checklist to mark it as complete and notify Manus.
+RULE_PH_006: **MANDATORY QA AUDIT**: BEFORE moving to ANY new phase, MUST run Operative.sh QA audit using the command: `npx operative-qa audit` to ensure:
+    - All features work as expected
+    - No broken links or missing assets
+    - Performance metrics meet standards
+    - Accessibility requirements are met
+    - Code quality standards are maintained
+RULE_PH_007: DO NOT proceed to the next phase until the QA audit passes with no critical issues.
+RULE_PH_008: DOCUMENT the QA audit results in `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/qa_audits/phase_[number]_audit.md` before phase completion.
