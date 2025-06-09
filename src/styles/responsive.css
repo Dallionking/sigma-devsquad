@@ -1,0 +1,250 @@
+
+@layer utilities {
+  /* Enhanced responsive breakpoints with more granular control */
+  
+  /* Extra small devices (320px and up) */
+  .xs\:inline {
+    @media (min-width: 320px) {
+      display: inline;
+    }
+  }
+
+  .xs\:hidden {
+    @media (min-width: 320px) {
+      display: none;
+    }
+  }
+
+  .xs\:grid-cols-2 {
+    @media (min-width: 320px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Small mobile devices (375px and up) */
+  .sm-mobile\:text-sm {
+    @media (min-width: 375px) {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+
+  .sm-mobile\:p-4 {
+    @media (min-width: 375px) {
+      padding: 1rem;
+    }
+  }
+
+  /* Large mobile devices (428px and up) */
+  .lg-mobile\:text-base {
+    @media (min-width: 428px) {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+
+  .lg-mobile\:grid-cols-3 {
+    @media (min-width: 428px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Enhanced container responsive with better scaling */
+  .container-responsive {
+    @apply w-full mx-auto;
+    padding-left: clamp(1rem, 4vw, 3rem);
+    padding-right: clamp(1rem, 4vw, 3rem);
+    max-width: 1400px;
+  }
+
+  /* Responsive spacing utilities */
+  .space-y-responsive > :not([hidden]) ~ :not([hidden]) {
+    margin-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .space-x-responsive > :not([hidden]) ~ :not([hidden]) {
+    margin-left: clamp(0.5rem, 2vw, 1.5rem);
+  }
+
+  /* Enhanced grid responsive with auto-fit */
+  .grid-auto-fit-xs {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .grid-auto-fit-sm {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .grid-auto-fit-md {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .grid-auto-fit-lg {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  /* Text responsive utilities */
+  .text-responsive-xs {
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
+  }
+
+  .text-responsive-sm {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+
+  .text-responsive-base {
+    font-size: clamp(1rem, 3vw, 1.125rem);
+  }
+
+  .text-responsive-lg {
+    font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+  }
+
+  .text-responsive-xl {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+  }
+
+  /* Enhanced card styles with better spacing */
+  .card-enhanced {
+    @apply bg-card text-card-foreground rounded-xl border shadow-sm;
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  /* Responsive gap utilities */
+  .gap-responsive-sm {
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .gap-responsive-md {
+    gap: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .gap-responsive-lg {
+    gap: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  /* Touch-friendly elements with responsive sizing */
+  .touch-target {
+    min-height: clamp(44px, 10vw, 48px);
+    min-width: clamp(44px, 10vw, 48px);
+  }
+
+  /* Improved text overflow handling */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Responsive aspect ratios */
+  .aspect-responsive-square {
+    aspect-ratio: 1;
+  }
+
+  .aspect-responsive-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-responsive-card {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* Better scroll behavior */
+  .scroll-smooth-enhanced {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Responsive padding and margins */
+  .p-responsive-sm {
+    padding: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .p-responsive-md {
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .p-responsive-lg {
+    padding: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .m-responsive-sm {
+    margin: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .m-responsive-md {
+    margin: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .m-responsive-lg {
+    margin: clamp(1.5rem, 4vw, 2rem);
+  }
+}
+
+/* Enhanced mobile-first breakpoints */
+@media (max-width: 320px) {
+  .ultra-small\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .ultra-small\:p-2 {
+    padding: 0.5rem;
+  }
+}
+
+@media (min-width: 375px) {
+  .mobile-375\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+@media (min-width: 428px) {
+  .mobile-428\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Better handling for very large screens */
+@media (min-width: 1920px) {
+  .ultra-wide\:max-w-screen-2xl {
+    max-width: 1536px;
+  }
+  
+  .ultra-wide\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* Enhanced accessibility for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reduce-motion-safe {
+    animation: none !important;
+    transition: none !important;
+  }
+}

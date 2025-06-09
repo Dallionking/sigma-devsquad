@@ -1,0 +1,53 @@
+
+/* Responsive Sidebar Styles */
+
+@media (max-width: 768px) {
+  .left-sidebar-container {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .left-sidebar-container.mobile-open {
+    transform: translateX(0);
+  }
+  
+  .main-content-area {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .left-sidebar-container {
+    width: 100vw !important;
+    max-width: 280px;
+  }
+  
+  .left-sidebar-container.collapsed {
+    width: 64px !important;
+  }
+}
+
+/* Ensure smooth transitions on all breakpoints */
+@media (prefers-reduced-motion: reduce) {
+  .left-sidebar-container,
+  .main-content-area,
+  .nav-link,
+  .dropdown-trigger,
+  .sidebar-collapse-toggle {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .nav-link,
+  .dropdown-trigger,
+  .sidebar-collapse-toggle {
+    border: 1px solid currentColor;
+  }
+  
+  .nav-link.active {
+    border: 2px solid currentColor;
+  }
+}

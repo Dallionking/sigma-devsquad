@@ -1,0 +1,62 @@
+
+/* Animation and Transition Styles */
+
+/* Status indicator animations */
+.status-section .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Sidebar transition animations */
+.left-sidebar-container {
+  transition: width 0.3s ease;
+}
+
+.dropdown-trigger {
+  transition: all 0.2s ease;
+}
+
+.nav-link {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-trigger-arrow {
+  transition: transform 0.2s ease;
+}
+
+.sidebar-collapse-toggle {
+  transition: all 0.2s ease;
+}
+
+.toggle-icon {
+  transition: transform 0.2s ease;
+}
+
+.sidebar-tooltip {
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Navigation item hover effects */
+.sidebar-section nav button {
+  transition: all 0.2s ease;
+}
+
+/* Enhanced main content transitions */
+.main-content-area {
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Mobile transition adjustments */
+@media (max-width: 768px) {
+  .left-sidebar-container {
+    transition: transform 0.3s ease;
+  }
+}

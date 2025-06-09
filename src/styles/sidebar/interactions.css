@@ -1,0 +1,54 @@
+
+/* Interactive Elements */
+
+.left-sidebar-container.collapsed .nav-link {
+  justify-content: center;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 4px auto;
+}
+
+.left-sidebar-container.collapsed .nav-link-text {
+  display: none;
+}
+
+.left-sidebar-container.collapsed .dropdown-trigger {
+  justify-content: center;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+}
+
+.left-sidebar-container.collapsed .dropdown-trigger-text,
+.left-sidebar-container.collapsed .dropdown-trigger-arrow {
+  display: none;
+}
+
+/* Focus styles for accessibility */
+.nav-link:focus-visible,
+.dropdown-trigger:focus-visible,
+.sidebar-collapse-toggle:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Active state animations */
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: hsl(var(--primary-foreground));
+  border-radius: 0 2px 2px 0;
+}
+
+.left-sidebar-container.collapsed .nav-link.active::before {
+  left: -8px;
+  width: 2px;
+  height: 16px;
+}

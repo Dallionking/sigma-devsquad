@@ -1,0 +1,65 @@
+
+/* Base Sidebar Structure */
+
+.left-sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: width 0.3s ease;
+  background-color: hsl(var(--background));
+  border-right: 1px solid hsl(var(--border));
+}
+
+.sidebar-section {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Main content area adjustments */
+.main-content-area {
+  padding-top: 24px;
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.main-content-area.sidebar-collapsed {
+  margin-left: 64px;
+  width: calc(100% - 64px);
+}
+
+/* Hide redundant top navigation elements */
+.breadcrumb-navigation,
+.top-tab-navigation,
+[class*="breadcrumb"],
+[class*="BreadcrumbNavigation"],
+[class*="EnhancedBreadcrumb"],
+[class*="HierarchicalBreadcrumb"],
+.main-layout-header,
+[class*="MainLayoutHeader"],
+[class*="ViewModeTabs"] {
+  display: none !important;
+}
+
+/* Override dashboard page specific styles to ensure clean layout */
+.dashboard-content {
+  padding-top: 0 !important;
+}
+
+.dashboard-header {
+  display: none !important;
+}
+
+/* Ensure smooth transitions for all layout changes */
+* {
+  transition: margin-left 0.3s ease, width 0.3s ease, padding 0.3s ease;
+}
