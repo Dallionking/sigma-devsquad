@@ -1,0 +1,111 @@
+Phase 6.5: Comprehensive Light/Dark Mode Fix & QA - Product Requirements Document
+
+OVERVIEW:
+Fix light/dark mode functionality across all pages and components in the Vibe Dev Squad application. Ensure perfect readability, contrast, and visual consistency in both themes without changing any features, copy, or design effects.
+
+CORE REQUIREMENTS:
+
+1. LANDING PAGE LIGHT/DARK MODE FIX
+- Audit and fix landing page hero section for both light and dark themes
+- Fix navigation header light/dark mode functionality
+- Ensure all cards and sections have proper contrast ratios
+- Fix footer light/dark mode styling
+- Verify all fonts are readable in both modes with proper contrast
+
+2. FEATURES PAGE LIGHT/DARK MODE FIX
+- Audit and fix features page layout for theme consistency
+- Fix feature cards and descriptions with proper backgrounds
+- Ensure proper contrast for all text elements
+- Fix any broken backgrounds or borders in both themes
+
+3. HOW IT WORKS PAGE LIGHT/DARK MODE FIX
+- Audit and fix how it works page sections
+- Fix step cards and process flows for both themes
+- Ensure all explanatory text is readable with proper contrast
+- Fix any visual indicators or icons that break in dark mode
+
+4. RESOURCES PAGE LIGHT/DARK MODE FIX
+- Audit and fix resources page layout
+- Fix resource cards and categories for both themes
+- Ensure proper contrast for all content
+- Fix any documentation or link styling issues
+
+5. PRICING PAGE LIGHT/DARK MODE FIX
+- Audit and fix pricing page layout
+- Fix pricing cards and feature lists for both themes
+- Ensure all pricing text is clearly readable
+- Fix any buttons or call-to-action elements
+
+6. TEAMS PAGE LIGHT/DARK MODE FIX
+- Audit and fix teams page layout (recently modified in Phase 6)
+- Fix team cards and member displays for both themes
+- Ensure search and filter elements work properly in both modes
+- Fix any broken animations or hover states
+- Verify skeleton loading states work correctly in both themes
+
+7. DASHBOARD PAGE LIGHT/DARK MODE FIX
+- Audit and fix dashboard layout for theme consistency
+- Fix widgets and analytics cards backgrounds
+- Ensure all charts and graphs are visible in both modes
+- Fix any data visualization elements
+
+8. PROJECTS PAGE LIGHT/DARK MODE FIX
+- Audit and fix projects page layout
+- Fix project cards and status indicators for both themes
+- Ensure all project information is readable
+- Fix any progress bars or status elements
+
+9. SETTINGS PAGE LIGHT/DARK MODE FIX
+- Audit and fix settings page layout
+- Fix form elements and input fields for both themes
+- Ensure all configuration options are visible
+- Fix any toggle switches or controls
+
+10. NAVIGATION COMPONENTS LIGHT/DARK MODE FIX
+- Audit and fix main navigation for both themes
+- Fix sidebar navigation if applicable
+- Ensure all menu items and dropdowns work properly
+- Fix any breadcrumb or navigation aids
+
+11. FORM COMPONENTS LIGHT/DARK MODE FIX
+- Audit and fix all form inputs for both themes
+- Fix buttons and interactive elements
+- Ensure proper focus states in both modes
+- Fix any validation messages or errors
+
+12. MODAL AND DIALOG LIGHT/DARK MODE FIX
+- Audit and fix all modal dialogs for both themes
+- Fix overlay backgrounds and borders
+- Ensure modal content is readable in both modes
+- Fix any popup or tooltip elements
+
+13. GLOBAL STYLES AND THEME FIX
+- Audit and fix global CSS variables for theme switching
+- Fix any remaining theme inconsistencies
+- Ensure proper color scheme inheritance
+- Fix any edge cases or special states
+
+QUALITY ASSURANCE REQUIREMENTS:
+- Comprehensive QA testing using web evaluation tool after each major section
+- Light mode testing for all elements
+- Dark mode testing for all elements
+- Theme toggle testing for smooth transitions
+- Contrast verification for accessibility standards
+- Interactive elements testing in both modes
+- Edge cases testing including loading states and errors
+
+CONSTRAINTS:
+- NO feature changes allowed
+- NO copy or content changes
+- NO design effect changes
+- Focus ONLY on light/dark mode functionality
+- Maintain all existing animations and interactions
+- Preserve code quality and performance
+
+SUCCESS CRITERIA:
+- All pages display perfectly in both light and dark modes
+- Theme toggle works smoothly on all pages
+- All text meets WCAG contrast standards (4.5:1 for normal text, 3:1 for large text)
+- No broken backgrounds or invisible elements
+- All interactive elements visible and functional in both modes
+- Comprehensive QA completed and passed for each section
