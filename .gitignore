@@ -33,3 +33,6 @@ dist-ssr
 # Task files
 tasks.json
 tasks/
+
+# Added by Task Master AI
+.vscode
