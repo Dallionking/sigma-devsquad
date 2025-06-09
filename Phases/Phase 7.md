@@ -21,48 +21,49 @@ The IDE Integration Bridge feature provides seamless connectivity between the Vi
 ### Tier 1 Task - IDE Bridge Infrastructure Setup
 
 #### Subtask 1.1: Set up IDE bridge database schema
-- [ ] Before starting, use Context7 MCP to fetch latest Supabase schema design documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/supabase/supabase"` and topic: "database schema design"
-- [ ] Use Perplexity MCP to research IDE integration best practices
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "Best practices for IDE integration database schema design and secure communication protocols"
-- [ ] Create `ide_connections` table with fields: id, user_id, ide_type, connection_status, last_connected_at, created_at, updated_at
-  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
-- [ ] Create `ide_sessions` table with fields: id, connection_id, session_token, started_at, ended_at, status
-  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
-- [ ] Create `ide_commands` table with fields: id, session_id, command_type, command_json, status, created_at, executed_at
-  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
-- [ ] Create `ide_files` table with fields: id, session_id, file_path, file_hash, last_synced_at
-  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
-- [ ] Create `bridge_installations` table with fields: id, user_id, installation_id, version, os_type, installed_at, last_active_at
-  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
-- [ ] Create `project_repositories` table with fields: id, project_id, repository_url, provider, access_token_encrypted, status
-  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
-- [ ] Set up appropriate relationships and constraints between tables
-- [ ] Create database indexes for performance optimization
+- [x] Before starting, use Context7 MCP to fetch latest Supabase schema design documentation
+  - [x] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/supabase/supabase"` and topic: "database schema design"
+- [x] Use Perplexity MCP to research IDE integration best practices
+  - [x] Use command: `mcp3_perplexity_ask` with query: "Best practices for IDE integration database schema design and secure communication protocols"
+- [x] Create `ide_connections` table with fields: id, user_id, ide_type, connection_status, last_connected_at, created_at, updated_at
+  - [x] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [x] Create `ide_sessions` table with fields: id, connection_id, session_token, started_at, ended_at, status
+  - [x] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [x] Create `ide_commands` table with fields: id, session_id, command_type, command_json, status, created_at, executed_at
+  - [x] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [x] Create `ide_files` table with fields: id, session_id, file_path, file_hash, last_synced_at
+  - [x] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [x] Create `bridge_installations` table with fields: id, user_id, installation_id, version, os_type, installed_at, last_active_at
+  - [x] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [x] Create `project_repositories` table with fields: id, project_id, repository_url, provider, access_token_encrypted, status
+  - [x] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [x] Set up appropriate relationships and constraints between tables
+- [x] Create database indexes for performance optimization
 
 📎 Use Supabase MCP for database operations with `mcp5_apply_migration` command
 
+
 #### Subtask 1.2: Create Next.js API routes for IDE bridge
-- [ ] Before starting, use Context7 MCP to fetch latest Next.js route handler documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "route handlers"
-- [ ] Use Perplexity MCP to research API design best practices for IDE integrations
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "REST API design patterns for IDE integration and WebSocket communication"
-- [ ] Implement `/api/ide/connections` route with GET (list) and POST (create) methods
-- [ ] Implement `/api/ide/connections/[id]` route with GET (detail), PUT (update), and DELETE methods
-- [ ] Implement `/api/ide/sessions/[id]/commands` route for sending commands to IDE
-- [ ] Implement `/api/ide/sessions/[id]/files` route for file operations
-- [ ] Implement WebSocket endpoint for real-time IDE communication
-- [ ] Implement `/api/bridge/installations` route for managing bridge installations
-- [ ] Implement `/api/projects/[id]/repositories` route for GitHub integration
+- [x] Before starting, use Context7 MCP to fetch latest Next.js route handler documentation
+  - [x] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "route handlers"
+- [x] Use Perplexity MCP to research API design best practices for IDE integrations
+  - [x] Use command: `mcp3_perplexity_ask` with query: "REST API design patterns for IDE integration and WebSocket communication"
+- [x] Implement `/api/ide/connections` route with GET (list) and POST (create) methods
+- [x] Implement `/api/ide/connections/[id]` route with GET (detail), PUT (update), and DELETE methods
+- [x] Implement `/api/ide/sessions/[id]/commands` route for sending commands to IDE
+- [x] Implement `/api/ide/sessions/[id]/files` route for file operations
+- [x] Implement WebSocket endpoint for real-time IDE communication
+- [x] Implement `/api/bridge/installations` route for managing bridge installations
+- [x] Implement `/api/projects/[id]/repositories` route for GitHub integration
 
 📎 Use Context7 MCP for Next.js API routes documentation
 
 #### Subtask 1.3: Create bridge application core
-- [ ] Before starting, use Context7 MCP to fetch latest Node.js application architecture documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/nodejs/node"` and topic: "application architecture"
-- [ ] Use Perplexity MCP to research bridge application patterns
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "Bridge application architecture patterns for IDE integration with secure communication"
-- [ ] Set up Node.js application structure for the bridge:
+- [x] Before starting, use Context7 MCP to fetch latest Node.js application architecture documentation
+  - [x] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/nodejs/node"` and topic: "application architecture"
+- [x] Use Perplexity MCP to research bridge application patterns
+  - [x] Use command: `mcp3_perplexity_ask` with query: "Bridge application architecture patterns for IDE integration with secure communication"
+- [x] Set up Node.js application structure for the bridge:
   ```typescript
   // bridge/src/index.ts
   import { createServer } from './server';
@@ -78,10 +79,10 @@ The IDE Integration Bridge feature provides seamless connectivity between the Vi
     // ...
   }
   ```
-- [ ] Create IDE adapter interfaces for VS Code, Cursor, and Windsurf
-- [ ] Implement secure communication layer with encryption
-- [ ] Create file system access layer with permission management
-- [ ] Set up error handling and logging system
+- [x] Create IDE adapter interfaces for VS Code, Cursor, and Windsurf
+- [x] Implement secure communication layer with encryption
+- [x] Create file system access layer with permission management
+- [x] Set up error handling and logging system
 
 📎 Use Context7 MCP for Node.js application architecture documentation
 
@@ -243,34 +244,71 @@ git push origin main
 - [ ] Create secure token management for GitHub integration
 - [ ] Implement rate limiting for IDE operations
 - [ ] Add audit logging for all bridge operations
-- [ ] Create performance monitoring for bridge communication
-- [ ] Optimize WebSocket connection management
+- [ ] Create performance monitoring for bridge application
+- [ ] Implement caching for frequently accessed files and commands
 
-📎 Use Magic UI MCP for security and performance guidelines
+📎 Use Operative.sh MCP for security verification with `mcp7_web_eval_agent`
 
-✅ **Tier 3 Checkpoint**: Ensure all Tier 3 subtasks are complete and the IDE integration bridge is visually polished, responsive, secure, and performs well with multiple IDE connections before saying it's complete
+#### Subtask 3.4: Implement IDE extension development
+- [ ] Before starting, use Context7 MCP to fetch latest VS Code Extension API documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/microsoft/vscode-extension-api"` and topic: "extension development"
+- [ ] Before starting, use Context7 MCP to fetch latest Cursor Plugin API documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/cursor/plugin-api"` and topic: "plugin development"
+- [ ] Before starting, use Context7 MCP to fetch latest Windsurf MCP documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/windsurf/mcp"` and topic: "mcp integration"
+- [ ] Use Perplexity MCP to research best practices for cross-IDE extension development
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Best practices for developing cross-IDE extensions and plugins for VS Code, Cursor, and Windsurf"
 
-**🔄 Git Commit and Push After Tier 3 (Phase 7 Complete):**
+##### VS Code Extension Development (Traditional Extension)
+- [ ] Set up VS Code extension project structure
+- [ ] Configure `package.json` with extension metadata, commands, and activation events
+- [ ] Implement `extension.ts` for extension activation and command registration
+- [ ] Develop `BridgeClient` to communicate with the Vibe DevSquad platform via WebSocket
+- [ ] Create UI components (e.g., TreeView, Webview panels) for displaying Vibe DevSquad data within VS Code
+- [ ] Implement commands for interacting with the Planning Agent and other Vibe DevSquad features
+- [ ] Add support for publishing the extension to the VS Code Marketplace
+
+##### VS Code MCP Integration
+- [ ] Research and understand the VS Code MCP extension architecture
+- [ ] Define the Vibe DevSquad MCP schema for VS Code
+- [ ] Implement the necessary handlers for MCP commands and events within the VS Code extension
+- [ ] Ensure seamless communication between the VS Code MCP extension and the Vibe DevSquad bridge
+
+##### Cursor Plugin Development (Traditional Plugin)
+- [ ] Set up Cursor plugin project structure
+- [ ] Configure plugin manifest with metadata and entry points
+- [ ] Implement plugin activation and lifecycle methods
+- [ ] Develop `BridgeClient` to communicate with the Vibe DevSquad platform via WebSocket
+- [ ] Create custom UI components for Cursor's interface
+- [ ] Implement commands for interacting with the Planning Agent and other Vibe DevSquad features
+- [ ] Add support for publishing the plugin to the Cursor Plugin Marketplace
+
+##### Cursor MCP Integration
+- [ ] Research and understand Cursor's native MCP integration capabilities
+- [ ] Define the Vibe DevSquad MCP schema for Cursor
+- [ ] Implement the necessary handlers for MCP commands and events within Cursor's environment
+- [ ] Ensure seamless communication between Cursor's native MCP and the Vibe DevSquad bridge
+
+##### Windsurf MCP Extension
+- [ ] Define the Vibe DevSquad MCP schema for Windsurf
+- [ ] Implement the necessary handlers for MCP commands and events within Windsurf's environment
+- [ ] Ensure seamless communication between Windsurf's native MCP and the Vibe DevSquad bridge
+
+- [ ] Implement secure authentication and authorization for all extension/plugin/MCP connections
+- [ ] Develop robust error handling and logging for all IDE integrations
+- [ ] Create comprehensive documentation for installing and configuring each IDE integration method
+
+📎 Use Operative.sh MCP for testing and validating all IDE integrations with `mcp7_web_eval_agent`
+
+✅ **Tier 3 Checkpoint**: Ensure all Tier 3 subtasks are complete and the UI is polished, responsive, secure, and performs optimally.
+
+**🔄 Git Commit and Push After Tier 3:**
 ```bash
 git add .
-git commit -m "feat: complete Phase 7 - IDE Integration Bridge UI polish and QA
+git commit -m "feat: implement Phase 7 Tier 3 - UI polish and quality assurance
 
-- Enhanced IDE integration visualization with real-time status indicators
-- Implemented responsive design optimizations for all screen sizes
-- Added security and performance optimizations with audit logging
-- Completed comprehensive QA verification through Operative.sh MCP"
+- Enhanced IDE integration visualization with real-time indicators
+- Implemented responsive design optimizations for all device sizes
+- Applied security and performance optimizations for bridge operations
+- Developed comprehensive IDE extensions/plugins/MCP integrations for VS Code, Cursor, and Windsurf"
 git push origin main
-```
-
----
-
-## 🎉 Phase 7 Complete!
-The IDE Integration Bridge feature is now fully implemented with:
-- ✅ Complete database schema and API infrastructure
-- ✅ Bridge application core with secure communication
-- ✅ Comprehensive UI components with Magic UI templates
-- ✅ Bridge installation process with cross-platform support
-- ✅ IDE command execution and file system operations
-- ✅ Planning agent integration with code generation
-- ✅ Security features and performance optimizations
-- ✅ Comprehensive QA verification

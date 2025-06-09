@@ -1,4 +1,4 @@
-# 17. Voice Interface for Agent Interaction
+# 16. Voice Interface for Agent Interaction
 
 ## Role & Background
 **Senior FANG Engineer Profile**: Senior Voice UI Engineer with 9+ years experience at Google or Amazon, specializing in voice recognition, natural language processing, and conversational interfaces. Experience with TypeScript, Next.js, WebRTC, and speech recognition APIs. Background in voice assistant development, speech-to-text optimization, and accessibility-focused interfaces is highly valuable.

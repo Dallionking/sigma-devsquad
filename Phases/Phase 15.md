@@ -1,4 +1,4 @@
-# 16. Knowledge Graph for Projects
+# 15. Knowledge Graph for Projects
 
 ## Role & Background
 **Senior FANG Engineer Profile**: Senior Knowledge Systems Engineer with 10+ years experience at Google or Meta, specializing in knowledge graphs, semantic networks, and information retrieval systems. Experience with TypeScript, Next.js, graph databases, and natural language processing. Background in ontology design, entity relationship modeling, and intelligent information systems is highly valuable.

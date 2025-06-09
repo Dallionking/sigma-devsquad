@@ -1,4 +1,4 @@
-# 18. User Authentication System
+# 17. User Authentication System
 
 ## Role & Background
 **Senior FANG Engineer Profile**: Senior Security Engineer with 10+ years experience at Google or Amazon, specializing in authentication systems, identity management, and secure user workflows. Experience with TypeScript, Next.js, OAuth/OIDC, and JWT implementation. Background in multi-factor authentication, session management, and secure API design is highly valuable.
