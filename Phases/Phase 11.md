@@ -1,269 +1,254 @@
-# 11. AI Agent Marketplace
+# 11. Dashboard and Analytics
 
 ## Role & Background
-**Senior FANG Engineer Profile**: Senior Platform Engineer with 9+ years experience at Amazon or Google, specializing in marketplace systems, plugin ecosystems, and developer platforms. Experience with TypeScript, Next.js, and distributed systems. Background in API design, extension frameworks, and community-driven platforms is highly valuable.
+**Senior FANG Engineer Profile**: Senior Data Visualization Engineer with 8+ years experience at Netflix or Amazon, specializing in analytics dashboards, metrics visualization, and performance monitoring systems. Experience with TypeScript, Next.js, D3.js, and building interactive data visualization interfaces. Background in business intelligence, KPI tracking, and real-time monitoring is highly valuable.
 
 ## Feature Description
-The AI Agent Marketplace is a central hub for discovering, sharing, and installing pre-configured specialized agents with specific skill sets. This feature enables community contributions to the Vibe DevSquad ecosystem, accelerating adoption and expanding platform capabilities through a curated library of purpose-built AI agents with standardized interfaces and capabilities.
+The Dashboard and Analytics feature provides comprehensive visibility into platform performance, agent productivity, and project metrics within the Vibe DevSquad platform. This feature implements a complete analytics solution with customizable dashboards, real-time metrics, interactive visualizations, and reporting capabilities in a new Next.js project.
 
 ⚠️ **IMPORTANT INSTRUCTIONS:**
 1. Check off each subtask with [x] as you complete it
 2. Do not proceed to the next task until ALL checkboxes in the current task are marked complete
 3. Use Magic UI MCP with `/ui` command for all component generation
-4. Reference `/.aigent/design/Magic Ui templates/agent-template/` for component patterns
-5. Use Context7 MCP to fetch up-to-date documentation before starting each subtask
-6. Use Perplexity MCP for any research needs or best practices
-7. Create TaskMaster tasks for any complex implementation requirements
+4. Reference `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/design/Magic Ui templates/agent-template` for component patterns
+5. Reference `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Magic Ui templates/` for styling consistency
+6. Use Context7 MCP to fetch up-to-date documentation before starting each subtask
+7. Use Perplexity MCP for any research needs or best practices
+8. Create TaskMaster tasks for any complex implementation requirements
 
 ## Implementation Tasks:
 
-### Tier 1 Task - Marketplace Infrastructure Setup
+### Tier 1 Task - Dashboard Infrastructure Setup
 
-#### Subtask 1.1: Set up marketplace database schema
-- [ ] Before starting, use Context7 MCP to fetch latest Supabase documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/supabase/supabase"` and topic: "database schema design"
-- [ ] Use Perplexity MCP to research marketplace database patterns
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best database schema patterns for a digital marketplace with user-contributed items?"
-- [ ] Create `marketplace_agents` table with fields: id, name, description, creator_id, version, category, tags, rating, downloads, created_at, updated_at
-- [ ] Create `agent_versions` table with fields: id, agent_id, version_number, changelog, config_json, prompt_template, compatibility_json, created_at
-- [ ] Create `agent_reviews` table with fields: id, agent_id, user_id, rating, review_text, created_at
-- [ ] Create `agent_categories` table with fields: id, name, description, icon, parent_category_id
-- [ ] Create `user_installed_agents` table with fields: id, user_id, agent_id, version_id, installed_at, last_used_at, is_active
+#### Subtask 1.1: Set up analytics database schema
+- [ ] Before starting, use Context7 MCP to fetch latest Supabase analytics schema documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/supabase/supabase"` and topic: "analytics database design"
+- [ ] Use Perplexity MCP to research analytics dashboard best practices
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Best practices for analytics dashboard database schema design and metrics tracking data models"
+- [ ] Create `dashboards` table with fields: id, user_id, title, layout_json, is_default, created_at, updated_at
+  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [ ] Create `dashboard_widgets` table with fields: id, dashboard_id, widget_type, title, data_source, config_json, position_x, position_y, width, height
+  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [ ] Create `metrics` table with fields: id, name, description, calculation_method, data_source, refresh_interval, created_at
+  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
+- [ ] Create `reports` table with fields: id, user_id, title, description, query_json, schedule, last_generated_at, created_at
+  - [ ] Use Supabase MCP with `mcp5_apply_migration` to create the table
 - [ ] Set up appropriate relationships and constraints between tables
 - [ ] Create database indexes for performance optimization
 
-📎 Link to Supabase MCP for database operations
+📎 Use Supabase MCP for database operations with `mcp5_apply_migration` command
 
-#### Subtask 1.2: Create Next.js API routes for marketplace
-- [ ] Before starting, use Context7 MCP to fetch latest Next.js API routes documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "api routes"
-- [ ] Use Perplexity MCP to research API design for marketplaces
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for designing RESTful APIs for a digital marketplace?"
-- [ ] Implement `/api/marketplace/agents` route with GET (list) and POST (publish) methods
-- [ ] Implement `/api/marketplace/agents/[id]` route with GET (detail), PUT (update), and DELETE methods
-- [ ] Implement `/api/marketplace/agents/[id]/versions` route for version management
-- [ ] Implement `/api/marketplace/agents/[id]/reviews` route for reviews and ratings
-- [ ] Implement `/api/marketplace/categories` route for category management
-- [ ] Implement `/api/marketplace/search` route for advanced agent search
-- [ ] Implement `/api/user/installed-agents` route for managing installed agents
+#### Subtask 1.2: Create Next.js API routes for analytics
+- [ ] Before starting, use Context7 MCP to fetch latest Next.js route handler documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "route handlers"
+- [ ] Use Perplexity MCP to research analytics API patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "API design patterns for analytics dashboards and real-time metrics collection"
+- [ ] Implement `/api/dashboards` route with GET (list) and POST (create) methods
+- [ ] Implement `/api/dashboards/[id]` route with GET (detail), PUT (update), and DELETE methods
+- [ ] Implement `/api/dashboards/[id]/widgets` route for managing dashboard widgets
+- [ ] Implement `/api/metrics` route for retrieving available metrics
+- [ ] Implement `/api/reports` route for managing scheduled reports
 
-📎 Link to Next.js API routes documentation: https://nextjs.org/docs/app/building-your-application/routing/route-handlers
+📎 Use Context7 MCP for Next.js API routes documentation
 
-#### Subtask 1.3: Create agent packaging and validation system
-- [ ] Before starting, use Context7 MCP to fetch latest TypeScript documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/microsoft/typescript"` and topic: "interfaces and validation"
-- [ ] Use Perplexity MCP to research plugin validation systems
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for validating and sandboxing third-party plugins in a marketplace?"
-- [ ] Create agent package schema validator:
+#### Subtask 1.3: Set up visualization libraries
+- [ ] Before starting, use Context7 MCP to fetch latest data visualization documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/recharts/recharts"` and topic: "chart components"
+- [ ] Use Perplexity MCP to research data visualization patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Data visualization patterns for analytics dashboards and interactive chart components"
+- [ ] Install D3.js and React wrappers: `npm install d3 @types/d3 react-d3-library`
+- [ ] Install chart libraries: `npm install recharts victory-chart`
+- [ ] Create base visualization components:
   ```typescript
-  // src/services/agentValidator.ts
-  export interface AgentPackage {
-    name: string;
-    description: string;
-    version: string;
-    author: string;
-    capabilities: string[];
-    promptTemplate: string;
-    configSchema: Record<string, any>;
-    compatibility: {
-      minPlatformVersion: string;
-      requiredMCPs: string[];
-    };
+  // src/components/visualizations/LineChart.tsx
+  import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+  
+  interface LineChartProps {
+    data: any[];
+    xKey: string;
+    yKey: string;
+    color?: string;
+    title?: string;
   }
   
-  export class AgentValidator {
-    validate(agentPackage: AgentPackage): ValidationResult {
-      // Validation logic
-    }
-  }
+  export const LineChartComponent = ({ data, xKey, yKey, color = '#8884d8', title }: LineChartProps) => {
+    return (
+      <div className="w-full h-full min-h-[200px]">
+        {title && <h3 className="text-lg font-medium mb-2">{title}</h3>}
+        // ...
+      </div>
+    );
+  };
   ```
-- [ ] Implement agent capability verification system
-- [ ] Create agent sandbox for testing submitted agents
-- [ ] Implement version compatibility checking
-- [ ] Set up agent package export/import functionality
-- [ ] Create validation pipeline for new agent submissions
+- [ ] Create additional chart components (BarChart, PieChart, AreaChart)
+- [ ] Set up responsive chart containers
 
-📎 Link to TypeScript documentation for interface design
+📎 Use Context7 MCP for data visualization documentation
 
-#### Subtask 1.4: Create UI components for marketplace
-- [ ] Before starting, use Context7 MCP to fetch latest React documentation
+#### Subtask 1.4: Create UI components for dashboard interface
+- [ ] Before starting, use Context7 MCP to fetch latest React component documentation
   - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/facebook/react"` and topic: "component patterns"
-- [ ] Use Perplexity MCP to research marketplace UI patterns
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best UI patterns for digital marketplaces and app stores?"
-- [ ] Use Magic UI MCP to create `AgentMarketplaceGrid` component
-  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "grid layout for marketplace items with filtering"
-- [ ] Use Magic UI MCP to create `AgentCard` component
-  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "product card with rating, author, and download count"
-- [ ] Use Magic UI MCP to create `AgentDetail` component
-  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "detailed product page with tabs for description, reviews, and versions"
-- [ ] Use Magic UI MCP to create `AgentInstallButton` component
-  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "install button with loading and success states"
-- [ ] Use Magic UI MCP to create `AgentCategoryFilter` component
-  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "category filter sidebar with counts"
-- [ ] Use Magic UI MCP to create `AgentSearchBar` component
-  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "search bar with filters and suggestions"
+- [ ] Use Perplexity MCP to research dashboard UI patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Dashboard UI component patterns and responsive grid layouts for analytics interfaces"
+- [ ] Use Magic UI MCP to create `DashboardGrid` component with responsive layout
+  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "dashboard grid layout"
+- [ ] Use Magic UI MCP to create `WidgetContainer` component for individual widgets
+  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "widget container card"
+- [ ] Use Magic UI MCP to create `WidgetLibrary` component for adding new widgets
+  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "widget library selector"
+- [ ] Use Magic UI MCP to create `WidgetSettings` component for configuring widgets
+  - [ ] Use command: `mcp0_21st_magic_component_builder` with searchQuery: "settings panel form"
 - [ ] Set up responsive layout with Tailwind CSS
+- [ ] Reference Magic UI templates in `/Users/dallionking/CascadeProjects/Vibe Dev Squad/.aigent/design/Magic Ui templates/agent-template`
+- [ ] Reference Magic UI templates in `/Users/dallionking/CascadeProjects/Vibe Dev Squad/Magic Ui templates/`
+- [ ] Follow Vibe DevSquad design system guidelines in `/Users/dallionking/CascadeProjects/Vibe Dev Squad/vibe-devsquad/.aigent/design/vibe_devsquad_design_system.md`
 
-📎 Link to Magic UI MCP for component styling guidelines
+📎 Use Magic UI MCP for component styling guidelines
 
 **⚠️ TIER 1 CHECKPOINT:** Do not proceed to Tier 2 until ALL Tier 1 subtasks are completed and verified. After completing Tier 1:
-- [ ] Commit all changes: `git add . && git commit -m "Phase 11 Tier 1: AI Agent Marketplace Infrastructure Setup - Database schema, Next.js API routes, agent validation system, and UI components"`
+- [ ] Commit all changes: `git add . && git commit -m "Phase 11 Tier 1: Dashboard Infrastructure Setup - Analytics database schema, Next.js API routes, visualization libraries, and UI components"`
 - [ ] Push to repository: `git push origin main`
 
-### Tier 2 Task - Marketplace Business Logic and Integration
+### Tier 2 Task - Dashboard Business Logic and Integration
 
-#### Subtask 2.1: Implement agent discovery and search
-- [ ] Before starting, use Context7 MCP to fetch latest search implementation documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/algolia/instantsearch"` and topic: "search implementation"
-- [ ] Use Perplexity MCP to research search optimization
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for implementing search functionality in a marketplace?"
-- [ ] Implement full-text search for agents
-- [ ] Create category-based browsing functionality
-- [ ] Develop tag-based filtering system
-- [ ] Implement sorting options (popularity, rating, newest)
-- [ ] Create recommendation engine based on user preferences
-- [ ] Develop trending agents section
-- [ ] Implement search result pagination
+#### Subtask 2.1: Implement dashboard management
+- [ ] Before starting, use Context7 MCP to fetch latest dashboard management documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/react-grid-layout/react-grid-layout"` and topic: "drag and drop layouts"
+- [ ] Use Perplexity MCP to research dashboard management patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Dashboard management patterns including creation, customization, sharing, and templates"
+- [ ] Create dashboard creation and configuration
+- [ ] Implement dashboard layout customization with drag-and-drop
+- [ ] Develop dashboard sharing and permissions
+- [ ] Create dashboard templates for common use cases
+- [ ] Implement dashboard export and import
+- [ ] Add error handling for failed operations with user feedback
 
-📎 Call to Supabase MCP for search operations
+📎 Use Supabase MCP for dashboard persistence with `mcp5_execute_sql` command
 
-#### Subtask 2.2: Implement agent publication workflow
-- [ ] Before starting, use Context7 MCP to fetch latest workflow management documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "form handling and submission"
-- [ ] Use Perplexity MCP to research publication workflows
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for implementing a publication workflow for user-contributed content?"
-- [ ] Create agent creation form with validation
-- [ ] Implement agent testing and verification process
-- [ ] Develop version management system
-- [ ] Create agent publication approval workflow
-- [ ] Implement agent update and versioning process
-- [ ] Develop changelog generation system
-- [ ] Create agent deprecation and removal process
+#### Subtask 2.2: Implement widget management
+- [ ] Before starting, use Context7 MCP to fetch latest widget framework documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/react/react"` and topic: "dynamic components"
+- [ ] Use Perplexity MCP to research widget management patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Widget management patterns for dashboard applications including configuration and data binding"
+- [ ] Create widget creation with type selection
+- [ ] Implement widget configuration interface
+- [ ] Develop widget data source connection
+- [ ] Create widget refresh and update logic
+- [ ] Implement widget resizing and positioning
 
-📎 Call to TaskMaster MCP for workflow management
+📎 Use Operative.sh MCP for widget visualization with `mcp7_web_eval_agent` command
 
-#### Subtask 2.3: Implement agent installation and management
-- [ ] Before starting, use Context7 MCP to fetch latest plugin system documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "dynamic imports and code loading"
-- [ ] Use Perplexity MCP to research plugin installation patterns
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for implementing plugin installation and management in web applications?"
-- [ ] Create agent installation process
-- [ ] Implement agent configuration interface
-- [ ] Develop agent activation/deactivation functionality
-- [ ] Create agent update notification system
-- [ ] Implement agent compatibility checking
-- [ ] Develop agent uninstallation process
-- [ ] Create user's installed agents dashboard
+#### Subtask 2.3: Implement metrics collection and processing
+- [ ] Before starting, use Context7 MCP to fetch latest metrics processing documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "server actions"
+- [ ] Use Perplexity MCP to research metrics collection patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Metrics collection and processing patterns for real-time analytics dashboards"
+- [ ] Create metrics definition interface
+- [ ] Implement metrics calculation engine
+- [ ] Develop real-time metrics updates
+- [ ] Create historical metrics storage
+- [ ] Implement metrics aggregation and filtering
 
-📎 Call to Supabase MCP for agent installation tracking
+📎 Use Supabase MCP for metrics storage with `mcp5_execute_sql` command
 
-#### Subtask 2.4: Implement rating and review system
-- [ ] Before starting, use Context7 MCP to fetch latest review system documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/facebook/react"` and topic: "form handling and validation"
-- [ ] Use Perplexity MCP to research review systems
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for implementing rating and review systems in digital marketplaces?"
-- [ ] Create review submission form with validation
-- [ ] Implement star rating system
-- [ ] Develop review moderation workflow
-- [ ] Create review helpfulness voting
-- [ ] Implement review sorting and filtering
-- [ ] Develop agent rating aggregation
-- [ ] Create review notification system for agent creators
+#### Subtask 2.4: Implement reporting functionality
+- [ ] Before starting, use Context7 MCP to fetch latest reporting documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/puppeteer/puppeteer"` and topic: "PDF generation"
+- [ ] Use Perplexity MCP to research reporting patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Automated reporting patterns including scheduled generation, export formats, and distribution"
+- [ ] Create report builder interface
+- [ ] Implement scheduled report generation
+- [ ] Develop report export (PDF, CSV, Excel)
+- [ ] Create report sharing and distribution
+- [ ] Implement report templates for common needs
 
-📎 Call to Supabase MCP for review operations
+📎 Use Operative.sh MCP for report generation with `mcp7_web_eval_agent` command
 
 **⚠️ TIER 2 CHECKPOINT:** Do not proceed to Tier 3 until ALL Tier 2 subtasks are completed and verified. After completing Tier 2:
-- [ ] Commit all changes: `git add . && git commit -m "Phase 11 Tier 2: AI Agent Marketplace Business Logic and Integration - Agent discovery, publication workflow, installation management, and review system"`
+- [ ] Commit all changes: `git add . && git commit -m "Phase 11 Tier 2: Dashboard Business Logic and Integration - Dashboard management, widget management, metrics collection, and reporting functionality"`
 - [ ] Push to repository: `git push origin main`
 
 ### Tier 3 Task - UI Polish and Quality Assurance
 
-#### Subtask 3.1: Enhance marketplace visualization
-- [ ] Before starting, use Context7 MCP to fetch latest UI animation documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/framer/motion"` and topic: "animation and transitions"
-- [ ] Use Perplexity MCP to research marketplace UI enhancements
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for creating engaging and intuitive marketplace user interfaces?"
-- [ ] Implement agent card hover animations
-- [ ] Create category transition animations
-- [ ] Develop installation progress visualization
-- [ ] Implement rating interaction animations
-- [ ] Create agent detail page transitions
-- [ ] Develop featured agent carousel
-- [ ] Implement skeleton loading states
+#### Subtask 3.1: Enhance visualization design
+- [ ] Before starting, use Context7 MCP to fetch latest data visualization design documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/d3/d3"` and topic: "color scales and animations"
+- [ ] Use Perplexity MCP to research visualization design patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Data visualization design patterns including color palettes, animations, and interactive elements"
+- [ ] Implement consistent color palette for different metric types
+- [ ] Create animation for data transitions (300ms ease)
+- [ ] Develop interactive tooltips with detailed information
+- [ ] Create coordinated highlighting across related charts
+- [ ] Implement responsive sizing for all visualizations
 
-📎 QA through Operative.sh MCP, visually confirm marketplace layout and animations
+📎 QA through Operative.sh MCP, visually confirm visualization design with `mcp7_web_eval_agent` command
 
-#### Subtask 3.2: Implement responsive design optimizations
+#### Subtask 3.2: Implement dashboard interactivity
+- [ ] Before starting, use Context7 MCP to fetch latest React state management documentation
+  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/facebook/react"` and topic: "state management"
+- [ ] Use Perplexity MCP to research dashboard interactivity patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Dashboard interactivity patterns including filtering, drill-down, and cross-filtering"
+- [ ] Add filtering controls for dashboard data
+- [ ] Implement date range selection
+- [ ] Develop drill-down functionality for metrics
+- [ ] Create cross-filtering between widgets
+- [ ] Implement dashboard state persistence
+
+📎 QA through Operative.sh MCP, verify dashboard interactions with `mcp7_web_eval_agent` command
+
+#### Subtask 3.3: Implement responsive design optimizations
 - [ ] Before starting, use Context7 MCP to fetch latest responsive design documentation
   - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/tailwindlabs/tailwindcss"` and topic: "responsive design"
-- [ ] Use Perplexity MCP to research responsive marketplace patterns
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for responsive design in marketplace applications?"
-- [ ] Optimize mobile layout (single column, collapsible filters)
-- [ ] Create tablet layout (2-column grid, side panel)
-- [ ] Enhance desktop layout (3+ column grid with details panel)
+- [ ] Use Perplexity MCP to research responsive dashboard patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Responsive design patterns for analytics dashboards across mobile, tablet, and desktop"
+- [ ] Test and optimize mobile layout (stacked widgets, simplified controls)
+- [ ] Create tablet layout (2-column grid, touch-optimized)
+- [ ] Optimize desktop layout (multi-column grid, advanced controls)
 - [ ] Ensure touch targets are appropriate size (min 44px×44px)
-- [ ] Implement responsive search and filter components
-- [ ] Create mobile-optimized agent detail view
-- [ ] Develop responsive review submission form
+- [ ] Implement responsive widget resizing
 
-📎 QA through Operative.sh MCP, test all breakpoints
+📎 QA through Operative.sh MCP, test all breakpoints with `mcp7_web_eval_agent` command
 
-#### Subtask 3.3: Implement interaction polish
-- [ ] Before starting, use Context7 MCP to fetch latest interaction design documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/facebook/react"` and topic: "interaction patterns"
-- [ ] Use Perplexity MCP to research interaction design
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for creating polished user interactions in web applications?"
-- [ ] Add smooth animations for state changes (150ms transition)
-- [ ] Create hover states for interactive elements
-- [ ] Implement keyboard shortcuts for navigation
-- [ ] Add drag-and-drop for agent organization
-- [ ] Create contextual tooltips for marketplace features
-- [ ] Implement infinite scroll for agent browsing
-- [ ] Develop intuitive filter interaction patterns
-
-📎 QA through Operative.sh MCP, verify animations and interactions
-
-#### Subtask 3.4: Implement performance and security optimizations
+#### Subtask 3.4: Implement performance optimizations
 - [ ] Before starting, use Context7 MCP to fetch latest performance optimization documentation
   - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/vercel/next.js"` and topic: "performance optimization"
-- [ ] Use Perplexity MCP to research marketplace security
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "What are the best practices for security in marketplace applications with user-contributed content?"
-- [ ] Implement lazy loading for marketplace grid
-- [ ] Add image optimization for agent icons
-- [ ] Create agent sandboxing for security
-- [ ] Implement rate limiting for submissions
-- [ ] Develop content moderation system
-- [ ] Create performance monitoring for marketplace
-- [ ] Implement caching for popular agents
+- [ ] Use Perplexity MCP to research dashboard performance patterns
+  - [ ] Use command: `mcp3_perplexity_ask` with query: "Performance optimization patterns for analytics dashboards including data aggregation, caching, and lazy loading"
+- [ ] Add data aggregation for large datasets
+- [ ] Implement progressive loading for dashboards
+- [ ] Create efficient update mechanisms for real-time data
+- [ ] Develop caching for frequently accessed metrics
+- [ ] Implement lazy loading for off-screen widgets
+- [ ] Add background data fetching and processing
 - [ ] Utilize Next.js server components where appropriate for improved performance
 
-📎 QA through Operative.sh MCP, verify security and performance
+📎 QA through Operative.sh MCP, verify performance with complex dashboards using `mcp7_web_eval_agent` command
 
 **⚠️ TIER 3 CHECKPOINT:** After completing Tier 3:
-- [ ] Commit all changes: `git add . && git commit -m "Phase 11 Tier 3: AI Agent Marketplace UI Polish and Quality Assurance - Enhanced visualization, responsive design, interaction polish, and performance optimizations"`
+- [ ] Commit all changes: `git add . && git commit -m "Phase 11 Tier 3: UI Polish and Quality Assurance - Enhanced visualization design, dashboard interactivity, responsive design, and performance optimizations"`
 - [ ] Push to repository: `git push origin main`
 
-## Phase Completion Summary
+## Phase 11 Completion Summary
 
 Upon completion of all tiers, Phase 11 will have delivered:
 
 ### **Infrastructure Achievements:**
-- ✅ Comprehensive marketplace database schema for agent discovery and management
-- ✅ Complete API routes for marketplace operations and agent management
-- ✅ Robust agent packaging and validation system for quality control
-- ✅ Consistent UI components following design system guidelines
+- ✅ Complete analytics database schema with dashboards, widgets, metrics, and reports tables
+- ✅ Comprehensive Next.js API routes for dashboard management and analytics operations
+- ✅ Advanced visualization library setup with D3.js, Recharts, and custom chart components
+- ✅ Professional UI component library for dashboard interfaces
 
 ### **Business Logic Features:**
-- ✅ Powerful agent discovery with search, filtering, and recommendations
-- ✅ Complete agent publication workflow with versioning and approval
-- ✅ Seamless agent installation and management system
-- ✅ Comprehensive rating and review system for community feedback
+- ✅ Full dashboard management with creation, customization, sharing, and templates
+- ✅ Advanced widget management with configuration, data binding, and positioning
+- ✅ Comprehensive metrics collection and processing with real-time updates
+- ✅ Complete reporting functionality with scheduled generation and multiple export formats
 
 ### **Quality Assurance:**
-- ✅ Polished marketplace visualization with engaging animations
-- ✅ Fully responsive design optimized for all device sizes
-- ✅ Refined interaction patterns for intuitive user experience
-- ✅ Performance and security optimizations for production use
+- ✅ Enhanced visualization design with consistent theming and animations
+- ✅ Interactive dashboard features with filtering, drill-down, and cross-filtering
+- ✅ Responsive design optimized for mobile, tablet, and desktop experiences
+- ✅ Performance optimizations for large datasets and real-time updates
 
 ### **Technical Achievements:**
 - ✅ Research-driven development using Context7 MCP and Perplexity MCP
@@ -271,4 +256,4 @@ Upon completion of all tiers, Phase 11 will have delivered:
 - ✅ Comprehensive QA verification using Operative.sh MCP
 - ✅ Git-disciplined development with tier-based commits and pushes
 
-**Phase 11 (AI Agent Marketplace) is now complete and ready for production deployment.**
+**Phase 11 (Dashboard and Analytics) is now complete and ready for production deployment.**

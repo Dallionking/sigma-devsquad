@@ -1,6 +1,6 @@
 # 📋 Vibe DevSquad Platform Features - User Manual
 
-*Last Updated: Phase 5 Complete - MCP Registry & Integration + Task Management System - June 2025*
+*Last Updated: Phase 8 In Progress - Onboarding Experience - June 2025*
 
 This document serves as a comprehensive guide to all features available in the Vibe DevSquad platform. Each feature is documented with its location, purpose, and usage instructions.
 
@@ -29,10 +29,170 @@ This document serves as a comprehensive guide to all features available in the V
 
 ---
 
+## 🔌 IDE Integrations (NEW in Phase 7)
+
+### **Universal VS Code Extension**
+**Location**: VS Code, Cursor, or Windsurf Extensions Marketplace
+**What it does**: Brings Vibe DevSquad AI capabilities directly into your IDE
+
+**Features:**
+- **AI Chat Interface**: Streaming AI responses with modern UI
+- **Quick Actions**: One-click file analysis, project analysis, task creation
+- **WebSocket Bridge**: Real-time connection to Vibe DevSquad platform
+- **Cross-IDE Support**: Single extension works in VS Code, Cursor, and Windsurf
+- **Cursor-Style UI**: Modern dark theme matching Cursor's design language
+
+**How to Install:**
+```bash
+# VS Code
+code --install-extension vibe-devsquad.vibe-devsquad-vscode-extension
+
+# Cursor
+cursor --install-extension vibe-devsquad.vibe-devsquad-vscode-extension
+
+# Windsurf
+windsurf --install-extension vibe-devsquad.vibe-devsquad-vscode-extension
+```
+
+### **MCP Servers for Enhanced AI**
+**Location**: npm registry and GitHub
+**What it does**: Provides Model Context Protocol integration for advanced AI features
+
+**Available MCP Servers:**
+1. **Cursor MCP Server** (`@vibedevsquad/cursor-mcp-server`)
+   - 7 specialized tools for development workflows
+   - Streaming support for real-time responses
+   - Auto-reconnection with exponential backoff
+
+2. **Windsurf MCP Extension**
+   - 10 comprehensive tools including collaboration
+   - Windsurf-specific command execution
+   - Full TypeScript implementation with validation
+
+**Installation:**
+```bash
+# Cursor MCP Server
+npm install -g @vibedevsquad/cursor-mcp-server
+
+# Or use the automated installer
+npm install -g @vibedevsquad/extension-installer
+vibe-install --all
+```
+
+### **Automated Installer System**
+**Location**: npm package `@vibedevsquad/extension-installer`
+**What it does**: Automatically detects and installs extensions across all supported IDEs
+
+**Features:**
+- **IDE Auto-Detection**: Finds VS Code, Cursor, Windsurf installations
+- **Smart Installation**: Checks existing versions, supports force reinstall
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Combined Install**: Can install both MCP servers and extensions
+
+**Commands:**
+```bash
+# Install globally
+npm install -g @vibedevsquad/extension-installer
+
+# Install extension to all detected IDEs
+vibe-install --all
+
+# Install to specific IDE
+vibe-install --ide cursor
+
+# Uninstall from all IDEs
+vibe-uninstall --all
+```
+
+---
+
+## 🎓 Onboarding Experience (NEW in Phase 8 - 66% Complete)
+
+### **Interactive Onboarding Flow**
+**Location**: `/onboarding`
+**What it does**: Guides new users through platform setup with a comprehensive 6-step process
+
+**Features Implemented:**
+- **Step-by-Step Wizard**: Progressive onboarding with visual progress tracking
+- **Persistence**: Zustand state management saves progress automatically
+- **Responsive Design**: Full viewport layout with no scrolling required
+- **Dark Mode Support**: Proper text visibility in both light and dark modes
+- **Animated Transitions**: Smooth Framer Motion animations between steps
+
+**Onboarding Steps:**
+1. **Welcome Step**: Platform introduction and overview
+2. **Project Setup**: Guided project creation with validation
+3. **Agent Team**: AI agent selection and configuration
+4. **Task Management**: Interactive demo of task features
+5. **Communication**: Preferences and notification setup
+6. **Next Steps**: Resources and completion celebration
+
+### **Interactive Tutorials (Shepherd.js Integration)**
+**Location**: Available throughout the platform
+**What it does**: Provides contextual guided tours for key features
+
+**Tour Types:**
+- **Welcome Tour**: Platform introduction with UI highlights
+- **Project Creation Tour**: Step-by-step project setup guidance
+- **Task Management Tour**: Interactive task creation walkthrough
+- **Collaboration Tour**: Team features and communication setup
+
+**Tour Features:**
+- **Element Highlighting**: Focus on specific UI elements
+- **Action Validation**: Ensures users complete required steps
+- **Progress Tracking**: Saves tour progress in localStorage
+- **Skip Controls**: Users can skip or pause tours
+- **Contextual Help**: Tooltips and help buttons throughout
+
+### **Celebration Effects**
+**Location**: Integrated throughout onboarding flow
+**What it does**: Provides positive reinforcement during onboarding
+
+**Celebration Types:**
+- **Completion Modal**: Confetti animation on onboarding completion
+- **Step Badges**: Visual rewards for completing steps
+- **Milestone Notifications**: Achievement popups at key points
+- **Progress Animations**: Smooth transitions and visual feedback
+
+### **Analytics Integration (Planned)**
+**Location**: `/onboarding/analytics`
+**What it does**: Will track onboarding metrics and user behavior
+
+**Planned Features:**
+- **Conversion Funnel**: Track user progress through steps
+- **Drop-off Analysis**: Identify where users abandon onboarding
+- **Time Tracking**: Measure time spent on each step
+- **A/B Testing**: Test different onboarding variations
+
+---
+
+## 🤖 AI Planning Agent
+
+### Location: `/dashboard/planning`
+**What it does**: Interactive AI planning assistant with real-time streaming responses
+
+**Features:**
+- **Streaming Responses**: See AI responses as they're generated
+- **Context Awareness**: Automatically includes workspace and file context
+- **Message History**: Review and regenerate previous responses
+- **Quick Actions**: Pre-configured prompts for common planning tasks
+- **Dark Theme UI**: Consistent with platform design
+
+**How to Use:**
+1. Navigate to `/dashboard/planning`
+2. Type your planning question or request
+3. Watch as AI streams the response in real-time
+4. Use quick action buttons for common tasks
+5. Click regenerate to get alternative responses
+
+---
+
 ## 📋 Task Management System
 
 ### Location: `/dashboard/tasks`
 **What it does**: Complete task management with Kanban board, filtering, and advanced features
+
+---
 
 ## 🎯 Core Task Features
 
@@ -137,7 +297,7 @@ This document serves as a comprehensive guide to all features available in the V
 
 ---
 
-## 🔌 MCP Registry & Integration System
+## 🔗 MCP Registry & Integration System
 
 ### Location: `/dashboard/mcps`
 **What it does**: Comprehensive management of Machine Collaboration Protocols (MCPs) for AI tool integration
@@ -213,6 +373,28 @@ This document serves as a comprehensive guide to all features available in the V
 - **Usage Patterns**: Analyze usage patterns and optimization opportunities
 - **Health Monitoring**: Continuous health checks and status monitoring
 - **Reporting**: Generate usage reports and analytics dashboards
+
+---
+
+## 🛠️ Development Tools Integration
+
+### **GitHub Integration**
+- Available through MCP tools in IDE extensions
+- Direct repository management from IDE
+- Issue and PR creation/management
+- Code review workflows
+
+### **Supabase Integration**
+- Database operations through MCP
+- Real-time subscriptions
+- Authentication management
+- Edge function deployment
+
+### **AI Model Access**
+- GPT-4, Claude, and other models
+- Model switching based on task
+- Cost tracking and optimization
+- Streaming and batch processing
 
 ---
 
@@ -374,7 +556,37 @@ This document serves as a comprehensive guide to all features available in the V
 
 ---
 
+## 🚀 What's New in Phase 7
+
+### **Universal IDE Support**
+- Single extension works across VS Code, Cursor, and Windsurf
+- No separate builds or configurations needed
+- Consistent experience across all IDEs
+
+### **Enhanced AI Capabilities**
+- MCP protocol integration for advanced features
+- Streaming responses for better UX
+- Context-aware AI assistance
+
+### **Improved Developer Experience**
+- One-click installation across all IDEs
+- Automated setup and configuration
+- Seamless platform integration
+
+### **Collaboration Features**
+- Real-time context sharing
+- Pair programming support
+- Code review integration
+
+---
+
 ## 🚀 Future Roadmap
+
+### **Phase 8 - Onboarding Experience (Next)**
+- Interactive onboarding flow
+- Guided setup wizard
+- Tutorial system
+- Progress tracking
 
 ### **Planned Enhancements:**
 - **Mobile App**: Native mobile applications for iOS and Android
@@ -394,4 +606,4 @@ This document serves as a comprehensive guide to all features available in the V
 
 ---
 
-*This manual reflects the current state after Phase 5 completion and will be updated as new features are added and existing features are enhanced.*
+*This manual reflects the current state after Phase 7 completion and will be updated as new features are added and existing features are enhanced.*
