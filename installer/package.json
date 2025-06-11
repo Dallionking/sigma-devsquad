@@ -1,0 +1,37 @@
+{
+  "name": "@vibedevsquad/extension-installer",
+  "version": "1.0.0",
+  "description": "Automatic installer for Vibe DevSquad extension across VS Code, Cursor, and Windsurf IDEs",
+  "main": "index.js",
+  "bin": {
+    "vibe-install": "./bin/install.js",
+    "vibe-uninstall": "./bin/uninstall.js"
+  },
+  "scripts": {
+    "install": "node ./bin/install.js",
+    "postinstall": "node -e \"if (!process.env.npm_config_global) { require('./bin/install.js'); }\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vscode",
+    "cursor",
+    "windsurf",
+    "extension",
+    "installer",
+    "vibe-devsquad"
+  ],
+  "author": "Vibe DevSquad",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.4.1",
+    "ora": "^5.4.1",
+    "which": "^3.0.0"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "extensions/",
+    "README.md"
+  ]
+}

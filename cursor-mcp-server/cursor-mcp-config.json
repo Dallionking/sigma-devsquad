@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "vibe-devsquad": {
+      "command": "node",
+      "args": ["/Users/dallionking/CascadeProjects/Vibe Dev Squad/cursor-mcp-server/dist/index.js"],
+      "cwd": "/Users/dallionking/CascadeProjects/Vibe Dev Squad/cursor-mcp-server",
+      "env": {
+        "VIBE_DEVSQUAD_BRIDGE_URL": "ws://localhost:3001",
+        "VIBE_DEVSQUAD_API_KEY": "development_api_key",
+        "VIBE_DEVSQUAD_PLANNING_AGENT_ID": "planning_agent_v1",
+        "VIBE_DEVSQUAD_ENABLE_STREAMING": "true",
+        "VIBE_DEVSQUAD_MAX_TOKENS": "4000",
+        "VIBE_DEVSQUAD_DEBUG": "true"
+      }
+    }
+  }
+}

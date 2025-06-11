@@ -1,0 +1,142 @@
+{
+    "name": "vibe-devsquad-vscode-extension",
+    "displayName": "Vibe DevSquad AI Assistant",
+    "description": "AI-powered development assistant for VS Code, Cursor, and Windsurf IDEs",
+    "version": "1.0.6",
+    "publisher": "vibedevsquad",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vibe-dev-squad/vibe-devsquad-vscode-extension"
+    },
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "AI",
+        "Programming Languages",
+        "Other"
+    ],
+    "keywords": [
+        "ai",
+        "assistant",
+        "vibe",
+        "devsquad",
+        "planning",
+        "cursor",
+        "windsurf",
+        "vscode"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "icon": "resources/icon.png",
+    "contributes": {
+        "commands": [
+            {
+                "command": "vibeDevSquad.openPlanningAgent",
+                "title": "Open Planning Agent",
+                "category": "Vibe DevSquad"
+            },
+            {
+                "command": "vibeDevSquad.createTaskFromSelection",
+                "title": "Create Task from Selection",
+                "category": "Vibe DevSquad"
+            },
+            {
+                "command": "vibeDevSquad.quickCreateTask",
+                "title": "Quick Create Task",
+                "category": "Vibe DevSquad"
+            },
+            {
+                "command": "vibeDevSquad.analyzeCurrentFile",
+                "title": "Analyze Current File",
+                "category": "Vibe DevSquad"
+            }
+        ],
+        "views": {
+            "vibeDevSquad": [
+                {
+                    "type": "webview",
+                    "id": "vibeDevSquad.planningView",
+                    "name": "Planning Agent",
+                    "when": "vibeDevSquad.enabled"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "vibeDevSquad",
+                    "title": "Vibe DevSquad",
+                    "icon": "$(robot)"
+                }
+            ]
+        },
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "vibeDevSquad.createTaskFromSelection",
+                    "when": "editorHasSelection",
+                    "group": "vibeDevSquad"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "vibeDevSquad.openPlanningAgent"
+                },
+                {
+                    "command": "vibeDevSquad.quickCreateTask"
+                },
+                {
+                    "command": "vibeDevSquad.analyzeCurrentFile"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Vibe DevSquad",
+            "properties": {
+                "vibeDevSquad.serverUrl": {
+                    "type": "string",
+                    "default": "ws://localhost:3006",
+                    "description": "Vibe DevSquad platform server URL"
+                },
+                "vibeDevSquad.autoConnect": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically connect to platform on startup"
+                },
+                "vibeDevSquad.apiKey": {
+                    "type": "string",
+                    "default": "",
+                    "description": "API key for Vibe DevSquad platform authentication"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "webpack",
+        "package": "webpack --mode production --devtool hidden-source-map",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch": "webpack --watch",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "lint": "eslint src/**/*.ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.74.0",
+        "@types/node": "16.x",
+        "@types/ws": "^8.5.0",
+        "@typescript-eslint/eslint-plugin": "^5.45.0",
+        "@typescript-eslint/parser": "^5.45.0",
+        "eslint": "^8.28.0",
+        "typescript": "^4.9.4",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.0",
+        "ts-loader": "^9.4.1"
+    },
+    "dependencies": {
+        "ws": "^8.11.0"
+    }
+}

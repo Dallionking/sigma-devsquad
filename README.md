@@ -1,73 +1,137 @@
-# Welcome to your Lovable project
+# Vibe DevSquad AI Platform
 
-## Project info
+> 🚀 The AI-powered development platform that brings advanced AI capabilities directly to your IDE
 
-**URL**: https://lovable.dev/projects/a14e5dae-e610-4ecb-b040-ee324b852eef
+[![VS Code Extension](https://img.shields.io/badge/VS%20Code-Extension-blue)](https://marketplace.visualstudio.com/items?itemName=vibedevsquad.vibe-devsquad-vscode-extension)
+[![npm version](https://img.shields.io/npm/v/@vibedevsquad/cursor-mcp-server)](https://www.npmjs.com/package/@vibedevsquad/cursor-mcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## How can I edit this code?
+## 🌟 What is Vibe DevSquad?
 
-There are several ways of editing your application.
+Vibe DevSquad is a comprehensive AI development platform that seamlessly integrates into your favorite IDEs (VS Code, Cursor, and Windsurf). It combines the power of multiple AI models, task management, and collaborative development tools into a unified experience that accelerates your development workflow.
 
-**Use Lovable**
+### 🎯 Key Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a14e5dae-e610-4ecb-b040-ee324b852eef) and start prompting.
+- **🤖 Multi-Model AI Integration**: Access GPT-4, Claude, and other leading AI models
+- **📋 Advanced Task Management**: Kanban boards with dependencies and AI-powered planning
+- **🔌 MCP Registry**: Discover and integrate Model Context Protocol plugins
+- **💬 IDE-Native Chat**: AI assistance without leaving your editor
+- **🔄 Real-time Collaboration**: Share context and work together with AI
+- **📊 Project Analysis**: AI-powered code analysis and recommendations
+- **🚀 Workflow Automation**: Streamline development from research to deployment
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🏗️ Platform Components
 
-**Use your preferred IDE**
+### 1. **Web Dashboard** ([vibe-devsquad.vercel.app](https://vibe-devsquad.vercel.app))
+- Central hub for project management
+- Visual task boards and planning tools
+- MCP registry and configuration
+- Team collaboration features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 2. **Universal IDE Extension**
+- One extension for VS Code, Cursor, and Windsurf
+- AI chat interface with streaming responses
+- Quick actions for common development tasks
+- Seamless platform integration
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 3. **MCP Servers**
+- Enhanced AI capabilities through Model Context Protocol
+- Specialized tools for different development workflows
+- Extensible architecture for custom integrations
 
-Follow these steps:
+## 🚀 Quick Start
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Install the IDE Extension
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+#### For VS Code:
+```bash
+code --install-extension vibe-devsquad.vibe-devsquad-vscode-extension
 ```
 
-**Edit a file directly in GitHub**
+#### For Cursor:
+```bash
+cursor --install-extension vibe-devsquad.vibe-devsquad-vscode-extension
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+#### For Windsurf:
+```bash
+windsurf --install-extension vibe-devsquad.vibe-devsquad-vscode-extension
+```
 
-**Use GitHub Codespaces**
+Or search for "Vibe DevSquad" in the Extensions marketplace within any of these IDEs.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Install MCP Server (Optional)
+```bash
+npm install -g @vibe-devsquad/cursor-mcp-server
+```
 
-## What technologies are used for this project?
+## 📈 Current Status
 
-This project is built with:
+**Phase 7 Complete** - All IDE integrations are now live! 
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- ✅ Universal VS Code extension published
+- ✅ Cursor MCP server available on npm
+- ✅ Windsurf MCP extension fully implemented
+- ✅ Automated installer for easy setup
+- 🚧 Phase 8 (Onboarding Experience) starting next
 
-## How can I deploy this project?
+See [CURRENT_STATUS.md](./CURRENT_STATUS.md) for detailed platform status.
 
-Simply open [Lovable](https://lovable.dev/projects/a14e5dae-e610-4ecb-b040-ee324b852eef) and click on Share -> Publish.
+## 🛠️ Development Setup
 
-## Can I connect a custom domain to my Lovable project?
+### Prerequisites
+- Node.js 16+
+- npm or yarn
+- VS Code, Cursor, or Windsurf IDE
 
-Yes, you can!
+### Clone and Install
+```bash
+git clone https://github.com/yourusername/vibe-devsquad.git
+cd vibe-devsquad
+npm install
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Build Extension
+```bash
+cd vscode-extension
+npm install
+npm run compile
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Test Locally
+Press `F5` in VS Code/Cursor/Windsurf to launch a new Extension Development Host window.
+
+## 📚 Documentation
+
+- [Current Status](./CURRENT_STATUS.md) - Platform status and metrics
+- [Changelog](./CHANGELOG.md) - Detailed version history
+- [Features Guide](./Features.md) - Complete feature documentation
+- [Publishing Guide](docs/PUBLISHING_GUIDE.md) - Complete publishing workflow
+- [Quick Reference](docs/QUICK_PUBLISH_REFERENCE.md) - Quick commands and shortcuts
+- [Extension README](vscode-extension/README.md) - Extension-specific details
+- [MCP Server README](cursor-mcp-server/README.md) - MCP server documentation
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `npm test`
+5. Submit a pull request
+
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built for the Vibe AI community
+- Powered by advanced AI models including GPT-4, Claude, and more
+- Compatible with VS Code, Cursor, and Windsurf IDEs
+- Developed with ❤️ using AI-assisted development
+
+---
+
+**🎉 Join thousands of developers enhancing their workflow with Vibe DevSquad!**

@@ -1,0 +1,4 @@
+node_modules/
+extensions/*.vsix
+*.log
+.DS_Store

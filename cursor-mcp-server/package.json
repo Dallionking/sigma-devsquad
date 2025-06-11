@@ -1,0 +1,40 @@
+{
+  "name": "vibe-devsquad-cursor-mcp",
+  "version": "1.0.0",
+  "description": "Vibe DevSquad MCP Server for Cursor IDE Integration",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "dev": "node dist/index.js",
+    "start": "node dist/index.js",
+    "test": "echo \"No tests yet\" && exit 0",
+    "lint": "eslint src --ext .ts",
+    "release": "./scripts/publish.sh patch",
+    "release:patch": "./scripts/publish.sh patch",
+    "release:minor": "./scripts/publish.sh minor",
+    "release:major": "./scripts/publish.sh major",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["mcp", "cursor", "ai", "vibe-devsquad", "planning-agent"],
+  "author": "Vibe DevSquad",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ws": "^8.17.0",
+    "node-fetch": "^3.3.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/ws": "^8.5.10",
+    "@types/uuid": "^9.0.8",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

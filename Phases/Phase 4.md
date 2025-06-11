@@ -135,7 +135,7 @@ git push origin main
   - [ ] Use command: `mcp3_perplexity_ask` with query: "Real-time messaging implementation patterns with WebSockets and optimistic updates"
 - [x] Set up WebSocket connection management with reconnection logic
 - [x] Implement message sending with optimistic updates
-- [x] Create message receipt and read status tracking
+- [x] Create message receipt and read status tracking 
 - [x] Develop typing indicators and presence information
 - [x] Implement notification system for new messages
 - [x] Create message threading for complex conversations
