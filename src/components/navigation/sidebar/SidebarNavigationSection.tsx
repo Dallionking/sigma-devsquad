@@ -13,7 +13,8 @@ import {
   User,
   Settings,
   CreditCard,
-  Star
+  Star,
+  BarChart3
 } from 'lucide-react';
 
 interface SidebarNavigationSectionProps {
@@ -30,6 +31,7 @@ export const SidebarNavigationSection = ({ collapsed }: SidebarNavigationSection
     { path: "/dashboard", label: "Dashboard", icon: Home },
     { path: "/planning-agent", label: "Planning", icon: Layers },
     { path: "/projects", label: "Projects", icon: Folder },
+    { path: "/analytics", label: "Analytics", icon: BarChart3 },
   ];
 
   const configItems = [
