@@ -70,34 +70,34 @@ The WebContainer will be integrated as a new primary navigation item, tentativel
 ### Tier 2: Business Logic
 
 #### Subtask 2.1: Integrate WebContainer API for In-Browser Development Environments
-- [ ] Before starting, use Context7 MCP to fetch WebContainer documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/stackblitz/webcontainer"` and topic: "WebContainer API setup and configuration"
-- [ ] Use Perplexity MCP to research WebContainer integration patterns
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "WebContainer API integration best practices React Next.js"
-- [ ] Set up WebContainer API integration in the workspace component
-- [ ] Implement container lifecycle management (start, stop, restart)
-- [ ] Add file system mounting and synchronization with backend storage
-- [ ] Implement terminal interface for shell commands
+- [x] Before starting, use Context7 MCP to fetch WebContainer documentation
+  - [x] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/stackblitz/webcontainer-docs"` and topic: "WebContainer API setup and configuration"
+- [x] Use Perplexity MCP to research WebContainer integration patterns
+  - [x] Use command: `mcp3_perplexity_ask` with query: "WebContainer API integration best practices React Next.js"
+- [x] Set up WebContainer API integration in the workspace component
+- [x] Implement container lifecycle management (start, stop, restart)
+- [x] Add file system mounting and synchronization with backend storage
+- [x] Implement terminal interface for shell commands
 
 📎 Use Operative.sh MCP for testing WebContainer file operations with `mcp7_web_eval_agent` command.
 
 #### Subtask 2.2: Implement Code Editor & Terminal Components
-- [ ] Before starting, use Context7 MCP to fetch latest Monaco Editor documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/microsoft/monaco-editor"` and topic: "Monaco Editor integration"
-- [ ] Use Perplexity MCP to research best practices for integrating Xterm.js with React for terminal emulation
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "Xterm.js React integration best practices"
-- [ ] Integrate a performant, browser-based code editor (e.g., Monaco Editor) connected to the WebContainer's file system.
-- [ ] Integrate an interactive terminal (e.g., Xterm.js) connected to the WebContainer.
+- [x] Before starting, use Context7 MCP to fetch latest Monaco Editor documentation
+  - [x] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/microsoft/monaco-editor"` and topic: "Monaco Editor integration"
+- [x] Use Perplexity MCP to research best practices for integrating Xterm.js with React for terminal emulation
+  - [x] Use command: `mcp3_perplexity_ask` with query: "Xterm.js React integration best practices"
+- [x] Integrate a performant, browser-based code editor (e.g., Monaco Editor) connected to the WebContainer's file system.
+- [x] Integrate an interactive terminal (e.g., Xterm.js) connected to the WebContainer.
 
 📎 Use Magic UI MCP for editor and terminal component styling.
 
 #### Subtask 2.3: Implement Real-time Communication for AI Agent Interaction
-- [ ] Before starting, use Context7 MCP to fetch latest Flask-SocketIO documentation
-  - [ ] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/miguelgrinberg/flask-socketio"` and topic: "Flask-SocketIO usage"
-- [ ] Use Perplexity MCP to research secure WebSocket communication patterns for AI feedback
-  - [ ] Use command: `mcp3_perplexity_ask` with query: "secure WebSocket communication for AI feedback"
-- [ ] Implement WebSocket endpoints on the backend for real-time, bidirectional communication between the frontend Workspace and the AI orchestration layer.
-- [ ] Create a dedicated AI Interaction Panel in the frontend to display AI agent outputs and send commands.
+- [x] Before starting, use Context7 MCP to fetch latest Flask-SocketIO documentation
+  - [x] Use command: `mcp1_get-library-docs` with `context7CompatibleLibraryID: "/miguelgrinberg/flask-socketio"` and topic: "Flask-SocketIO usage"
+- [x] Use Perplexity MCP to research secure WebSocket communication patterns for AI feedback
+  - [x] Use command: `mcp3_perplexity_ask` with query: "secure WebSocket communication for AI feedback"
+- [x] Implement WebSocket endpoints on the backend for real-time, bidirectional communication between the frontend Workspace and the AI orchestration layer.
+- [x] Create a dedicated AI Interaction Panel in the frontend to display AI agent outputs and send commands.
 
 📎 Use Operative.sh MCP for testing real-time communication with `mcp7_web_eval_agent` command.
 
