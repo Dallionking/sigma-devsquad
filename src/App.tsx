@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +27,7 @@ import Profile from "./pages/Profile";
 import Account from "./pages/Account";
 import Projects from "./pages/Projects";
 import PlanningAgent from "./pages/PlanningAgent";
+import Workspace from "./pages/Workspace";
 import AgentCreation from "./pages/AgentCreation";
 import AgentConfiguration from "./pages/AgentConfiguration";
 import IDEIntegration from "./pages/IDEIntegration";
@@ -101,6 +101,11 @@ function AppContent() {
                                 <Route path="/planning-agent" element={
                                   <ProtectedRoute>
                                     <PlanningAgent />
+                                  </ProtectedRoute>
+                                } />
+                                <Route path="/workspace" element={
+                                  <ProtectedRoute>
+                                    <Workspace />
                                   </ProtectedRoute>
                                 } />
                                 <Route path="/agent-creation" element={

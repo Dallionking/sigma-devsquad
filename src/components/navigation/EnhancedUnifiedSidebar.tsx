@@ -7,6 +7,7 @@ import {
   PanelLeftClose,
   Home,
   Layers,
+  Code2,
   Folder,
   Presentation,
   Bot,
@@ -45,6 +46,7 @@ const navigationItems: NavItem[] = [
   // Primary navigation
   { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: Home, level: 'primary' },
   { id: 'planning', label: 'Planning Agent', path: '/planning-agent', icon: Layers, level: 'primary' },
+  { id: 'workspace', label: 'Workspace', path: '/workspace', icon: Code2, level: 'primary' },
   { id: 'projects', label: 'Projects', path: '/projects', icon: Folder, level: 'primary' },
   { id: 'presentations', label: 'Presentations', path: '/presentations', icon: Presentation, level: 'primary' },
   
