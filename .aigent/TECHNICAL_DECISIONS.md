@@ -45,9 +45,49 @@ This document captures key technical decisions made throughout the project devel
 - Requires modern browser
 - Some npm packages incompatible
 
+### 4. AI Agent Marketplace Architecture
+**Decision**: Supabase + Next.js API Routes + @dnd-kit for drag-and-drop
+**Date**: Phase 12
+**Rationale**:
+- Supabase provides robust database with RLS policies
+- Next.js API routes offer serverless scalability
+- @dnd-kit is React 19 compatible and accessible
+**Implementation Details**:
+- PostgreSQL schema with agents, reviews, installations tables
+- RESTful API endpoints for CRUD operations
+- React Query for caching and optimistic updates
+- Framer Motion for smooth animations
+**Trade-offs**:
+- Supabase vendor lock-in vs self-hosted database
+- Client-side state management complexity
+- Performance optimization needed for large agent catalogs
+
 ## UI/UX Decisions
 
-### 4. Flex Layout for Workspace (Recent Fix)
+### 5. Infinite Render Loop Prevention
+**Decision**: useMemo for filteredAgents and simplified hook patterns
+**Date**: 2025-06-12 (Phase 12)
+**Problem**: useAgentOrganization hook caused infinite re-renders
+**Root Cause**: filteredAgents array recreated on every render
+**Solution**:
+```typescript
+// Before - caused infinite loops
+const filteredAgents = agents.filter(/* ... */);
+const { agents: organizedAgents } = useAgentOrganization(filteredAgents);
+
+// After - stable references
+const filteredAgents = useMemo(() => 
+  agents.filter(/* ... */), 
+  [agents, searchQuery, selectedCategory]
+);
+const { agents: organizedAgents } = useAgentOrganization(filteredAgents);
+```
+**Benefits**:
+- Eliminated infinite render loops
+- Improved performance
+- Stable component behavior
+
+### 6. Flex Layout for Workspace (Recent Fix)
 **Decision**: Replace absolute positioning with flexbox
 **Date**: 2025-06-12
 **Problem**: Headers were getting cut off due to nested height calculations
@@ -82,7 +122,7 @@ This document captures key technical decisions made throughout the project devel
 - Proper overflow handling
 - Cleaner, more maintainable
 
-### 5. Grid Layout for Responsive Cards
+### 7. Grid Layout for Responsive Cards
 **Decision**: CSS Grid with auto-rows-fr
 **Date**: Phase 6
 **Rationale**:
@@ -98,7 +138,7 @@ This document captures key technical decisions made throughout the project devel
 }
 ```
 
-### 6. Monaco Editor vs CodeMirror
+### 8. Monaco Editor vs CodeMirror
 **Decision**: Monaco Editor for code editing
 **Date**: Phase 10
 **Rationale**:
@@ -112,7 +152,7 @@ This document captures key technical decisions made throughout the project devel
 
 ## State Management Decisions
 
-### 7. React Query for Server State
+### 9. React Query for Server State
 **Decision**: TanStack Query (React Query) over Redux
 **Date**: Phase 4
 **Rationale**:
@@ -129,7 +169,7 @@ const { data, mutate } = useMutation({
 });
 ```
 
-### 8. Zustand for Client State
+### 10. Zustand for Client State
 **Decision**: Zustand over Context API
 **Date**: Phase 3
 **Rationale**:
@@ -140,7 +180,7 @@ const { data, mutate } = useMutation({
 
 ## Database Decisions
 
-### 9. Supabase as Backend
+### 11. Supabase as Backend
 **Decision**: Supabase over custom backend
 **Date**: Phase 1
 **Rationale**:
@@ -155,7 +195,7 @@ const { data, mutate } = useMutation({
 - Edge Functions
 - Real-time for collaboration
 
-### 10. Row Level Security (RLS)
+### 12. Row Level Security (RLS)
 **Decision**: Database-level security
 **Date**: Phase 2
 **Rationale**:
@@ -169,7 +209,7 @@ const { data, mutate } = useMutation({
 
 ## Performance Decisions
 
-### 11. Turbopack for Development
+### 13. Turbopack for Development
 **Decision**: Use Next.js with Turbopack
 **Date**: Phase 1
 **Rationale**:
@@ -180,7 +220,7 @@ const { data, mutate } = useMutation({
 - 10x faster cold starts
 - Near-instant HMR
 
-### 12. Operation Timeouts in WebContainer
+### 14. Operation Timeouts in WebContainer
 **Decision**: Add timeouts to all WebContainer operations
 **Date**: 2025-06-12
 **Rationale**:
@@ -204,7 +244,7 @@ const withTimeout = <T>(
 
 ## Testing Decisions
 
-### 13. web-eval-agent for UI Testing
+### 15. web-eval-agent for UI Testing
 **Decision**: Use MCP-based UI testing
 **Date**: Phase 8
 **Rationale**:
@@ -216,7 +256,7 @@ const withTimeout = <T>(
 - Tests user flows
 - Reduces manual QA
 
-### 14. Jest + React Testing Library
+### 16. Jest + React Testing Library
 **Decision**: Standard React testing stack
 **Date**: Phase 2
 **Rationale**:
@@ -230,7 +270,7 @@ const withTimeout = <T>(
 
 ## Security Decisions
 
-### 15. API Key Encryption
+### 17. API Key Encryption
 **Decision**: Encrypt keys in database
 **Date**: Phase 3
 **Rationale**:
@@ -242,7 +282,7 @@ const withTimeout = <T>(
 - Keys in environment vars
 - Audit logging
 
-### 16. WebContainer Isolation
+### 18. WebContainer Isolation
 **Decision**: Run WebContainer in iframe
 **Date**: Phase 10
 **Rationale**:
@@ -255,7 +295,7 @@ const withTimeout = <T>(
 
 ## Deployment Decisions
 
-### 17. Vercel for Hosting
+### 19. Vercel for Hosting
 **Decision**: Deploy on Vercel
 **Date**: Phase 1
 **Rationale**:
@@ -268,7 +308,7 @@ const withTimeout = <T>(
 - Analytics
 - Web Vitals monitoring
 
-### 18. npm Registry for Extensions
+### 20. npm Registry for Extensions
 **Decision**: Publish to npm
 **Date**: Phase 7
 **Rationale**:
@@ -282,7 +322,7 @@ const withTimeout = <T>(
 
 ## Code Organization Decisions
 
-### 19. Monorepo Structure
+### 21. Monorepo Structure
 **Decision**: Keep all packages in one repo
 **Date**: Phase 1
 **Rationale**:
@@ -294,7 +334,7 @@ const withTimeout = <T>(
 - Extensions in subdirectories
 - Shared types package
 
-### 20. TypeScript Strict Mode
+### 22. TypeScript Strict Mode
 **Decision**: Enable all strict checks
 **Date**: Phase 1
 **Rationale**:

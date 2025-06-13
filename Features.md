@@ -1,6 +1,6 @@
 # 📋 Vibe DevSquad Platform Features - User Manual
 
-*Last Updated: Phase 11 Analytics Dashboard Redesign - June 2025*
+*Last Updated: Phase 12 AI Agent Marketplace Complete - December 2025*
 
 This document serves as a comprehensive guide to all features available in the Vibe DevSquad platform. Each feature is documented with its location, purpose, and usage instructions.
 
@@ -18,6 +18,7 @@ This document serves as a comprehensive guide to all features available in the V
 - **Quick Access Icons**: Direct navigation to key features
 - **Planning Agent Interface**: Advanced AI planning capabilities at `/dashboard/planning`
 - **MCP Registry**: Comprehensive plugin management system at `/dashboard/mcps`
+- **AI Agent Marketplace**: Discover, install, and manage AI agents at `/dashboard/marketplace`
 
 **How to Use:**
 1. Navigate to `/dashboard` after login
@@ -26,6 +27,7 @@ This document serves as a comprehensive guide to all features available in the V
 4. Icons provide visual context for each section
 5. Access AI Planning features via dedicated planning section
 6. Manage MCPs (Machine Collaboration Protocols) via MCP Registry section
+7. Browse and install AI agents from the marketplace
 
 ---
 
@@ -918,3 +920,50 @@ vibe-uninstall --all
 ---
 
 *This manual reflects the current state after Phase 9 completion (Planning Canvas Implementation) and will be updated as new features are added and existing features are enhanced.*
+
+---
+
+## 🤖 AI Agent Marketplace (NEW in Phase 12 - 100% Complete)
+
+### **Agent Discovery and Management**
+**Location**: `/dashboard/marketplace`
+**What it does**: Comprehensive marketplace for discovering, installing, and managing AI agents
+
+**Features Implemented:**
+- **Agent Discovery**: Browse and search through curated AI agents
+- **Advanced Search**: Filter by categories, ratings, price, and capabilities
+- **Agent Installation**: One-click installation with progress tracking
+- **Agent Publishing**: Submit your own AI agents to the marketplace
+- **Review System**: Rate and review agents with detailed feedback
+- **Drag-and-Drop Organization**: Reorder and organize your installed agents
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+
+**Key Components:**
+1. **Agent Cards**: Beautiful cards displaying agent information, ratings, and actions
+2. **Search and Filters**: Advanced filtering by category, price, rating, and capabilities
+3. **Installation Management**: Track installation progress and manage installed agents
+4. **Publication Workflow**: Submit agents with validation and approval process
+5. **Review System**: Community-driven ratings and detailed reviews
+
+**Agent Categories:**
+- **Development**: Code generation, debugging, and development tools
+- **Analytics**: Data analysis, visualization, and insights
+- **Content**: Content creation, writing, and media generation
+- **Productivity**: Task management, automation, and workflow optimization
+- **Language**: Translation, localization, and language processing
+
+**How to Use:**
+1. Navigate to `/dashboard/marketplace`
+2. Browse featured agents or use search to find specific capabilities
+3. Click on agent cards to view detailed information
+4. Use "Install" button to add agents to your workspace
+5. Click "Publish Agent" to submit your own AI agents
+6. Enable drag mode to organize your installed agents
+7. Rate and review agents you've used
+
+**Technical Features:**
+- **Performance Optimized**: Lazy loading and infinite scroll for large agent catalogs
+- **Security Validated**: All agents undergo security validation before publication
+- **Version Management**: Support for agent updates and version control
+- **Usage Analytics**: Track agent performance and usage statistics
+- **API Integration**: RESTful APIs for agent management and marketplace operations

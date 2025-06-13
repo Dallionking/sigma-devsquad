@@ -2,11 +2,11 @@
 
 **Last Updated**: 2025-06-12
 **Project**: Vibe DevSquad
-**Current Phase**: Phase 10 - WebContainer Integration (85% Complete)
+**Current Phase**: Phase 12 - AI Agent Marketplace (100% Complete)
 
 ## 🎯 Executive Summary
 
-Vibe DevSquad is a production-ready AI-powered development platform with universal IDE support (VS Code, Cursor, Windsurf), in-browser development environments via WebContainer, and comprehensive MCP orchestration. The platform is currently in Phase 10 with 85% of WebContainer integration complete.
+Vibe DevSquad is a production-ready AI-powered development platform with universal IDE support (VS Code, Cursor, Windsurf), in-browser development environments via WebContainer, comprehensive MCP orchestration, and a fully functional AI Agent Marketplace. The platform has successfully completed Phase 12 with a complete marketplace ecosystem for AI agent discovery, installation, and management.
 
 ## 🚀 Quick Start for New Developers
 
@@ -45,6 +45,10 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_key
 # WebContainer Configuration
 NEXT_PUBLIC_WEBCONTAINER_API_KEY=your_webcontainer_key
 
+# AI Agent Marketplace (Phase 12)
+NEXT_PUBLIC_MARKETPLACE_API_URL=your_marketplace_api_url
+MARKETPLACE_ADMIN_KEY=your_admin_key
+
 # MCP Server Keys (Optional but recommended)
 OPENAI_API_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
@@ -79,6 +83,121 @@ vibe-devsquad/
 4. `/src/lib/mcp/registry.ts` - MCP registry system
 5. `/src/app/api/planning-agent/route.ts` - AI planning agent API
 
+## 🤖 AI Agent Marketplace (Phase 12 - Complete)
+
+### Architecture Overview
+The AI Agent Marketplace is a comprehensive ecosystem for discovering, installing, and managing AI agents. Built with Supabase backend, Next.js API routes, and React 19 frontend.
+
+### Database Schema
+```sql
+-- Core marketplace tables
+CREATE TABLE agents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  author TEXT NOT NULL,
+  version TEXT NOT NULL,
+  categories TEXT[] NOT NULL,
+  capabilities TEXT[] NOT NULL,
+  icon TEXT,
+  price DECIMAL(10,2) DEFAULT 0,
+  featured BOOLEAN DEFAULT false,
+  verified BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE agent_reviews (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  agent_id UUID REFERENCES agents(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE agent_installations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  agent_id UUID REFERENCES agents(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  installed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(agent_id, user_id)
+);
+```
+
+### Key Components
+
+#### 1. AgentCard Component
+**Location**: `/src/components/marketplace/AgentCard.tsx`
+**Features**:
+- Responsive card design with agent information
+- Install button with loading states and feedback
+- Click handlers for detailed agent information
+- Support for both grid and list view modes
+- Optimized Next.js Image component with placeholders
+
+#### 2. DraggableAgentGrid Component
+**Location**: `/src/components/marketplace/DraggableAgentGrid.tsx`
+**Features**:
+- Drag-and-drop agent organization using @dnd-kit
+- Memoized filtering to prevent infinite renders
+- Support for keyboard navigation and accessibility
+- Real-time reordering with visual feedback
+
+#### 3. Marketplace API Routes
+**Location**: `/src/app/api/marketplace/`
+**Endpoints**:
+- `GET /api/marketplace/agents` - List and search agents
+- `POST /api/marketplace/agents` - Publish new agent
+- `GET /api/marketplace/reviews` - Get agent reviews
+- `POST /api/marketplace/reviews` - Submit review
+- `POST /api/marketplace/install` - Install agent
+
+### Critical Implementation Details
+
+#### Infinite Render Loop Prevention
+```typescript
+// Problem: filteredAgents recreated on every render
+const filteredAgents = agents.filter(/* ... */);
+
+// Solution: Memoized with stable dependencies
+const filteredAgents = useMemo(() => 
+  agents.filter(agent => {
+    const matchesSearch = searchQuery === '' || 
+      agent.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || 
+      agent.categories.includes(selectedCategory);
+    return matchesSearch && matchesCategory;
+  }), 
+  [agents, searchQuery, selectedCategory]
+);
+```
+
+#### Hook Execution Order
+```typescript
+// Critical: useAgentOrganization must come after filteredAgents
+const filteredAgents = useMemo(/* ... */);
+const { agents: organizedAgents, handleReorder } = useAgentOrganization(filteredAgents);
+```
+
+### Security Measures
+- **Input Validation**: Zod schemas for all API inputs
+- **Content Moderation**: Agent code sandboxing
+- **Rate Limiting**: API endpoint protection
+- **RLS Policies**: Database-level access control
+
+### Performance Optimizations
+- **Lazy Loading**: Agent cards load on scroll
+- **Image Optimization**: Next.js Image with blur placeholders
+- **Memoization**: Prevent unnecessary re-renders
+- **Caching**: React Query for server state
+
+### Testing Strategy
+- **Unit Tests**: Component behavior and hooks
+- **Integration Tests**: API endpoints and database
+- **E2E Tests**: User workflows with web-eval-agent
+- **Performance Tests**: Load testing for large catalogs
+
 ## 🔧 Current Implementation Status
 
 ### ✅ Completed Features
@@ -89,16 +208,14 @@ vibe-devsquad/
 5. **WebContainer UI** - Monaco editor, terminal, file explorer
 6. **Authentication** - Supabase auth with RLS policies
 7. **LLM Key Management** - Secure storage and rotation
+8. **AI Agent Marketplace** - Complete marketplace ecosystem
 
 ### 🔄 In Progress
-1. **WebContainer Backend Integration** - Persistent file storage
-2. **MCP WebContainer Server** - Full integration pending
-3. **Performance Optimization** - Additional caching layers
+1. **Performance Optimization** - Additional caching layers
 
 ### ❌ Not Started
-1. **Analytics Dashboard** (Phase 10 Tier 3)
-2. **Agent Marketplace** (Phase 11)
-3. **Enterprise Features** (Phase 12+)
+1. **Analytics Dashboard** (Phase 13)
+2. **Enterprise Features** (Phase 14+)
 
 ## 🐛 Known Issues & Workarounds
 
@@ -251,23 +368,21 @@ npm run monitor        # Start monitoring
 
 ## 📝 Next Steps for Development
 
-### Immediate Priorities (Phase 10 Completion)
-1. **Backend Integration** - Connect WebContainer to persistent storage
-2. **File Sync** - Implement real-time file synchronization
-3. **Performance Testing** - Load test WebContainer operations
-4. **Error Recovery** - Enhance error recovery mechanisms
+### Immediate Priorities (Phase 13)
+1. **Analytics Dashboard** - Implement analytics dashboard
+2. **Performance Testing** - Load test WebContainer operations
+3. **Error Recovery** - Enhance error recovery mechanisms
 
 ### Short-term Goals (1-2 weeks)
-1. Complete Phase 10 Tier 3 (Polish & QA)
-2. Begin Phase 11 (Agent Marketplace) planning
-3. Expand test coverage to 80%+
+1. Complete Phase 13 (Analytics Dashboard)
+2. Begin Phase 14 (Enterprise Features) planning
+3. Expand test coverage to 90%+
 4. Document all API endpoints
 
 ### Long-term Vision (1-3 months)
-1. Launch agent marketplace
-2. Enterprise features rollout
-3. Advanced analytics dashboard
-4. Mobile app development
+1. Launch enterprise features
+2. Advanced analytics dashboard
+3. Mobile app development
 
 ## 🤝 Team Contacts
 
